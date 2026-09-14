@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --good:#1f8a4c; --bad:#c23b3b; --mid:#c98a1a;
+    --line:#e3e8e5; --farmery:#eaf7ef;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 48px; width:1500px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  h1{font-size:30px; margin:0 0 6px; font-weight:800;}
+  .sub{color:var(--sub); font-size:15px; margin:0 0 26px;}
+  table{
+    width:100%; border-collapse:separate; border-spacing:0;
+    background:#fff; border-radius:16px; overflow:hidden;
+    box-shadow:0 2px 10px rgba(20,40,30,.06);
+  }
+  th, td{
+    padding:16px 14px; text-align:center; font-size:13.5px;
+    border-bottom:1px solid var(--line);
+  }
+  th{
+    background:#1c2b23; color:#fff; font-size:13px;
+    text-transform:uppercase; letter-spacing:.3px; font-weight:700;
+  }
+  td.crit{
+    text-align:left; font-weight:700; font-size:13.5px;
+    background:#f8faf8; color:#243830; width:260px;
+  }
+  th.farmery-col, td.farmery-col{ background:var(--farmery); }
+  th.farmery-col{ background:#12351f; }
+  tr:last-child td{border-bottom:none;}
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; font-weight:700; padding:6px 10px; border-radius:999px;
+  }
+  .b-good{ background:#e5f6ea; color:var(--good); }
+  .b-mid{ background:#fdf1dc; color:var(--mid); }
+  .b-bad{ background:#fbe9e9; color:var(--bad); }
+  .b-good::before{content:"✓";}
+  .b-mid::before{content:"◐";}
+  .b-bad::before{content:"✕";}
+  footer{margin-top:22px; font-size:11px; color:#9aa6a0;}
+  .legend{display:flex; gap:18px; margin-top:16px; font-size:12px; color:var(--sub);}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+</style>
+</head>
+<body>
+  <h1>Ma trận khoảng trống nghiên cứu: Farmery so với các nền tảng đối chứng</h1>
+  <p class="sub">Tổng hợp từ bảng so sánh sàn trong nước, quốc tế và cơ sở lý thuyết Chương 2</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Tiêu chí</th>
+        <th>Shopee / Lazada</th>
+        <th>FoodMap</th>
+        <th>VIPO Mall</th>
+        <th>Farm2Market</th>
+        <th class="farmery-col">Farmery</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="crit">Song song B2C + B2B (MOQ/giá bậc)</td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-mid">Một phần</span></td>
+        <td><span class="badge b-bad">Không (chỉ B2B)</span></td>
+        <td><span class="badge b-bad">Không đề cập</span></td>
+        <td class="farmery-col"><span class="badge b-good">Có</span></td>
+      </tr>
+      <tr>
+        <td class="crit">Truy xuất nguồn gốc gắn nhật ký canh tác</td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-mid">Cơ bản (QR)</span></td>
+        <td><span class="badge b-mid">Không rõ</span></td>
+        <td><span class="badge b-good">Có (blockchain)</span></td>
+        <td class="farmery-col"><span class="badge b-good">Có (QR + nhật ký)</span></td>
+      </tr>
+      <tr>
+        <td class="crit">Xác thực chứng nhận VietGAP/GlobalGAP</td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-mid">Không rõ</span></td>
+        <td><span class="badge b-mid">Không rõ</span></td>
+        <td><span class="badge b-bad">Không đề cập</span></td>
+        <td class="farmery-col"><span class="badge b-good">Có (2 cấp)</span></td>
+      </tr>
+      <tr>
+        <td class="crit">AI hỗ trợ ra quyết định</td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-bad">Không</span></td>
+        <td><span class="badge b-good">Có (dự báo giá)</span></td>
+        <td class="farmery-col"><span class="badge b-good">Có (4 mô-đun)</span></td>
+      </tr>
+      <tr>
+        <td class="crit">Vận hành thương mại đã kiểm chứng</td>
+        <td><span class="badge b-good">Có</span></td>
+        <td><span class="badge b-good">Có</span></td>
+        <td><span class="badge b-good">Có</span></td>
+        <td><span class="badge b-bad">Không (nghiên cứu)</span></td>
+        <td class="farmery-col"><span class="badge b-mid">Đang xây dựng (MVP)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <span><span class="badge b-good">✓</span> Đáp ứng đầy đủ</span>
+    <span><span class="badge b-mid">◐</span> Đáp ứng một phần / không rõ</span>
+    <span><span class="badge b-bad">✕</span> Không đáp ứng</span>
+  </div>
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Bảng 2.3</footer>
+</body>
+</html>

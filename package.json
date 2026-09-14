@@ -1,0 +1,12 @@
+{
+  "name": "farmery-dacn-report",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tooling nội bộ để render bảng so sánh dạng HTML sang ảnh cho báo cáo LaTeX",
+  "scripts": {
+    "shot": "node tools/render-comparison-tables.js"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}

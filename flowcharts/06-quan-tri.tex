@@ -1,0 +1,28 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Bắt đầu đợt giám sát};
+    \node[farm/process] (review) at (0,-1.5) {Quản trị: kiểm duyệt hồ sơ mới, sản phẩm mới / thay đổi trọng yếu và chứng nhận sắp hết hạn};
+    \node[farm/process] (monitor) at (0,-3.2) {Quản trị: theo dõi cảnh báo tỷ lệ khiếu nại bất thường và giao dịch có nguy cơ gian lận};
+    \node[farm/decision] (violation) at (0,-5.2) {Phát hiện\\vi phạm?};
+    \node[farm/decision] (severe) at (0,-7.5) {Vi phạm\\nghiêm trọng?};
+    \node[farm/exception] (lock) at (6,-7.5) {Giả mạo chứng nhận / gian lận:\\khóa ngay tài khoản, không qua nhắc nhở trung gian};
+    \node[farm/process] (sanction) at (0,-9.8) {Quản trị: xử lý theo mức độ và số lần vi phạm: nhắc nhở, cảnh cáo công khai, tạm khóa hoặc khóa vĩnh viễn};
+    \node[farm/exception] (orders) at (6,-9.8) {Rà soát toàn bộ đơn đang xử lý của tài khoản, bảo vệ khách đã đặt trước};
+    \node[farm/process] (audit) at (0,-12) {Hệ thống / quản trị: lưu vết đầy đủ lý do và quyết định xử lý};
+    \node[farm/process] (report) at (0,-13.8) {Quản trị: truy xuất báo cáo định kỳ, hỗ trợ quyết định vận hành và báo cáo các bên liên quan};
+    \node[farm/terminal] (finish) at (0,-15.5) {Kết thúc đợt giám sát};
+    \node[farm/note] at (2.7,-17.3) {\textbf{Nguyên tắc phân cấp:} các hình thức xử lý được lựa chọn theo mức độ và số lần vi phạm, không bắt buộc đi qua mọi mức. Quy trình giám sát được thực hiện định kỳ; trường hợp nghiêm trọng được xử lý ngay khi phát hiện.};
+    \foreach \source/\target in {start/review,review/monitor,monitor/violation,lock/orders,sanction/audit,audit/report,report/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (violation) -- node[farm/label,right] {Có} (severe);
+    \draw[farm/arrow] (violation.west) -- (-3.6,-5.2) |- node[farm/label,near start,left] {Không} (report.west);
+    \draw[farm/arrow] (severe) -- node[farm/label,right] {Không} (sanction);
+    \draw[farm/arrow] (severe) -- node[farm/label,above] {Có} (lock);
+    \draw[farm/arrow] (orders.south) |- (audit.east);
+\end{tikzpicture}
+\caption{Flowchart quản trị hệ thống, xử lý vi phạm và báo cáo.}
+\label{fig:flow-quan-tri}
+\end{figure}
+\clearpage

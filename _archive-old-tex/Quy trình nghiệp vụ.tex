@@ -1,0 +1,92 @@
+\section{Quy trình nghiệp vụ}
+
+Mỗi quy trình dưới đây được trình bày theo các bước tuần tự, có ghi rõ tác nhân thực hiện (actor), dữ liệu vào/ra, điều kiện chuyển bước và các trường hợp ngoại lệ. Bộ quy trình này là cơ sở trực tiếp để xây dựng các sơ đồ BPMN/flowchart và đặc tả use-case ở các chương thiết kế tiếp theo của đồ án.
+
+\subsection{Đăng ký và xác thực nhà bán, kiểm duyệt chứng nhận}
+
+\begin{enumerate}
+    \item Nhà bán (nông dân hoặc hợp tác xã) đăng ký tài khoản, nhập thông tin định danh (căn cước công dân hoặc mã số thuế đối với hợp tác xã) và thông tin trang trại, vùng canh tác.
+    \item Hệ thống gửi mã xác thực (OTP) qua số điện thoại hoặc email; nếu nhập sai quá 5 lần, tài khoản bị khóa tạm thời trong 30 phút.
+    \item Nhà bán tải lên giấy chứng nhận VietGAP, GlobalGAP hoặc hữu cơ (nếu có), kèm mã số chứng nhận, cơ quan cấp và ngày hết hạn.
+    \item Bộ phận kiểm duyệt đối chiếu thông tin chứng nhận với dữ liệu của cơ quan cấp (nếu có kết nối) hoặc xác minh thủ công.
+    \item Hệ thống ghi nhận kết quả: nếu đạt, tài khoản chuyển trạng thái “Đã xác thực” và được gắn nhãn chứng nhận tương ứng hiển thị công khai; nếu không đạt, hệ thống gửi thông báo lý do và hướng dẫn bổ sung.
+\end{enumerate}
+
+Ngoại lệ: khi chứng nhận còn hiệu lực dưới 30 ngày, hệ thống tự động nhắc nhà bán gia hạn; nếu hết hạn mà chưa gia hạn, nhãn chứng nhận trên sản phẩm liên quan sẽ tự động bị ẩn cho đến khi được cập nhật, sản phẩm không bị gỡ bỏ. Trường hợp phát hiện chứng nhận giả mạo qua xác minh hoặc khiếu nại, tài khoản bị khóa vĩnh viễn, được ghi vào danh sách vi phạm và không được phép đăng ký lại bằng cùng thông tin định danh.
+
+\input{flowcharts/01-dang-ky}
+
+\subsection{Đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất}
+
+\begin{enumerate}
+    \item Nhà bán đã xác thực tạo sản phẩm mới với đầy đủ thông tin: tên, mô tả, hình ảnh, đơn vị tính, giá bán lẻ, giá bán sỉ theo bậc (nếu có), sản lượng và ngày dự kiến thu hoạch.
+    \item Nhà bán ghi nhật ký canh tác theo từng giai đoạn (gieo trồng, chăm sóc, thu hoạch), mỗi lần ghi gồm ngày tháng, hoạt động và hình ảnh minh chứng nếu có; các bản ghi được gắn với một lô sản phẩm (batch) cụ thể.
+    \item Hệ thống kiểm duyệt tự động sơ bộ: kiểm tra hình ảnh không trùng lặp, mô tả không chứa từ khóa cấm, giá không bất thường so với mặt bằng chung của danh mục.
+    \item Bộ phận kiểm duyệt thực hiện kiểm tra thủ công lần cuối đối với sản phẩm mới hoặc nhà bán chưa có lịch sử giao dịch; nhà bán có uy tín lâu năm có thể áp dụng cơ chế hậu kiểm để rút ngắn thời gian chờ duyệt.
+    \item Hệ thống sinh mã QR truy xuất duy nhất cho từng lô sản phẩm, liên kết tới trang truy xuất công khai gồm hồ sơ nhà bán, chứng nhận, nhật ký canh tác và các mốc vận chuyển liên quan.
+\end{enumerate}
+
+Điều kiện: sản phẩm chỉ được duyệt và hiển thị công khai khi có tối thiểu một bản ghi nhật ký canh tác gần nhất và hình ảnh sản phẩm thực tế. Ngoại lệ: khi nhà bán thay đổi thông tin trọng yếu sau khi đã duyệt (giá thay đổi vượt 20\% hoặc mô tả chất lượng thay đổi), sản phẩm được chuyển về trạng thái chờ duyệt lại; các thay đổi nhỏ (còn hàng/hết hàng) không yêu cầu duyệt lại.
+
+\input{flowcharts/02-san-pham}
+
+\subsection{Quy trình mua lẻ (B2C)}
+
+\begin{enumerate}
+    \item Người tiêu dùng tìm kiếm và lọc sản phẩm theo danh mục, vùng trồng, chứng nhận hoặc mức giá.
+    \item Người tiêu dùng xem chi tiết sản phẩm, có thể tra cứu trang truy xuất nguồn gốc trước khi quyết định mua.
+    \item Người tiêu dùng thêm sản phẩm vào giỏ hàng với số lượng giới hạn theo sản lượng còn lại của lô hàng.
+    \item Người tiêu dùng thanh toán qua ví điện tử, chuyển khoản hoặc thanh toán khi nhận hàng (COD), đồng thời chọn khung giờ giao phù hợp với hàng tươi.
+    \item Hệ thống xác nhận đơn hàng, tạm trừ sản lượng khỏi lô hàng và thông báo cho nhà bán chuẩn bị hàng.
+    \item Nhà bán đóng gói theo tiêu chuẩn dành cho hàng dễ hư hỏng và bàn giao cho đơn vị vận chuyển.
+    \item Người tiêu dùng xác nhận đã nhận hàng và có thể đánh giá sản phẩm, nhà bán trong khoảng thời gian quy định sau khi nhận hàng.
+\end{enumerate}
+
+Ngoại lệ: nếu thanh toán trực tuyến thất bại, đơn hàng được giữ ở trạng thái chờ thanh toán tối đa 15 phút trước khi tự hủy và giải phóng lại sản lượng. Nếu người nhận từ chối nhận hàng COD, đơn chuyển trạng thái hoàn hàng và chi phí vận chuyển hai chiều được xử lý theo chính sách đã công bố. Khi nhiều đơn đặt cùng lúc vượt sản lượng còn lại, hệ thống ưu tiên đơn thanh toán/xác nhận trước; các đơn còn lại được tự động hủy kèm thông báo hết hàng.
+
+\input{flowcharts/03-mua-le}
+
+\subsection{Quy trình mua sỉ (B2B)}
+
+\begin{enumerate}
+    \item Doanh nghiệp thu mua gửi yêu cầu báo giá (RFQ) tới một hoặc nhiều nhà bán, nêu rõ sản phẩm, số lượng dự kiến, tiêu chuẩn chất lượng yêu cầu và lịch giao mong muốn.
+    \item Hệ thống kiểm tra số lượng yêu cầu có đạt số lượng tối thiểu (MOQ) của nhà bán hay không; nếu chưa đạt, hệ thống gợi ý gộp đơn với doanh nghiệp khác cùng khu vực hoặc chuyển hướng sang kênh mua lẻ.
+    \item Nhà bán phản hồi báo giá theo giá bậc (ví dụ: mức giá khác nhau theo từng ngưỡng số lượng), thời gian có thể đáp ứng và điều kiện thanh toán.
+    \item Hai bên thương lượng qua hệ thống nhắn tin nội bộ cho đến khi thống nhất số lượng, đơn giá và lịch giao.
+    \item Hệ thống sinh hợp đồng điện tử từ mẫu chuẩn, điền đầy đủ các điều khoản đã thống nhất, bao gồm điều khoản phạt vi phạm và điều khoản thanh toán/công nợ.
+    \item Hai bên ký xác nhận hợp đồng bằng chữ ký điện tử hoặc mã xác nhận trong hệ thống.
+    \item Nhà bán giao hàng theo từng đợt theo lịch đã ký; mỗi đợt giao, hệ thống sinh hóa đơn tương ứng và cập nhật vào sổ công nợ của doanh nghiệp thu mua.
+    \item Doanh nghiệp thu mua xác nhận nhận hàng và chất lượng từng đợt, sau đó thanh toán theo kỳ hạn công nợ đã thỏa thuận.
+\end{enumerate}
+
+Ngoại lệ: khi nhà bán không giao đủ số lượng hoặc đúng lịch một đợt giao, điều khoản phạt trong hợp đồng được áp dụng và sự việc được ghi nhận vào lịch sử uy tín của nhà bán. Khi doanh nghiệp thu mua chậm thanh toán quá hạn công nợ, hệ thống nhắc nhở tự động và có thể tạm khóa quyền đặt yêu cầu báo giá mới cho đến khi hoàn tất thanh toán. Trường hợp một trong hai bên muốn hủy hợp đồng giữa kỳ, việc xử lý tuân theo điều khoản hủy đã ký kết từ đầu.
+
+\input{flowcharts/04-mua-si}
+
+\subsection{Vận chuyển hàng dễ hư hỏng và xử lý khiếu nại}
+
+\begin{enumerate}
+    \item Nhà bán đóng gói theo hướng dẫn bảo quản riêng cho từng nhóm nông sản (nhiệt độ, độ ẩm, vật liệu chống dập) do hệ thống gợi ý theo danh mục sản phẩm.
+    \item Hệ thống ưu tiên lựa chọn phương thức vận chuyển có hỗ trợ bảo quản lạnh hoặc thời gian giao nhanh đối với các danh mục được đánh dấu dễ hư hỏng; đơn hàng có thời gian giao vượt ngưỡng an toàn sẽ được cảnh báo trước khi khách xác nhận đặt hàng.
+    \item Đơn vị vận chuyển cập nhật trạng thái đơn hàng theo thời gian thực trong suốt quá trình giao nhận.
+    \item Người nhận kiểm tra hàng ngay khi nhận; nếu phát hiện hư hỏng, gửi khiếu nại trong khung thời gian quy định kèm hình ảnh hoặc video minh chứng.
+    \item Hệ thống phân loại khiếu nại theo nguyên nhân khả năng (đóng gói/chất lượng từ nhà bán, lỗi vận chuyển, hoặc bảo quản sai từ phía người nhận).
+    \item Bộ phận phụ trách ra quyết định xử lý: hoàn tiền toàn phần, hoàn tiền một phần, đổi lô hàng mới, hoặc từ chối khiếu nại nếu bằng chứng không đầy đủ.
+\end{enumerate}
+
+Ngoại lệ: khiếu nại lặp lại nhiều lần từ cùng một nhà bán trong thời gian ngắn sẽ tự động được gắn cờ cảnh báo và tạm hạ mức ưu tiên hiển thị sản phẩm cho đến khi được rà soát; khiếu nại có dấu hiệu bất thường từ phía người mua sẽ được chuyển cho bộ phận quản trị xem xét thủ công trước khi hoàn tiền.
+
+\input{flowcharts/05-van-chuyen}
+
+\subsection{Quản trị hệ thống}
+
+\begin{enumerate}
+    \item Quản trị viên thực hiện kiểm duyệt định kỳ hồ sơ nhà bán mới, sản phẩm mới hoặc có thay đổi trọng yếu, và các chứng nhận sắp hết hạn.
+    \item Quản trị viên giám sát các cảnh báo tự động từ hệ thống, bao gồm tỷ lệ khiếu nại bất thường và các dấu hiệu giao dịch có nguy cơ gian lận.
+    \item Vi phạm được xử lý theo quy trình phân cấp từ nhắc nhở, cảnh cáo công khai, tạm khóa cho đến khóa vĩnh viễn tài khoản, tùy theo mức độ và số lần vi phạm, có lưu vết đầy đủ lý do và quyết định.
+    \item Quản trị viên truy xuất báo cáo thống kê định kỳ để hỗ trợ ra quyết định vận hành và báo cáo cho các bên liên quan.
+\end{enumerate}
+
+Ngoại lệ: khi phát hiện vi phạm nghiêm trọng như giả mạo chứng nhận hoặc gian lận, tài khoản bị khóa ngay lập tức mà không qua các bước nhắc nhở trung gian, đồng thời toàn bộ đơn hàng đang xử lý của tài khoản đó được rà soát để bảo vệ quyền lợi của khách hàng đã đặt trước.
+
+\input{flowcharts/06-quan-tri}

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 48px; width:1500px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  h1{font-size:28px; margin:0 0 6px; font-weight:800;}
+  .sub{color:var(--sub); font-size:14.5px; margin:0 0 26px;}
+  .grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;}
+  .tile{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:20px 18px; box-shadow:0 2px 10px rgba(20,40,30,.05);
+    border-top:5px solid var(--bar);
+  }
+  .icon{font-size:26px; margin-bottom:8px;}
+  .num{font-size:30px; font-weight:900; line-height:1.05; color:var(--bar);}
+  .label{font-size:13px; color:#2c3a33; margin-top:6px; line-height:1.4; min-height:52px;}
+  .src{font-size:10px; color:#9aa6a0; margin-top:10px;}
+  footer{margin-top:20px; font-size:11px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <h1>Thực trạng chuỗi cung ứng nông sản Việt Nam</h1>
+  <p class="sub">Tổng hợp số liệu dùng trong mục 1.1 — nguồn: IPSARD/Tạp chí Công Thương, VILAS, TheLeader, Tuổi Trẻ</p>
+
+  <div class="grid">
+    <div class="tile" style="--bar:#c23b3b">
+      <div class="icon">🔗</div>
+      <div class="num">4–5</div>
+      <div class="label">khâu trung gian trước khi nông sản đến tay người tiêu dùng cuối</div>
+      <div class="src">IPSARD / Tạp chí Công Thương, 2023–2024</div>
+    </div>
+    <div class="tile" style="--bar:#c23b3b">
+      <div class="icon">📈</div>
+      <div class="num">+30–40%</div>
+      <div class="label">giá thành bị đội lên qua các khâu trung gian so với giá tại trang trại</div>
+      <div class="src">IPSARD / Tạp chí Công Thương, 2023–2024</div>
+    </div>
+    <div class="tile" style="--bar:#c98a1a">
+      <div class="icon">🏪</div>
+      <div class="num">80%</div>
+      <div class="label">sản lượng nông sản tiêu thụ qua chợ truyền thống tại Hà Nội/TP.HCM (bán lẻ hiện đại chỉ 15–20%)</div>
+      <div class="src">IPSARD / Tạp chí Công Thương, 2023–2024</div>
+    </div>
+    <div class="tile" style="--bar:#c98a1a">
+      <div class="icon">🤝</div>
+      <div class="num">21,6%</div>
+      <div class="label">nông sản được sản xuất theo hình thức liên kết chuỗi nông dân/HTX–doanh nghiệp (2024)</div>
+      <div class="src">Bộ NN&amp;PTNT, 2024</div>
+    </div>
+    <div class="tile" style="--bar:#7b3fe4">
+      <div class="icon">🌍</div>
+      <div class="num">85–90%</div>
+      <div class="label">lượng nông sản xuất khẩu phải đi qua trung gian bằng thương hiệu nước ngoài</div>
+      <div class="src">VILAS, 2023</div>
+    </div>
+    <div class="tile" style="--bar:#7b3fe4">
+      <div class="icon">💰</div>
+      <div class="num">~25%</div>
+      <div class="label">giá trị nông dân/doanh nghiệp Việt thực nhận trên giá bán đến tay người tiêu dùng cuối</div>
+      <div class="src">VILAS, 2023</div>
+    </div>
+    <div class="tile" style="--bar:#128a3e">
+      <div class="icon">🍎</div>
+      <div class="num">20–40%</div>
+      <div class="label">tỷ lệ tổn thất sau thu hoạch ngành rau quả, gây thiệt hại 3,5–4,1 tỷ USD/năm</div>
+      <div class="src">Tuổi Trẻ, đầu 2026</div>
+    </div>
+    <div class="tile" style="--bar:#128a3e">
+      <div class="icon">❄️</div>
+      <div class="num">117</div>
+      <div class="label">kho lạnh chuyên nghiệp cả nước — 90% trong số đó chỉ phục vụ thủy sản/thịt, gần như không có kho cho rau quả tươi</div>
+      <div class="src">Tuổi Trẻ, đầu 2026</div>
+    </div>
+  </div>
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Hình 1.1</footer>
+</body>
+</html>

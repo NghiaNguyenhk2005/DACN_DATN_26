@@ -1,0 +1,18 @@
+# Node / tooling
+node_modules/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Phase plans (tạm thời, không commit theo quy ước)
+PHASE*-PLAN.md
