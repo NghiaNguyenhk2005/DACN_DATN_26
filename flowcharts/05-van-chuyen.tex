@@ -1,0 +1,35 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Đơn hàng dự kiến};
+    \node[farm/process] (method) at (0,-1.35) {Hệ thống: ưu tiên giao nhanh / bảo quản lạnh theo danh mục dễ hư hỏng};
+    \node[farm/decision] (unsafe) at (0,-3.2) {Thời gian giao vượt ngưỡng an toàn?};
+    \node[farm/side] (warn) at (6,-3.2) {Hệ thống: cảnh báo trước khi khách xác nhận đặt hàng};
+    \node[farm/process] (confirm) at (0,-5.2) {Khách xác nhận đặt hàng;\\nhà bán đóng gói theo nhiệt độ, độ ẩm và vật liệu phù hợp};
+    \node[farm/process] (transport) at (0,-6.9) {Đơn vị vận chuyển: giao hàng, cập nhật trạng thái theo thời gian thực};
+    \node[farm/decision] (damage) at (0,-8.8) {Người nhận kiểm tra: hàng hư hỏng?};
+    \node[farm/terminal] (received) at (6,-8.8) {Nhận hàng, hoàn tất};
+    \node[farm/process] (claim) at (0,-10.8) {Người nhận: khiếu nại trong thời hạn, kèm ảnh / video minh chứng};
+    \node[farm/decision] (suspicious) at (0,-12.7) {Người mua có\\dấu hiệu bất thường?};
+    \node[farm/side] (manual) at (6,-12.7) {Quản trị: xem xét thủ công trước khi quyết định hoàn tiền};
+    \node[farm/process] (classify) at (0,-14.7) {Hệ thống: phân loại nguyên nhân từ nhà bán, vận chuyển hoặc bảo quản của người nhận};
+    \node[farm/process] (resolve) at (0,-16.6) {Bộ phận phụ trách: hoàn tiền toàn phần / một phần, đổi lô mới hoặc từ chối nếu thiếu bằng chứng};
+    \node[farm/terminal] (finish) at (0,-18.3) {Thông báo kết quả xử lý};
+    \node[farm/exception] (repeated) at (6,-16.5) {Khiếu nại lặp lại từ cùng nhà bán trong thời gian ngắn:\\gắn cờ và tạm hạ ưu tiên hiển thị đến khi rà soát};
+    \foreach \source/\target in {start/method,method/unsafe,confirm/transport,transport/damage,claim/suspicious,classify/resolve,resolve/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (unsafe) -- node[farm/label,right] {Không} (confirm);
+    \draw[farm/arrow] (unsafe) -- node[farm/label,above] {Có} (warn);
+    \draw[farm/arrow] (warn.south) |- (confirm.east);
+    \draw[farm/arrow] (damage) -- node[farm/label,right] {Có} (claim);
+    \draw[farm/arrow] (damage) -- node[farm/label,above] {Không} (received);
+    \draw[farm/arrow] (suspicious) -- node[farm/label,right] {Không} (classify);
+    \draw[farm/arrow] (suspicious) -- node[farm/label,above] {Có} (manual);
+    \draw[farm/arrow] (manual.south) |- (classify.east);
+    \draw[farm/arrow,dashed] (resolve) -- (repeated);
+\end{tikzpicture}
+\caption{Flowchart vận chuyển hàng dễ hư hỏng và xử lý khiếu nại.}
+\label{fig:flow-van-chuyen}
+\end{figure}
+\clearpage

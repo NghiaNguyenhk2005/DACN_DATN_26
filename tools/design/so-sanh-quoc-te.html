@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --good:#1f8a4c; --bad:#c23b3b;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 48px; width:1500px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  h1{font-size:30px; margin:0 0 6px; font-weight:800;}
+  .sub{color:var(--sub); font-size:15px; margin:0 0 28px;}
+  .grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:22px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:22px 24px 20px 28px; box-shadow:0 2px 10px rgba(20,40,30,.05);
+    position:relative; overflow:hidden;
+  }
+  .card::before{content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--bar);}
+  .flag{font-size:26px; float:right;}
+  .tag{
+    display:inline-block; font-size:11px; font-weight:700; color:var(--bar);
+    background:color-mix(in srgb, var(--bar) 12%, white);
+    padding:4px 10px; border-radius:999px; margin-bottom:10px;
+    letter-spacing:.3px; text-transform:uppercase;
+  }
+  .name{font-size:21px; font-weight:800; margin:0 0 2px;}
+  .model{font-size:13px; color:var(--sub); margin:0 0 14px;}
+  .sec-title{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; margin:14px 0 6px;}
+  .sec-title.good{color:var(--good);}
+  .sec-title.bad{color:var(--bad);}
+  ul{margin:0; padding:0; list-style:none;}
+  li{font-size:13.5px; line-height:1.45; margin-bottom:6px; padding-left:20px; position:relative; color:#2c3a33;}
+  li.good::before{content:"✓"; position:absolute; left:0; color:var(--good); font-weight:900;}
+  li.bad::before{content:"✕"; position:absolute; left:0; color:var(--bad); font-weight:900;}
+  .src{font-size:10.5px; color:#9aa6a0; margin-top:10px;}
+  .highlight{
+    background:#fff6e5; border:1px dashed #e8b64b; border-radius:10px;
+    padding:8px 12px; font-size:12.5px; margin-top:10px; color:#7a5a12;
+  }
+  footer{margin-top:22px; font-size:11px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <h1>So sánh các mô hình quốc tế tham khảo</h1>
+  <p class="sub">Các nền tảng/mô hình nông nghiệp số đã triển khai hoặc công bố nghiên cứu ở nước ngoài</p>
+
+  <div class="grid">
+
+    <div class="card" style="--bar:#ff9933">
+      <span class="tag">Ấn Độ · 2000</span>
+      <div class="name">e-Choupal <span class="flag">🇮🇳</span></div>
+      <div class="model">ITC — kiosk internet tại làng (click-and-mortar)</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Tăng thu nhập nông dân tới 50%</li>
+        <li class="good">Quy mô đã kiểm chứng: ~4 triệu nông dân, 22 tỉnh</li>
+        <li class="good">ITC tiết kiệm 6–10% chi phí thu mua</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Chủ yếu phục vụ chuỗi cung ứng nội bộ của ITC</li>
+        <li class="bad">Không phải marketplace mở đa người mua</li>
+      </ul>
+      <div class="src">Nguồn: Business Standard, 2020</div>
+    </div>
+
+    <div class="card" style="--bar:#e02020">
+      <span class="tag">Trung Quốc · 2020</span>
+      <div class="name">Pinduoduo <span class="flag">🇨🇳</span></div>
+      <div class="model">Duo Duo Grocery — group buying nông sản</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Quy mô rất lớn: 12 triệu+ nông dân kết nối trực tiếp</li>
+        <li class="good">GMV nông nghiệp &gt;270 tỷ NDT (2020)</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Thuần B2C, không có kênh B2B/MOQ</li>
+        <li class="bad">Không nhấn mạnh truy xuất nguồn gốc</li>
+      </ul>
+      <div class="src">Nguồn: Nasdaq / PR Newswire, 2021</div>
+    </div>
+
+    <div class="card" style="--bar:#128a3e">
+      <span class="tag">Ấn Độ</span>
+      <div class="name">Ninjacart <span class="flag">🇮🇳</span></div>
+      <div class="model">B2B rau củ tươi — AI dự báo nhu cầu</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">17.000+ điểm bán lẻ, giao trong 12 giờ</li>
+        <li class="good">Thanh toán nông dân trong 24 giờ</li>
+        <li class="good">ML thực chiến: dự báo nhu cầu, tối ưu tuyến vận chuyển</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Thuần B2B, không phục vụ người tiêu dùng cá nhân</li>
+        <li class="bad">Chi phí kho lạnh/logistics cao</li>
+      </ul>
+      <div class="src">Nguồn: Focus Agritech, 2024</div>
+    </div>
+
+    <div class="card" style="--bar:#5b3fd6">
+      <span class="tag">Nghiên cứu học thuật · 2025</span>
+      <div class="name">Farm2Market</div>
+      <div class="model">Blockchain (escrow) + AI dự báo giá + QR truy xuất</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Gần nhất về ý tưởng với Farmery</li>
+        <li class="good">AI dự báo giá đạt ~82% độ chính xác</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Mới dừng ở nghiên cứu, chưa có dữ liệu vận hành thương mại</li>
+        <li class="bad">Chưa tích hợp song song B2B/B2C</li>
+      </ul>
+      <div class="highlight">⭐ Đối chứng học thuật gần nhất — dùng để định vị research gap của Farmery</div>
+      <div class="src">Nguồn: Research Square (preprint), 2025</div>
+    </div>
+
+  </div>
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Bảng 2.2</footer>
+</body>
+</html>

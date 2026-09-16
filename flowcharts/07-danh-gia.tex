@@ -1,0 +1,42 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\resizebox{!}{\dimexpr\textheight-2cm\relax}{%
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Đơn hàng bán lẻ hoàn tất (verified purchase)};
+    \node[farm/decision] (window) at (0,-2) {Trong thời hạn\\đánh giá quy định?};
+    \node[farm/exception] (locked) at (6,-2) {Hệ thống: khóa chức năng đánh giá cho đơn này};
+    \node[farm/process] (submit) at (0,-4.2) {Người mua: gửi đánh giá (sao 1--5, bình luận, ảnh minh chứng)};
+    \node[farm/process] (autocheck) at (0,-6) {Hệ thống: kiểm duyệt tự động sơ bộ + mô-đun AI phát hiện bất thường};
+    \node[farm/decision] (suspect) at (0,-8.2) {Nghi ngờ\\giả/spam?};
+    \node[farm/process] (manual) at (6,-8.2) {Quản trị viên: xem xét thủ công};
+    \node[farm/decision] (approved) at (6,-10.4) {Được duyệt?};
+    \node[farm/exception] (reject) at (9.5,-10.4) {Ẩn đánh giá, thông báo lý do cho người mua};
+    \node[farm/process] (publish) at (0,-10.4) {Hệ thống: công khai đánh giá};
+    \node[farm/process] (score) at (0,-12.2) {Hệ thống: cập nhật điểm uy tín tổng hợp của nhà bán};
+    \node[farm/process] (reply) at (0,-14) {Nhà bán: có thể phản hồi công khai (một lần) dưới đánh giá};
+    \node[farm/decision] (threshold) at (0,-16.2) {Điểm uy tín\\đủ ngưỡng?};
+    \node[farm/side] (perks) at (6,-16.2) {Nhà bán: đủ điều kiện hậu kiểm nhanh và hiển thị ưu tiên};
+    \node[farm/terminal] (finish) at (0,-18.4) {Kết thúc};
+    \node[farm/note] at (2.7,-20.2) {\textbf{Điểm uy tín:} trung bình có trọng số theo thời gian và số lượng đơn, không tính đánh giá bị ẩn.\\[2pt]\textbf{Liên hệ:} mô-đun AI phát hiện bất thường tại mục~\ref{sec:thietkeAI}; điều kiện hậu kiểm nhanh tại mục~\ref{sec:quytrinhnghiepvu} (Đăng và kiểm duyệt sản phẩm).};
+    \foreach \source/\target in {start/window,submit/autocheck,autocheck/suspect,score/reply,reply/threshold}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (window) -- node[farm/label,right] {Có} (submit);
+    \draw[farm/arrow] (window) -- node[farm/label,above] {Không} (locked);
+    \draw[farm/arrow] (locked.south) |- (finish.east);
+    \draw[farm/arrow] (suspect) -- node[farm/label,right] {Không} (publish);
+    \draw[farm/arrow] (suspect) -- node[farm/label,above] {Có} (manual);
+    \draw[farm/arrow] (manual) -- (approved);
+    \draw[farm/arrow] (approved) -- node[farm/label,above] {Không} (reject);
+    \draw[farm/arrow] (approved.west) -- node[farm/label,near start,above] {Có} (publish.east);
+    \draw[farm/arrow] (reject.south) |- (finish.east);
+    \draw[farm/arrow] (publish) -- (score);
+    \draw[farm/arrow] (threshold) -- node[farm/label,right] {Có} (perks);
+    \draw[farm/arrow] (threshold) -- node[farm/label,above] {Không} (finish);
+    \draw[farm/arrow] (perks.south) |- (finish.east);
+\end{tikzpicture}%
+}
+\caption{Flowchart đánh giá sản phẩm và nhà bán: kiểm duyệt, cập nhật điểm uy tín và tác động tới quyền lợi nhà bán.}
+\label{fig:flow-danh-gia}
+\end{figure}
+\clearpage

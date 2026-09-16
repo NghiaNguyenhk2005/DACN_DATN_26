@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --good:#1f8a4c; --bad:#c23b3b; --accent:#2f7d4f;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 48px; width:1500px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  h1{
+    font-size:30px; margin:0 0 6px; font-weight:800; letter-spacing:.2px;
+  }
+  .sub{color:var(--sub); font-size:15px; margin:0 0 28px;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:22px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    box-shadow:0 2px 10px rgba(20,40,30,.05);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:6px;
+    background:var(--bar);
+  }
+  .card{padding-left:26px;}
+  .tag{
+    display:inline-block; font-size:11px; font-weight:700;
+    color:var(--bar); background:color-mix(in srgb, var(--bar) 12%, white);
+    padding:4px 10px; border-radius:999px; margin-bottom:10px;
+    letter-spacing:.3px; text-transform:uppercase;
+  }
+  .name{font-size:20px; font-weight:800; margin:0 0 2px;}
+  .model{font-size:13px; color:var(--sub); margin:0 0 14px;}
+  .sec-title{
+    font-size:12px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.4px; margin:14px 0 6px;
+  }
+  .sec-title.good{color:var(--good);}
+  .sec-title.bad{color:var(--bad);}
+  ul{margin:0; padding:0; list-style:none;}
+  li{
+    font-size:13.5px; line-height:1.45; margin-bottom:6px;
+    padding-left:20px; position:relative; color:#2c3a33;
+  }
+  li.good::before{content:"✓"; position:absolute; left:0; color:var(--good); font-weight:900;}
+  li.bad::before{content:"✕"; position:absolute; left:0; color:var(--bad); font-weight:900;}
+  .src{font-size:10.5px; color:#9aa6a0; margin-top:10px;}
+  .wide{grid-column: span 3;}
+  footer{margin-top:22px; font-size:11px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <h1>So sánh các sàn thương mại điện tử trong nước liên quan đến nông sản</h1>
+  <p class="sub">Nhóm sàn tổng hợp đa ngành hàng và nhóm sàn chuyên biệt nông sản — đối chiếu với định hướng Farmery</p>
+
+  <div class="grid">
+
+    <div class="card" style="--bar:#ee4d2d">
+      <span class="tag">Sàn tổng hợp · B2C</span>
+      <div class="name">Shopee</div>
+      <div class="model">Marketplace đa ngành hàng</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Thị phần dẫn đầu — 56% GMV nhóm 4 sàn lớn (2025)</li>
+        <li class="good">Hạ tầng logistics &amp; thanh toán trưởng thành</li>
+        <li class="good">Lượng người dùng rất lớn</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Không chuyên biệt cho nông sản</li>
+        <li class="bad">Không xác minh chứng nhận canh tác</li>
+        <li class="bad">Không có truy xuất nguồn gốc gắn nhật ký canh tác</li>
+        <li class="bad">Không hỗ trợ đàm phán giá sỉ B2B theo MOQ</li>
+      </ul>
+      <div class="src">Nguồn: VnEconomy / Metric.vn, 2025</div>
+    </div>
+
+    <div class="card" style="--bar:#0a3d91">
+      <span class="tag">Sàn tổng hợp · B2C</span>
+      <div class="name">Lazada</div>
+      <div class="model">Marketplace đa ngành hàng</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Hệ sinh thái logistics khu vực Đông Nam Á (LEL)</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Thị phần đang thu hẹp — còn 3% (2025), giảm từ 6%</li>
+        <li class="bad">Cùng hạn chế chuyên biệt hoá nông sản như Shopee</li>
+      </ul>
+      <div class="src">Nguồn: VnEconomy / Metric.vn, 2025</div>
+    </div>
+
+    <div class="card" style="--bar:#2f7d4f">
+      <span class="tag">Chuyên nông sản · B2C+B2B</span>
+      <div class="name">FoodMap</div>
+      <div class="model">Sàn TMĐT nông sản tư nhân</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Có QR truy xuất nguồn gốc</li>
+        <li class="good">Mạng lưới 300+ nông trại/nhà sản xuất</li>
+        <li class="good">Đã gọi vốn, có kinh nghiệm vận hành thực tế</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Quy mô nhỏ hơn nhiều so với sàn tổng hợp</li>
+        <li class="bad">Chưa rõ cơ chế giá bậc B2B theo MOQ</li>
+        <li class="bad">Chưa có AI hỗ trợ ra quyết định</li>
+      </ul>
+      <div class="src">Nguồn: Forbes Việt Nam, 2021</div>
+    </div>
+
+    <div class="card" style="--bar:#f6a821">
+      <span class="tag">Chuyên nông sản · B2B/xuất khẩu</span>
+      <div class="name">Buudien.vn <span style="font-weight:400;font-size:13px;color:var(--sub);">(trước là Postmart)</span></div>
+      <div class="model">VNPost — hậu duệ Postmart.vn</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Kế thừa mạng lưới bưu chính toàn quốc</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Thế hệ trước thiên tiêu thụ thời vụ hơn chiến lược dài hạn</li>
+        <li class="bad">Thế hệ mới thu hẹp phạm vi, giảm phục vụ khách mua lẻ</li>
+      </ul>
+      <div class="src">Nguồn: Báo Nhân Dân, 2024</div>
+    </div>
+
+    <div class="card" style="--bar:#7b3fe4">
+      <span class="tag">Chuyên nông sản · B2B xuất khẩu</span>
+      <div class="name">VIPO Mall</div>
+      <div class="model">Viettel Post — bán sỉ xuyên biên giới</div>
+      <div class="sec-title good">Ưu điểm</div>
+      <ul>
+        <li class="good">Hậu thuẫn hạ tầng Viettel Post</li>
+        <li class="good">Tập trung xuất khẩu nông–lâm–thủy sản</li>
+      </ul>
+      <div class="sec-title bad">Hạn chế</div>
+      <ul>
+        <li class="bad">Chỉ phục vụ B2B/xuất khẩu</li>
+        <li class="bad">Không có kênh bán lẻ cá nhân trên cùng nền tảng</li>
+      </ul>
+      <div class="src">Nguồn: Báo Đầu Tư, 2024</div>
+    </div>
+
+    <div class="card" style="--bar:#111827">
+      <span class="tag">Định vị</span>
+      <div class="name">Farmery</div>
+      <div class="model">B2B2C · marketplace nhiều người bán</div>
+      <div class="sec-title good">Khác biệt</div>
+      <ul>
+        <li class="good">Song song bán lẻ (B2C) + bán sỉ theo MOQ (B2B)</li>
+        <li class="good">Truy xuất nguồn gốc gắn nhật ký canh tác (QR)</li>
+        <li class="good">Kiểm duyệt chứng nhận VietGAP/GlobalGAP 2 cấp</li>
+        <li class="good">AI hỗ trợ ra quyết định (gợi ý, dự báo, phát hiện gian lận, chatbot)</li>
+      </ul>
+    </div>
+
+  </div>
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Bảng 2.1</footer>
+</body>
+</html>

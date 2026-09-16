@@ -1,0 +1,40 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\resizebox{!}{\dimexpr\textheight-2cm\relax}{%
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Bắt đầu bán lẻ};
+    \node[farm/process] (ready) at (0,-1.4) {Nhà bán: sản phẩm đã duyệt (mục~\ref{sec:quytrinhnghiepvu}), hiển thị công khai với giá bán lẻ và sản lượng còn lại theo thời gian thực};
+    \node[farm/process] (browse) at (0,-2.9) {Người mua: tìm kiếm, lọc, xem chi tiết và truy xuất nguồn gốc};
+    \node[farm/process] (cart) at (0,-4.4) {Người mua: thêm vào giỏ theo sản lượng còn lại; chọn khung giờ giao và phương thức thanh toán};
+    \node[farm/decision] (payment) at (0,-6.6) {Thanh toán thành công\\hoặc chọn COD?};
+    \node[farm/side] (wait) at (6,-6.6) {Thanh toán trực tuyến thất bại:\\giữ đơn chờ tối đa 15 phút, cho phép thanh toán lại};
+    \node[farm/decision] (retry) at (6,-8.9) {Thành công\\trong 15 phút?};
+    \node[farm/decision] (stock) at (0,-8.9) {Còn đủ\\sản lượng?};
+    \node[farm/exception] (cancel) at (6,-11.1) {Hệ thống: hủy đơn, thông báo lý do; giải phóng sản lượng đã giữ nếu có};
+    \node[farm/process] (confirm) at (0,-11.1) {Hệ thống: xác nhận đơn, tạm trừ sản lượng khỏi tồn của nhà bán và báo nhà bán chuẩn bị hàng};
+    \node[farm/process] (ship) at (0,-12.7) {Nhà bán: đóng gói hàng dễ hư hỏng, bàn giao vận chuyển};
+    \node[farm/decision] (refused) at (0,-14.6) {Người nhận\\từ chối COD?};
+    \node[farm/exception] (return) at (6,-14.6) {Hoàn hàng; xử lý phí vận chuyển hai chiều theo chính sách};
+    \node[farm/process] (receive) at (0,-16.6) {Người mua: xác nhận nhận hàng, đánh giá sản phẩm và nhà bán trong thời hạn quy định};
+    \node[farm/process] (sellerdone) at (0,-18.1) {Nhà bán: đơn hoàn tất — hệ thống cập nhật doanh thu và lịch sử bán hàng lẻ của nhà bán};
+    \node[farm/terminal] (finish) at (0,-19.7) {Kết thúc};
+    \node[farm/note] at (2.7,-21.5) {\textbf{Đặt đồng thời:} ưu tiên đơn thanh toán/xác nhận trước khi phân bổ sản lượng; đơn còn lại bị hủy và thông báo hết hàng.\\[2pt]\textbf{Hàng hư hỏng:} xử lý theo flowchart vận chuyển và khiếu nại tại Hình~\ref{fig:flow-van-chuyen}.};
+    \foreach \source/\target in {start/ready,ready/browse,browse/cart,cart/payment,wait/retry,confirm/ship,ship/refused,receive/sellerdone,sellerdone/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (payment) -- node[farm/label,right] {Có} (stock);
+    \draw[farm/arrow] (payment) -- node[farm/label,above] {Không} (wait);
+    \draw[farm/arrow] (retry) -- node[farm/label,above] {Có} (stock);
+    \draw[farm/arrow] (retry) -- node[farm/label,right] {Không} (cancel);
+    \draw[farm/arrow] (stock) -- node[farm/label,right] {Có} (confirm);
+    \draw[farm/arrow] (stock.south east) |- (3.2,-10.2) |- node[farm/label,near end,above] {Không} (cancel.west);
+    \draw[farm/arrow] (refused) -- node[farm/label,right] {Không} (receive);
+    \draw[farm/arrow] (refused) -- node[farm/label,above] {Có} (return);
+    \draw[farm/arrow] (return.south) |- (finish.east);
+    \draw[farm/arrow] (cancel.east) -- (8.5,-11.1) -- (8.5,-19.7) -- (finish.east);
+\end{tikzpicture}%
+}
+\caption{Flowchart bán lẻ (B2C): từ sản phẩm đã duyệt của nhà bán đến thanh toán và xử lý đơn hàng.}
+\label{fig:flow-ban-le}
+\end{figure}
+\clearpage
