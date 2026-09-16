@@ -1,40 +1,33 @@
-\clearpage
-\begin{figure}[p]
+\begin{figure}[H]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu bán lẻ};
-    \node[farm/process] (ready) at (0,-1.4) {Nhà bán: sản phẩm đã duyệt (mục~\ref{sec:quytrinhnghiepvu}), hiển thị công khai với giá bán lẻ và sản lượng còn lại theo thời gian thực};
-    \node[farm/process] (browse) at (0,-2.9) {Người mua: tìm kiếm, lọc, xem chi tiết và truy xuất nguồn gốc};
-    \node[farm/process] (cart) at (0,-4.4) {Người mua: thêm vào giỏ theo sản lượng còn lại; chọn khung giờ giao và phương thức thanh toán};
-    \node[farm/decision] (payment) at (0,-6.6) {Thanh toán thành công\\hoặc chọn COD?};
-    \node[farm/processnarrow] (wait) at (6,-6.6) {Thanh toán trực tuyến thất bại:\\giữ đơn chờ tối đa 15 phút, cho phép thanh toán lại};
-    \node[farm/decision] (retry) at (6,-8.9) {Thành công\\trong 15 phút?};
-    \node[farm/decision] (stock) at (0,-8.9) {Còn đủ\\sản lượng?};
-    \node[farm/exception] (cancel) at (6,-11.1) {Hệ thống: hủy đơn, thông báo lý do; giải phóng sản lượng đã giữ nếu có};
-    \node[farm/process] (confirm) at (0,-11.1) {Hệ thống: xác nhận đơn, tạm trừ sản lượng khỏi tồn của nhà bán và báo nhà bán chuẩn bị hàng};
-    \node[farm/process] (ship) at (0,-12.7) {Nhà bán: đóng gói hàng dễ hư hỏng, bàn giao vận chuyển};
-    \node[farm/decision] (refused) at (0,-14.6) {Người nhận\\từ chối COD?};
-    \node[farm/exception] (return) at (6,-14.6) {Hoàn hàng; xử lý phí vận chuyển hai chiều theo chính sách};
-    \node[farm/process] (receive) at (0,-16.95) {Người mua: xác nhận nhận hàng, đánh giá sản phẩm và nhà bán trong thời hạn quy định};
-    \node[farm/process] (sellerdone) at (0,-18.45) {Nhà bán: đơn hoàn tất — hệ thống cập nhật doanh thu và lịch sử bán hàng lẻ của nhà bán};
-    \node[farm/terminal] (finish) at (0,-20.05) {Kết thúc};
-    \node[farm/note] at (2.7,-21.85) {\textbf{Đặt đồng thời:} ưu tiên đơn thanh toán/xác nhận trước khi phân bổ sản lượng; đơn còn lại bị hủy và thông báo hết hàng.\\[2pt]\textbf{Hàng hư hỏng:} xử lý theo flowchart vận chuyển và khiếu nại tại Hình~\ref{fig:flow-van-chuyen}.};
-    \foreach \source/\target in {start/ready,ready/browse,browse/cart,cart/payment,wait/retry,confirm/ship,ship/refused,receive/sellerdone,sellerdone/finish}
+    \node[farm/process] (ready) at (0,-1.7) {Nhà bán: sản phẩm đã duyệt (mục~\ref{sec:quytrinhnghiepvu}), hiển thị công khai với giá bán lẻ và sản lượng còn lại theo thời gian thực};
+    \node[farm/process] (browse) at (0,-3.75) {Người mua: tìm kiếm, lọc, xem chi tiết và truy xuất nguồn gốc};
+    \node[farm/process] (cart) at (0,-5.7) {Người mua: thêm vào giỏ theo sản lượng còn lại; chọn khung giờ giao và phương thức thanh toán};
+    \node[farm/decision] (payment) at (0,-8) {Thanh toán thành công\\hoặc chọn COD?};
+    \node[farm/processnarrow] (wait) at (7,-8) {Thanh toán trực tuyến thất bại: giữ đơn chờ tối đa 15 phút, cho phép thanh toán lại};
+    \node[farm/decision] (retry) at (7,-11.4) {Thành công\\trong 15 phút?};
+    \node[farm/decision] (stock) at (0,-11) {Còn đủ\\sản lượng?};
+    \node[farm/exception] (cancel) at (7,-13.5) {Hệ thống: hủy đơn, thông báo lý do; giải phóng sản lượng đã giữ nếu có};
+    \node[farm/process] (confirm) at (0,-13.5) {Hệ thống: xác nhận đơn, tạm trừ sản lượng khỏi tồn của nhà bán và báo nhà bán chuẩn bị hàng};
+    \node[farm/terminal] (cancelled) at (7,-15.5) {Đơn bị hủy};
+    \node[farm/connector] (connA) at (0,-15.5) {A};
+    \node[farm/processnarrow] (connAnote) at (2.9,-15.5) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-le-b} (giao nhận hàng)};
+    \node[farm/note] at (2.7,-17.3) {\textbf{Đặt đồng thời:} ưu tiên đơn thanh toán/xác nhận trước khi phân bổ sản lượng; đơn còn lại bị hủy và thông báo hết hàng.};
+    \foreach \source/\target in {start/ready,ready/browse,browse/cart,cart/payment,wait/retry,confirm/connA,cancel/cancelled}
         \draw[farm/arrow] (\source) -- (\target);
-    \draw[farm/arrow] (payment) -- node[farm/label,right,pos=0.22] {Có} (stock);
+    \draw[farm/arrow,dashed] (connA) -- (connAnote);
+    \draw[farm/arrow] (payment) -- node[farm/label,left,pos=0.2] {Có} (stock);
     \draw[farm/arrow] (payment) -- node[farm/label,above] {Không} (wait);
-    \draw[farm/arrow] (retry.north) -- (6,-7.92) -- node[farm/label,above,pos=0.35] {Có} (0,-7.92) -- (stock.north);
+    % Thanh toán lại thành công: nhập vào luồng chính ngay trên ô "Còn đủ sản lượng?".
+    \draw[farm/arrow] (retry.west) -- node[farm/label,above] {Có} (3.7,-11.4) -- (3.7,-9.6) -- (0,-9.6);
     \draw[farm/arrow] (retry) -- node[farm/label,right] {Không} (cancel);
     \draw[farm/arrow] (stock) -- node[farm/label,right] {Có} (confirm);
-    \draw[farm/arrow] (stock.east) -- node[farm/label,above] {Không} (3.2,-8.9) -- (3.2,-11.1) -- (cancel.west);
-    \draw[farm/arrow] (refused) -- node[farm/label,right] {Không} (receive);
-    \draw[farm/arrow] (refused) -- node[farm/label,above] {Có} (return);
-    \draw[farm/arrow] (return.south) |- (finish.east);
-    \draw[farm/arrow] (cancel.east) -- (8.5,-11.1) -- (8.5,-20.05) -- (finish.east);
+    \draw[farm/arrow] (stock.east) -- node[farm/label,above] {Không} (3,-11) -- (3,-13.5) -- (cancel.west);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Flowchart bán lẻ (B2C): từ sản phẩm đã duyệt của nhà bán đến thanh toán và xử lý đơn hàng.}
-\label{fig:flow-ban-le}
+\caption[Lưu đồ quy trình bán lẻ B2C (phần 1)]{Lưu đồ quy trình bán lẻ B2C (phần 1): đặt hàng, thanh toán và xác nhận đơn}
+\label{fig:flow-ban-le-a}
 \end{figure}
-\clearpage

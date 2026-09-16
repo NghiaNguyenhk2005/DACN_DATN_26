@@ -1,22 +1,22 @@
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[farm/chart,
-    desc/.style={anchor=west, text width=8.3cm, align=left, font=\small}]
+    desc/.style={anchor=west, text width=9cm, align=left, font=\farmfont}]
     \node[farm/terminal] (t) at (0,0) {Điểm bắt đầu / kết thúc};
-    \node[desc] at (2.3,0) {Trạng thái mở đầu hoặc kết thúc của quy trình.};
-    \node[farm/process] (p) at (0,-1.5) {Bước xử lý};
-    \node[desc] at (2.8,-1.5) {Một thao tác do tác nhân hoặc hệ thống thực hiện.};
-    \node[farm/decision] (d) at (0,-3.2) {Điểm\\quyết định};
-    \node[desc] at (2.8,-3.2) {Rẽ nhánh theo điều kiện; nhãn trên mũi tên là kết quả (Có/Không).};
-    \node[farm/exception] (e) at (0,-5) {Ngoại lệ};
-    \node[desc] at (2.8,-5) {Tình huống bất thường và cách hệ thống xử lý.};
-    \node[farm/connector] (c) at (0,-6.8) {A};
-    \node[desc] at (2.8,-6.8) {\textbf{Điểm nối:} hai vòng tròn cùng ký hiệu (A với A, B với B) là hai đầu của cùng một đường nối --- luồng đi ra ở vòng tròn này sẽ đi tiếp tại vòng tròn cùng ký hiệu; dùng khi đường nối quá dài hoặc phải chuyển sang hình khác.};
-    \draw[farm/arrow] (-1,-8.9) -- (0.9,-8.9);
-    \node[desc] at (2.8,-8.9) {Mũi tên liền: luồng đi chính của quy trình.};
-    \draw[farm/arrow,dashed] (-1,-9.9) -- (0.9,-9.9);
-    \node[desc] at (2.8,-9.9) {Mũi tên nét đứt: liên hệ tham chiếu, không phải bước kế tiếp.};
+    \node[desc] at (2.8,0) {Trạng thái mở đầu hoặc kết thúc của quy trình.};
+    \node[farm/process] (p) at (0,-1.1) {Bước xử lý};
+    \node[desc] at (2.8,-1.1) {Một thao tác do tác nhân hoặc hệ thống thực hiện.};
+    \node[farm/decision] (d) at (0,-2.5) {Điểm\\quyết định};
+    \node[desc] at (2.8,-2.5) {Rẽ nhánh theo điều kiện; nhãn trên mũi tên là kết quả (Có/Không).};
+    \node[farm/exception] (e) at (0,-3.9) {Ngoại lệ};
+    \node[desc] at (2.8,-3.9) {Tình huống bất thường và cách hệ thống xử lý.};
+    \node[farm/connector] (c) at (0,-5.1) {A};
+    \node[desc] at (2.8,-5.1) {\textbf{Điểm nối:} hai vòng tròn cùng ký hiệu (A với A, B với B) là hai đầu của cùng một đường nối --- luồng đi ra ở vòng tròn này sẽ đi tiếp tại vòng tròn cùng ký hiệu; dùng khi đường nối quá dài hoặc phải chuyển sang hình khác.};
+    \draw[farm/arrow] (-1,-6.4) -- (0.9,-6.4);
+    \node[desc] at (2.8,-6.4) {Mũi tên liền: luồng đi chính của quy trình.};
+    \draw[farm/arrow,dashed] (-1,-7.1) -- (0.9,-7.1);
+    \node[desc] at (2.8,-7.1) {Mũi tên nét đứt: liên hệ tham chiếu, không phải bước kế tiếp.};
 \end{tikzpicture}
-\caption{Chú giải ký hiệu dùng trong các flowchart quy trình nghiệp vụ}
+\caption{Chú giải ký hiệu dùng trong các lưu đồ quy trình nghiệp vụ}
 \label{fig:chu-thich-flowchart}
 \end{figure}

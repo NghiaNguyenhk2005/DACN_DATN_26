@@ -1,7 +1,6 @@
-\clearpage
-\begin{figure}[p]
+\begin{figure}[H]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Nhà bán đã xác thực};
     \node[farm/process] (create) at (0,-1.5) {Nhà bán: tạo sản phẩm, khai báo giá lẻ/sỉ, sản lượng, ngày thu hoạch và nhật ký theo lô};
@@ -41,7 +40,6 @@
     \draw[farm/arrow] (reviewin) -- (automatic);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Flowchart đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất.}
+\caption{Lưu đồ quy trình đăng, kiểm duyệt sản phẩm và sinh mã QR truy xuất}
 \label{fig:flow-san-pham}
 \end{figure}
-\clearpage

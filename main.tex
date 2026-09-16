@@ -1,5 +1,5 @@
-\documentclass[a4paper, 16pt]{report}
-\usepackage{a4wide,amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
+\documentclass[a4paper, 12pt]{report}
+\usepackage{amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
 \usepackage{vntex}
 \usepackage{amsmath}
 \usepackage{lastpage}
@@ -16,14 +16,20 @@
 \usepackage{multicol}
 \usepackage{rotating}
 \usepackage{graphics}
-\usepackage{geometry}
+% Thông số trình bày tạm thời khi chưa có quy định của khoa: lề trái 3cm, phải 2cm, trên/dưới 2,5cm; giãn dòng 1,3.
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2cm,headheight=40pt,headsep=0.6cm,footskip=1.2cm,includehead]{geometry}
 \usepackage{setspace}
+\setstretch{1.3}
+\usepackage{indentfirst}
 \usepackage{epsfig}
 \usepackage{courier}
 \usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{arrows,snakes,backgrounds}
 \input{flowcharts/styles}
+\usepackage{csquotes}
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
 \usepackage{hyperref}
 \usepackage{mdframed}
 \usepackage{tcolorbox}
@@ -44,8 +50,11 @@
 \newtheorem{corollary}[proposition]{{\bf Corollary}}
 \newtheorem{lemma}[proposition]{{\bf Lemma}}
 
-\AtBeginDocument{\renewcommand*\contentsname{Mục lục}}
-\setlength{\headheight}{40pt}
+\AtBeginDocument{%
+  \renewcommand*\contentsname{Mục lục}%
+  \renewcommand*\listfigurename{Danh mục hình}%
+  \renewcommand*\listtablename{Danh mục bảng}%
+}
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[L]{
@@ -54,20 +63,17 @@
     \put(0,-8){\includegraphics[width=8mm, height=8mm]{image/hcmut.png}}
    \end{picture}
 	\begin{tabular}{l}
-		\textbf{\bf \ttfamily University of Technology, Ho Chi Minh City}\\
-		\textbf{\bf \ttfamily Faculty of Computer Science and Engineering}
+		\textbf{\small Trường Đại học Bách Khoa -- ĐHQG TP.HCM}\\
+		\textbf{\small Khoa Khoa học và Kỹ thuật Máy tính}
 	\end{tabular}
  \end{tabular}
 }
-\fancyhead[R]{
-	\begin{tabular}{l}
-		\tiny \bf \\
-		\tiny \bf
-	\end{tabular}  }
 \fancyfoot{}
-\fancyfoot[R]{\scriptsize \ttfamily Page {\thepage}/\pageref{LastPage}}
+\fancyfoot[R]{\small Trang \thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0.3pt}
+% Trang mở đầu chương dùng chung header/footer với các trang còn lại.
+\fancypagestyle{plain}{}
 
 \setcounter{secnumdepth}{3}
 % Mục lục chỉ liệt kê tới cấp section để không bị phình theo số nhóm FR/NFR;
@@ -131,7 +137,7 @@ KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH
 \begin{center}
 Giảng viên hướng dẫn: Võ Thị Ngọc Châu\\
 \vspace{0.7cm}
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
 \textbf{STT} & \textbf{Họ tên SV} & \textbf{MSSV} & \textbf{\% Hoàn thành}\\
 \hline
@@ -153,6 +159,7 @@ Thành phố Hồ Chí Minh, tháng ... năm 2026
 \input{frontmatter/biaphu}
 
 % ===================== PHIẾU NHIỆM VỤ =====================
+\pagenumbering{roman}
 \input{frontmatter/phieunhiemvu}
 
 % ===================== LỜI CẢM ƠN =====================
@@ -166,24 +173,30 @@ Thành phố Hồ Chí Minh, tháng ... năm 2026
 \setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
-\listoffigures
-\addcontentsline{toc}{chapter}{Danh mục hình vẽ}
-\newpage
-\listoftables
-\addcontentsline{toc}{chapter}{Danh mục bảng biểu}
-\newpage
 \input{frontmatter/danhmuc-tuvietat}
+\cleardoublepage\phantomsection
+\addcontentsline{toc}{chapter}{Danh mục hình}
+\listoffigures
+\cleardoublepage\phantomsection
+\addcontentsline{toc}{chapter}{Danh mục bảng}
+\listoftables
 \newpage
 
 % ===================== NỘI DUNG CHÍNH =====================
+% Phần nội dung đánh số lại từ 1; chân trang hiển thị "Trang x/tổng số trang nội dung".
+\pagenumbering{arabic}
+\fancyfoot[R]{\small Trang \thepage/\pageref{LastPage}}
 \input{chapters/chuong1-gioithieu}
-\input{chapters/chuong2-coso-lythuyet}
-\input{chapters/chuong3-phantich-thietke}
-\input{chapters/chuong4-hienthuc}
-\input{chapters/chuong5-danhgia}
-\input{chapters/chuong6-ketluan}
+\input{chapters/chuong2-kienthuc-nentang}
+\input{chapters/chuong3-congtrinh-lienquan}
+\input{chapters/chuong4-hethong-dexuat}
+\input{chapters/chuong5-phantich-thietke}
+\input{chapters/chuong6-hienthuc-kiemthu}
+\input{chapters/chuong7-danhgia}
+\input{chapters/chuong8-tongket}
 
 % ===================== PHẦN KẾT THÚC =====================
+\input{backmatter/kehoach}
 \input{backmatter/tailieuthamkhao}
 \input{backmatter/phuluc}
 

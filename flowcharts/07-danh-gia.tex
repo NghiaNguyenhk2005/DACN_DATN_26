@@ -1,7 +1,6 @@
-\clearpage
-\begin{figure}[p]
+\begin{figure}[H]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Đơn hàng bán lẻ hoàn tất (verified purchase)};
     \node[farm/decision] (window) at (0,-2) {Trong thời hạn\\đánh giá quy định?};
@@ -37,7 +36,6 @@
     \draw[farm/arrow] (9,-2) -- (9,-19.2) -- (finish.east);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Flowchart đánh giá sản phẩm và nhà bán: kiểm duyệt, cập nhật điểm uy tín và tác động tới quyền lợi nhà bán.}
+\caption[Lưu đồ quy trình đánh giá sản phẩm và nhà bán]{Lưu đồ quy trình đánh giá sản phẩm và nhà bán: kiểm duyệt, cập nhật điểm uy tín và quyền lợi nhà bán}
 \label{fig:flow-danh-gia}
 \end{figure}
-\clearpage

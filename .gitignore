@@ -16,3 +16,5 @@ node_modules/
 
 # Phase plans (tạm thời, không commit theo quy ước)
 PHASE*-PLAN.md
+*.bcf
+*.run.xml

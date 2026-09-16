@@ -1,9 +1,13 @@
 \chapter{Giới thiệu}
 \label{chap:gioithieu}
 
-\section{Đặt vấn đề và tính cấp thiết của đề tài}
+\section{Động cơ của đề tài}
+\label{sec:dongco}
 
-Chuỗi cung ứng nông sản truyền thống tại Việt Nam hiện vẫn phụ thuộc nặng vào các khâu trung gian --- nông sản thường đi qua 4--5 khâu trước khi đến tay người tiêu dùng cuối, khiến giá thành bị đội lên 30--40\% so với giá tại trang trại \cite{tapchicongthuong_ipsard_2023_2024} --- trong khi phần lớn nông dân vẫn giao dịch qua kênh tự do do thương lái định giá. Hình~\ref{fig:thuctrang} tổng hợp các số liệu chính minh họa cho thực trạng này.
+\subsection{Bối cảnh và thực trạng}
+\label{sec:thuctrang}
+
+Chuỗi cung ứng nông sản truyền thống tại Việt Nam hiện vẫn phụ thuộc nặng vào các khâu trung gian --- nông sản thường đi qua 4--5 khâu trước khi đến tay người tiêu dùng cuối, khiến giá thành bị đội lên 30--40\% so với giá tại trang trại \parencite{tapchicongthuong_ipsard_2023_2024} --- trong khi phần lớn nông dân vẫn giao dịch qua kênh tự do do thương lái định giá. Hình~\ref{fig:thuctrang} tổng hợp các số liệu chính minh họa cho thực trạng này.
 
 \begin{figure}[p]
 \centering
@@ -12,56 +16,139 @@ Chuỗi cung ứng nông sản truyền thống tại Việt Nam hiện vẫn ph
 \label{fig:thuctrang}
 \end{figure}
 
-Vai trò của thương lái trong bối cảnh này mang tính hai mặt: một mặt họ giải quyết bài toán thu gom, sơ chế và vận chuyển phân tán mà từng nông hộ nhỏ khó tự thực hiện; mặt khác, do nắm thông tin thị trường tốt hơn nông dân (bất cân xứng thông tin --- xem mục~\ref{subsec:reputation}) và thường là điểm bán duy nhất tại địa phương vào thời điểm thu hoạch, thương lái có vị thế đàm phán giá vượt trội, dẫn đến hiện tượng ép giá khi vào vụ thu hoạch rộ \cite{vilas_logistics}.
-
-Nguyên nhân sâu xa của hiện tượng ``được mùa mất giá'' gồm ba nhóm yếu tố chính:
+Vai trò của thương lái trong bối cảnh này mang tính hai mặt \parencite{vilas_logistics}:
 \begin{itemize}
-    \item Cung tăng ồ ạt và đồng loạt khi vào vụ thu hoạch do sản xuất còn theo tập quán mùa vụ, thiếu quy hoạch rải vụ.
-    \item Thiếu phương án tiêu thụ đa kênh và năng lực chế biến sâu/bảo quản để hấp thụ sản lượng dư thừa.
-    \item Tỷ lệ hao hụt, hư hỏng sau thu hoạch rất cao --- theo ông Nguyễn Thanh Bình, Chủ tịch Hiệp hội Rau quả Việt Nam (Vinafruit), được TheLeader (2024) dẫn lại, tỷ lệ này với một số loại trái cây có thể lên tới 35--40\%, buộc nông dân phải bán tháo với giá thấp trước khi hàng hỏng hoàn toàn \cite{theleader_2024}. Con số 35--40\% nói trên là mức ghi nhận ở một số loại trái cây cụ thể; xét trên phạm vi toàn ngành rau quả, tỷ lệ tổn thất sau thu hoạch được ghi nhận trong khoảng 20--40\%, tương ứng thiệt hại 3,5--4,1 tỷ USD mỗi năm (Hình~\ref{fig:thuctrang}) \cite{tuoitre_2026}.
+    \item \textbf{Mặt tích cực:} giải quyết bài toán thu gom, sơ chế và vận chuyển phân tán mà từng nông hộ nhỏ khó tự thực hiện.
+    \item \textbf{Mặt tiêu cực:} do nắm thông tin thị trường tốt hơn nông dân (bất cân xứng thông tin --- mục~\ref{subsec:reputation}) và thường là điểm bán duy nhất tại địa phương vào thời điểm thu hoạch, thương lái có vị thế đàm phán giá vượt trội, dẫn đến hiện tượng ép giá khi vào vụ thu hoạch rộ.
 \end{itemize}
 
-Đây chính là ba ``điểm đau'' mà một sàn TMĐT như Farmery có thể can thiệp trực tiếp:
-\begin{itemize}
-    \item Kết nối cung--cầu theo thời gian thực và mở rộng thị trường tiêu thụ ra ngoài phạm vi địa lý của thương lái địa phương.
-    \item Cho phép đặt hàng B2B theo lịch/hợp đồng để nông dân chủ động sản xuất.
-    \item Tối ưu logistics lạnh và rút ngắn thời gian từ thu hoạch đến giao hàng.
-\end{itemize}
+\subsection{Vấn đề cần giải quyết}
+\label{sec:vande}
 
-Số liệu cập nhật đầu năm 2026 (báo Tuổi Trẻ, xem Hình~\ref{fig:thuctrang}) cho thấy vấn đề tổn thất sau thu hoạch và thiếu kho lạnh chuyên dụng cho rau quả tươi vẫn chưa được cải thiện đáng kể so với năm 2024, buộc nông dân ``bán ngay, bán vội'' ngay khi thu hoạch và càng suy yếu vị thế đàm phán giá trước thương lái \cite{tuoitre_2026}. Điều này cho thấy đầu tư vào logistics lạnh là điều kiện gần như bắt buộc để một sàn TMĐT như Farmery giải quyết triệt để hiện tượng ``được mùa mất giá'', chứ không chỉ dừng ở việc kết nối cung--cầu.
+Từ thực trạng trên, đồ án xác định bốn vấn đề chính dẫn tới hiện tượng ``được mùa mất giá'' và sự thiếu tin cậy trên thị trường nông sản:
 
-\section{Mục tiêu đồ án}
+\begin{enumerate}
+    \item[\textbf{V1.}] \textbf{Cung dồn theo mùa vụ:} sản lượng tăng ồ ạt và đồng loạt khi vào vụ thu hoạch do sản xuất còn theo tập quán mùa vụ, thiếu thông tin nhu cầu để quy hoạch rải vụ.
+    \item[\textbf{V2.}] \textbf{Thiếu kênh tiêu thụ:} nông dân thiếu phương án tiêu thụ đa kênh và năng lực chế biến sâu/bảo quản để hấp thụ sản lượng dư thừa, nên vẫn phụ thuộc vào thương lái địa phương.
+    \item[\textbf{V3.}] \textbf{Hao hụt sau thu hoạch và thiếu kho lạnh:}
+    \begin{itemize}
+        \item Theo ông Nguyễn Thanh Bình, Chủ tịch Hiệp hội Rau quả Việt Nam (Vinafruit), được TheLeader (2024) dẫn lại, tỷ lệ hao hụt với một số loại trái cây có thể lên tới 35--40\% \parencite{theleader_2024}.
+        \item Xét trên toàn ngành rau quả, tỷ lệ tổn thất sau thu hoạch ở mức 20--40\%, tương ứng thiệt hại 3,5--4,1 tỷ USD mỗi năm; số liệu đầu năm 2026 cho thấy tình trạng thiếu kho lạnh chuyên dụng cho rau quả tươi chưa được cải thiện đáng kể so với năm 2024 \parencite{tuoitre_2026}.
+        \item Hệ quả: nông dân buộc phải ``bán ngay, bán vội'' khi thu hoạch, càng suy yếu vị thế đàm phán giá trước thương lái.
+    \end{itemize}
+    \item[\textbf{V4.}] \textbf{Thiếu minh bạch nguồn gốc và niềm tin:} người mua thiếu công cụ kiểm chứng chất lượng trước khi giao dịch, nên khó phân biệt nông sản ``sạch'' thật với sản phẩm chỉ gắn mác marketing. Theo lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}), khi đó người bán hàng chất lượng cao không chứng minh được giá trị thực để nhận mức giá tương xứng, làm suy giảm động lực sản xuất theo tiêu chuẩn.
+\end{enumerate}
+
+Bảng~\ref{tab:vande-muctieu} ánh xạ từng vấn đề tới hướng giải quyết của Farmery và mục tiêu cụ thể tương ứng tại mục~\ref{sec:muctieu}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{3.3cm} L{7.2cm} L{2.4cm}}
+\caption{Ánh xạ giữa vấn đề, hướng giải quyết và mục tiêu của đồ án}
+\label{tab:vande-muctieu} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Vấn đề} & \textbf{Hướng giải quyết của Farmery} & \textbf{Mục tiêu} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Vấn đề} & \textbf{Hướng giải quyết của Farmery} & \textbf{Mục tiêu} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{V1.} Cung dồn theo mùa vụ &
+Đặt hàng B2B theo hợp đồng/lịch giao để nông dân chủ động sản xuất; mô-đun AI dự báo nhu cầu và giá theo mùa vụ, vùng trồng. &
+MT3, MT5 \\
+\rowcolor{tblaltbg}
+\textbf{V2.} Thiếu kênh tiêu thụ &
+Sàn nhiều người bán phục vụ song song bán lẻ (B2C) và bán sỉ (B2B), mở rộng thị trường ra ngoài phạm vi thương lái địa phương. &
+MT3 \\
+\textbf{V3.} Hao hụt, thiếu kho lạnh &
+Quy trình vận chuyển riêng cho hàng dễ hư hỏng (ưu tiên giao nhanh/bảo quản lạnh qua đối tác 3PL), quản lý tồn kho theo lô với nguyên tắc FEFO. &
+MT4 \\
+\rowcolor{tblaltbg}
+\textbf{V4.} Thiếu minh bạch, niềm tin &
+Xác thực nhà bán và kiểm duyệt chứng nhận; mã QR truy xuất gắn nhật ký canh tác theo lô; hệ thống đánh giá -- điểm uy tín; giám sát vi phạm có hỗ trợ AI phát hiện bất thường. &
+MT1, MT2, MT5, MT6 \\
+\end{longtable}
+\endgroup
+
+\section{Mục tiêu}
 \label{sec:muctieu}
 
 % TODO (nhóm rà soát lại cho khớp phạm vi thật đã/sẽ hiện thực ở Ch.4):
-Đồ án hướng tới xây dựng Farmery --- một nền tảng thương mại điện tử nông sản theo mô hình marketplace nhiều người bán (multi-vendor), phục vụ đồng thời kênh bán lẻ (B2C) và bán sỉ theo hợp đồng (B2B) --- với các công việc cụ thể sau:
+\noindent\textbf{Mục tiêu tổng quát:} xây dựng Farmery --- một nền tảng thương mại điện tử nông sản theo mô hình B2B2C dạng marketplace nhiều người bán, phục vụ đồng thời kênh bán lẻ (B2C) và bán sỉ theo hợp đồng (B2B), góp phần giải quyết bốn vấn đề đã nêu tại mục~\ref{sec:vande}.
+\\
+
+\noindent\textbf{Các phần việc cụ thể cần thực hiện:}
 \begin{enumerate}
-    \item Xây dựng quy trình đăng ký, xác thực và kiểm duyệt chứng nhận (VietGAP/GlobalGAP) cho nhà bán, làm cơ sở minh bạch hóa thông tin nguồn gốc sản phẩm.
-    \item Hiện thực cơ chế truy xuất nguồn gốc bằng mã QR gắn với nhật ký canh tác theo từng lô sản phẩm.
-    \item Hiện thực song song hai luồng giao dịch từ phía nhà bán: bán lẻ (B2C) cho người tiêu dùng cá nhân và bán sỉ theo báo giá/hợp đồng (B2B) cho doanh nghiệp thu mua, có hỗ trợ giá bậc theo số lượng tối thiểu (MOQ).
-    \item Thiết kế quy trình vận chuyển và xử lý khiếu nại phù hợp đặc thù hàng nông sản dễ hư hỏng.
-    \item Tích hợp các tính năng AI hỗ trợ ra quyết định: gợi ý sản phẩm, dự báo nhu cầu/giá nông sản, phát hiện gian lận/bất thường, và trợ lý ảo tư vấn cho người dùng.
-    \item Xây dựng công cụ quản trị (kiểm duyệt, giám sát vi phạm, báo cáo thống kê) hỗ trợ vận hành sàn.
+    \item[\textbf{MT1.}] Xây dựng quy trình đăng ký, xác thực và kiểm duyệt chứng nhận (VietGAP/GlobalGAP) cho nhà bán, làm cơ sở minh bạch hóa thông tin nguồn gốc sản phẩm.
+    \item[\textbf{MT2.}] Hiện thực cơ chế truy xuất nguồn gốc bằng mã QR gắn với nhật ký canh tác theo từng lô sản phẩm.
+    \item[\textbf{MT3.}] Hiện thực song song hai luồng giao dịch từ phía nhà bán: bán lẻ (B2C) cho người tiêu dùng cá nhân và bán sỉ theo báo giá/hợp đồng (B2B) cho doanh nghiệp thu mua, có hỗ trợ giá bậc theo số lượng tối thiểu (MOQ).
+    \item[\textbf{MT4.}] Thiết kế quy trình vận chuyển và xử lý khiếu nại phù hợp đặc thù hàng nông sản dễ hư hỏng.
+    \item[\textbf{MT5.}] Tích hợp các tính năng AI hỗ trợ ra quyết định: gợi ý sản phẩm, dự báo nhu cầu/giá nông sản, phát hiện gian lận/bất thường, và trợ lý ảo tư vấn cho người dùng.
+    \item[\textbf{MT6.}] Xây dựng công cụ quản trị (kiểm duyệt, giám sát vi phạm, báo cáo thống kê) hỗ trợ vận hành sàn.
 \end{enumerate}
 
-\section{Ý nghĩa khoa học và ý nghĩa thực tiễn}
-
-\subsection*{Ý nghĩa khoa học}
-% TODO: nhóm bổ sung/điều chỉnh cho sát với đóng góp thực tế của đồ án.
-Đồ án góp phần hệ thống hóa và vận dụng có chọn lọc các lý thuyết liên quan đến thương mại điện tử đa vai trò (mô hình B2B2C, marketplace nhiều người bán), chuỗi cung ứng thực phẩm ngắn (SFSC) và disintermediation, truy xuất nguồn gốc theo chuẩn GS1, cùng lý thuyết bất cân xứng thông tin (information asymmetry) trong thiết kế hệ thống đánh giá/uy tín, vào một bài toán ứng dụng cụ thể là nông sản Việt Nam. Việc đối chiếu với các nền tảng quốc tế đã công bố kết quả nghiên cứu (như Farm2Market) và các nền tảng thương mại đã triển khai thực tế (Ninjacart, e-Choupal, Pinduoduo) giúp làm rõ khoảng trống nghiên cứu (research gap) mà đồ án hướng tới lấp đầy: tích hợp đồng thời hai luồng bán lẻ/bán sỉ, truy xuất nguồn gốc gắn nhật ký canh tác, và các mô-đun AI hỗ trợ ra quyết định trên cùng một nền tảng (xem mục~\ref{subsec:researchgap}).
-
-\subsection*{Ý nghĩa thực tiễn}
-% TODO: nhóm bổ sung/điều chỉnh cho sát với đóng góp thực tế của đồ án.
-Về mặt thực tiễn, hệ thống hướng tới hỗ trợ trực tiếp bốn nhóm người dùng đã được phân tích tại mục~\ref{sec:doituongnguoidung}: giúp nông dân/HTX tiếp cận thị trường rộng hơn và giảm phụ thuộc vào thương lái; giúp người tiêu dùng cá nhân mua được nông sản có nguồn gốc rõ ràng; giúp doanh nghiệp thu mua có kênh đặt hàng sỉ theo hợp đồng với nguồn cung minh bạch; và cung cấp công cụ quản trị hiệu quả cho đội ngũ vận hành sàn. Đồng thời, kết quả đồ án có thể là cơ sở để mở rộng thành sản phẩm hoàn chỉnh hơn ở học kỳ Khóa luận tốt nghiệp tiếp theo.
-
-\section{Phạm vi và giới hạn đề tài}
+\section{Phạm vi}
 \label{sec:phamvi}
 
 % TODO: nhóm rà soát lại phạm vi cho khớp với những gì thực sự hiện thực ở Ch.4, tránh cam kết vượt quá phạm vi đã làm.
-Đồ án tập trung vào bốn nhóm người dùng: nông dân/hợp tác xã, người tiêu dùng cá nhân, doanh nghiệp thu mua (nhà hàng, siêu thị, nhà phân phối) và quản trị viên hệ thống (chi tiết phân tích tại mục~\ref{sec:doituongnguoidung}). Phạm vi nghiệp vụ bao gồm bảy quy trình chính: đăng ký/xác thực nhà bán, đăng và kiểm duyệt sản phẩm, bán lẻ, đánh giá sản phẩm/nhà bán, bán sỉ, quản lý tồn kho/vận chuyển/khiếu nại, và quản trị hệ thống (chi tiết tại mục~\ref{sec:quytrinhnghiepvu}), cùng luồng tiếp cận/tham gia hệ thống cho từng nhóm người dùng (mục~\ref{sec:luongtiepcan}) và mô hình kinh doanh của nền tảng (mục~\ref{sec:businessmodelcanvas}).
+\noindent\textbf{Đối tượng người dùng} (theo mô hình B2B2C, chi tiết tại mục~\ref{sec:doituongnguoidung}):
+\begin{itemize}
+    \item Nhà bán (nông dân/hợp tác xã) --- nguồn cung đầu chuỗi.
+    \item Nhóm B --- doanh nghiệp thu mua (nhà hàng, siêu thị, nhà phân phối), kênh bán sỉ.
+    \item Nhóm C --- người tiêu dùng cá nhân, kênh bán lẻ.
+    \item Quản trị viên vận hành nền tảng, gồm 5 vai trò chuyên biệt (kiểm duyệt, giám sát vi phạm, xử lý khiếu nại, vận hành -- báo cáo, giám sát tồn kho -- vận chuyển).
+\end{itemize}
 
-Đồ án giới hạn ở việc xây dựng phiên bản khả thi tối thiểu (MVP) của nền tảng, không bao gồm: tích hợp trực tiếp với hệ thống xác minh chứng nhận VietGAP/GlobalGAP của cơ quan cấp chứng nhận (giai đoạn đầu xác minh thủ công); ứng dụng blockchain cho truy xuất nguồn gốc (lý do được phân tích tại mục~\ref{subsec:gs1blockchain}); vận hành kho bãi vật lý trung chuyển --- Farmery chỉ điều phối và tích hợp API với các đơn vị vận chuyển thứ ba (3PL), nhà bán tự quản lý kho của mình (mục~\ref{subsec:khobai}); và các nghiệp vụ xuất khẩu xuyên biên giới.
+\noindent\textbf{Nghiệp vụ trong phạm vi:}
+\begin{itemize}
+    \item Bảy quy trình chính (mục~\ref{sec:quytrinhnghiepvu}): đăng ký/xác thực nhà bán; đăng và kiểm duyệt sản phẩm; bán lẻ; đánh giá sản phẩm/nhà bán; bán sỉ; quản lý tồn kho/vận chuyển/khiếu nại; quản trị hệ thống.
+    \item Luồng tiếp cận và tham gia hệ thống cho từng nhóm người dùng (mục~\ref{sec:luongtiepcan}).
+    \item Mô hình kinh doanh của nền tảng (mục~\ref{sec:businessmodelcanvas}).
+\end{itemize}
+
+\noindent\textbf{Ngoài phạm vi} (đồ án giới hạn ở phiên bản khả thi tối thiểu --- MVP):
+\begin{itemize}
+    \item Tích hợp trực tiếp với hệ thống xác minh chứng nhận VietGAP/GlobalGAP của cơ quan cấp chứng nhận --- giai đoạn đầu xác minh thủ công.
+    \item Ứng dụng blockchain cho truy xuất nguồn gốc --- lý do phân tích tại mục~\ref{subsec:gs1blockchain}.
+    \item Vận hành kho bãi vật lý trung chuyển --- Farmery chỉ điều phối và tích hợp API với đơn vị vận chuyển thứ ba (3PL), nhà bán tự quản lý kho (mục~\ref{subsec:khobai}).
+    \item Các nghiệp vụ xuất khẩu xuyên biên giới.
+\end{itemize}
+
+\section{Ý nghĩa}
+\label{sec:ynghia}
+
+\subsection{Ý nghĩa thực tiễn}
+% TODO: nhóm bổ sung/điều chỉnh cho sát với đóng góp thực tế của đồ án.
+Hệ thống hướng tới hỗ trợ trực tiếp các nhóm người dùng đã phân tích tại mục~\ref{sec:doituongnguoidung}:
+\begin{itemize}
+    \item \textbf{Nhà bán (nông dân/HTX):} tiếp cận thị trường rộng hơn, giảm phụ thuộc vào thương lái.
+    \item \textbf{Nhóm B (doanh nghiệp thu mua):} có kênh đặt hàng sỉ theo hợp đồng với nguồn cung minh bạch.
+    \item \textbf{Nhóm C (người tiêu dùng):} mua được nông sản có nguồn gốc rõ ràng.
+    \item \textbf{Quản trị viên:} có công cụ kiểm duyệt, giám sát và báo cáo để vận hành sàn hiệu quả.
+\end{itemize}
+Kết quả đồ án có thể là cơ sở để mở rộng thành sản phẩm hoàn chỉnh hơn ở học kỳ Khóa luận tốt nghiệp tiếp theo.
+
+\subsection{Ý nghĩa khoa học}
+% TODO: nhóm bổ sung/điều chỉnh cho sát với đóng góp thực tế của đồ án.
+Đồ án góp phần hệ thống hóa và vận dụng có chọn lọc các lý thuyết liên quan đến thương mại điện tử đa vai trò (mô hình B2B2C, marketplace nhiều người bán), chuỗi cung ứng thực phẩm ngắn (SFSC) và disintermediation, truy xuất nguồn gốc theo chuẩn GS1, cùng lý thuyết bất cân xứng thông tin (information asymmetry) trong thiết kế hệ thống đánh giá/uy tín, vào một bài toán ứng dụng cụ thể là nông sản Việt Nam. Việc đối chiếu với các nền tảng quốc tế đã công bố kết quả nghiên cứu (như Farm2Market) và các nền tảng thương mại đã triển khai thực tế (Ninjacart, e-Choupal, Pinduoduo) giúp làm rõ khoảng trống nghiên cứu (research gap) mà đồ án hướng tới lấp đầy: tích hợp đồng thời hai luồng bán lẻ/bán sỉ, truy xuất nguồn gốc gắn nhật ký canh tác, và các mô-đun AI hỗ trợ ra quyết định trên cùng một nền tảng (xem mục~\ref{subsec:researchgap}).
 
 \section{Cấu trúc báo cáo}
 
-Phần còn lại của báo cáo được tổ chức như sau. Chương~\ref{chap:coso} trình bày tổng quan các nghiên cứu, nền tảng thương mại điện tử nông sản liên quan và cơ sở lý thuyết được vận dụng trong đồ án. Chương~\ref{chap:phantich} phân tích yêu cầu và trình bày thiết kế hệ thống, bao gồm quy trình nghiệp vụ, kiến trúc, cơ sở dữ liệu và các sơ đồ thiết kế chi tiết. Chương~\ref{chap:hienthuc} mô tả quá trình hiện thực các mô-đun chính của hệ thống. Chương~\ref{chap:danhgia} trình bày kịch bản kiểm thử và kết quả đánh giá hệ thống. Chương~\ref{chap:ketluan} tổng kết các kết quả đạt được, hạn chế còn tồn tại và hướng phát triển tiếp theo.
+Phần còn lại của báo cáo được tổ chức như sau:
+\begin{itemize}
+    \item \textbf{Chương~\ref{chap:coso}} --- kiến thức và công nghệ nền tảng: bối cảnh chính sách, tiêu chuẩn nông sản, các lý thuyết và bài toán AI được vận dụng.
+    \item \textbf{Chương~\ref{chap:lienquan}} --- các nghiên cứu và hệ thống liên quan, phân tích khoảng trống để định vị đồ án.
+    \item \textbf{Chương~\ref{chap:hethong}} --- hệ thống đề xuất: ngữ cảnh nghiệp vụ, mô tả hệ thống, vấn đề nghiên cứu, thách thức và các yêu cầu.
+    \item \textbf{Chương~\ref{chap:phantich}} --- phân tích và thiết kế: mô hình hóa quy trình, giải pháp công nghệ, kiến trúc, cơ sở dữ liệu, mô hình AI, API, UI/UX và test case.
+    \item \textbf{Chương~\ref{chap:hienthuc}} --- hiện thực và kiểm thử hệ thống.
+    \item \textbf{Chương~\ref{chap:danhgia}} --- đánh giá hệ thống ở phía front-end, back-end và mô-đun AI.
+    \item \textbf{Chương~\ref{chap:ketluan}} --- tổng kết kết quả đạt được và hướng phát triển.
+\end{itemize}
+Cuối báo cáo là kế hoạch thực hiện Đồ án tốt nghiệp trong 15 tuần, tài liệu tham khảo và các phụ lục.

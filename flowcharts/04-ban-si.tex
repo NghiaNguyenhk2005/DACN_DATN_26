@@ -1,7 +1,6 @@
-\clearpage
-\begin{figure}[p]
+\begin{figure}[H]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu bán sỉ};
     \node[farm/process] (pricelist) at (0,-1.6) {Nhà bán: công bố bảng giá bán sỉ theo bậc số lượng, MOQ và lịch giao dự kiến cho từng lô hàng};
@@ -12,9 +11,9 @@
     \node[farm/process] (quote) at (0,-8.1) {Nhà bán: xác nhận/điều chỉnh báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
     \node[farm/process] (negotiate) at (0,-10) {Hai bên: thương lượng qua hệ thống nhắn tin nội bộ};
     \node[farm/decision] (agreed) at (0,-12) {Thống nhất\\điều khoản?};
-    \node[farm/process] (contract) at (0,-14.2) {Hệ thống: sinh hợp đồng điện tử gồm điều khoản phạt vi phạm và công nợ; hai bên ký điện tử hoặc mã xác nhận};
-    \node[farm/connector] (connA) at (0,-16.2) {A};
-    \node[farm/processnarrow] (connAnote) at (3.9,-16.2) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-b} (ký quỹ, giao hàng và công nợ)};
+    \node[farm/process] (contract) at (0,-14.7) {Hệ thống: sinh hợp đồng điện tử gồm điều khoản phạt vi phạm và công nợ; hai bên ký điện tử hoặc mã xác nhận};
+    \node[farm/connector] (connA) at (0,-16.7) {A};
+    \node[farm/processnarrow] (connAnote) at (3.9,-16.7) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-b} (ký quỹ, giao hàng và công nợ)};
     \draw[farm/arrow,dashed] (connA) -- (connAnote);
     \foreach \source/\target in {start/pricelist,pricelist/rfq,rfq/moq,quote/negotiate,negotiate/agreed,contract/connA}
         \draw[farm/arrow] (\source) -- (\target);
@@ -26,7 +25,6 @@
     \draw[farm/arrow] (agreed.west) -- (-3.5,-12) |- node[farm/label,near start,left] {Chưa} (quote.west);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Flowchart bán sỉ (B2B) --- phần 1: công bố bảng giá, RFQ, đàm phán và ký hợp đồng.}
+\caption[Lưu đồ quy trình bán sỉ B2B (phần 1)]{Lưu đồ quy trình bán sỉ B2B (phần 1): công bố bảng giá, RFQ, đàm phán và ký hợp đồng}
 \label{fig:flow-ban-si-a}
 \end{figure}
-\clearpage
