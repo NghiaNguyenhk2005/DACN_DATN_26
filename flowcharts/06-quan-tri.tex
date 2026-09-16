@@ -1,6 +1,7 @@
 \clearpage
 \begin{figure}[p]
 \centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu đợt giám sát};
     \node[farm/process] (review) at (0,-1.5) {Quản trị: kiểm duyệt hồ sơ mới, sản phẩm mới / thay đổi trọng yếu và chứng nhận sắp hết hạn};
@@ -22,6 +23,7 @@
     \draw[farm/arrow] (severe) -- node[farm/label,above] {Có} (lock);
     \draw[farm/arrow] (orders.south) |- (audit.east);
 \end{tikzpicture}
+\end{adjustbox}
 \caption{Flowchart quản trị hệ thống, xử lý vi phạm và báo cáo.}
 \label{fig:flow-quan-tri}
 \end{figure}

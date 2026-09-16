@@ -29,6 +29,12 @@
 \usepackage{tcolorbox}
 \usepackage{relsize}
 \usepackage{longtable}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\definecolor{tblheadbg}{gray}{0.82}
+\definecolor{tblaltbg}{gray}{0.95}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \hypersetup{urlcolor=blue,linkcolor=black,citecolor=black,colorlinks=true}
 
 \newtheorem{definition}{{\bf Định nghĩa}}
@@ -63,8 +69,10 @@
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0.3pt}
 
-\setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+% Mục lục chỉ liệt kê tới cấp section để không bị phình theo số nhóm FR/NFR;
+% ép lại ở AtBeginDocument vì có gói nạp sau đặt lại giá trị này.
+\AtBeginDocument{\setcounter{tocdepth}{1}}
 \makeatletter
 \newcounter{subsubsubsection}[subsubsection]
 \renewcommand\thesubsubsubsection{\thesubsubsection.\@alph\c@subsubsubsection}
@@ -155,6 +163,7 @@ Thành phố Hồ Chí Minh, tháng ... năm 2026
 
 % ===================== MỤC LỤC, DANH MỤC =====================
 \newpage
+\setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
 \listoffigures

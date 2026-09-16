@@ -26,6 +26,11 @@ const pages = [
     const outPath = path.join(outDir, file.replace('.html', '.png'));
     await page.goto('file://' + srcPath.replace(/\\/g, '/'));
     await page.waitForTimeout(150);
+    // Khớp viewport với bề rộng thật của body để ảnh không dư nền hai bên,
+    // nhờ đó chữ không bị thu nhỏ thêm khi ảnh được ép về \textwidth trong LaTeX.
+    const contentWidth = await page.evaluate(() => Math.ceil(document.body.getBoundingClientRect().width));
+    await page.setViewportSize({ width: contentWidth, height: 800 });
+    await page.waitForTimeout(100);
     await page.screenshot({ path: outPath, fullPage: true });
     console.log('Rendered', outPath);
   }

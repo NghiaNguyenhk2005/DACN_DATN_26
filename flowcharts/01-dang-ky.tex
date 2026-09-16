@@ -1,6 +1,7 @@
 \clearpage
 \begin{figure}[p]
 \centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu};
     \node[farm/process] (register) at (0,-1.25) {Nhà bán: đăng ký, khai báo định danh và thông tin trang trại};
@@ -8,27 +9,29 @@
     \node[farm/decision] (valid) at (0,-4.5) {OTP hợp lệ?};
     \node[farm/decision] (attempts) at (6,-4.5) {Sai quá 5 lần?};
     \node[farm/exception] (lock) at (6,-6.4) {Hệ thống: khóa tạm thời\\30 phút};
-    \node[farm/process] (evidence) at (0,-6.2) {Nhà bán: tải chứng nhận (nếu có), mã số, cơ quan cấp và hạn dùng};
-    \node[farm/process] (review) at (0,-8.1) {Kiểm duyệt: xác minh hồ sơ, đối chiếu chứng nhận với cơ quan cấp hoặc kiểm tra thủ công};
-    \node[farm/decision] (approved) at (0,-10.2) {Hồ sơ đạt\\yêu cầu?};
-    \node[farm/side] (supplement) at (6,-10.2) {Hệ thống: thông báo lý do;\\nhà bán bổ sung hồ sơ};
-    \node[farm/process] (verified) at (0,-12.2) {Hệ thống: trạng thái ``Đã xác thực''; gắn nhãn chứng nhận tương ứng nếu có};
-    \node[farm/process] (monitor) at (0,-14) {Hệ thống: theo dõi hiệu lực chứng nhận trong quá trình hoạt động};
-    \node[farm/side] (expiry) at (6,-14) {Còn dưới 30 ngày: nhắc gia hạn.\\Hết hạn: ẩn nhãn đến khi cập nhật; không gỡ sản phẩm.};
-    \node[farm/terminal] (finish) at (0,-15.7) {Hoàn tất đăng ký};
-    \node[farm/note] at (2.7,-17.5) {\textbf{Ngoại lệ xuyên suốt:} nếu phát hiện chứng nhận giả mạo qua xác minh hoặc khiếu nại, khóa vĩnh viễn tài khoản, ghi vào danh sách vi phạm và chặn đăng ký lại bằng cùng thông tin định danh.};
-    \foreach \source/\target in {start/register,register/otp,otp/valid,evidence/review,review/approved,verified/monitor,monitor/finish}
+    \node[farm/process] (ekyc) at (0,-6.75) {Nhà bán: xác minh danh tính điện tử (eKYC) --- ảnh giấy tờ định danh và ảnh chân dung};
+    \node[farm/process] (evidence) at (0,-8.55) {Nhà bán: tải chứng nhận (nếu có), mã số, cơ quan cấp và hạn dùng};
+    \node[farm/process] (review) at (0,-10.4) {Kiểm duyệt: đối chiếu kết quả eKYC và chứng nhận với cơ quan cấp hoặc kiểm tra thủ công};
+    \node[farm/decision] (approved) at (0,-12.45) {eKYC và hồ sơ\\đạt yêu cầu?};
+    \node[farm/processnarrow] (supplement) at (6,-12.45) {Hệ thống: thông báo lý do của bước không đạt; nhà bán bổ sung};
+    \node[farm/process] (verified) at (0,-14.75) {Hệ thống: trạng thái ``Đã xác thực'', kích hoạt quyền đăng bán; gắn nhãn chứng nhận nếu có};
+    \node[farm/process] (monitor) at (0,-16.45) {Hệ thống: theo dõi hiệu lực chứng nhận trong quá trình hoạt động};
+    \node[farm/processnarrow] (expiry) at (6,-16.45) {Còn dưới 30 ngày: nhắc gia hạn.\\Hết hạn: ẩn nhãn đến khi cập nhật; không gỡ sản phẩm.};
+    \node[farm/terminal] (finish) at (0,-18.1) {Hoàn tất đăng ký};
+    \node[farm/note] at (2.7,-19.9) {\textbf{Ngoại lệ xuyên suốt:} nếu phát hiện chứng nhận giả mạo qua xác minh hoặc khiếu nại, khóa vĩnh viễn tài khoản, ghi vào danh sách vi phạm và chặn đăng ký lại bằng cùng thông tin định danh.};
+    \foreach \source/\target in {start/register,register/otp,otp/valid,ekyc/evidence,evidence/review,review/approved,verified/monitor,monitor/finish}
         \draw[farm/arrow] (\source) -- (\target);
-    \draw[farm/arrow] (valid) -- node[farm/label,right] {Có} (evidence);
+    \draw[farm/arrow] (valid) -- node[farm/label,right] {Có} (ekyc);
     \draw[farm/arrow] (valid) -- node[farm/label,above] {Không} (attempts);
     \draw[farm/arrow] (attempts.north) |- node[farm/label,near start,right] {Không: nhập lại} (otp.east);
     \draw[farm/arrow] (attempts) -- node[farm/label,right] {Có} (lock);
-    \draw[farm/arrow] (lock.east) -- (8.6,-6.4) -- (8.6,-1.8) -| node[farm/label,near start,above] {Sau 30 phút} (otp.north east);
+    \draw[farm/arrow] (lock.east) -- (8.6,-6.4) -- (8.6,-1.8) -| node[farm/label,near start,above] {Sau 30 phút} (otp.north);
     \draw[farm/arrow] (approved) -- node[farm/label,right] {Có} (verified);
     \draw[farm/arrow] (approved) -- node[farm/label,above] {Không} (supplement);
-    \draw[farm/arrow] (supplement.north) -- (6,-8.8) -- (3.1,-8.8) |- (evidence.east);
+    \draw[farm/arrow] (supplement.west) -- (3.3,-12.45) -- (3.3,-6.75) -- (ekyc.east);
     \draw[farm/arrow,dashed] (monitor) -- (expiry);
 \end{tikzpicture}
+\end{adjustbox}
 \caption{Flowchart đăng ký và xác thực nhà bán, kiểm duyệt chứng nhận.}
 \label{fig:flow-dang-ky}
 \end{figure}

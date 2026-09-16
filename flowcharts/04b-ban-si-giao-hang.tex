@@ -1,0 +1,35 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.4cm\relax},center}
+\begin{tikzpicture}[farm/chart]
+    \node[farm/connector] (connA) at (0,0) {A};
+    \node[farm/processnarrow] (connAnote) at (3.9,0) {Tiếp nối vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-a} (hợp đồng vừa được ký)};
+    \draw[farm/arrow,dashed] (connAnote) -- (connA);
+    \node[farm/decision] (escrowq) at (0,-2) {Giá trị vượt ngưỡng\\ký quỹ (FR7.4)?};
+    \node[farm/processnarrow] (nonescrow) at (6,-2) {Không ký quỹ: thanh toán theo kỳ hạn công nợ đã thỏa thuận};
+    \node[farm/process] (escrow) at (0,-4.3) {Bên mua nộp tiền đợt giao vào tài khoản ký quỹ tại cổng thanh toán trung gian; hệ thống ghi nhận trạng thái ``đã ký quỹ''};
+    \node[farm/process] (delivery) at (0,-6.7) {Nhà bán giao theo từng đợt; hệ thống lập hóa đơn và cập nhật sổ công nợ};
+    \node[farm/process] (settle) at (0,-8.7) {Doanh nghiệp: xác nhận số lượng và chất lượng của đợt giao};
+    \node[farm/process] (release) at (0,-10.7) {Hệ thống: ghi nhận thanh toán; nếu có ký quỹ thì ra lệnh cổng trung gian giải ngân khoản đã giữ cho nhà bán};
+    \node[farm/decision] (complete) at (0,-13.1) {Còn đợt giao\\theo hợp đồng?};
+    \node[farm/processnarrow] (reconcile) at (6,-13.1) {Hai bên: đối soát, hoàn tất thanh toán công nợ theo kỳ hạn};
+    \node[farm/process] (sellerdone) at (0,-15.3) {Nhà bán: hợp đồng hoàn tất --- hệ thống cập nhật doanh thu và lịch sử bán sỉ};
+    \node[farm/terminal] (finish) at (0,-17.1) {Hoàn tất hợp đồng};
+    \node[farm/exception,text width=3.8cm] (exceptions) at (6,-7.6) {\textbf{Ngoại lệ hợp đồng}\\[3pt]Giao thiếu / trễ: áp dụng phạt và ghi lịch sử uy tín.\\[4pt]Quá hạn công nợ: nhắc tự động; có thể khóa RFQ mới đến khi trả đủ.\\[4pt]Hủy giữa kỳ: xử lý theo điều khoản hủy đã ký.\\[4pt]Tranh chấp đợt đã ký quỹ: giữ nguyên khoản ký quỹ tại cổng trung gian đến khi xử lý xong khiếu nại.};
+    \foreach \source/\target in {connA/escrowq,escrow/delivery,delivery/settle,settle/release,release/complete,sellerdone/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (escrowq) -- node[farm/label,right] {Có} (escrow);
+    \draw[farm/arrow] (escrowq) -- node[farm/label,above] {Không} (nonescrow);
+    % Đi vòng qua rãnh trống x=3.3 để không cắt ngang hộp ngoại lệ đặt tại x=6.
+    \draw[farm/arrow] (nonescrow.west) -- (3.3,-2) -- (3.3,-6.7) -- (delivery.east);
+    \draw[farm/arrow] (complete) -- node[farm/label,above] {Không} (reconcile);
+    \draw[farm/arrow] (reconcile.south) |- (sellerdone.east);
+    \draw[farm/arrow] (complete.west) -- (-3.5,-13.1) |- node[farm/label,near start,left] {Có} (delivery.west);
+    \draw[farm/arrow,dashed] (delivery) -- (exceptions);
+\end{tikzpicture}
+\end{adjustbox}
+\caption{Flowchart bán sỉ (B2B) --- phần 2: ký quỹ trung gian, giao hàng theo đợt, giải ngân và công nợ.}
+\label{fig:flow-ban-si-b}
+\end{figure}
+\clearpage

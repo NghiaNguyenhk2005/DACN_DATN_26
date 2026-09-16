@@ -32,7 +32,7 @@ mục~\ref{sec:doituongnguoidung} và luồng tham gia tại
 mục~\ref{sec:luongtiepcan}.
 
 \textbf{Điều 2. Tài khoản và vai trò}\\
-Mỗi tài khoản được gán đúng một vai trò theo mô hình RBAC (mục~\ref{chap:coso}).
+Mỗi tài khoản được gán đúng một vai trò theo mô hình RBAC (Chương~\ref{chap:coso}).
 Người dùng chịu trách nhiệm bảo mật thông tin đăng nhập và toàn bộ hoạt
 động phát sinh từ tài khoản của mình; phải thông báo ngay cho Farmery nếu
 nghi ngờ tài khoản bị truy cập trái phép.
@@ -60,15 +60,22 @@ gửi khiếu nại hoặc đánh giá.
 Dòng doanh thu của Farmery được phân tích chi tiết tại mục~\ref{sec:businessmodelcanvas}
 (Business Model Canvas). Farmery thu phí hoa hồng trên mỗi giao dịch thành
 công qua nền tảng, với mức riêng cho bán lẻ và bán sỉ, cùng phí dịch vụ giá
-trị gia tăng tùy chọn (xác thực chứng nhận nhanh, hiển thị ưu tiên cho nhà
-bán đạt ngưỡng uy tín --- mục~\ref{subsec:danhgianghiepvu}); không thu phí
-đăng ký tài khoản hoặc phí duy trì đối với nhà bán.
+trị gia tăng tùy chọn (xác thực chứng nhận nhanh; gói hiển thị nổi bật dành
+cho nhà bán đã đạt ngưỡng uy tín quy định, vị trí hiển thị được gắn nhãn
+``Tài trợ''); không thu phí đăng ký tài khoản hoặc phí duy trì đối với nhà
+bán. Việc ưu tiên hiển thị tự động theo điểm uy tín
+(mục~\ref{subsec:danhgianghiepvu}) là quyền lợi miễn phí, độc lập với gói
+trả phí nói trên.
 
 \textbf{Điều 6. Thanh toán và ký quỹ trung gian (escrow)}\\
 Giao dịch bán lẻ thanh toán qua ví điện tử, chuyển khoản hoặc COD. Giao
-dịch bán sỉ giá trị lớn có thể áp dụng cơ chế escrow (mục~\ref{chap:coso}):
-khoản tiền được giữ bởi Farmery và chỉ giải ngân cho nhà bán khi bên mua
-xác nhận đã nhận đủ hàng đúng cam kết.
+dịch bán sỉ có giá trị vượt ngưỡng quy định được áp dụng cơ chế escrow
+(Chương~\ref{chap:coso}; yêu cầu chức năng FR7.4): khoản tiền của bên mua
+được giữ tại cổng thanh toán trung gian được cấp phép --- Farmery không
+trực tiếp giữ tiền của người dùng --- và chỉ được giải ngân cho nhà bán
+theo lệnh của hệ thống khi bên mua xác nhận đã nhận đủ hàng đúng cam kết.
+Khi phát sinh tranh chấp, khoản ký quỹ được giữ nguyên cho đến khi khiếu
+nại được xử lý xong theo Điều 7.
 
 \textbf{Điều 7. Chính sách đổi trả và hoàn tiền}\\
 Áp dụng theo quy trình vận chuyển và xử lý khiếu nại tại
@@ -95,7 +102,7 @@ huấn luyện/vận hành các mô-đun AI hỗ trợ ra quyết định (mục
 có thể ở dạng ẩn danh/tổng hợp khi không cần gắn với danh tính cụ thể.
 
 \textbf{Điều 10. Giới hạn trách nhiệm}\\
-Farmery đóng vai trò trung gian công nghệ và thanh toán (mục~\ref{chap:coso}),
+Farmery đóng vai trò trung gian công nghệ và thanh toán (Chương~\ref{chap:coso}),
 không trực tiếp sản xuất hay vận chuyển hàng hóa. Trách nhiệm của Farmery
 giới hạn trong phạm vi thông tin đã được xác minh qua quy trình kiểm duyệt;
 các tranh chấp về chất lượng nằm ngoài phạm vi xác minh được xử lý theo quy
