@@ -86,30 +86,249 @@ Dòng doanh thu chính là phí hoa hồng trên mỗi giao dịch thành công,
 \section{Yêu cầu chức năng}
 \label{sec:yeucauchucnang}
 
-% TODO: nhóm rà soát/bổ sung, đối chiếu lại với những gì thực sự hiện thực ở Ch.4 và use case ở mục~\ref{sec:sddchitiet}.
-Dựa trên phân tích đối tượng người dùng (mục~\ref{sec:doituongnguoidung}) và quy trình nghiệp vụ (mục~\ref{sec:quytrinhnghiepvu}), hệ thống cần đáp ứng các nhóm yêu cầu chức năng chính sau:
+Dựa trên phân tích đối tượng người dùng (mục~\ref{sec:doituongnguoidung}) và
+quy trình nghiệp vụ (mục~\ref{sec:quytrinhnghiepvu}), hệ thống cần đáp ứng các
+nhóm yêu cầu chức năng sau. Các mã FRx.x dùng để đối chiếu 1--1 với use case
+tại mục~\ref{sec:sddchitiet} và phần hiện thực ở Chương~4.
 
-\begin{enumerate}
-    \item \textbf{Quản lý tài khoản và xác thực}: đăng ký/đăng nhập theo vai trò (nông dân/HTX, người tiêu dùng, doanh nghiệp thu mua, quản trị viên), xác thực OTP, phân quyền theo RBAC.
-    \item \textbf{Quản lý sản phẩm và truy xuất nguồn gốc}: tạo/kiểm duyệt sản phẩm, ghi nhật ký canh tác theo lô, sinh mã QR truy xuất.
-    \item \textbf{Quản lý chứng nhận}: tải lên, kiểm duyệt và theo dõi hạn chứng nhận VietGAP/GlobalGAP.
-    \item \textbf{Giao dịch bán lẻ (B2C)}: tìm kiếm/lọc sản phẩm, giỏ hàng, thanh toán, theo dõi đơn hàng, đánh giá.
-    \item \textbf{Giao dịch bán sỉ (B2B)}: gửi/nhận yêu cầu báo giá (RFQ), đàm phán, sinh hợp đồng điện tử, quản lý công nợ và giao hàng theo đợt.
-    \item \textbf{Vận chuyển và khiếu nại}: theo dõi trạng thái vận chuyển, gửi/xử lý khiếu nại.
-    \item \textbf{Quản trị hệ thống}: kiểm duyệt định kỳ, giám sát vi phạm, báo cáo thống kê.
-    \item \textbf{Hỗ trợ AI}: gợi ý sản phẩm, dự báo nhu cầu/giá, cảnh báo bất thường, trợ lý ảo (chi tiết thiết kế tại mục~\ref{sec:thietkeAI}).
-\end{enumerate}
+\subsection{FR1: Quản lý tài khoản \& phân quyền}
+\begin{itemize}
+    \item \textbf{FR1.1:} Đăng ký/đăng nhập theo vai trò riêng biệt: nông
+    dân/HTX, người tiêu dùng, doanh nghiệp thu mua (B2B), quản trị viên; hỗ
+    trợ đăng nhập bằng Email, số điện thoại hoặc tài khoản mạng xã hội
+    (OAuth 2.0).
+    \item \textbf{FR1.2:} Xác thực tài khoản qua OTP (đăng ký, khôi phục mật
+    khẩu, các thao tác nhạy cảm).
+    \item \textbf{FR1.3:} Đăng ký tài khoản doanh nghiệp thu mua (B2B) kèm
+    xác thực Giấy phép kinh doanh (GPKD) và Mã số thuế (MST).
+    \item \textbf{FR1.4:} Phân quyền nội bộ cho tài khoản doanh nghiệp theo
+    mô hình RBAC (Chủ tài khoản, Người mua hàng, Kế toán, Người xem) --- liên
+    hệ mục~\ref{chap:coso}.
+    \item \textbf{FR1.5:} Quy trình xác minh danh tính người bán (eKYC) đối
+    với nông dân/HTX trước khi kích hoạt quyền đăng bán.
+    \item \textbf{FR1.6:} Quản lý sổ địa chỉ giao/nhận hàng (nhiều địa chỉ,
+    gán nhãn, chọn địa chỉ mặc định).
+\end{itemize}
+
+\subsection{FR2: Quản lý hồ sơ nông dân/HTX \& gian hàng}
+\begin{itemize}
+    \item \textbf{FR2.1:} Thiết lập, cập nhật hồ sơ gian hàng (tên, logo,
+    mô tả, thông tin vùng trồng/khu vực canh tác).
+    \item \textbf{FR2.2:} Báo cáo thống kê cơ bản cho người bán: doanh thu,
+    số đơn hàng, sản phẩm bán chạy theo mốc thời gian.
+    \item \textbf{FR2.3:} Quản lý tồn kho theo lô hàng (Batch/Lot), gồm số
+    lượng nhập/xuất và tồn hiện tại.
+\end{itemize}
+
+\subsection{FR3: Quản lý chứng nhận chất lượng}
+\begin{itemize}
+    \item \textbf{FR3.1:} Tải lên chứng nhận VietGAP/GlobalGAP (và tương tự
+    như OCOP, HACCP nếu có) kèm tệp minh chứng.
+    \item \textbf{FR3.2:} Quản trị viên kiểm duyệt, phê duyệt hoặc từ chối
+    chứng nhận trước khi hiển thị công khai.
+    \item \textbf{FR3.3:} Theo dõi hạn hiệu lực chứng nhận, tự động đánh dấu
+    hết hạn và nhắc người bán gia hạn (liên hệ FR11.2).
+\end{itemize}
+
+\subsection{FR4: Quản lý sản phẩm \& truy xuất nguồn gốc}
+\begin{itemize}
+    \item \textbf{FR4.1:} Đăng bán sản phẩm kèm hình ảnh, mô tả, đơn vị
+    tính (kg, tấn, thùng), giá bán lẻ và bảng giá bán sỉ theo bậc số lượng.
+    \item \textbf{FR4.2:} Ghi nhật ký canh tác theo lô (ngày gieo trồng, xử
+    lý, thu hoạch) và sinh mã QR truy xuất nguồn gốc gắn với từng lô.
+    \item \textbf{FR4.3:} Trừ/khóa tồn kho khi phát sinh giao dịch, tránh
+    bán vượt số lượng tồn thực tế.
+    \item \textbf{FR4.4:} Phân loại sản phẩm theo danh mục đa cấp chuyên
+    ngành nông sản.
+    \item \textbf{FR4.5:} Tìm kiếm và lọc nâng cao (khoảng giá, vùng miền,
+    loại chứng nhận, đánh giá, tình trạng còn hàng).
+\end{itemize}
+
+\subsection{FR5: Giao dịch bán lẻ (B2C)}
+\begin{itemize}
+    \item \textbf{FR5.1:} Giỏ hàng tổng hợp sản phẩm từ nhiều gian hàng
+    trong một phiên mua sắm.
+    \item \textbf{FR5.2:} Tự động tách đơn hàng chính thành các đơn con
+    theo từng gian hàng tại bước thanh toán.
+    \item \textbf{FR5.3:} Áp dụng mã giảm giá (toàn sàn hoặc riêng từng
+    gian hàng).
+    \item \textbf{FR5.4:} Theo dõi trạng thái từng đơn con độc lập; xử lý
+    hủy đơn, đổi trả, hoàn tiền theo từng đơn con.
+    \item \textbf{FR5.5:} Đánh giá sản phẩm (điểm số, nhận xét, hình ảnh)
+    và đánh giá gian hàng sau khi nhận hàng; người bán có thể phản hồi công
+    khai.
+\end{itemize}
+
+\subsection{FR6: Giao dịch bán sỉ (B2B)}
+\begin{itemize}
+    \item \textbf{FR6.1:} Doanh nghiệp thu mua gửi yêu cầu báo giá (RFQ) cho
+    một hoặc nhiều nông dân/HTX, nêu rõ số lượng, thời gian giao, tiêu chuẩn
+    chất lượng mong muốn.
+    \item \textbf{FR6.2:} Nông dân/HTX phản hồi RFQ (báo giá, số lượng có
+    thể cung ứng); hai bên trao đổi/đàm phán trước khi chốt.
+    \item \textbf{FR6.3:} Sinh hợp đồng điện tử từ RFQ đã thống nhất, lưu
+    lịch sử phiên bản và trạng thái ký kết.
+    \item \textbf{FR6.4:} Tự động áp khung giá sỉ khi đạt số lượng tối
+    thiểu (MOQ) đã thỏa thuận trong hợp đồng.
+    \item \textbf{FR6.5:} Quản lý công nợ và lịch giao hàng theo đợt
+    (nhiều lần giao trên cùng một hợp đồng), theo dõi tiến độ từng đợt.
+\end{itemize}
+
+\subsection{FR7: Thanh toán}
+\begin{itemize}
+    \item \textbf{FR7.1:} Hỗ trợ COD, chuyển khoản ngân hàng/VietQR, ví
+    điện tử qua cổng thanh toán trung gian đã được chứng nhận.
+    \item \textbf{FR7.2:} Xuất hóa đơn điện tử cho đơn hàng của khách hàng
+    doanh nghiệp.
+    \item \textbf{FR7.3:} Ghi nhận điều khoản thanh toán trả sau (ví dụ:
+    Net 15, Net 30) cho khách hàng B2B đã qua thẩm định, gắn với FR6.5.
+\end{itemize}
+
+\subsection{FR8: Vận chuyển \& khiếu nại}
+\begin{itemize}
+    \item \textbf{FR8.1:} Tích hợp đơn vị vận chuyển thứ ba hoặc seller tự
+    vận chuyển; theo dõi trạng thái vận đơn theo thời gian thực.
+    \item \textbf{FR8.2:} Tính cước vận chuyển dựa trên khoảng cách và
+    trọng lượng/thể tích quy đổi.
+    \item \textbf{FR8.3:} Gửi và xử lý khiếu nại liên quan đến đơn hàng
+    (chất lượng, giao hàng, thanh toán); quản trị viên đóng vai trò xử lý
+    tranh chấp khi cần (liên hệ FR10.3).
+\end{itemize}
+
+\subsection{FR9: Tương tác người dùng}
+\begin{itemize}
+    \item \textbf{FR9.1:} Tin nhắn trực tiếp giữa người mua và người bán.
+    \item \textbf{FR9.2:} Danh sách sản phẩm yêu thích (Wishlist) và theo
+    dõi gian hàng (Follow Store).
+\end{itemize}
+
+\subsection{FR10: Quản trị hệ thống (Admin)}
+\begin{itemize}
+    \item \textbf{FR10.1:} Xét duyệt hồ sơ mở gian hàng, kiểm duyệt định kỳ
+    sản phẩm và chứng nhận (liên hệ FR3.2), khóa/mở tài khoản vi phạm.
+    \item \textbf{FR10.2:} Giám sát vi phạm (sản phẩm sai thông tin, đánh
+    giá giả, gian lận đơn hàng).
+    \item \textbf{FR10.3:} Tiếp nhận và xử lý khiếu nại, đóng vai trò trung
+    gian phân xử khi có tranh chấp giữa các bên.
+    \item \textbf{FR10.4:} Báo cáo thống kê tổng quan hệ thống: tổng giá trị
+    giao dịch, số lượng người dùng hoạt động, tỷ lệ hoàn tất đơn hàng.
+\end{itemize}
+
+\subsection{FR11: Thông báo}
+\begin{itemize}
+    \item \textbf{FR11.1:} Thông báo đa kênh (trong ứng dụng, email, SMS)
+    về tiến độ đơn hàng, RFQ, hợp đồng.
+    \item \textbf{FR11.2:} Cảnh báo chứng nhận sắp hết hạn (liên hệ FR3.3)
+    và tồn kho chạm ngưỡng tối thiểu (liên hệ FR2.3).
+\end{itemize}
+
+\subsection{FR12: Hỗ trợ AI}
+\label{subsec:FR-AI}
+Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
+\begin{itemize}
+    \item \textbf{FR12.1:} Gợi ý sản phẩm cá nhân hóa cho người tiêu dùng
+    dựa trên lịch sử tìm kiếm/mua hàng.
+    \item \textbf{FR12.2:} Dự báo nhu cầu và xu hướng giá theo mùa vụ, hỗ
+    trợ nông dân/HTX và doanh nghiệp thu mua lập kế hoạch.
+    \item \textbf{FR12.3:} Cảnh báo bất thường (giao dịch nghi vấn, đánh
+    giá giả, biến động giá đột ngột).
+    \item \textbf{FR12.4:} Trợ lý ảo hỗ trợ người dùng ít rành công nghệ
+    (đặc biệt nhóm nông dân/HTX) thao tác trên hệ thống.
+\end{itemize}
 
 \section{Yêu cầu phi chức năng}
 \label{sec:yeucauphichucnang}
 
-% TODO: nhóm điều chỉnh các ngưỡng cụ thể (thời gian phản hồi, SLA...) cho khớp với năng lực hạ tầng thực tế và bổ sung kết quả đo đạc ở Ch.5.
+\subsection{NFR1: Hiệu năng}
 \begin{itemize}
-    \item \textbf{Bảo mật}: phân quyền theo RBAC (mục~\ref{chap:coso}), mã hóa dữ liệu nhạy cảm (thông tin định danh, thanh toán), tuân thủ nguyên tắc đặc quyền tối thiểu.
-    \item \textbf{Hiệu năng}: thời gian phản hồi các thao tác tìm kiếm/lọc sản phẩm ở mức chấp nhận được với lượng truy cập đồng thời dự kiến; đo đạc cụ thể tại mục~\ref{sec:danhgiahieunang}.
-    \item \textbf{Khả năng mở rộng}: kiến trúc cho phép bổ sung vai trò/mô-đun mới (ví dụ tách nhỏ vai trò quản trị viên kiểm duyệt và quản trị viên xử lý vi phạm) mà không thay đổi lớn hệ thống hiện có.
-    \item \textbf{Khả dụng cho người dùng ít rành công nghệ}: giao diện đơn giản, hướng dẫn rõ ràng cho nhóm nông dân/HTX (mục~\ref{sec:doituongnguoidung}), có hỗ trợ trợ lý ảo.
-    \item \textbf{Toàn vẹn dữ liệu truy xuất nguồn gốc}: dữ liệu nhật ký canh tác và chứng nhận một khi đã duyệt công khai cần được kiểm soát chặt chẽ trước khi cho phép chỉnh sửa (liên hệ mục~\ref{subsec:gs1blockchain}).
+    \item \textbf{NFR1.1:} Thời gian tải trang chủ và trả kết quả tìm
+    kiếm/lọc sản phẩm ở mức chấp nhận được (mục tiêu tạm thời: dưới 2 giây
+    với tải truy cập thông thường); số đo thực tế tại
+    mục~\ref{sec:danhgiahieunang}.
+    \item \textbf{NFR1.2:} Đảm bảo không xảy ra bán vượt tồn kho (oversell)
+    khi nhiều người mua thao tác đồng thời trên cùng một lô hàng.
+\end{itemize}
+
+\subsection{NFR2: Khả năng mở rộng}
+\begin{itemize}
+    \item \textbf{NFR2.1:} Kiến trúc cho phép bổ sung vai trò/mô-đun mới
+    (ví dụ tách vai trò quản trị viên kiểm duyệt và quản trị viên xử lý vi
+    phạm) mà không thay đổi lớn hệ thống hiện có.
+    \item \textbf{NFR2.2:} Các thành phần xử lý tải cao (tìm kiếm, đặt
+    hàng) được thiết kế để có thể mở rộng theo chiều ngang khi lưu lượng
+    tăng.
+\end{itemize}
+
+\subsection{NFR3: Bảo mật}
+\begin{itemize}
+    \item \textbf{NFR3.1:} Phân quyền theo RBAC (mục~\ref{chap:coso}), tuân
+    thủ nguyên tắc đặc quyền tối thiểu.
+    \item \textbf{NFR3.2:} Mã hóa dữ liệu nhạy cảm khi lưu trữ (thông tin
+    định danh, MST, tài khoản ngân hàng nếu có).
+    \item \textbf{NFR3.3:} Băm mật khẩu bằng thuật toán an toàn
+    (Bcrypt/Argon2).
+    \item \textbf{NFR3.4:} Nghiệp vụ thanh toán ủy quyền xử lý qua cổng
+    thanh toán trung gian đã đạt chuẩn bảo mật thẻ (PCI-DSS do bên cổng
+    thanh toán chịu trách nhiệm), hệ thống không lưu trữ trực tiếp dữ liệu
+    thẻ.
+    \item \textbf{NFR3.5:} Giới hạn tần suất thao tác (rate limiting) đối
+    với các hành vi có nguy cơ gian lận (đặt đơn ảo, đăng nhập sai nhiều
+    lần).
+\end{itemize}
+
+\subsection{NFR4: Độ tin cậy \& tính sẵn sàng}
+\begin{itemize}
+    \item \textbf{NFR4.1:} Các thao tác ảnh hưởng số dư/tồn kho (đặt hàng,
+    hủy đơn, hoàn tiền) đảm bảo tính nhất quán dữ liệu trong phạm vi một
+    giao dịch cơ sở dữ liệu.
+    \item \textbf{NFR4.2:} Có cơ chế sao lưu định kỳ dữ liệu hệ thống.
+\end{itemize}
+
+\subsection{NFR5: Khả năng bảo trì}
+\begin{itemize}
+    \item \textbf{NFR5.1:} Tổ chức mã nguồn theo module tách biệt theo
+    nghiệp vụ (tài khoản, sản phẩm, đơn hàng, thanh toán) để dễ bảo trì và
+    mở rộng.
+    \item \textbf{NFR5.2:} Tài liệu hóa API theo chuẩn OpenAPI/Swagger cho
+    các endpoint chính.
+\end{itemize}
+
+\subsection{NFR6: Khả dụng cho người dùng ít rành công nghệ}
+\begin{itemize}
+    \item \textbf{NFR6.1:} Giao diện đơn giản, hướng dẫn rõ ràng cho nhóm
+    nông dân/HTX (mục~\ref{sec:doituongnguoidung}), ưu tiên hiển thị tốt
+    trên thiết bị di động.
+    \item \textbf{NFR6.2:} Có hỗ trợ trợ lý ảo (liên hệ FR12.4) để giảm rào
+    cản thao tác cho người dùng ít quen thuộc với công nghệ.
+    \item \textbf{NFR6.3:} Luồng đăng bán sản phẩm và ghi nhật ký canh tác
+    được thiết kế tối giản, giảm số bước nhập liệu.
+\end{itemize}
+
+\subsection{NFR7: Khả năng tích hợp \& tương thích}
+\begin{itemize}
+    \item \textbf{NFR7.1:} Tích hợp qua API chuẩn (RESTful) với đơn vị vận
+    chuyển và cổng thanh toán trung gian.
+    \item \textbf{NFR7.2:} Giao diện web đáp ứng (responsive), hoạt động
+    tốt trên các trình duyệt phổ biến.
+\end{itemize}
+
+\subsection{NFR8: Pháp lý \& tuân thủ}
+\begin{itemize}
+    \item \textbf{NFR8.1:} Tuân thủ quy định về thương mại điện tử tại
+    Việt Nam (Nghị định số 52/2013/NĐ-CP và Nghị định số 85/2021/NĐ-CP sửa
+    đổi, bổ sung).
+    \item \textbf{NFR8.2:} Tuân thủ khung pháp lý về bảo vệ dữ liệu cá nhân
+    theo Nghị định số 13/2023/NĐ-CP.
+    \item \textbf{NFR8.3:} Đối với hóa đơn điện tử (FR7.2), tuân thủ quy
+    định liên quan theo Thông tư 78/2021/TT-BTC.
+\end{itemize}
+
+\subsection{NFR9: Toàn vẹn dữ liệu truy xuất nguồn gốc}
+\begin{itemize}
+    \item \textbf{NFR9.1:} Dữ liệu nhật ký canh tác và chứng nhận, một khi
+    đã được duyệt và công khai, cần được kiểm soát chặt chẽ trước khi cho
+    phép chỉnh sửa nhằm đảm bảo tính bất biến (immutability) của thông tin
+    truy xuất --- liên hệ mục~\ref{subsec:gs1blockchain}.
 \end{itemize}
 
 \section{Phân tích quy trình nghiệp vụ}
@@ -282,7 +501,230 @@ Nói cách khác, hệ thống không cho phép hai tác nhân thương mại (n
 \section{Thiết kế cơ sở dữ liệu}
 \label{sec:csdl}
 
-% TODO: nhóm bổ sung sơ đồ ERD cụ thể (\includegraphics) và mô tả các thực thể chính (Người dùng, Vai trò, Sản phẩm, Lô hàng/Batch, Nhật ký canh tác, Chứng nhận, Đơn hàng B2C, RFQ/Hợp đồng B2B, Vận chuyển, Khiếu nại, Đánh giá...).
+\subsection{Đặc tả cơ sở dữ liệu}
+\label{subsec:dacta-csdl}
+
+Cơ sở dữ liệu được tổ chức theo 7 nhóm thực thể tương ứng với các nhóm chức
+năng FR1--FR12 tại mục~\ref{sec:yeucauchucnang}, nhằm đảm bảo khả năng tách
+module theo domain (NFR5.1). Quy ước: \textbf{PK} = khóa chính,
+\textit{FK} = khóa ngoại.
+ 
+\subsubsection{Nhóm 1 --- Người dùng \& phân quyền (ứng với FR1)}
+ 
+\begin{itemize}
+    \item \textbf{NguoiDung} (User): \texttt{id} (PK), \texttt{ho\_ten},
+    \texttt{email} (unique), \texttt{sdt} (unique), \texttt{mat\_khau\_hash},
+    \texttt{vai\_tro} (enum: \emph{nong\_dan\_htx, nguoi\_tieu\_dung,
+    doanh\_nghiep\_thu\_mua, quan\_tri\_vien}), \texttt{trang\_thai}
+    (hoạt động/khóa), \texttt{ngay\_tao}.
+    \item \textbf{DiaChi} (Address): \texttt{id} (PK),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{noi\_dung},
+    \texttt{nhan} (nhà riêng/công ty...), \texttt{la\_mac\_dinh}.
+    \item \textbf{DoanhNghiep} (Business): \texttt{id} (PK),
+    \texttt{chu\_tai\_khoan\_id} (FK $\to$ NguoiDung.id), \texttt{ten\_cong\_ty},
+    \texttt{mst} (unique), \texttt{file\_gpkd}, \texttt{trang\_thai\_xac\_thuc}
+    (chờ duyệt/đã duyệt/từ chối) --- phục vụ FR1.3.
+    \item \textbf{ThanhVienDoanhNghiep} (BusinessMember): \texttt{id} (PK),
+    \texttt{doanh\_nghiep\_id} (FK $\to$ DoanhNghiep.id),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{vai\_tro\_noi\_bo}
+    (enum: \emph{chu\_so\_huu, nguoi\_mua\_hang, ke\_toan, nguoi\_xem}) ---
+    hiện thực RBAC nội bộ theo FR1.4.
+\end{itemize}
+Quan hệ: một \emph{NguoiDung} có nhiều \emph{DiaChi} (1--n); một
+\emph{DoanhNghiep} có nhiều \emph{ThanhVienDoanhNghiep}, mỗi thành viên gắn
+với một \emph{NguoiDung} (n--n giữa NguoiDung và DoanhNghiep, giải quyết qua
+bảng trung gian ThanhVienDoanhNghiep).
+ 
+\subsubsection{Nhóm 2 --- Gian hàng, chứng nhận, sản phẩm \& truy xuất nguồn gốc
+(ứng với FR2--FR4)}
+ 
+\begin{itemize}
+    \item \textbf{GianHang} (Shop): \texttt{id} (PK), \texttt{nguoi\_dung\_id}
+    (FK $\to$ NguoiDung.id, ràng buộc vai\_tro = nong\_dan\_htx),
+    \texttt{ten\_shop}, \texttt{mo\_ta}, \texttt{vung\_trong},
+    \texttt{trang\_thai\_ekyc} (chờ duyệt/đã duyệt).
+    \item \textbf{ChungNhan} (Certification): \texttt{id} (PK),
+    \texttt{gian\_hang\_id} (FK $\to$ GianHang.id), \texttt{loai} (VietGAP/
+    GlobalGAP/...), \texttt{file\_minh\_chung}, \texttt{ngay\_cap},
+    \texttt{ngay\_het\_han}, \texttt{trang\_thai\_duyet} (chờ/đã duyệt/từ chối),
+    \texttt{nguoi\_duyet\_id} (FK $\to$ NguoiDung.id, nullable).
+    \item \textbf{DanhMuc} (Category): \texttt{id} (PK), \texttt{ten},
+    \texttt{danh\_muc\_cha\_id} (FK $\to$ DanhMuc.id, tự tham chiếu --- phục
+    vụ phân loại đa cấp FR4.4).
+    \item \textbf{SanPham} (Product): \texttt{id} (PK), \texttt{gian\_hang\_id}
+    (FK $\to$ GianHang.id), \texttt{danh\_muc\_id} (FK $\to$ DanhMuc.id),
+    \texttt{ten}, \texttt{mo\_ta}, \texttt{don\_vi\_tinh}, \texttt{gia\_le},
+    \texttt{trang\_thai} (đang bán/ẩn/chờ duyệt).
+    \item \textbf{BangGiaSi} (WholesaleTier): \texttt{id} (PK),
+    \texttt{san\_pham\_id} (FK $\to$ SanPham.id), \texttt{so\_luong\_tu},
+    \texttt{don\_gia} --- phục vụ FR4.1/FR6.4.
+    \item \textbf{LoHang} (Batch): \texttt{id} (PK), \texttt{san\_pham\_id}
+    (FK $\to$ SanPham.id), \texttt{ma\_lo} (unique), \texttt{ngay\_thu\_hoach},
+    \texttt{han\_su\_dung}, \texttt{so\_luong\_ton}, \texttt{ma\_qr} (unique).
+    \item \textbf{NhatKyCanhTac} (FarmingLog): \texttt{id} (PK),
+    \texttt{lo\_hang\_id} (FK $\to$ LoHang.id), \texttt{ngay},
+    \texttt{hoat\_dong}, \texttt{mo\_ta}, \texttt{hinh\_anh},
+    \texttt{da\_cong\_khai} (boolean).
+\end{itemize}
+Quan hệ: GianHang 1--n ChungNhan; GianHang 1--n SanPham; SanPham 1--n
+BangGiaSi; SanPham 1--n LoHang; LoHang 1--n NhatKyCanhTac.
+\textbf{Ràng buộc toàn vẹn (NFR9.1):} khi \texttt{ChungNhan.trang\_thai\_duyet
+= đã duyệt} hoặc \texttt{NhatKyCanhTac.da\_cong\_khai = true}, các trường nội
+dung không được phép \texttt{UPDATE} trực tiếp --- mọi chỉnh sửa sau công khai
+phải tạo bản ghi mới và giữ liên kết lịch sử (append-only), liên hệ
+mục~\ref{subsec:gs1blockchain}.
+ 
+\subsubsection{Nhóm 3 --- Giao dịch bán lẻ B2C (ứng với FR5)}
+ 
+\begin{itemize}
+    \item \textbf{GioHang} (Cart): \texttt{id} (PK), \texttt{nguoi\_dung\_id}
+    (FK $\to$ NguoiDung.id).
+    \item \textbf{GioHangChiTiet} (CartItem): \texttt{id} (PK),
+    \texttt{gio\_hang\_id} (FK $\to$ GioHang.id), \texttt{san\_pham\_id}
+    (FK $\to$ SanPham.id), \texttt{so\_luong}.
+    \item \textbf{MaGiamGia} (Voucher): \texttt{id} (PK), \texttt{ma\_code}
+    (unique), \texttt{pham\_vi} (enum: \emph{toan\_san, gian\_hang}),
+    \texttt{gian\_hang\_id} (FK $\to$ GianHang.id, nullable),
+    \texttt{phan\_tram\_giam}, \texttt{gia\_tri\_toi\_da},
+    \texttt{so\_luong\_con\_lai}, \texttt{han\_su\_dung}.
+    \item \textbf{DonHangChinh} (MasterOrder): \texttt{id} (PK),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{tong\_tien},
+    \texttt{ngay\_tao}.
+    \item \textbf{DonHangCon} (SubOrder): \texttt{id} (PK),
+    \texttt{don\_hang\_chinh\_id} (FK $\to$ DonHangChinh.id),
+    \texttt{gian\_hang\_id} (FK $\to$ GianHang.id), \texttt{trang\_thai}
+    (chờ xác nhận/đang giao/hoàn tất/hủy/hoàn tiền), \texttt{phi\_van\_chuyen},
+    \texttt{tong\_tien}.
+    \item \textbf{DonHangChiTiet} (OrderItem): \texttt{id} (PK),
+    \texttt{don\_hang\_con\_id} (FK $\to$ DonHangCon.id),
+    \texttt{lo\_hang\_id} (FK $\to$ LoHang.id), \texttt{so\_luong},
+    \texttt{don\_gia}.
+    \item \textbf{ThanhToan} (Payment): \texttt{id} (PK),
+    \texttt{don\_hang\_chinh\_id} (FK $\to$ DonHangChinh.id),
+    \texttt{phuong\_thuc} (COD/chuyển khoản/ví...), \texttt{trang\_thai},
+    \texttt{ma\_giao\_dich\_cong}, \texttt{ngay\_thanh\_toan}.
+    \item \textbf{DanhGia} (Review): \texttt{id} (PK),
+    \texttt{don\_hang\_chi\_tiet\_id} (FK $\to$ DonHangChiTiet.id),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{so\_sao} (1--5),
+    \texttt{noi\_dung}, \texttt{hinh\_anh}, \texttt{phan\_hoi\_nguoi\_ban}
+    (nullable).
+\end{itemize}
+Quan hệ: một DonHangChinh phân rã thành nhiều DonHangCon (1--n, mỗi
+DonHangCon gắn đúng một GianHang); mỗi DonHangCon có nhiều
+DonHangChiTiet; ThanhToan gắn với DonHangChinh (1--1 hoặc 1--n nếu cho
+thanh toán từng phần); DanhGia tham chiếu đúng một dòng DonHangChiTiet để
+đảm bảo chỉ đánh giá sau khi đã mua (ràng buộc nghiệp vụ).
+ 
+\subsubsection{Nhóm 4 --- Giao dịch bán sỉ B2B (ứng với FR6)}
+ 
+\begin{itemize}
+    \item \textbf{RFQ} (Request for Quotation): \texttt{id} (PK),
+    \texttt{doanh\_nghiep\_id} (FK $\to$ DoanhNghiep.id, bên mua),
+    \texttt{gian\_hang\_id} (FK $\to$ GianHang.id, bên bán),
+    \texttt{san\_pham\_id} (FK $\to$ SanPham.id), \texttt{so\_luong\_yeu\_cau},
+    \texttt{thoi\_gian\_giao\_mong\_muon}, \texttt{tieu\_chuan\_chat\_luong},
+    \texttt{trang\_thai} (mới/đang đàm phán/chốt/từ chối/hết hạn).
+    \item \textbf{RFQTraoDoi} (RFQ Negotiation Log): \texttt{id} (PK),
+    \texttt{rfq\_id} (FK $\to$ RFQ.id), \texttt{nguoi\_gui\_id}
+    (FK $\to$ NguoiDung.id), \texttt{gia\_de\_xuat}, \texttt{so\_luong\_de\_xuat},
+    \texttt{noi\_dung}, \texttt{ngay\_gui} --- lưu lịch sử đàm phán theo
+    FR6.2.
+    \item \textbf{HopDong} (Contract): \texttt{id} (PK), \texttt{rfq\_id}
+    (FK $\to$ RFQ.id), \texttt{gia\_chot}, \texttt{tong\_so\_luong},
+    \texttt{dieu\_khoan\_thanh\_toan} (enum: \emph{Net 15, Net 30,...}),
+    \texttt{file\_hop\_dong}, \texttt{trang\_thai\_ky} (chờ ký/đã ký/hủy),
+    \texttt{ngay\_ky}.
+    \item \textbf{DotGiaoHang} (Delivery Installment): \texttt{id} (PK),
+    \texttt{hop\_dong\_id} (FK $\to$ HopDong.id), \texttt{so\_luong},
+    \texttt{ngay\_giao\_du\_kien}, \texttt{trang\_thai} (chờ/đang giao/đã
+    giao) --- phục vụ FR6.5.
+    \item \textbf{CongNo} (Debt Ledger): \texttt{id} (PK), \texttt{hop\_dong\_id}
+    (FK $\to$ HopDong.id), \texttt{so\_tien\_no}, \texttt{han\_thanh\_toan},
+    \texttt{trang\_thai} (chưa đến hạn/quá hạn/đã tất toán).
+\end{itemize}
+Quan hệ: RFQ 1--n RFQTraoDoi; một RFQ đã chốt sinh đúng một HopDong (1--1);
+HopDong 1--n DotGiaoHang; HopDong 1--n CongNo (theo từng đợt hoặc gộp).
+ 
+\subsubsection{Nhóm 5 --- Vận chuyển \& khiếu nại (ứng với FR8)}
+ 
+\begin{itemize}
+    \item \textbf{VanChuyen} (Shipping): \texttt{id} (PK),
+    \texttt{don\_hang\_con\_id} (FK $\to$ DonHangCon.id, nullable nếu gắn
+    HopDong/DotGiaoHang cho B2B), \texttt{dot\_giao\_hang\_id}
+    (FK $\to$ DotGiaoHang.id, nullable), \texttt{don\_vi\_van\_chuyen},
+    \texttt{ma\_van\_don}, \texttt{trang\_thai}.
+    \item \textbf{LichSuVanChuyen} (Shipping Status Log): \texttt{id} (PK),
+    \texttt{van\_chuyen\_id} (FK $\to$ VanChuyen.id), \texttt{trang\_thai},
+    \texttt{thoi\_gian}, \texttt{ghi\_chu}.
+    \item \textbf{KhieuNai} (Complaint): \texttt{id} (PK),
+    \texttt{don\_hang\_con\_id} (FK $\to$ DonHangCon.id, nullable),
+    \texttt{hop\_dong\_id} (FK $\to$ HopDong.id, nullable),
+    \texttt{nguoi\_gui\_id} (FK $\to$ NguoiDung.id), \texttt{noi\_dung},
+    \texttt{trang\_thai} (mới/đang xử lý/đã xử lý), \texttt{admin\_xu\_ly\_id}
+    (FK $\to$ NguoiDung.id, nullable), \texttt{ket\_qua}.
+\end{itemize}
+Ghi chú: VanChuyen và KhieuNai dùng khóa ngoại \emph{nullable kép} (B2C qua
+DonHangCon hoặc B2B qua HopDong/DotGiaoHang) để tái sử dụng chung một bảng
+cho cả hai luồng giao dịch, tránh trùng lặp cấu trúc.
+ 
+\subsubsection{Nhóm 6 --- Tương tác, thông báo (ứng với FR9, FR11)}
+ 
+\begin{itemize}
+    \item \textbf{CuocTroChuyen} (Conversation): \texttt{id} (PK),
+    \texttt{nguoi\_mua\_id} (FK $\to$ NguoiDung.id), \texttt{gian\_hang\_id}
+    (FK $\to$ GianHang.id).
+    \item \textbf{TinNhan} (Message): \texttt{id} (PK),
+    \texttt{cuoc\_tro\_chuyen\_id} (FK $\to$ CuocTroChuyen.id),
+    \texttt{nguoi\_gui\_id} (FK $\to$ NguoiDung.id), \texttt{noi\_dung},
+    \texttt{ngay\_gui}.
+    \item \textbf{YeuThich} (Wishlist): \texttt{nguoi\_dung\_id}
+    (FK $\to$ NguoiDung.id), \texttt{san\_pham\_id} (FK $\to$ SanPham.id) ---
+    khóa chính kép (composite PK).
+    \item \textbf{TheoDoiGianHang} (Follow Store): \texttt{nguoi\_dung\_id}
+    (FK $\to$ NguoiDung.id), \texttt{gian\_hang\_id} (FK $\to$ GianHang.id)
+    --- khóa chính kép.
+    \item \textbf{ThongBao} (Notification): \texttt{id} (PK),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{loai} (đơn
+    hàng/RFQ/chứng nhận/tồn kho/khuyến mãi...), \texttt{noi\_dung},
+    \texttt{da\_doc}, \texttt{ngay\_tao}.
+\end{itemize}
+ 
+\subsubsection{Nhóm 7 --- Hỗ trợ AI (ứng với FR12)}
+ 
+\begin{itemize}
+    \item \textbf{LichSuGoiY} (Recommendation Log): \texttt{id} (PK),
+    \texttt{nguoi\_dung\_id} (FK $\to$ NguoiDung.id), \texttt{san\_pham\_id}
+    (FK $\to$ SanPham.id), \texttt{diem\_goi\_y}, \texttt{ngay\_tao} ---
+    phục vụ FR12.1, dùng làm dữ liệu đánh giá độ chính xác mô hình.
+    \item \textbf{DuBaoGiaCa} (Price/Demand Forecast): \texttt{id} (PK),
+    \texttt{danh\_muc\_id} (FK $\to$ DanhMuc.id), \texttt{ky\_du\_bao}
+    (tuần/tháng), \texttt{gia\_du\_bao}, \texttt{nhu\_cau\_du\_bao},
+    \texttt{ngay\_tao} --- phục vụ FR12.2.
+    \item \textbf{CanhBaoBatThuong} (Anomaly Alert): \texttt{id} (PK),
+    \texttt{loai\_doi\_tuong} (đơn hàng/đánh giá/giao dịch...),
+    \texttt{doi\_tuong\_id}, \texttt{mo\_ta}, \texttt{muc\_do} (thấp/trung
+    bình/cao), \texttt{trang\_thai\_xu\_ly}, \texttt{ngay\_tao} --- phục vụ
+    FR12.3, liên hệ FR10.2 (giám sát vi phạm).
+\end{itemize}
+
+\subsection{Sơ đồ quan hệ thực thể (ERD)}
+\label{subsec:erd}
+
+Dựa trên các thực thể và mối quan hệ đã đặc tả, mô hình quan hệ thực thể (ERD)
+tổng quát của hệ thống Farmery được thể hiện tại Hình~\ref{fig:erd}. Sơ đồ tổng
+hợp mối liên kết giữa 7 nhóm thực thể nghiệp vụ: tài khoản và phân quyền người
+dùng, quản lý gian hàng và truy xuất nguồn gốc, chu trình giao dịch bán lẻ B2C
+và bán sỉ B2B, vận chuyển, khiếu nại, tương tác người dùng cũng như các bảng
+phục vụ tính năng AI.
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=\textwidth]{image/erd.png}
+\caption{Sơ đồ quan hệ thực thể (ERD) hệ thống Farmery}
+\label{fig:erd}
+\end{figure}
+% TODO: nhóm bổ sung file ảnh sơ đồ ERD vào image/erd.png và bỏ chú thích dòng lệnh \includegraphics ở trên.
+
 
 \section{Sơ đồ thiết kế chi tiết}
 \label{sec:sddchitiet}
