@@ -1,7 +1,7 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-09-23 (sau phiên chỉnh sửa 18 hạng mục, đợt 3: so sánh
-chuyển sang bảng LaTeX, sửa đánh số phụ lục, cô đọng nội dung).
+Cập nhật lần cuối: 2026-09-23 (đợt 4: ghép commit của thành viên khác — persona,
+customer journey, ma trận FR/NFR, yêu cầu dữ liệu — và bỏ mô-đun trợ lý ảo).
 
 ## Gốc dự án
 
@@ -9,7 +9,7 @@ chuyển sang bảng LaTeX, sửa đánh số phụ lục, cô đọng nội dun
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 134 trang |
+| `main.pdf` | Bản build gần nhất, 143 trang |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
@@ -25,12 +25,12 @@ dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 | File | Nội dung | Trạng thái |
 |---|---|---|
 | `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, đặc thù nông sản, 4 vấn đề V1–V4) · 1.2 Mục tiêu (tổng quát, MT1–MT7, **mục tiêu đánh giá**) · 1.3 Phạm vi (**không gian, thời gian, nội dung, giới hạn kỹ thuật**) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong |
-| `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản (mới: định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market)** · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền · 2.4 Ứng dụng AI | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
+| `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản** (định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market) · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền (**2.3.1 hai trục phân loại: B2B/B2C/B2B2C và 1P/3P**) · 2.4 Ứng dụng AI (**2 bài toán**: gợi ý, dự báo giá) | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · **3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này (mới)** · 3.4 Kết chương (research gap) | Xong; còn TODO bổ sung nghiên cứu ở 3.1 |
-| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, **quy tắc chống đăng sai sản phẩm**) · 4.2 Mô tả hệ thống (**Farmery là gì, phân hệ, kênh truy cập**, 5 nhóm người dùng, NC1–NC5, thách thức) · 4.3 Yêu cầu (**câu chuyện người dùng** → FR1–FR12, NFR) | Xong |
-| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · **5.2 Giải pháp công nghệ (mới: đối sánh 12 hạng mục + 3 mô-đun AI)** · 5.3 Thiết kế (**kiến trúc modular monolith + RB1–RB3**, CSDL, AI, API, UI/UX, test case) | 5.2, 5.3.1, 5.3.5, 5.3.6 xong; sitemap/sequence/class/API/UI còn TODO |
+| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập, 5 nhóm người dùng, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR12, NFR, **2 ma trận Priority/Feasibility/Testability**, yêu cầu dữ liệu 9 miền) | Xong |
+| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **2 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | 5.2, 5.3.1, 5.3.5, 5.3.6 xong; use case/sitemap/sequence/class/API/UI/test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | Toàn bộ TODO |
-| `chuong7-danhgia.tex` | **7.1 Mục tiêu và phương pháp đánh giá (mới)** · 7.2 Chức năng · 7.3 Front-end · 7.4 Back-end · 7.5 AI · 7.6 Kết chương | Khung xong, chờ số liệu thực nghiệm |
+| `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (5 trụ cột: chức năng, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (k6, SUS, Lighthouse); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
 | `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
 
 ## `backmatter/` — Phụ lục A–L
@@ -39,12 +39,12 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 
 | File | Nội dung |
 |---|---|
-| `phuluc.tex` | Khung phụ lục A, B, C, E; `\input` các file bên dưới |
+| `phuluc.tex` | Khung phụ lục A, B, C (còn TODO) và E (Business Model Canvas dạng bảng); `\input` các file bên dưới |
 | `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 15 điều, viết để đọc độc lập (không dùng mã vai trò, mã FR hay tham chiếu chéo vào thân báo cáo) |
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản thế giới |
 | `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh giải pháp công nghệ và mô hình AI |
-| `phuluc-yeucau.tex` | **Phụ lục J** — truy vết câu chuyện người dùng → yêu cầu, và bảng FR theo nhóm người dùng |
-| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đầy đủ (8 nhóm thực thể) |
+| `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, và bảng FR theo nhóm người dùng |
+| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu, đặc tả chi tiết 4 nhóm thực thể cốt lõi (4 nhóm còn lại chỉ liệt kê ở mục 5.3.5, chi tiết chờ Chương 6) |
 | `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI |
 | `kehoach.tex` | Kế hoạch thực hiện 15 tuần |
 | `tailieuthamkhao.tex` | `\printbibliography` |
@@ -70,7 +70,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 
 **Các nội dung so sánh nay dùng bảng LaTeX, không dùng ảnh** — `tools/design/` chỉ còn các infographic thật sự cần đồ họa.
 
-**Cỡ chữ trong hình:** cỡ chữ in ra (pt) = `font_px × 16 / body_width_px × 28,45`, vì ảnh luôn bị ép về `	extwidth` = 16cm. Giữ tối thiểu ~7pt cho chữ nhỏ nhất khi sửa bất kỳ file HTML nào.
+**Cỡ chữ trong hình:** cỡ chữ in ra (pt) = `font_px × 16 / body_width_px × 28,45`, vì ảnh luôn bị ép về `\textwidth` = 16cm. Giữ tối thiểu ~7pt cho chữ nhỏ nhất khi sửa bất kỳ file HTML nào.
 
 Sửa số liệu/nội dung infographic → sửa file HTML tương ứng, chạy `npm run shot`,
 rồi rebuild PDF. Không sửa trực tiếp file PNG.
@@ -100,14 +100,26 @@ rồi rebuild PDF. Không sửa trực tiếp file PNG.
 `sec:thietkeAI`; **`sec:muctieuphuongphap`**, `sec:danhgiaux`,
 `sec:danhgiahieunang`, `sec:danhgiaAI`.
 
-**Hình:** `fig:thuctrang`, `fig:ocop`, **`fig:bmc-cum1`**, **`fig:bmc-cum2`**,
-**`fig:bmc-cum3`**, `fig:bmc-full`, **`fig:flow-thu-mua`**, `tab:sosanhtrongnuoc`,
-`tab:sosanhquocte`, `tab:researchgap`, các `fig:flow-*`.
+**Hình (17):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
+`fig:chu-thich-flowchart`, `fig:erd` (chưa có ảnh), và 10 lưu đồ `fig:flow-*`
+gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
+`fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
+`fig:flow-van-chuyen`, `fig:flow-quan-tri`.
 
-**Bảng:** **`tab:hailuong`** (trong thân báo cáo), `tab:vande-muctieu`,
-`tab:dacdiem-hanghoa`, `tab:chungnhan`, `tab:sosanh-congnghe`,
-`tab:sosanh-ai`, `tab:truyvet-us`, `tab:fr-nguoidung`, `tab:db-nhom1`–`4`,
-`tab:nguongNFR`, `tab:nguongAI` (tất cả trừ `tab:hailuong` đều nằm ở phụ lục).
+**Bảng trong thân báo cáo (7):** `tab:hailuong` (đối chiếu hai luồng),
+`tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap`,
+`tab:customer-journey`, `tab:fr-matrix`, `tab:nfr-matrix`.
 
-**Lưu ý:** các phụ lục dùng `\section*` nên **không đánh số tự động** — trong
-thân báo cáo phải viết thẳng "Phụ lục G", không dùng `\ref`.
+**Bảng ở phụ lục:** `tab:vande-muctieu` (F), `tab:dacdiem-hanghoa` (G),
+`tab:chungnhan` (H), `tab:sosanh-congnghe` và `tab:sosanh-ai` (I),
+`tab:truyvet-us` và `tab:fr-nguoidung` (J), `tab:db-nhom1`–`4` (K),
+`tab:nguongNFR` và `tab:nguongAI` (L), `tab:bmc-full` (E), `tab:kehoach`.
+
+## Hai điểm dễ vấp khi sửa
+
+1. **Phụ lục dùng `\section*` nên không đánh số tự động** — trong thân báo cáo
+   phải viết thẳng "Phụ lục G", không dùng `\ref`.
+2. **Hình và bảng ở phần sau Chương 8 có tiền tố riêng** — `KH.` cho Kế hoạch
+   thực hiện, `PL.` cho Phụ lục, đặt trong `main.tex` ngay trước phần kết thúc.
+   Nếu bỏ đoạn `\setcounter` và `\renewcommand` đó, toàn bộ bảng phụ lục sẽ bị
+   đánh số nối tiếp Chương 8 thành "Bảng 8.1" đến "Bảng 8.14" — lỗi đã từng xảy ra.
