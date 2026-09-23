@@ -10,7 +10,7 @@ ngưỡng 7pt và chuyển sang trang float riêng).
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 166 trang (154 trang đánh số Ả Rập + 12 trang đầu đánh số La Mã) |
+| `main.pdf` | Bản build gần nhất, 171 trang (159 trang đánh số Ả Rập + 12 trang đầu đánh số La Mã) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
@@ -34,7 +34,7 @@ dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (5 trụ cột: chức năng, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (k6, SUS, Lighthouse); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
 | `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
 
-## `backmatter/` — Phụ lục A–M
+## `backmatter/` — Phụ lục A–O
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ.
 
@@ -49,6 +49,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu, đặc tả chi tiết 4 nhóm thực thể cốt lõi (4 nhóm còn lại chỉ liệt kê ở mục 5.3.5, chi tiết chờ Chương 6) |
 | `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI, mỗi căn cứ dẫn từ một nhu cầu người dùng cụ thể |
 | `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
+| `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với yêu cầu thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho mô-đun AI |
 | `kehoach.tex` | Kế hoạch thực hiện theo hai giai đoạn, có mốc ngày thật: giai đoạn 1 tới 15/10/2026 (nộp giữa kỳ), giai đoạn 2 tới 31/12/2026 (nộp cuối kỳ); kèm phân tích rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
@@ -85,9 +86,7 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 
 | File | Trạng thái |
 |---|---|
-| `README.md` | Ghi chú bàn giao của phiên soạn thảo trước |
-| `nguon-du-lieu-nong-san.tex` | Chưa nhận --- còn `% TODO` số liệu nhóm chưa chốt |
-| `nhat-ky-canh-tac.tex` | Chưa nhận --- chỉ dự kiến lấy phần bảng khoảng cách vào Ch.8 |
+| `README.md` | Ghi chú bàn giao của phiên soạn thảo trước (đã lỗi thời phần lớn) |
 | `nghien-cuu-blockchain.tex` | **Không nhận** --- 4/5 nguồn sai hoặc không kiểm chứng được; nội dung đã tự viết lại tại `subsec:gs1blockchain` |
 
 ## `flowcharts/`

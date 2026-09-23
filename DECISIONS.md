@@ -555,6 +555,33 @@ bây giờ đâu còn đắt" khi bảo vệ.
 **Đánh đổi:** dài thêm hai trang ở Chương 2 vừa mới rút gọn, đổi lấy một lập luận
 không thể bị lật bằng một lần tra nguồn.
 
+### Nhận hai file _incoming còn lại sau khi sửa lỗi dữ kiện — 2026-09-24
+**Bối cảnh:** Trước đó hoãn `nguon-du-lieu-nong-san.tex` vì file tự ghi `% TODO`
+cần chốt số liệu 18.000 vs 18.500 sản phẩm, 24 vs 26 tỉnh. Rà lại thì **những con
+số đó chỉ nằm trong chính dòng TODO, không có trong nội dung** --- lý do hoãn đã
+lỗi thời.
+**Lỗi dữ kiện phát hiện và đã sửa trước khi nhận:**
+- `nhat-ky-canh-tac.tex` ghi "Lệnh 280 của GACC, hiệu lực 1/6/2026, áp dụng cho
+  17 nhóm thực phẩm" --- cả ba đều sai. Đúng là **Lệnh 248**, ban hành 12/4/2021,
+  **hiệu lực 1/1/2022**, áp dụng cho **18 nhóm**.
+- Thời hạn lưu hồ sơ 5 năm được gán cho Điều 18 EC 178/2002. Điều 18 **không ấn
+  định thời hạn**; các mốc nằm ở hướng dẫn thi hành của Uỷ ban châu Âu, và mốc 6
+  tháng áp cho hàng có hạn sử dụng dưới 3 tháng chứ không phải "hàng dễ hư hỏng".
+- Cả hai file gọi hệ thống truy xuất quốc gia là **"CheckVN"**. CheckVN là ứng
+  dụng quét tem chống hàng giả của IDE, không phải hệ thống của Bộ NN&MT.
+- "Tổng cục Thống kê" --- từ 1/3/2025 là **Cục Thống kê** thuộc Bộ Tài chính.
+- Tám chỗ dùng từ "MVP", vốn đã được loại khỏi báo cáo từ trước.
+**Đã kiểm chứng đúng:** hệ thống truy xuất quốc gia vận hành từ 1/7/2026;
+Nghị định 38/2026/NĐ-CP về mã số vùng trồng (báo cáo đang dẫn văn bản này, mới
+hơn QĐ 3156/2022 mà file _incoming đề xuất --- nên giữ nguyên bản đang có).
+**Cách ghép:** hai bảng dài đưa xuống Phụ lục N và O, thân bài chỉ giữ phần lập
+luận. Phần thảo luận xuất khẩu đặt tại `subsec:nhatkycanhtac-xuatkhau` (Chương 2),
+phần nguồn dữ liệu AI đặt sau `subsec:gs1blockchain`, phần hướng phát triển nối
+vào Chương 8.
+**Lý do giữ phần thảo luận xuất khẩu:** bảng khoảng cách năm tiêu chí là bằng
+chứng cho thấy việc đặt xuất khẩu ngoài phạm vi là quyết định có cân nhắc, không
+phải né việc.
+
 ### Phóng cỡ chữ sơ đồ use case và đổi cách đặt hình gần trọn trang — 2026-09-24
 **Bối cảnh:** Năm sơ đồ use case in ra chỉ 3,2--4,0pt so với thân bài 12pt, gần
 như không đọc được. Nguyên nhân là tỉ lệ `font_px / body_width_px`: ảnh rộng
