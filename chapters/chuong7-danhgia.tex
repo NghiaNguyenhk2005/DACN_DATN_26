@@ -1,20 +1,37 @@
 \chapter{Đánh giá hệ thống}
 \label{chap:danhgia}
 
-% TODO: toàn bộ chương này cần nhóm điền kết quả thực tế; nêu rõ điều kiện đo (cấu hình máy, công cụ, kích thước dữ liệu) để kết quả có thể tái lập.
+\section{Mục tiêu và phương pháp đánh giá}
+\label{sec:muctieuphuongphap}
+
+Chương này kiểm chứng hệ thống theo bốn nhóm mục tiêu đánh giá đã đặt ra tại mục~\ref{sec:muctieudanhgia}. Nguyên tắc chung: mọi ngưỡng đối chiếu đều được xác định \emph{trước} khi hiện thực --- tại Bảng~\ref{tab:nguongNFR} cho yêu cầu phi chức năng và Bảng~\ref{tab:nguongAI} cho các mô-đun AI --- nhằm tránh việc chọn chỉ số sau khi đã biết kết quả.
+
+\noindent\textbf{Phương pháp cho từng nhóm:}
+\begin{itemize}
+    \item \textbf{Chức năng:} xây dựng bộ test case phủ các nhóm yêu cầu chức năng, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là hai luồng thương mại cùng thao tác trên một lô hàng.
+    \item \textbf{Hiệu năng và độ tin cậy:} đo thời gian phản hồi ở p95 và khả năng chịu tải đồng thời bằng công cụ load testing; riêng tính toàn vẹn dữ liệu được kiểm bằng kịch bản đặt hàng đồng thời từ cả hai luồng trên cùng một lô để xác nhận không xảy ra bán vượt tồn kho.
+    \item \textbf{Mô-đun AI:} mỗi mô-đun đo bằng chỉ số phù hợp với bài toán của nó; riêng mô-đun dự báo giá được đánh giá offline trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng.
+    \item \textbf{Khả dụng:} thử nghiệm với đại diện các nhóm người dùng, trong đó nhóm nhà cung cấp là phép thử khó nhất do hạn chế về kỹ năng số.
+\end{itemize}
+
+% TODO: nêu rõ điều kiện đo của toàn chương (cấu hình máy, công cụ load testing, kích thước tập dữ liệu mô phỏng) để kết quả có thể tái lập.
+
+\section{Đánh giá chức năng}
+\label{sec:danhgiachucnang}
+% TODO: bảng test case và kết quả đạt/không đạt theo từng nhóm yêu cầu chức năng; bảng chi tiết đưa xuống phụ lục, thân chương giữ phần tổng hợp.
 
 \section{Đánh giá phía giao diện (front-end)}
 \label{sec:danhgiaux}
-% TODO: khảo sát/thử nghiệm khả dụng với đại diện các nhóm người dùng tại mục~\ref{sec:doituongnguoidung}, đặc biệt nhóm nông dân/HTX; đối chiếu các dòng NFR6.1--6.3 và NFR7.2 của Bảng~\ref{tab:nguongNFR}.
+% TODO: kết quả usability test với đại diện các nhóm người dùng tại mục~\ref{sec:doituongnguoidung}, đặc biệt nhóm nhà cung cấp; đối chiếu các dòng NFR6.1--6.3 và NFR7.2 của Bảng~\ref{tab:nguongNFR}.
 
 \section{Đánh giá phía máy chủ (back-end)}
 \label{sec:danhgiahieunang}
-% TODO: điền số đo thực tế và kết luận đạt/không đạt cho các dòng hiệu năng, bảo mật, độ tin cậy, tích hợp và toàn vẹn dữ liệu của Bảng~\ref{tab:nguongNFR}.
+% TODO: điền số đo thực tế và kết luận đạt/không đạt cho các dòng hiệu năng, bảo mật, độ tin cậy, tích hợp và toàn vẹn dữ liệu của Bảng~\ref{tab:nguongNFR}; nêu riêng kết quả kịch bản đặt hàng đồng thời hai luồng.
 
 \section{Đánh giá mô-đun AI}
 \label{sec:danhgiaAI}
-% TODO: điền kết quả thực nghiệm và kết luận đạt/không đạt cho từng dòng của Bảng~\ref{tab:nguongAI}.
+% TODO: điền kết quả thực nghiệm và kết luận đạt/không đạt cho từng dòng của Bảng~\ref{tab:nguongAI}; ghi rõ nguồn dữ liệu dùng cho mô-đun dự báo giá.
 
 \section{Kết chương}
 \label{sec:thaoluan}
-% TODO: tổng hợp ưu điểm, hạn chế rút ra từ các kết quả đánh giá.
+% TODO: tổng hợp ưu điểm và hạn chế rút ra từ các kết quả đánh giá; các hạn chế phát hiện ở đây cần được phản ánh lại vào mục Hạn chế tại Chương~\ref{chap:ketluan}.

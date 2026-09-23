@@ -8,6 +8,13 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{float}
+% Thu hẹp khoảng trắng quanh hình/bảng — mặc định của lớp report khá rộng,
+% gây cảm giác trang bị loãng khi có nhiều hình liên tiếp.
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{2pt}
 \usepackage[utf8]{inputenc}
 \usepackage{fancybox}
 \usepackage{array}
@@ -158,9 +165,7 @@ Thành phố Hồ Chí Minh, tháng ... năm 2026
 % ===================== TRANG BÌA PHỤ =====================
 \input{frontmatter/biaphu}
 
-% ===================== PHIẾU NHIỆM VỤ =====================
 \pagenumbering{roman}
-\input{frontmatter/phieunhiemvu}
 
 % ===================== LỜI CẢM ƠN =====================
 \input{frontmatter/loicamon}
@@ -196,8 +201,20 @@ Thành phố Hồ Chí Minh, tháng ... năm 2026
 \input{chapters/chuong8-tongket}
 
 % ===================== PHẦN KẾT THÚC =====================
+% Phần sau Chương 8 không thuộc chương nào, nên đổi cách đánh số hình/bảng
+% để không bị nối tiếp số của Chương 8 (trước đây sinh ra "Bảng 8.9" trong phụ lục).
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\renewcommand{\thetable}{KH.\arabic{table}}
+\renewcommand{\thefigure}{KH.\arabic{figure}}
 \input{backmatter/kehoach}
+
 \input{backmatter/tailieuthamkhao}
+
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\renewcommand{\thetable}{PL.\arabic{table}}
+\renewcommand{\thefigure}{PL.\arabic{figure}}
 \input{backmatter/phuluc}
 
 \end{document}

@@ -1,0 +1,106 @@
+% Phụ lục I — bảng đối sánh giải pháp công nghệ, tách khỏi thân báo cáo.
+% Phần kết luận và lý do chính nằm tại mục 5.2.
+
+\section*{Phụ lục I. Đối sánh các giải pháp công nghệ}
+\label{apdx:congnghe}
+\addcontentsline{toc}{section}{Phụ lục I. Đối sánh các giải pháp công nghệ}
+
+Bảng~\ref{tab:sosanh-congnghe} đối sánh các phương án ứng viên cho từng hạng
+mục công nghệ, Bảng~\ref{tab:sosanh-ai} đối sánh các hướng tiếp cận cho từng
+mô-đun AI. Bộ tiêu chí đối sánh và kết luận lựa chọn được trình bày tại
+mục~\ref{sec:giaiphapcongnghe}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{2.5cm} L{3.4cm} L{4.2cm} L{3.9cm}}
+\caption{Đối sánh các phương án công nghệ theo hạng mục}
+\label{tab:sosanh-congnghe} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Hạng mục} & \textbf{Phương án ứng viên} & \textbf{Nhận xét chính} & \textbf{Kết luận} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Hạng mục} & \textbf{Phương án ứng viên} & \textbf{Nhận xét chính} & \textbf{Kết luận} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Giao diện & Next.js (React) & Hỗ trợ sẵn server-side rendering (SSR), cần cho trang truy xuất công khai & \textbf{Chọn} \\
+& Nuxt (Vue) & Năng lực tương đương, nhưng hệ sinh thái thư viện thương mại điện tử mỏng hơn & Không chọn \\
+\rowcolor{tblaltbg}
+& Angular & Cấu trúc chặt chẽ nhưng chi phí học cao, dư thừa so với quy mô đồ án & Không chọn \\
+Back-end & NestJS (Node, TypeScript) & Dùng chung ngôn ngữ với giao diện; cấu trúc mô-đun và cơ chế phân quyền có sẵn & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Spring Boot (Java) & Rất trưởng thành, nhưng thêm một ngôn ngữ thứ hai vào dự án & Không chọn \\
+& Django, FastAPI (Python) & Trùng ngôn ngữ với dịch vụ AI, nhưng phần nghiệp vụ lõi cần cấu trúc mô-đun rõ hơn & Không chọn \\
+\rowcolor{tblaltbg}
+& Laravel (PHP) & Phù hợp thương mại điện tử truyền thống, hệ sinh thái AI hạn chế & Không chọn \\
+Kiểu kiến trúc & Modular monolith & Giữ được giao dịch trong một cơ sở dữ liệu, vẫn tách được về sau & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Monolith phân lớp thuần & Đơn giản nhất nhưng không giữ được đường biên miền nghiệp vụ & Không chọn \\
+& Microservices & Chi phí vận hành cao; phá vỡ giao dịch chống bán vượt tồn kho & Không chọn \\
+\rowcolor{tblaltbg}
+Cơ sở dữ liệu & PostgreSQL & Transaction có row-level locking, dữ liệu không gian, tìm kiếm vector, kiểu JSON có chỉ mục --- gom bốn nhu cầu vào một thành phần & \textbf{Chọn} \\
+& MySQL & Đáp ứng giao dịch nhưng thiếu dữ liệu không gian và tìm kiếm vector & Không chọn \\
+\rowcolor{tblaltbg}
+& MongoDB & Linh hoạt lược đồ nhưng xử lý transaction có row-level locking kém hơn & Không chọn \\
+Tìm kiếm & Full-text search của PostgreSQL & Đủ cho quy mô mục tiêu, không phát sinh đồng bộ dữ liệu & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Elasticsearch, Meilisearch & Mạnh hơn nhiều nhưng thêm một hạ tầng phải đồng bộ và vận hành & Để dành cho giai đoạn sau \\
+Lưu trữ tệp & Object storage tương thích S3 & Tách tệp khỏi cơ sở dữ liệu, thuận lợi khi nhân bản máy chủ & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Lưu trong cơ sở dữ liệu & Làm phình dung lượng, chậm sao lưu & Không chọn \\
+& Lưu trên đĩa máy chủ ứng dụng & Cản trở việc nhân bản khi mở rộng & Không chọn \\
+\rowcolor{tblaltbg}
+Đệm và hàng đợi & Redis & Một thành phần phục vụ cả cache lẫn hàng đợi tác vụ nền & \textbf{Chọn} \\
+& Message broker chuyên dụng & Năng lực vượt nhu cầu hiện tại & Để dành cho giai đoạn sau \\
+\rowcolor{tblaltbg}
+Thanh toán & VNPay (môi trường thử nghiệm) & Tài liệu tiếng Việt đầy đủ, hỗ trợ cơ chế tạm giữ tiền & \textbf{Chọn} \\
+Vận chuyển & Giao Hàng Nhanh & Giao diện lập trình công khai, độ phủ tốt tại nông thôn & \textbf{Chọn} \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{2.5cm} L{3.6cm} L{4.5cm} L{3.4cm}}
+\caption{Đối sánh các hướng tiếp cận cho từng mô-đun AI}
+\label{tab:sosanh-ai} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Hướng tiếp cận} & \textbf{Nhận xét chính} & \textbf{Kết luận} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Hướng tiếp cận} & \textbf{Nhận xét chính} & \textbf{Kết luận} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Gợi ý sản phẩm & Collaborative filtering thuần & Không hoạt động khi chưa có lịch sử tương tác & Không chọn \\
+\rowcolor{tblaltbg}
+& Content-based filtering thuần & Chạy được ngay nhưng gợi ý đơn điệu khi dữ liệu tăng & Không chọn \\
+& Mô hình hybrid & Dùng đặc trưng nông sản khi chưa có dữ liệu, chuyển dần sang hành vi & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Mạng nơ-ron & Đòi hỏi lượng tương tác lớn hơn nhiều so với khả năng thu thập & Không chọn \\
+Dự báo giá & Mô hình time series có mùa vụ & Phù hợp chuỗi time series ngắn nhưng có tính mùa vụ rõ; dễ giải thích & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Gradient boosting trên đặc trưng thời gian & Khai thác được biến ngoại sinh; dùng làm mô hình đối chứng & Chọn làm đối chứng \\
+& Mạng nơ-ron hồi quy (RNN, LSTM) & Cần lượng dữ liệu vượt xa khả năng thu thập trong đồ án & Không chọn \\
+\rowcolor{tblaltbg}
+Trợ lý ảo & Intent classification cổ điển & Cần gán nhãn và bảo trì tập intent thủ công, công sức lớn & Không chọn \\
+& LLM dùng trực tiếp & Nguy cơ bịa đặt thông tin về chính sách và sản phẩm & Không chọn \\
+\rowcolor{tblaltbg}
+& Mô hình ngôn ngữ lớn kèm truy hồi tri thức & Câu trả lời dựa trên tài liệu thật của nền tảng; hiểu tiếng Việt tốt & \textbf{Chọn} \\
+Giám sát bất thường & Luật ngưỡng cấu hình được & Kiểm chứng được, minh bạch, không cần dữ liệu huấn luyện & \textbf{Chọn} \\
+\rowcolor{tblaltbg}
+& Unsupervised learning & Không đủ lưu lượng thật để học phân bố bình thường & Hướng phát triển \\
+& Supervised learning & Không có tập nhãn gian lận đã xác nhận để đo chất lượng & Hướng phát triển \\
+\end{longtable}
+\endgroup

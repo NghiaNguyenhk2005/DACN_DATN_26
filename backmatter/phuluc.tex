@@ -10,124 +10,59 @@
 \section*{Phụ lục C. Mã nguồn chi tiết bổ sung}
 % TODO: (nếu cần) các đoạn code không phù hợp trích trong thân báo cáo Ch.4.
 
-\section*{Phụ lục D. Điều khoản dịch vụ (Terms of Service)}
-% TODO: đây là bản nháp dựa trên các quy trình/chính sách đã mô tả ở Ch.3;
-% nhóm cần rà lại cho khớp thực tế vận hành (đặc biệt Điều 5 --- mức phí cụ
-% thể) trước khi công bố, và cân nhắc tham vấn pháp lý nếu triển khai thật.
+\input{backmatter/phuluc-tos}
 
-\noindent\textbf{Định nghĩa thuật ngữ}
-\begin{itemize}
-    \item \textit{Nền tảng}: hệ thống Farmery (web/app).
-    \item \textit{Nhà bán}: tài khoản vai trò \texttt{seller} (mục~\ref{sec:doituongnguoidung}).
-    \item \textit{Người mua}: gồm người mua lẻ (\texttt{buyer\_retail}) và người mua sỉ (\texttt{buyer\_wholesale}).
-    \item \textit{Lô hàng (batch)}: đơn vị sản phẩm gắn với một lần thu hoạch/nhật ký canh tác cụ thể, được định danh bằng mã QR truy xuất (mục~\ref{subsec:gs1blockchain}).
-    \item \textit{Xác thực xong}: trạng thái tài khoản sau khi hoàn tất thủ tục tại mục~\ref{sec:luongtiepcan}.
-\end{itemize}
+\section*{Phụ lục E. Business Model Canvas đầy đủ}
+\label{apdx:bmc}
+\addcontentsline{toc}{section}{Phụ lục E. Business Model Canvas đầy đủ}
 
-\noindent\textbf{Điều 1. Phạm vi áp dụng}\\
-Điều khoản này áp dụng cho mọi tài khoản sử dụng nền tảng Farmery, gồm ba
-nhóm: nhà bán (\texttt{seller}), người mua lẻ (\texttt{buyer\_retail}) và
-người mua sỉ (\texttt{buyer\_wholesale}), theo phân tích tại
-mục~\ref{sec:doituongnguoidung} và luồng tham gia tại
-mục~\ref{sec:luongtiepcan}.
+Bảng~\ref{tab:bmc-full} liệt kê toàn bộ chín khối của khung Business Model
+Canvas để tiện đối chiếu tổng thể; nội dung theo từng cụm đã được phân tích
+tại mục~\ref{sec:businessmodelcanvas}. Ký hiệu \emph{3P} chỉ luồng bán sỉ qua
+sàn, \emph{1P} chỉ luồng bán lẻ do Farmery tự thu mua và bán lại; mục không
+ghi ký hiệu là dùng chung cho cả hai luồng.
 
-\noindent\textbf{Điều 2. Tài khoản và vai trò}\\
-Mỗi tài khoản được gán đúng một vai trò theo mô hình RBAC (Chương~\ref{chap:coso}).
-Người dùng chịu trách nhiệm bảo mật thông tin đăng nhập và toàn bộ hoạt
-động phát sinh từ tài khoản của mình; phải thông báo ngay cho Farmery nếu
-nghi ngờ tài khoản bị truy cập trái phép.
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{3.2cm} L{11.6cm}}
+\caption{Business Model Canvas đầy đủ của Farmery}
+\label{tab:bmc-full} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Khối} & \textbf{Nội dung} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Khối} & \textbf{Nội dung} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Phân khúc khách hàng & Nhà cung cấp là nông dân và hợp tác xã tại vùng trồng thí điểm; khách sỉ là nhà hàng, siêu thị, nhà phân phối (3P); khách lẻ là người tiêu dùng cá nhân trong bán kính giao hàng (1P). \\
+\rowcolor{tblaltbg}
+Giá trị đề xuất & \emph{Nhà cung cấp:} hai lựa chọn đầu ra thay vì phụ thuộc thương lái --- tự bán sỉ trên sàn để giữ toàn bộ giá bán, hoặc bán đứt cả lô để nhận tiền ngay. \emph{Khách sỉ (3P):} nguồn cung đã xác thực chứng nhận, giá bậc minh bạch theo sản lượng, truy xuất tới từng lô. \emph{Khách lẻ (1P):} hàng đã được phân loại và đóng gói, một đầu mối duy nhất chịu trách nhiệm chất lượng và đổi trả. \\
+Quan hệ khách hàng & Tự phục vụ trên web cho khách lẻ; nhân sự phụ trách đồng hành cho khách sỉ; hỗ trợ vùng qua hotline cho nhà cung cấp ít rành công nghệ; đội thu mua làm việc trực tiếp với nhà cung cấp theo mùa vụ (1P). \\
+\rowcolor{tblaltbg}
+Kênh phân phối & Web và ứng dụng Farmery; mạng xã hội và tối ưu tìm kiếm; hội nông dân, hợp tác xã, chương trình OCOP; đội kinh doanh tiếp cận khách sỉ (3P); đội thu mua đặt tại vùng trồng (1P). \\
+Hoạt động chính & Kiểm duyệt nhà cung cấp, sản phẩm và chứng nhận (3P); kết nối cung cầu, xử lý báo giá và hợp đồng bán sỉ (3P); khảo giá và đặt mua theo lô (1P); phân loại, đóng gói, định giá bán lẻ (1P); quản lý tồn kho và xử lý hàng cận hạn (1P); vận hành nền tảng, hệ thống uy tín và các mô-đun AI. \\
+\rowcolor{tblaltbg}
+Nguồn lực chính & Nền tảng web và hạ tầng cho mô-đun AI; dữ liệu truy xuất nguồn gốc và nhật ký canh tác tích lũy theo thời gian; đội ngũ kiểm duyệt, chăm sóc khách hàng, phụ trách khách sỉ; vốn lưu động để thu mua trước khi bán được hàng (1P); kho sơ chế và đóng gói quy mô nhỏ tại vùng trồng (1P). \\
+Đối tác chính & Đơn vị vận chuyển thứ ba (3PL); cổng thanh toán trung gian được cấp phép; cơ quan cấp chứng nhận VietGAP và GlobalGAP; hội nông dân và hợp tác xã địa phương; chương trình OCOP. \\
+\rowcolor{tblaltbg}
+Dòng doanh thu & Hoa hồng trên mỗi giao dịch bán sỉ thành công (3P); biên lợi nhuận bán lại --- chênh lệch giữa giá thu mua và giá bán lẻ (1P); phí dịch vụ giá trị gia tăng gồm xác thực chứng nhận nhanh và gói hiển thị nổi bật. Không thu phí đăng ký hay duy trì tài khoản nhà cung cấp. \\
+Cơ cấu chi phí & Giá vốn hàng mua vào --- khoản chi lớn nhất (1P); hao hụt sau thu hoạch và hàng không bán hết trước hạn (1P); sơ chế, đóng gói, vận chuyển chặng đầu về kho (1P); vận hành nền tảng gồm hạ tầng và đội ngũ kỹ thuật; nhân sự kiểm duyệt, chăm sóc khách hàng, thu mua; marketing; chi phí tích hợp bên thứ ba. \\
+\end{longtable}
+\endgroup
 
-\noindent\textbf{Điều 3. Quyền và nghĩa vụ của nhà bán}\\
-Nhà bán cam kết cung cấp thông tin sản phẩm, chứng nhận và nhật ký canh tác
-trung thực, chính xác (mục~\ref{sec:quytrinhnghiepvu}); chịu trách nhiệm về
-chất lượng hàng hóa đúng như mô tả; tự quản lý tồn kho/giá bán lẻ và bảng
-giá bán sỉ theo nguyên tắc FEFO, cập nhật kịp thời (mục~\ref{subsec:khobai});
-giao hàng đúng cam kết về thời gian và tiêu chuẩn bảo quản đối với hàng dễ
-hư hỏng; có quyền phản hồi công khai đánh giá của người mua
-(mục~\ref{subsec:danhgianghiepvu}).
+\input{backmatter/phuluc-bang}
 
-\noindent\textbf{Điều 4. Quyền và nghĩa vụ của người mua (lẻ và sỉ)}\\
-Người mua có quyền tra cứu truy xuất nguồn gốc trước khi giao dịch, được
-bảo vệ theo chính sách đổi trả/hoàn tiền tại Điều 7, và được gửi đánh giá
-sau khi đơn hàng đã xác nhận nhận được (mục~\ref{subsec:danhgianghiepvu}).
-Người mua có nghĩa vụ thanh toán đúng hạn (bao gồm công nợ B2B theo kỳ hạn
-đã ký), cung cấp thông tin nhận hàng chính xác, và phản hồi trung thực khi
-gửi khiếu nại hoặc đánh giá.
+\input{backmatter/phuluc-congnghe}
 
-\noindent\textbf{Điều 5. Phí dịch vụ}\\
-% TODO: nhóm điền mức phí hoa hồng cụ thể (X% bán lẻ, Y% bán sỉ) theo phân
-% tích chi phí vận hành thực tế.
-Dòng doanh thu của Farmery được phân tích chi tiết tại mục~\ref{sec:businessmodelcanvas}
-(Business Model Canvas). Farmery thu phí hoa hồng trên mỗi giao dịch thành
-công qua nền tảng, với mức riêng cho bán lẻ và bán sỉ, cùng phí dịch vụ giá
-trị gia tăng tùy chọn (xác thực chứng nhận nhanh; gói hiển thị nổi bật dành
-cho nhà bán đã đạt ngưỡng uy tín quy định, vị trí hiển thị được gắn nhãn
-``Tài trợ''); không thu phí đăng ký tài khoản hoặc phí duy trì đối với nhà
-bán. Việc ưu tiên hiển thị tự động theo điểm uy tín
-(mục~\ref{subsec:danhgianghiepvu}) là quyền lợi miễn phí, độc lập với gói
-trả phí nói trên.
+\input{backmatter/phuluc-yeucau}
 
-\noindent\textbf{Điều 6. Thanh toán và ký quỹ trung gian (escrow)}\\
-Giao dịch bán lẻ thanh toán qua ví điện tử, chuyển khoản hoặc COD. Giao
-dịch bán sỉ có giá trị vượt ngưỡng quy định được áp dụng cơ chế escrow
-(Chương~\ref{chap:coso}; yêu cầu chức năng FR7.4): khoản tiền của bên mua
-được giữ tại cổng thanh toán trung gian được cấp phép --- Farmery không
-trực tiếp giữ tiền của người dùng --- và chỉ được giải ngân cho nhà bán
-theo lệnh của hệ thống khi bên mua xác nhận đã nhận đủ hàng đúng cam kết.
-Khi phát sinh tranh chấp, khoản ký quỹ được giữ nguyên cho đến khi khiếu
-nại được xử lý xong theo Điều 7.
+\input{backmatter/phuluc-csdl}
 
-\noindent\textbf{Điều 7. Chính sách đổi trả và hoàn tiền}\\
-Áp dụng theo quy trình vận chuyển và xử lý khiếu nại tại
-mục~\ref{sec:quytrinhnghiepvu}: hoàn tiền toàn phần, hoàn tiền một phần,
-đổi lô hàng mới, hoặc từ chối khiếu nại nếu bằng chứng không đầy đủ, tùy
-mức độ và nguyên nhân xác định được.
-% TODO: nhóm điền cụ thể khung thời gian gửi khiếu nại và thời gian xử lý
-% tối đa (SLA) sau khi chốt được năng lực vận hành thực tế.
-
-\noindent\textbf{Điều 8. Kiểm duyệt và xử lý vi phạm}\\
-Farmery kiểm duyệt định kỳ hồ sơ nhà bán, sản phẩm và chứng nhận
-(mục~\ref{sec:quytrinhnghiepvu}). Vi phạm bị xử lý theo quy trình phân cấp
-từ nhắc nhở, cảnh cáo công khai, tạm khóa đến khóa vĩnh viễn tài khoản; vi
-phạm nghiêm trọng (giả mạo chứng nhận, gian lận, thao túng đánh giá ---
-mục~\ref{subsec:danhgianghiepvu}) bị khóa ngay không qua bước trung gian.
-% TODO: nhóm điền thời gian xử lý hồ sơ xác minh doanh nghiệp B2B
-% (mục~\ref{sec:luongtiepcan}) sau khi chốt quy trình thẩm định thực tế.
-
-\noindent\textbf{Điều 9. Sở hữu trí tuệ và dữ liệu}\\
-Dữ liệu nhật ký canh tác, hình ảnh sản phẩm và chứng nhận do nhà bán cung
-cấp vẫn thuộc quyền sở hữu của nhà bán; Farmery được quyền sử dụng dữ liệu
-này để vận hành nền tảng, hiển thị công khai trang truy xuất nguồn gốc, và
-huấn luyện/vận hành các mô-đun AI hỗ trợ ra quyết định (mục~\ref{sec:thietkeAI}),
-có thể ở dạng ẩn danh/tổng hợp khi không cần gắn với danh tính cụ thể.
-
-\noindent\textbf{Điều 10. Giới hạn trách nhiệm}\\
-Farmery đóng vai trò trung gian công nghệ và thanh toán (Chương~\ref{chap:coso}),
-không trực tiếp sản xuất hay vận chuyển hàng hóa. Trách nhiệm của Farmery
-giới hạn trong phạm vi thông tin đã được xác minh qua quy trình kiểm duyệt;
-các tranh chấp về chất lượng nằm ngoài phạm vi xác minh được xử lý theo quy
-trình khiếu nại tại Điều 7.
-
-\noindent\textbf{Điều 11. Chấm dứt hoặc tạm ngừng dịch vụ}\\
-Người dùng có quyền tự nguyện đóng tài khoản bất kỳ lúc nào, với điều kiện
-không còn đơn hàng/hợp đồng đang xử lý dở dang. Farmery có quyền tạm ngừng
-hoặc chấm dứt tài khoản theo quy trình phân cấp vi phạm tại Điều 8, hoặc
-khi phát hiện dấu hiệu gian lận nghiêm trọng (liên hệ mục~\ref{sec:quytrinhnghiepvu},
-Quản trị hệ thống). Việc chấm dứt không ảnh hưởng đến nghĩa vụ tài chính
-đã phát sinh trước thời điểm chấm dứt (công nợ B2B, khoản đang ký quỹ
-escrow theo Điều 6).
-
-\noindent\textbf{Điều 12. Giải quyết tranh chấp}\\
-Tranh chấp giữa các bên (nhà bán--người mua, hoặc với Farmery) trước hết
-được giải quyết qua thương lượng trực tiếp trên kênh nhắn tin nội bộ hoặc
-CSKH của nền tảng (mục~\ref{sec:luongtiepcan}). Nếu không đạt được thỏa
-thuận, các bên có thể yêu cầu Farmery hòa giải dựa trên dữ liệu giao dịch
-và truy xuất nguồn gốc đã ghi nhận trên hệ thống làm căn cứ khách quan. Nếu
-vẫn không giải quyết được, tranh chấp được xử lý theo quy định của pháp
-luật Việt Nam.
-
-\noindent\textbf{Điều 13. Thay đổi điều khoản}\\
-Farmery có quyền cập nhật điều khoản dịch vụ khi cần, có thông báo trước
-cho người dùng qua nền tảng hoặc email/SMS đã đăng ký. Việc tiếp tục sử
-dụng nền tảng sau thời điểm điều khoản mới có hiệu lực được xem là chấp
-nhận thay đổi.
+\input{backmatter/phuluc-nguong}

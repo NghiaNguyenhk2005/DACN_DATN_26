@@ -3,16 +3,16 @@
 \begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu};
-    \node[farm/process] (register) at (0,-1.25) {Nhà bán: đăng ký, khai báo định danh và thông tin trang trại};
-    \node[farm/process] (otp) at (0,-2.75) {Hệ thống gửi OTP;\\nhà bán nhập mã xác thực};
+    \node[farm/process] (register) at (0,-1.25) {Nhà cung cấp: đăng ký, khai báo định danh và thông tin trang trại};
+    \node[farm/process] (otp) at (0,-2.75) {Hệ thống gửi OTP;\\nhà cung cấp nhập mã xác thực};
     \node[farm/decision] (valid) at (0,-4.5) {OTP hợp lệ?};
     \node[farm/decision] (attempts) at (6,-4.5) {Sai quá 5 lần?};
     \node[farm/exception] (lock) at (6,-6.4) {Hệ thống: khóa tạm thời\\30 phút};
-    \node[farm/process] (ekyc) at (0,-6.75) {Nhà bán: xác minh danh tính điện tử (eKYC) --- ảnh giấy tờ định danh và ảnh chân dung};
-    \node[farm/process] (evidence) at (0,-8.55) {Nhà bán: tải chứng nhận (nếu có), mã số, cơ quan cấp và hạn dùng};
+    \node[farm/process] (ekyc) at (0,-6.75) {Nhà cung cấp: xác minh danh tính điện tử (eKYC) --- ảnh giấy tờ định danh và ảnh chân dung};
+    \node[farm/process] (evidence) at (0,-8.55) {Nhà cung cấp: tải chứng nhận (nếu có), mã số, cơ quan cấp và hạn dùng};
     \node[farm/process] (review) at (0,-10.4) {Kiểm duyệt: đối chiếu kết quả eKYC và chứng nhận với cơ quan cấp hoặc kiểm tra thủ công};
     \node[farm/decision] (approved) at (0,-12.45) {eKYC và hồ sơ\\đạt yêu cầu?};
-    \node[farm/processnarrow] (supplement) at (6,-12.45) {Hệ thống: thông báo lý do của bước không đạt; nhà bán bổ sung};
+    \node[farm/processnarrow] (supplement) at (6,-12.45) {Hệ thống: thông báo lý do của bước không đạt; nhà cung cấp bổ sung};
     \node[farm/process] (verified) at (0,-14.75) {Hệ thống: trạng thái ``Đã xác thực'', kích hoạt quyền đăng bán; gắn nhãn chứng nhận nếu có};
     \node[farm/process] (monitor) at (0,-16.45) {Hệ thống: theo dõi hiệu lực chứng nhận trong quá trình hoạt động};
     \node[farm/processnarrow] (expiry) at (6,-16.45) {Còn dưới 30 ngày: nhắc gia hạn.\\Hết hạn: ẩn nhãn đến khi cập nhật; không gỡ sản phẩm.};
@@ -31,6 +31,6 @@
     \draw[farm/arrow,dashed] (monitor) -- (expiry);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Lưu đồ quy trình đăng ký, xác thực nhà bán và kiểm duyệt chứng nhận}
+\caption{Lưu đồ quy trình đăng ký, xác thực nhà cung cấp và kiểm duyệt chứng nhận}
 \label{fig:flow-dang-ky}
 \end{figure}

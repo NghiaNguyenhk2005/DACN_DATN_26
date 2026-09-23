@@ -1,13 +1,13 @@
 \chapter{Công trình liên quan}
 \label{chap:lienquan}
 
-Chương này khảo sát các công trình liên quan tới Farmery theo hai nhóm: các nghiên cứu học thuật đã công bố (mục~\ref{sec:nghiencuulienquan}) và các nền tảng, hệ thống đã triển khai thực tế trong nước và quốc tế (mục~\ref{sec:hethonglienquan}). Phần kết chương phân tích khoảng trống giữa các công trình này để định vị đóng góp của đồ án.
+Chương này khảo sát các công trình liên quan tới Farmery theo hai nhóm: các nghiên cứu học thuật đã công bố (mục~\ref{sec:nghiencuulienquan}) và các nền tảng, hệ thống đã triển khai thực tế trong nước và quốc tế (mục~\ref{sec:hethonglienquan}). Mục~\ref{sec:visaochualam} phân tích vì sao chưa nền tảng nào đi theo hướng của Farmery, và phần kết chương định vị khoảng trống mà đồ án hướng tới lấp đầy.
 
 \section{Các nghiên cứu liên quan}
 \label{sec:nghiencuulienquan}
 
 % TODO: bổ sung thêm các bài báo/nghiên cứu đã đọc (nền tảng TMĐT nông sản, truy xuất nguồn gốc, hệ thống uy tín, AI trong nông nghiệp) để mục này không chỉ dựa vào một công trình; mỗi công trình nêu: phương pháp, kết quả, hạn chế so với Farmery.
-\textbf{Farm2Market} (nghiên cứu học thuật, 2025) --- tích hợp blockchain (escrow qua smart contract) + AI dự báo giá (~82\% độ chính xác) + QR truy xuất nguồn gốc \parencite{farm2market_2025}. Đây là mô hình \textbf{gần nhất về ý tưởng với Farmery}, nhưng mới dừng ở nghiên cứu/đề xuất, chưa có dữ liệu vận hành thương mại thực tế, và không đề cập phục vụ song song bán lẻ/bán sỉ theo MOQ.
+\textbf{Farm2Market} (2025) là nghiên cứu học thuật gần nhất về ý tưởng với Farmery: kết hợp blockchain (ký quỹ qua smart contract), AI dự báo giá đạt khoảng 82\% độ chính xác và mã QR truy xuất nguồn gốc \parencite{farm2market_2025}. Hạn chế của công trình này là mới dừng ở mức đề xuất, chưa có dữ liệu vận hành thương mại thực tế, và không đề cập tới việc phục vụ song song hai luồng bán lẻ và bán sỉ.
 
 \section{Các hệ thống và nền tảng liên quan}
 \label{sec:hethonglienquan}
@@ -15,47 +15,124 @@ Chương này khảo sát các công trình liên quan tới Farmery theo hai nh
 \subsection{Các sàn thương mại điện tử trong nước}
 \label{subsec:sosanhtrongnuoc}
 
-Nhóm thứ nhất là các sàn thương mại điện tử tổng hợp đa ngành hàng có quy mô lớn nhất Việt Nam --- Shopee và Lazada. Theo Metric.vn/VnEconomy, 9 tháng đầu 2025 Shopee dẫn đầu thị phần 4 sàn lớn với 56\% GMV, trong khi Lazada tụt còn 3\% (từ 6\% năm 2024) trước áp lực cạnh tranh của TikTok Shop \parencite{vneconomy_2025_ecommerce}. Cả hai đều có ngành hàng thực phẩm/nông sản nhưng không chuyên biệt hóa cho ngành này (chi tiết ưu/nhược điểm ở Hình~\ref{tab:sosanhtrongnuoc}).
+Nhóm thứ nhất là các sàn tổng hợp đa ngành hàng có quy mô lớn nhất Việt Nam. Theo Metric.vn, chín tháng đầu năm 2025 Shopee dẫn đầu với 56\% giá trị giao dịch của nhóm bốn sàn lớn, trong khi Lazada thu hẹp còn 3\% (giảm từ 6\% năm 2024) trước áp lực cạnh tranh của TikTok Shop \parencite{vneconomy_2025_ecommerce}. Cả hai đều có ngành hàng thực phẩm nhưng không chuyên biệt hóa cho nông sản.
 
-Nhóm thứ hai là các sàn chuyên biệt cho nông sản tại Việt Nam: FoodMap (tư nhân, B2C+B2B, mạng lưới 300+ nông trại, có QR truy xuất nguồn gốc) \parencite{foodmap}, và nhóm sàn của các tổng công ty bưu chính nhà nước. Nhóm sau đã trải qua một lần đổi tên/thu hẹp phạm vi đáng chú ý: Postmart.vn (VNPost) và Vỏ Sò (Viettel Post) ban đầu hỗ trợ nông dân đưa sản phẩm OCOP lên môi trường số, từng giúp tiêu thụ gần 1.200 tấn nông sản cho các tỉnh phía Nam trong đợt dịch 2021 \parencite{postmart_voso_2021}; Vỏ Sò ngừng hoạt động đầu 2023, còn Postmart.vn đổi tên thành Buudien.vn (31/3/2024) \parencite{buudien_2024}. Đến 12/2024, cả hai tập đoàn ra mắt sàn chuyên biệt mới theo hướng B2B/xuất khẩu --- nongsan.buudien.vn (VNPost) và VIPO Mall (Viettel Post) \parencite{vipo_nongsan_2024} --- nhưng vẫn thiếu tính năng phục vụ đồng thời cả bán lẻ cá nhân lẫn đàm phán giá sỉ theo MOQ như Farmery hướng tới.
+Nhóm thứ hai là các sàn chuyên biệt cho nông sản. FoodMap là sàn tư nhân phục vụ cả bán lẻ lẫn bán sỉ, có mạng lưới hơn 300 nông trại và tính năng QR truy xuất nguồn gốc \parencite{foodmap}. Nhóm sàn của các tổng công ty bưu chính nhà nước đã trải qua một lần thu hẹp phạm vi đáng chú ý: Postmart.vn (VNPost) và Vỏ Sò (Viettel Post) ban đầu hỗ trợ nông dân đưa sản phẩm OCOP lên môi trường số, từng giúp tiêu thụ gần 1.200 tấn nông sản cho các tỉnh phía Nam trong đợt dịch 2021 \parencite{postmart_voso_2021}; Vỏ Sò ngừng hoạt động đầu 2023, còn Postmart.vn đổi tên thành Buudien.vn từ tháng 3/2024 \parencite{buudien_2024}. Đến tháng 12/2024, cả hai tập đoàn ra mắt sàn chuyên biệt mới theo hướng bán sỉ và xuất khẩu --- nongsan.buudien.vn và VIPO Mall \parencite{vipo_nongsan_2024}.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{image/comparison/so-sanh-trong-nuoc.png}
+Bảng~\ref{tab:sosanhtrongnuoc} đối chiếu các nền tảng này với định hướng của Farmery.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{L{2.5cm} L{3.1cm} L{4.4cm} L{4.4cm}}
 \caption{So sánh các sàn thương mại điện tử trong nước liên quan đến nông sản}
-\label{tab:sosanhtrongnuoc}
-\end{figure}
-
+\label{tab:sosanhtrongnuoc} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nền tảng} & \textbf{Mô hình} & \textbf{Điểm mạnh} & \textbf{Hạn chế với nông sản} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nền tảng} & \textbf{Mô hình} & \textbf{Điểm mạnh} & \textbf{Hạn chế với nông sản} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Shopee & Sàn tổng hợp, B2C, 3P & Dẫn đầu thị phần (56\% GMV nhóm bốn sàn lớn, 2025); hạ tầng logistics và thanh toán trưởng thành & Không chuyên biệt nông sản; không xác minh chứng nhận canh tác; không truy xuất theo lô; không hỗ trợ giá sỉ theo MOQ \\
+\rowcolor{tblaltbg}
+Lazada & Sàn tổng hợp, B2C, 3P & Hệ sinh thái logistics khu vực Đông Nam Á & Thị phần thu hẹp còn 3\% (2025); các hạn chế về nông sản giống Shopee \\
+FoodMap & Chuyên nông sản, B2C và B2B, chủ yếu 3P & Có QR truy xuất nguồn gốc; mạng lưới hơn 300 nông trại; đã gọi vốn và vận hành thực tế & Quy mô nhỏ; chưa rõ cơ chế giá bậc theo MOQ; chưa có AI hỗ trợ ra quyết định \\
+\rowcolor{tblaltbg}
+Buudien.vn & Chuyên nông sản, B2B và xuất khẩu, 3P & Kế thừa mạng lưới bưu chính toàn quốc & Thế hệ trước thiên về tiêu thụ thời vụ; thế hệ mới thu hẹp phạm vi, giảm phục vụ khách mua lẻ \\
+VIPO Mall & Chuyên nông sản, B2B xuyên biên giới, 3P & Hậu thuẫn hạ tầng Viettel Post; tập trung xuất khẩu nông--lâm--thủy sản & Chỉ phục vụ bán sỉ và xuất khẩu; không có kênh bán lẻ trên cùng nền tảng \\
+\rowcolor{tblaltbg}
+\textbf{Farmery} & Bán sỉ 3P kết hợp bán lẻ 1P & Hai kênh song song trên cùng nguồn cung; truy xuất gắn nhật ký canh tác; kiểm duyệt chứng nhận hai cấp; ba mô-đun AI & Chưa kiểm chứng ở quy mô vận hành thật; cần vốn lưu động và chịu rủi ro tồn kho ở kênh bán lẻ \\
+\end{longtable}
+\endgroup
 
 \subsection{Các nền tảng quốc tế}
 \label{subsec:sosanhquocte}
 
-Ba nền tảng quốc tế dưới đây minh họa các hướng số hóa nông nghiệp khác nhau đã được kiểm chứng ở quy mô thương mại; Hình~\ref{tab:sosanhquocte} so sánh ưu/nhược điểm của chúng cùng với nghiên cứu Farm2Market đã trình bày tại mục~\ref{sec:nghiencuulienquan}:
-\begin{itemize}
-    \item \textbf{e-Choupal} (Ấn Độ, ITC, từ 2000) --- mô hình ``click and mortar'' dùng kiosk internet tại làng để loại bỏ tầng trung gian truyền thống (mandi/thương lái), giúp nông dân tăng thu nhập tới 50\% ở quy mô đã kiểm chứng (~4 triệu nông dân) \parencite{business_standard_2020_echoupal}.
-    \item \textbf{Pinduoduo / Duo Duo Grocery} (Trung Quốc) --- mô hình mua chung (group buying) kết nối trực tiếp nông dân--người tiêu dùng, quy mô rất lớn (12 triệu+ nông dân, GMV nông nghiệp hàng trăm tỷ NDT) nhưng thuần B2C \parencite{nasdaq_2021_pinduoduo}.
-    \item \textbf{Ninjacart} (Ấn Độ) --- nền tảng B2B rau củ tươi, dùng học máy dự báo nhu cầu và tối ưu vận chuyển, minh chứng AI có thể triển khai thực tế ở quy mô lớn cho hàng tươi, nhưng không phục vụ người tiêu dùng cá nhân \parencite{ninjacart}.
-\end{itemize}
+Ba nền tảng quốc tế dưới đây minh họa các hướng số hóa nông nghiệp khác nhau đã được kiểm chứng ở quy mô thương mại; Bảng~\ref{tab:sosanhquocte} đối chiếu chúng cùng với nghiên cứu Farm2Market đã trình bày tại mục~\ref{sec:nghiencuulienquan}.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{image/comparison/so-sanh-quoc-te.png}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{L{2.5cm} L{3.1cm} L{4.4cm} L{4.4cm}}
 \caption{So sánh các mô hình quốc tế tham khảo}
-\label{tab:sosanhquocte}
-\end{figure}
+\label{tab:sosanhquocte} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nền tảng} & \textbf{Mô hình} & \textbf{Kết quả đã kiểm chứng} & \textbf{Hạn chế} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nền tảng} & \textbf{Mô hình} & \textbf{Kết quả đã kiểm chứng} & \textbf{Hạn chế} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+e-Choupal (Ấn Độ, ITC, từ 2000) & Kiosk internet tại làng, loại bỏ tầng trung gian truyền thống & Tăng thu nhập nông dân tới 50\%; quy mô khoảng 4 triệu nông dân \parencite{business_standard_2020_echoupal} & Chủ yếu phục vụ chuỗi cung ứng nội bộ của ITC; không phải marketplace mở \\
+\rowcolor{tblaltbg}
+Pinduoduo (Trung Quốc) & Mua chung, kết nối trực tiếp nông dân với người tiêu dùng & Hơn 12 triệu nông dân tham gia; GMV nông nghiệp hàng trăm tỷ NDT \parencite{nasdaq_2021_pinduoduo} & Thuần B2C, không có kênh bán sỉ theo MOQ; không nhấn mạnh truy xuất nguồn gốc \\
+Ninjacart (Ấn Độ) & B2B rau củ tươi, dùng học máy dự báo nhu cầu và tối ưu vận chuyển & Hơn 17.000 điểm bán lẻ, giao trong 12 giờ; thanh toán nông dân trong 24 giờ \parencite{ninjacart} & Thuần B2B, không phục vụ người tiêu dùng cá nhân; chi phí kho lạnh cao \\
+\rowcolor{tblaltbg}
+Farm2Market (nghiên cứu, 2025) & Blockchain kết hợp AI dự báo giá và QR truy xuất & AI dự báo giá đạt khoảng 82\% độ chính xác \parencite{farm2market_2025} & Mới dừng ở nghiên cứu, chưa có dữ liệu vận hành; chưa tích hợp song song hai luồng \\
+\end{longtable}
+\endgroup
 
+\section{Vì sao các nền tảng hiện có chưa đi theo hướng này}
+\label{sec:visaochualam}
+
+Một câu hỏi tự nhiên đặt ra: nếu mô hình kết hợp bán sỉ qua sàn với bán lẻ do nền tảng tự thu mua là hợp lý, vì sao các nền tảng lớn đã có đủ nguồn lực lại chưa làm? Bốn nguyên nhân dưới đây giải thích điều đó, đồng thời cho thấy Farmery sẽ phải đánh đổi những gì.
+
+\begin{enumerate}
+    \item[\textbf{N1.}] \textbf{Mô hình phí của sàn tổng hợp không khớp với hàng tươi.} Shopee và Lazada sống bằng hoa hồng và quảng cáo trên quy mô giao dịch cực lớn, với giả định chi phí xử lý mỗi đơn gần như bằng không. Nông sản tươi phá vỡ giả định đó: giá trị mỗi đơn thấp, tỷ lệ khiếu nại và hoàn hàng cao do hàng hư hỏng trên đường, và mỗi khiếu nại đều cần con người xử lý.
+    \item[\textbf{N2.}] \textbf{Tự sở hữu hàng đòi hỏi vốn lưu động và hạ tầng bảo quản.} Mô hình thu mua rồi bán lại buộc nền tảng bỏ tiền trước và chịu toàn bộ rủi ro hàng hỏng. Rào cản này càng lớn tại Việt Nam, nơi hạ tầng kho lạnh cho rau quả tươi còn rất mỏng (Chương~\ref{chap:gioithieu}).
+    \item[\textbf{N3.}] \textbf{Các nền tảng đã né rủi ro tồn kho bằng thiết kế khác.} Pinduoduo dùng cơ chế mua chung để gom đủ cầu trước khi hàng được thu hoạch. e-Choupal số hóa khâu thông tin và thu mua chứ không bán lẻ tới người tiêu dùng.
+    \item[\textbf{N4.}] \textbf{Chuyên môn hóa về một phía thị trường.} Ninjacart tự chủ khâu thu mua và vận hành hàng tươi nhưng chỉ phục vụ khách doanh nghiệp. Ngược lại, FoodMap tiếp cận người tiêu dùng nhưng chưa có cơ chế đàm phán giá sỉ theo sản lượng tối thiểu.
+\end{enumerate}
+
+\noindent\textbf{Cái giá Farmery phải trả.} Việc chọn hướng kết hợp không có nghĩa các nền tảng trên đã sai. Farmery chấp nhận ba đánh đổi mà họ đã chủ động tránh: phải có vốn lưu động cho khâu thu mua, phải chịu lỗ trực tiếp với mỗi lô hàng không bán hết, và phải vận hành hai mô hình kinh doanh khác nhau trên cùng một hệ thống. Điều làm cho đánh đổi này trở nên chấp nhận được là phạm vi thí điểm hẹp về địa bàn và chủng loại hàng (mục~\ref{sec:phamvi}).
 
 \section{Kết chương}
 \label{subsec:researchgap}
 
-Từ hai hình so sánh trên, có thể thấy phần lớn các nền tảng hiện có chỉ mạnh ở một phía --- hoặc thuần B2C (Pinduoduo, Shopee/Lazada đối với hàng nông sản), hoặc thuần B2B (Ninjacart, VIPO Mall, e-Choupal chủ yếu phục vụ chuỗi nội bộ) --- mà chưa tích hợp đầy đủ cả hai luồng bán lẻ và bán sỉ theo MOQ/giá bậc trên cùng một nền tảng. Tính năng truy xuất nguồn gốc bằng mã QR ở các sàn Việt Nam (FoodMap) hiện chủ yếu phục vụ minh bạch thông tin cơ bản, chưa gắn liền với nhật ký canh tác chi tiết theo chuẩn quốc tế (GS1 --- xem mục~\ref{subsec:gs1blockchain}). Farm2Market là mô hình gần nhất về mặt lý thuyết (kết hợp truy xuất nguồn gốc + AI + escrow) nhưng mới dừng ở nghiên cứu học thuật, chưa kiểm chứng ở quy mô vận hành thật, và không đề cập tới việc phục vụ song song hai luồng B2C/B2B. Hình~\ref{tab:researchgap} tổng hợp các tiêu chí này.
+Bảng~\ref{tab:researchgap} đối chiếu toàn bộ các nền tảng trên theo cùng một bộ tiêu chí. Ký hiệu: \checkmark{} đáp ứng đầy đủ, $\circ$ đáp ứng một phần hoặc không rõ, $\times$ không đáp ứng.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{image/comparison/research-gap.png}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{3.6cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{2.1cm}}
 \caption{Ma trận khoảng trống nghiên cứu: Farmery so với các nền tảng đối chứng}
-\label{tab:researchgap}
-\end{figure}
+\label{tab:researchgap} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Shopee} & \textbf{Lazada} & \textbf{FoodMap} & \textbf{VIPO Mall} & \textbf{Farm2\-Market} & \textbf{Farmery} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Shopee} & \textbf{Lazada} & \textbf{FoodMap} & \textbf{VIPO Mall} & \textbf{Farm2\-Market} & \textbf{Farmery} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Song song bán lẻ và bán sỉ theo MOQ & $\times$ & $\times$ & $\circ$ một phần & $\times$ chỉ B2B & $\times$ không nêu & \checkmark \\
+\rowcolor{tblaltbg}
+Mô hình sở hữu hàng hóa & $\times$ chỉ 3P & $\times$ chỉ 3P & $\circ$ chủ yếu 3P & $\times$ chỉ 3P & $\times$ không nêu & \checkmark{} 3P và 1P \\
+Truy xuất gắn nhật ký canh tác & $\times$ & $\times$ & $\circ$ QR cơ bản & $\circ$ không rõ & \checkmark{} blockchain & \checkmark{} QR và nhật ký \\
+\rowcolor{tblaltbg}
+Xác thực chứng nhận GAP & $\times$ & $\times$ & $\circ$ không rõ & $\circ$ không rõ & $\times$ không nêu & \checkmark{} hai cấp \\
+AI hỗ trợ ra quyết định & $\circ$ không cho nông sản & $\circ$ không cho nông sản & $\times$ & $\times$ & \checkmark{} dự báo giá & \checkmark{} ba mô-đun \\
+\rowcolor{tblaltbg}
+Đã kiểm chứng thương mại & \checkmark{} 56\% GMV & $\circ$ thu hẹp, 3\% & \checkmark & \checkmark & $\times$ mới nghiên cứu & $\circ$ đang xây dựng \\
+\end{longtable}
+\endgroup
 
-Khoảng trống nghiên cứu mà Farmery hướng tới lấp đầy là: kết hợp truy xuất nguồn gốc gắn nhật ký canh tác theo nguyên lý GS1, hỗ trợ song song bán lẻ và bán sỉ B2B theo MOQ trên cùng một nền tảng, và tích hợp các mô-đun AI hỗ trợ ra quyết định (gợi ý sản phẩm, dự báo, phát hiện gian lận, trợ lý ảo) --- một tổ hợp chưa được các nền tảng đối chứng hiện thực hóa đầy đủ cùng lúc.
-
+Khoảng trống nghiên cứu mà Farmery hướng tới lấp đầy gồm ba phần: kết hợp truy xuất nguồn gốc gắn nhật ký canh tác theo nguyên lý GS1 (mục~\ref{subsec:gs1blockchain}); phục vụ song song hai luồng trên cùng một tập nguồn cung --- bán sỉ theo MOQ do nhà cung cấp tự bán, và bán lẻ do chính nền tảng thu mua rồi bán lại; và tích hợp các mô-đun AI hỗ trợ ra quyết định. Đây là tổ hợp chưa được các nền tảng đối chứng hiện thực hóa đầy đủ cùng lúc, vì những lý do đã phân tích tại mục~\ref{sec:visaochualam}.

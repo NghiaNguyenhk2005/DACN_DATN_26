@@ -1,7 +1,79 @@
 \chapter{Kiến thức và công nghệ nền tảng}
 \label{chap:coso}
 
-Chương này trình bày các kiến thức nền tảng mà Farmery vận dụng: bối cảnh chính sách và tiêu chuẩn chất lượng nông sản tại Việt Nam, các lý thuyết về mô hình thương mại điện tử, chuỗi cung ứng, truy xuất nguồn gốc, uy tín và công nghệ nền tảng, cùng các bài toán trí tuệ nhân tạo được tích hợp vào hệ thống. Các nền tảng và nghiên cứu cụ thể có liên quan được khảo sát riêng tại Chương~\ref{chap:lienquan}.
+Chương này trình bày các kiến thức nền tảng mà Farmery vận dụng: đặc điểm của chính mặt hàng nông sản và hệ quả của chúng lên thiết kế hệ thống, bối cảnh chính sách và tiêu chuẩn chất lượng tại Việt Nam, các lý thuyết về mô hình thương mại điện tử, chuỗi cung ứng, truy xuất nguồn gốc, uy tín và công nghệ nền tảng, cùng các bài toán trí tuệ nhân tạo được tích hợp vào hệ thống. Các nền tảng và nghiên cứu cụ thể có liên quan được khảo sát riêng tại Chương~\ref{chap:lienquan}.
+
+\section{Đặc điểm hàng nông sản}
+\label{sec:dacdiemnongsan}
+
+Toàn bộ thiết kế của Farmery xuất phát từ một điểm: nông sản không hành xử giống các loại hàng hóa khác trên sàn thương mại điện tử. Mục này làm rõ phạm vi khái niệm ``nông sản'' được dùng trong đồ án, các đặc điểm phân biệt nông sản với hàng hóa thông thường, và các chứng nhận mà một lô nông sản cần có để ra thị trường.
+
+\subsection{Phạm vi khái niệm nông sản trong đồ án}
+\label{subsec:dinhnghianongsan}
+
+% TODO: nhóm bổ sung \parencite cho ba văn bản pháp lý dẫn dưới đây vào references.bib.
+Pháp luật Việt Nam không có một định nghĩa duy nhất về ``nông sản'' áp dụng cho mọi mục đích. Đồ án xác định phạm vi dựa trên ba căn cứ: Luật An toàn thực phẩm số 55/2010/QH12 (khái niệm thực phẩm tươi sống và thực phẩm đã qua chế biến), Nghị định số 15/2018/NĐ-CP (phân loại sản phẩm phải công bố và sản phẩm được miễn), và Luật Trồng trọt số 31/2018/QH14 (sản phẩm cây trồng và sản phẩm sơ chế).
+
+Trên cơ sở đó, hàng hóa được chia thành bốn nhóm với ranh giới trong và ngoài phạm vi như sau:
+\begin{itemize}
+    \item \textbf{Nhóm 1 --- Nông sản tươi chưa qua chế biến} (rau, củ, quả, gạo, các loại hạt): \emph{trong phạm vi}, là trục chính của nền tảng.
+    \item \textbf{Nhóm 2 --- Nông sản sơ chế hoặc bảo quản đơn giản} (sấy khô, cấp đông, đóng gói hút chân không, không thêm phụ gia): \emph{trong phạm vi}.
+    \item \textbf{Nhóm 3 --- Nông sản chế biến sâu} (nước ép, mứt, trà, tinh dầu --- phần lớn sản phẩm OCOP thuộc nhóm này): \emph{trong phạm vi có điều kiện} --- nhà cung cấp bắt buộc phải có bản tự công bố sản phẩm và giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm.
+    \item \textbf{Nhóm 4 --- Ngoài phạm vi}: thủy sản sống, thịt tươi, động vật sống (đòi hỏi điều kiện kiểm dịch và bảo quản khác hẳn); thực phẩm chức năng, thuốc bảo vệ thực vật, vật tư nông nghiệp và mọi hàng hóa phi thực phẩm.
+\end{itemize}
+
+Ranh giới này không chỉ mang tính học thuật: nó là căn cứ trực tiếp để xây dựng danh mục sản phẩm đóng và danh sách loại trừ ở khâu đăng bán, nhằm ngăn nhà cung cấp đăng nhầm hoặc cố tình đăng sai loại hàng (mục~\ref{sec:quytrinhnghiepvu}).
+
+\subsection{Nông sản khác hàng hóa thông thường ở điểm nào}
+\label{subsec:sosanhnongsan}
+
+So với hàng công nghiệp và hàng tiêu dùng đóng gói --- nhóm hàng mà các sàn thương mại điện tử phổ thông được thiết kế để phục vụ --- nông sản có những khác biệt sau, mỗi khác biệt kéo theo một ràng buộc thiết kế cụ thể:
+
+\begin{itemize}
+    \item \textbf{Mau hỏng, hạn sử dụng tính bằng ngày.} Hàng công nghiệp tồn kho hàng năm không mất giá trị; rau quả tươi mất giá trị theo từng ngày. Hệ quả: tồn kho phải quản lý theo lô kèm hạn sử dụng, ưu tiên xuất trước lô hết hạn trước, và thời gian giao hàng trở thành ràng buộc chứ không phải tiện ích.
+    \item \textbf{Nguồn cung theo mùa vụ, không theo đơn đặt hàng.} Nhà máy sản xuất thêm khi có cầu; nông dân không thể thu hoạch sớm hơn mùa vụ. Hệ quả: giá và sản lượng biến động mạnh theo thời điểm trong năm, cần dự báo thay vì chỉ ghi nhận.
+    \item \textbf{Chất lượng không đồng nhất giữa các lô.} Hai lô cùng giống, cùng vùng trồng vẫn khác nhau về kích cỡ và độ chín. Hệ quả: không thể mô tả sản phẩm một lần rồi dùng mãi như mã hàng công nghiệp; mỗi lô cần dữ liệu riêng.
+    \item \textbf{Khó chuẩn hóa đơn vị bán.} Hàng công nghiệp bán theo ``cái''; nông sản bán theo khối lượng, theo bó, theo thùng, và quy cách khác nhau giữa bán lẻ với bán sỉ. Hệ quả: hệ thống phải hỗ trợ nhiều đơn vị tính và quy đổi giữa chúng.
+    \item \textbf{Là hàng hóa mà người mua không tự kiểm chứng được chất lượng.} Người mua không thể nhìn quả cà chua để biết nó có dư lượng thuốc bảo vệ thực vật hay không --- kể cả sau khi đã ăn. Đây chính là loại hàng hóa mà lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}) mô tả, và là lý do truy xuất nguồn gốc cùng chứng nhận bên thứ ba trở thành bắt buộc chứ không phải tùy chọn.
+    \item \textbf{Chịu ràng buộc pháp lý về an toàn thực phẩm.} Bán hàng công nghiệp sai mô tả là vi phạm thương mại; bán thực phẩm không an toàn có thể gây hậu quả sức khỏe. Hệ quả: khâu kiểm duyệt không thể chỉ dựa vào tự động hóa.
+    \item \textbf{Hao hụt trong vận chuyển ở mức cao.} Tỷ lệ tổn thất sau thu hoạch của rau quả Việt Nam ở mức 20--40\% (Chương~\ref{chap:gioithieu}), trong khi hàng công nghiệp gần như không hao hụt. Hệ quả: chi phí hao hụt phải được tính vào mô hình kinh doanh, đặc biệt ở luồng mà nền tảng tự sở hữu hàng.
+\end{itemize}
+
+Bảng đối chiếu chi tiết giữa nông sản, hàng công nghiệp và hàng tiêu dùng đóng gói theo từng tiêu chí được trình bày tại Phụ lục G.
+
+\subsection{Chứng nhận và giấy tờ để nông sản ra thị trường}
+\label{subsec:chungnhan}
+
+% TODO: nhóm bổ sung nguồn trích dẫn cho danh sách chứng nhận dưới đây (trang chính thức của GlobalG.A.P., GFSI, quy định hữu cơ của EU và Hoa Kỳ, chuẩn kiểm dịch thực vật quốc tế, và hướng dẫn mã số vùng trồng của cơ quan quản lý trong nước) rồi thêm \parencite tương ứng vào references.bib.
+Một lô nông sản muốn đi từ trang trại ra thị trường --- đặc biệt là thị trường xuất khẩu --- phải kèm theo hai loại hồ sơ: chứng nhận về \emph{cách thức sản xuất} và giấy tờ đi theo \emph{từng lô hàng cụ thể}.
+
+\noindent\textbf{Chứng nhận thực hành sản xuất:}
+\begin{itemize}
+    \item \textbf{GlobalG.A.P.} --- chuẩn thực hành nông nghiệp tốt được công nhận rộng rãi nhất trên thế giới, là điều kiện tiếp cận các thị trường khó tính; có thể bổ sung mô-đun GRASP đánh giá điều kiện lao động.
+    \item \textbf{VietGAP} --- chuẩn trong nước, phù hợp chuỗi cung ứng nội địa.
+    \item \textbf{Chứng nhận hữu cơ} --- USDA Organic (Hoa Kỳ), EU Organic theo Quy định 2018/848 (châu Âu), JAS Organic (Nhật Bản).
+\end{itemize}
+
+\noindent\textbf{Chuẩn an toàn thực phẩm cho khâu chế biến và đóng gói:}
+\begin{itemize}
+    \item \textbf{HACCP} --- nguyên tắc phân tích mối nguy và điểm kiểm soát tới hạn, nền tảng của các chuẩn còn lại.
+    \item \textbf{ISO 22000} và \textbf{FSSC 22000} --- hệ thống quản lý an toàn thực phẩm, trong đó FSSC 22000 được Sáng kiến An toàn Thực phẩm Toàn cầu (GFSI) công nhận.
+    \item \textbf{BRCGS Food Safety} và \textbf{IFS Food} --- hai chuẩn được các chuỗi bán lẻ lớn tại Anh và châu Âu yêu cầu.
+\end{itemize}
+
+\noindent\textbf{Chứng nhận phục vụ thị trường ngách:} Halal (thị trường Hồi giáo), Kosher (thị trường Do Thái), Fairtrade và Rainforest Alliance (thương mại công bằng và bền vững).
+
+\noindent\textbf{Giấy tờ đi theo từng lô hàng:}
+\begin{itemize}
+    \item \textbf{Giấy chứng nhận kiểm dịch thực vật} (Phytosanitary Certificate) --- bắt buộc với hầu hết lô hàng thực vật xuất khẩu, cấp theo chuẩn quốc tế về biện pháp kiểm dịch thực vật.
+    \item \textbf{Giấy chứng nhận xuất xứ} (C/O) --- căn cứ hưởng ưu đãi thuế quan theo các hiệp định thương mại.
+    \item \textbf{Phiếu kết quả phân tích} (Certificate of Analysis) --- kết quả kiểm nghiệm dư lượng thuốc bảo vệ thực vật và kim loại nặng.
+    \item \textbf{Mã số vùng trồng và mã số cơ sở đóng gói} --- điều kiện bắt buộc để xuất khẩu chính ngạch sang nhiều thị trường, trong đó có Trung Quốc.
+    \item \textbf{Hồ sơ theo yêu cầu riêng của thị trường đích} --- ví dụ thông báo trước và chương trình xác minh nhà cung cấp nước ngoài khi vào Hoa Kỳ, hoặc hồ sơ trên hệ thống TRACES khi vào châu Âu.
+    \item \textbf{Hồ sơ trong nước:} giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm, bản tự công bố sản phẩm, và tem OCOP với sản phẩm đã được xếp hạng.
+\end{itemize}
+
+Bảng tổng hợp đầy đủ các chứng nhận kèm phạm vi áp dụng, cơ quan cấp, thị trường đích và mức độ hỗ trợ của Farmery được trình bày tại Phụ lục H. Trong phạm vi đồ án, hệ thống hỗ trợ tải lên và kiểm duyệt nhóm chứng nhận thực hành sản xuất cùng các chuẩn an toàn thực phẩm phổ biến; nhóm giấy tờ theo lô phục vụ xuất khẩu nằm ngoài phạm vi (mục~\ref{sec:phamvi}) nhưng được trình bày ở đây để làm rõ bức tranh đầy đủ mà một nền tảng nông sản hoàn chỉnh sẽ phải xử lý.
 
 \section{Bối cảnh chính sách và tiêu chuẩn chất lượng nông sản}
 \label{sec:boicanhchinhsach}
@@ -15,12 +87,7 @@ Chương trình OCOP (Mỗi xã một sản phẩm) là chương trình quốc g
 \label{fig:ocop}
 \end{figure}
 
-Về chính sách, các văn bản dưới đây lần lượt xác định nông nghiệp là lĩnh vực ưu tiên chuyển đổi số ở Việt Nam:
-\begin{itemize}
-    \item \textbf{Quyết định số 749/QĐ-TTg (03/6/2020)} của Thủ tướng Chính phủ phê duyệt ``Chương trình Chuyển đổi số quốc gia đến năm 2025, định hướng đến năm 2030'', xác định nông nghiệp là một trong 8 lĩnh vực ưu tiên (cùng Y tế, Giáo dục, Tài chính-Ngân hàng, Giao thông vận tải-logistics, Năng lượng, Tài nguyên-Môi trường, Sản xuất công nghiệp), với mục tiêu: phát triển nông nghiệp thông minh/chính xác; xây dựng dữ liệu lớn về đất đai, cây trồng, vật nuôi, thủy sản; tự động hóa sản xuất và quản lý chuỗi cung ứng; thúc đẩy TMĐT nông sản; và định hướng ``mỗi nông dân là một thương nhân'' \parencite{qd749_2020}.
-    \item \textbf{Nghị quyết số 57-NQ/TW} của Bộ Chính trị về đột phá phát triển khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số quốc gia, tiếp tục là động lực cho chuyển đổi số ngành nông nghiệp trong giai đoạn mới \parencite{nq57_tw}.
-    \item \textbf{Quyết định số 5943/QĐ-BNNMT (31/12/2025)} của Bộ Nông nghiệp và Môi trường (Bộ NN\&MT --- cơ quan hợp nhất từ Bộ NN\&PTNT và Bộ Tài nguyên-Môi trường từ 01/3/2025 \parencite{botnmt_2025}) phê duyệt kế hoạch chuyển đổi số ngành, với mục tiêu: 100\% thủ tục hành chính đủ điều kiện lên trực tuyến toàn trình (tối thiểu 85\% hồ sơ xử lý trực tuyến), dữ liệu chỉ khai báo một lần; cơ sở dữ liệu dùng chung nông nghiệp--môi trường; và ứng dụng dữ liệu lớn/AI trong giám sát, dự báo sản xuất \parencite{qd5943_2025}. Đây là văn bản chính sách cập nhật nhất, cụ thể hóa thêm định hướng tại Quyết định 749/QĐ-TTg và là căn cứ để Farmery khẳng định tính phù hợp với định hướng vĩ mô của Nhà nước.
-\end{itemize}
+Về chính sách, nông nghiệp được xác định là lĩnh vực ưu tiên chuyển đổi số từ Quyết định số 749/QĐ-TTg (2020) \parencite{qd749_2020} và Nghị quyết số 57-NQ/TW của Bộ Chính trị \parencite{nq57_tw}. Văn bản cập nhật nhất là \textbf{Quyết định số 5943/QĐ-BNNMT (31/12/2025)} của Bộ Nông nghiệp và Môi trường \parencite{botnmt_2025}, phê duyệt kế hoạch chuyển đổi số ngành với ba nội dung liên quan trực tiếp tới Farmery: xây dựng cơ sở dữ liệu dùng chung cho nông nghiệp, đưa dữ liệu về nguyên tắc chỉ khai báo một lần, và ứng dụng dữ liệu lớn cùng AI trong giám sát và dự báo sản xuất \parencite{qd5943_2025}. Đây là căn cứ cho thấy định hướng của đồ án phù hợp với chủ trương vĩ mô.
 
 Về tiêu chuẩn chất lượng, VietGAP và GlobalGAP là hai chuẩn thực hành nông nghiệp tốt mà Farmery dùng làm căn cứ kiểm duyệt chứng nhận:
 \begin{itemize}
@@ -32,11 +99,25 @@ Một cơ sở đạt GlobalGAP đã vượt chuẩn VietGAP nên không cần c
 \section{Cơ sở lý thuyết nền tảng}
 \label{sec:lythuyet}
 
-\subsection{Mô hình thương mại điện tử B2C, B2B, B2B2C và marketplace nhiều người bán}
+\subsection{Mô hình thương mại điện tử: hai trục phân loại}
+\label{subsec:haitruc}
 
-Trong thương mại điện tử, các mô hình được phân loại chủ yếu theo bản chất của các bên tham gia giao dịch. B2B (Business to Business) là mô hình kinh doanh giữa các doanh nghiệp với nhau, đặc trưng bởi các đơn hàng số lượng lớn và tính chuyên nghiệp cao thông qua hợp đồng. Trái lại, B2C (Business to Consumer) là mô hình kinh doanh giữa doanh nghiệp và người tiêu dùng cá nhân. B2B2C (Business to Business to Consumer) là một mô hình lai (hybrid), kết hợp giữa B2B và B2C, trong đó một doanh nghiệp cung cấp sản phẩm hoặc dịch vụ cho một doanh nghiệp khác, và doanh nghiệp thứ hai này sẽ bán trực tiếp cho người tiêu dùng --- đây là mô hình phổ biến trong các nền tảng thương mại điện tử như các sàn giao dịch trực tuyến. Ngoài ra, Multi-vendor marketplace (sàn nhiều nhà cung cấp) là mô hình thương mại điện tử cho phép nhiều người bán (vendor) đăng ký, đăng sản phẩm/dịch vụ, quản lý đơn hàng và nhận thanh toán trên cùng một nền tảng; người sở hữu sàn (marketplace operator) đóng vai trò quản trị, định ra quy tắc, thu phí và đảm bảo trải nghiệm mua bán liền mạch.
+Thương mại điện tử được phân loại theo hai tiêu chí mà thực tế hay bị gộp làm một.
 
-Farmery lựa chọn mô hình B2B2C dạng marketplace nhiều người bán nhằm đáp ứng nhu cầu mua nông sản của 2 tệp khách hàng khác nhau: người tiêu dùng cá nhân mua lẻ và doanh nghiệp mua sỉ theo hợp đồng từ nguồn cung là nông dân/hợp tác xã, còn nền tảng sẽ đóng vai trò trung gian cung cấp công nghệ, là nền tảng thanh toán và là nơi đáng tin cậy để đảm bảo các giao dịch diễn ra đúng quy trình, mang lại lợi ích cho các bên.
+Tiêu chí thứ nhất là \textbf{bản chất các bên giao dịch}: B2B (Business to Business) giữa các doanh nghiệp, đặc trưng bởi đơn hàng số lượng lớn theo hợp đồng; B2C (Business to Consumer) giữa doanh nghiệp và người tiêu dùng cá nhân.
+
+B2B2C (Business to Business to Consumer) là trường hợp chuỗi có ba mắt xích: một doanh nghiệp bán cho một doanh nghiệp khác, rồi doanh nghiệp thứ hai bán tiếp cho người tiêu dùng cuối.
+
+Tiêu chí thứ hai --- và là tiêu chí quyết định với Farmery --- là \textbf{ai sở hữu hàng hóa trong lúc giao dịch diễn ra}. Mô hình \emph{third-party} (3P) để người bán giữ quyền sở hữu hàng cho tới khi giao; nền tảng chỉ trung gian và thu hoa hồng, không chịu rủi ro tồn kho. Mô hình \emph{first-party} (1P) thì ngược lại: chính nền tảng mua hàng vào, tự định giá và bán lại, hưởng chênh lệch nhưng gánh toàn bộ rủi ro hàng không bán hết.
+
+Hai tiêu chí này \textbf{độc lập với nhau}, nên kết hợp được thành bốn trường hợp. Cùng là B2B2C nhưng Shopee theo hướng 3P (thương hiệu tự bán cho người tiêu dùng qua sàn), còn mảng bán lẻ của Amazon theo hướng 1P (Amazon mua từ thương hiệu rồi bán lại). Việc phân biệt hai trục này quan trọng vì chúng quyết định hai thứ khác nhau: trục thứ nhất quyết định hệ thống phải phục vụ những nhóm người dùng nào, trục thứ hai quyết định ai chịu rủi ro tài chính và ai chịu trách nhiệm chất lượng trước người mua.
+
+Farmery vận dụng cả hai trục và khác nhau giữa hai kênh:
+\begin{itemize}
+    \item \textbf{Kênh bán sỉ --- B2B kết hợp 3P:} nhà cung cấp bán thẳng cho doanh nghiệp thu mua, Farmery đứng giữa.
+    \item \textbf{Kênh bán lẻ --- B2B2C kết hợp 1P:} nhà cung cấp bán cho Farmery, Farmery bán tiếp cho người tiêu dùng, và sở hữu hàng trong suốt quá trình đó.
+\end{itemize}
+Lý do lựa chọn cùng cách hai kênh bổ trợ nhau được phân tích tại mục~\ref{sec:businessmodelcanvas}.
 
 \subsection{Lý thuyết chuỗi cung ứng nông sản ngắn (SFSC) và disintermediation}
 
@@ -51,7 +132,7 @@ GS1 là tổ chức quốc tế phi lợi nhuận xây dựng các chuẩn đị
 
 Blockchain là công nghệ chuỗi khối phân tán, cho phép ghi chép và lưu trữ thông tin theo cách không thể thay đổi hoặc làm giả, nhờ đó đảm bảo tính minh bạch, tin cậy và bảo mật cao cho các giao dịch. Trong lĩnh vực thương mại điện tử, blockchain có thể hỗ trợ các bên (doanh nghiệp, nông dân, đơn vị vận chuyển) trong truy xuất nguồn gốc sản phẩm, tối ưu hóa quản lý chuỗi cung ứng và nâng cao hiệu quả giao dịch thương mại quốc tế.
 
-Tuy nhiên, các nghiên cứu gần đây chỉ ra rằng việc áp dụng blockchain cho truy xuất nguồn gốc thực phẩm vẫn gặp rào cản thực tế: bài toán ``Garbage In, Garbage Out'' và sai số tại ranh giới vật lý -- kỹ thuật số. Blockchain chỉ đảm bảo dữ liệu không thể bị chỉnh sửa sau khi đã ghi, chứ không thể tự động xác minh dữ liệu đưa vào ban đầu có chính xác hay không (input verification). Nông dân hoặc các cơ sở chế biến nhỏ lẻ vẫn phải nhập thông tin thủ công hoặc gắn thẻ RFID/QR code lên sản phẩm; hiện tượng gian lận tại nguồn hoặc tráo đổi hàng kém chất lượng trước khi đóng gói vẫn diễn ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Với quy mô một sàn TMĐT nông sản mới như Farmery, việc lưu trữ nhật ký canh tác và dữ liệu truy xuất trên một cơ sở dữ liệu tập trung tuân theo nguyên lý định danh của GS1 là phương án khả thi và tiết kiệm chi phí hơn ở giai đoạn đầu; blockchain có thể được xem xét bổ sung ở giai đoạn sau nếu cần tăng độ tin cậy cho các đối tác xuất khẩu hoặc khi số lượng bên tham gia độc lập vào chuỗi tăng đủ lớn để việc phi tập trung hóa mang lại lợi ích rõ ràng, vượt qua chi phí vận hành bổ sung.
+Tuy nhiên, blockchain vấp phải một giới hạn căn bản khi áp dụng cho truy xuất nguồn gốc thực phẩm: nó chỉ bảo đảm dữ liệu không bị sửa \emph{sau khi đã ghi}, chứ không xác minh được dữ liệu đưa vào ban đầu có đúng hay không. Nông dân và cơ sở chế biến nhỏ vẫn nhập thông tin thủ công, nên gian lận tại nguồn hoặc tráo hàng trước khi đóng gói vẫn xảy ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Vì vậy Farmery lưu nhật ký canh tác trên cơ sở dữ liệu tập trung theo nguyên lý định danh của GS1, kèm cơ chế bất biến sau khi công khai (NFR9.1); blockchain chỉ đáng cân nhắc khi số bên tham gia độc lập vào chuỗi đủ lớn để lợi ích phi tập trung vượt chi phí vận hành.
 
 \subsection{Hệ thống đánh giá, uy tín và niềm tin (reputation, information asymmetry)}
 \label{subsec:reputation}
@@ -62,7 +143,7 @@ Hệ thống đánh giá và uy tín (reputation system) là cơ chế phổ bi�
 
 \subsection{Nền tảng công nghệ: kiến trúc web, RBAC, cổng thanh toán trung gian và escrow}
 
-Về kiến trúc web, với một sàn thương mại điện tử đa vai trò như Farmery, để có thể phục vụ nhiều nhóm người dùng gồm nông dân/HTX, người tiêu dùng, doanh nghiệp B2B và quản trị viên, hệ thống có thể được xây dựng theo mô hình kiến trúc phân lớp hoặc kiến trúc hướng dịch vụ, tùy thuộc vào quy mô và yêu cầu mở rộng. Các thành phần chính bao gồm: lớp giao diện cung cấp web/app tương ứng với từng nhóm người dùng; lớp API và nghiệp vụ chịu trách nhiệm xử lý các quy trình kinh doanh; lớp dữ liệu sử dụng cơ sở dữ liệu quan hệ để lưu trữ thông tin người dùng, sản phẩm, đơn hàng, giao dịch và hợp đồng, kết hợp với hệ thống lưu trữ đối tượng cho hình ảnh, tài liệu và các chứng nhận liên quan. Ngoài ra, hệ thống có thể tích hợp với các dịch vụ bên thứ ba như cổng thanh toán, đơn vị vận chuyển và các hệ thống xác thực hoặc kiểm tra chứng nhận thông qua API khi cần thiết.
+Về kiến trúc web, với một sàn thương mại điện tử đa vai trò như Farmery, để có thể phục vụ nhiều nhóm người dùng gồm nông dân/HTX, người tiêu dùng, doanh nghiệp B2B và quản trị viên, hệ thống có thể được xây dựng theo mô hình kiến trúc phân lớp hoặc kiến trúc hướng dịch vụ, tùy thuộc vào quy mô và yêu cầu mở rộng. Các thành phần chính bao gồm: lớp giao diện cung cấp web/app tương ứng với từng nhóm người dùng; lớp API và nghiệp vụ chịu trách nhiệm xử lý các quy trình kinh doanh; lớp dữ liệu sử dụng cơ sở dữ liệu quan hệ để lưu trữ thông tin người dùng, sản phẩm, đơn hàng, giao dịch và hợp đồng, kết hợp với hệ thống object storage cho hình ảnh, tài liệu và các chứng nhận liên quan. Ngoài ra, hệ thống có thể tích hợp với các dịch vụ bên thứ ba như cổng thanh toán, đơn vị vận chuyển và các hệ thống xác thực hoặc kiểm tra chứng nhận thông qua API khi cần thiết.
 
 Đối với kiểm soát truy cập, Farmery áp dụng mô hình Role-Based Access Control (RBAC), trong đó quyền truy cập không được cấp trực tiếp cho từng người dùng mà được tổ chức thông qua các vai trò (role); người dùng được gán một hoặc nhiều vai trò, mỗi vai trò liên kết với một tập hợp các quyền tương ứng với chức năng nghiệp vụ. Mô hình RBAC được Sandhu và cộng sự hệ thống hóa thành một khung lý thuyết vào năm 1996 \parencite{sandhu1996rbac}. Với đặc thù của Farmery, RBAC phù hợp để quản lý tối thiểu bốn nhóm vai trò chính: nông dân/HTX, người tiêu dùng, doanh nghiệp thu mua và quản trị viên. Cách tổ chức này giúp áp dụng nguyên tắc đặc quyền tối thiểu (Principle of Least Privilege), qua đó hạn chế nguy cơ truy cập trái phép, sai sót trong vận hành và các rủi ro bảo mật.
 
@@ -75,7 +156,7 @@ Theo Osterwalder và Pigneur, mô hình kinh doanh của một tổ chức đư�
 \begin{itemize}
     \item Phí hoa hồng trên mỗi giao dịch thành công (phổ biến nhất, tỷ lệ \% theo giá trị đơn hàng).
     \item Phí niêm yết/gói nổi bật để sản phẩm hiển thị ưu tiên.
-    \item Phí dịch vụ giá trị gia tăng (xác thực chứng nhận nhanh, hỗ trợ chụp ảnh/marketing cho nhà bán).
+    \item Phí dịch vụ giá trị gia tăng (xác thực chứng nhận nhanh, hỗ trợ chụp ảnh/marketing cho nhà cung cấp).
     \item Quảng cáo trong sàn.
 \end{itemize}
 Đa số marketplace giai đoạn đầu ưu tiên phí hoa hồng làm dòng doanh thu chính vì gắn trực tiếp với giá trị giao dịch thực tế phát sinh trên nền tảng, ít tạo rào cản gia nhập cho người bán mới so với phí niêm yết cố định. Mô hình doanh thu cụ thể của Farmery được phân tích chi tiết tại mục~\ref{sec:businessmodelcanvas}.
@@ -85,34 +166,37 @@ Theo Osterwalder và Pigneur, mô hình kinh doanh của một tổ chức đư�
 
 Đối với hàng nông sản dễ hư hỏng, nguyên tắc quản lý tồn kho phổ biến là FEFO (First-Expired-First-Out) --- ưu tiên xuất bán lô hàng có hạn sử dụng/thời gian thu hoạch gần nhất trước, khác với nguyên tắc FIFO (First-In-First-Out) thường dùng cho hàng hóa không có hạn sử dụng rõ ràng. Việc quản lý tồn kho theo lô (batch) kết hợp với cảnh báo sớm khi lô hàng sắp hết hạn hoặc tồn kho xuống thấp giúp giảm tỷ lệ hao hụt --- vấn đề đã được phân tích tại Chương~\ref{chap:gioithieu} (Hình~\ref{fig:thuctrang}), nơi tỷ lệ tổn thất sau thu hoạch tại Việt Nam vẫn ở mức 20--40\% một phần do thiếu công cụ quản lý tồn kho hiệu quả ở khâu bán lẻ/bán sỉ.
 
-Về vận chuyển, nhiều nền tảng thương mại điện tử không tự đầu tư đội xe hay kho bãi mà hợp tác với đơn vị logistics bên thứ ba (Third-Party Logistics --- 3PL), là các công ty chuyên cung cấp dịch vụ vận chuyển, kho vận và xử lý đơn hàng thuê ngoài. Mô hình 3PL giúp nền tảng tập trung nguồn lực vào công nghệ và trải nghiệm người dùng thay vì đầu tư hạ tầng vật lý tốn kém (đặc biệt là kho lạnh --- vấn đề hạ tầng logistics lạnh còn thiếu tại Việt Nam đã nêu ở Chương~\ref{chap:gioithieu}), đổi lại phải phụ thuộc vào năng lực và chất lượng dịch vụ của đối tác 3PL. Ở giai đoạn MVP, Farmery lựa chọn mô hình này: nhà bán tự quản lý kho/tồn kho của mình trên nền tảng (đã mô tả tại mục~\ref{sec:quytrinhnghiepvu}, Đăng và kiểm duyệt sản phẩm), còn Farmery đóng vai trò điều phối và tích hợp API với các đơn vị 3PL để vận chuyển, không tự vận hành kho vật lý trung chuyển --- phù hợp với phạm vi giới hạn đã nêu tại mục~\ref{sec:phamvi}.
+Về vận chuyển, nhiều nền tảng thương mại điện tử không tự đầu tư đội xe hay kho bãi mà thuê ngoài đơn vị logistics bên thứ ba (3PL). Cách làm này giúp nền tảng tập trung nguồn lực vào công nghệ thay vì hạ tầng vật lý tốn kém --- đặc biệt là kho lạnh, vốn còn rất thiếu tại Việt Nam (Chương~\ref{chap:gioithieu}) --- nhưng đổi lại phải phụ thuộc vào chất lượng dịch vụ của đối tác. Farmery áp dụng mô hình này cho khâu vận chuyển ở cả hai kênh; ranh giới giữa phần nền tảng tự làm và phần thuê ngoài được nêu tại mục~\ref{sec:phamvi}.
 
 \section{Ứng dụng AI trong phân tích dữ liệu và ra quyết định thương mại điện tử}
 
 Bên cạnh các cơ sở lý thuyết về mô hình kinh doanh và niềm tin, Farmery còn tích hợp bốn nhóm bài toán trí tuệ nhân tạo (AI) nhằm hỗ trợ ra quyết định cho cả người dùng và đội ngũ vận hành, được thiết kế chi tiết tại mục~\ref{sec:thietkeAI} và hiện thực tại mục~\ref{sec:hienthucAI}.
 
 \subsection{Hệ thống gợi ý sản phẩm (recommendation system)}
-Hệ thống gợi ý là một trong những ứng dụng AI phổ biến nhất trong thương mại điện tử, giúp cá nhân hóa trải nghiệm mua sắm bằng cách đề xuất sản phẩm phù hợp dựa trên hành vi, lịch sử mua hàng hoặc đặc điểm của người dùng và sản phẩm tương tự. Theo khảo sát của Su và Khoshgoftaar (2009), hai hướng tiếp cận phổ biến là lọc cộng tác (collaborative filtering) --- dựa trên sự tương đồng hành vi giữa các người dùng --- và lọc theo nội dung (content-based filtering) --- dựa trên đặc điểm của sản phẩm đã tương tác trước đó; các hệ thống hiện đại thường kết hợp cả hai (hybrid) để giảm bớt vấn đề ``cold start'' (thiếu dữ liệu tương tác cho người dùng/sản phẩm mới) \parencite{su2009collaborative}. Với Farmery, hệ thống gợi ý có thể tận dụng đặc thù dữ liệu nông sản (mùa vụ, vùng trồng, chứng nhận) để gợi ý sản phẩm phù hợp thời điểm, giúp tăng khả năng tiêu thụ hàng tươi trước khi hết hạn sử dụng.
+Hệ thống gợi ý là một trong những ứng dụng AI phổ biến nhất trong thương mại điện tử, giúp cá nhân hóa trải nghiệm mua sắm bằng cách đề xuất sản phẩm phù hợp dựa trên hành vi, lịch sử mua hàng hoặc đặc điểm của người dùng và sản phẩm tương tự. Theo khảo sát của Su và Khoshgoftaar (2009), hai hướng tiếp cận phổ biến là collaborative filtering (collaborative filtering) --- dựa trên sự tương đồng hành vi giữa các người dùng --- và content-based filtering (content-based filtering) --- dựa trên đặc điểm của sản phẩm đã tương tác trước đó; các hệ thống hiện đại thường kết hợp cả hai (hybrid) để giảm bớt vấn đề ``cold start'' (thiếu dữ liệu tương tác cho người dùng/sản phẩm mới) \parencite{su2009collaborative}. Với Farmery, hệ thống gợi ý có thể tận dụng đặc thù dữ liệu nông sản (mùa vụ, vùng trồng, chứng nhận) để gợi ý sản phẩm phù hợp thời điểm, giúp tăng khả năng tiêu thụ hàng tươi trước khi hết hạn sử dụng.
 
 \subsection{Dự báo nhu cầu và giá nông sản}
-Dự báo nhu cầu/giá là bài toán chuỗi thời gian (time-series forecasting): theo Hyndman và Athanasopoulos, phương pháp dự báo dựa trên dữ liệu lịch sử (sản lượng, giá, mùa vụ) để ước lượng xu hướng và tính mùa vụ trong tương lai gần, kết hợp giữa mô hình thống kê cổ điển (ví dụ ARIMA, exponential smoothing) với các mô hình học máy khi dữ liệu đủ lớn \parencite{hyndman2021forecasting}. Với Farmery, dự báo giúp nông dân/HTX chủ động kế hoạch sản xuất và giúp hệ thống cảnh báo sớm nguy cơ dư cung/khan hiếm. Đây là hướng đã được kiểm chứng ở các nền tảng đối chứng: Ninjacart dùng học máy để dự báo nhu cầu và tối ưu vận chuyển \parencite{ninjacart}, còn Farm2Market công bố mô hình dự báo giá đạt độ chính xác khoảng 82\% \parencite{farm2market_2025}.
+Dự báo nhu cầu/giá là bài toán chuỗi thời gian (time-series forecasting): theo Hyndman và Athanasopoulos, phương pháp dự báo dựa trên dữ liệu lịch sử (sản lượng, giá, mùa vụ) để ước lượng xu hướng và tính mùa vụ trong tương lai gần, kết hợp giữa mô hình thống kê cổ điển (ARIMA, SARIMA) (ví dụ ARIMA, exponential smoothing) với các mô hình học máy khi dữ liệu đủ lớn \parencite{hyndman2021forecasting}. Với Farmery, dự báo giúp nông dân/HTX chủ động kế hoạch sản xuất và giúp hệ thống cảnh báo sớm nguy cơ dư cung/khan hiếm. Đây là hướng đã được kiểm chứng ở các nền tảng đối chứng: Ninjacart dùng học máy để dự báo nhu cầu và tối ưu vận chuyển \parencite{ninjacart}, còn Farm2Market công bố mô hình dự báo giá đạt độ chính xác khoảng 82\% \parencite{farm2market_2025}.
 
-\subsection{Phát hiện gian lận và bất thường (fraud/anomaly detection)}
-Bài toán phát hiện bất thường (anomaly detection) nhằm hỗ trợ đội ngũ quản trị phát hiện các dấu hiệu bất thường trên sàn: đánh giá giả/thao túng uy tín, mức giá lệch bất thường so với mặt bằng chung, hoặc hành vi giao dịch có nguy cơ gian lận (ví dụ đặt và hủy đơn liên tục). Theo khảo sát của Chandola, Banerjee và Kumar (2009), các kỹ thuật phổ biến gồm phương pháp thống kê, phân loại (classification-based) và phân cụm (clustering-based) để phát hiện điểm dữ liệu lệch khỏi phân bố ``bình thường'' đã học được \parencite{chandola2009anomaly}; với Farmery, các mô hình này được áp dụng trên đặc trưng hành vi giao dịch/đánh giá, kết hợp với luật nghiệp vụ (rule-based) làm lớp lọc sơ bộ trước khi đưa ra cảnh báo cho quản trị viên xem xét thủ công --- phù hợp với quy trình quản trị đã mô tả tại mục~\ref{sec:quytrinhnghiepvu} và quy trình đánh giá tại mục~\ref{subsec:danhgianghiepvu}.
+\subsection{Giám sát dấu hiệu bất thường}
+Một sàn giao dịch luôn cần cơ chế phát hiện các dấu hiệu bất thường: đánh giá giả nhằm thao túng uy tín, mức giá lệch xa mặt bằng chung, hoặc hành vi đặt và hủy đơn liên tục. Theo khảo sát của Chandola, Banerjee và Kumar (2009), các kỹ thuật học máy phổ biến cho bài toán này gồm phương pháp thống kê, phân loại và phân cụm để phát hiện điểm dữ liệu lệch khỏi phân bố đã học được \parencite{chandola2009anomaly}.
+
+Tuy nhiên, các kỹ thuật này đòi hỏi hai điều kiện mà một nền tảng mới chưa có: lưu lượng giao dịch thật đủ lớn để học được thế nào là ``bình thường'', và tập nhãn các trường hợp gian lận đã xác nhận để đo được chất lượng mô hình. Thiếu cả hai, mô hình học máy sẽ không kiểm chứng được bằng số đo --- mâu thuẫn với mục tiêu đánh giá đặt ra tại mục~\ref{sec:muctieudanhgia}. Vì vậy trong phạm vi đồ án, Farmery dùng \emph{luật ngưỡng} do quản trị viên cấu hình (ví dụ: số đánh giá năm sao từ cùng một người mua trong khoảng thời gian ngắn, tỷ lệ hủy đơn vượt mức, giá lệch quá một biên độ so với trung vị danh mục) làm lớp cảnh báo sơ bộ trước khi quản trị viên xem xét thủ công. Việc thay thế lớp luật ngưỡng này bằng mô hình học máy được đặt ở hướng phát triển (Chương~\ref{chap:ketluan}), khi nền tảng đã tích lũy đủ dữ liệu vận hành và nhãn từ chính phản hồi của quản trị viên.
 
 \subsection{Trợ lý ảo / chatbot hỗ trợ tư vấn}
-Trợ lý ảo dựa trên xử lý ngôn ngữ tự nhiên (NLP) là một dạng hệ thống hội thoại (dialogue system); theo Jurafsky và Martin, các hệ thống này thường được phân theo hai kiến trúc chính: chatbot hướng mục tiêu (task-oriented, dùng để hoàn thành một tác vụ cụ thể như tra cứu đơn hàng) và chatbot trò chuyện mở (open-domain), trong đó phần lớn trợ lý ảo thương mại điện tử thuộc nhóm task-oriented với một tập ý định (intent) và cơ sở tri thức giới hạn theo miền nghiệp vụ \parencite{jurafsky2023dialogue}. Với Farmery, trợ lý ảo task-oriented có thể hỗ trợ hai nhóm đối tượng: người mua (tư vấn chọn sản phẩm, giải đáp thắc mắc về truy xuất nguồn gốc, chính sách đổi trả) và nhà bán (hướng dẫn quy trình đăng sản phẩm, ghi nhật ký canh tác, giải thích lý do bị từ chối kiểm duyệt). Việc thiết kế chatbot cho nhóm nông dân/HTX --- vốn có mức độ thành thạo công nghệ hạn chế như đã phân tích tại mục~\ref{sec:doituongnguoidung} --- cần ưu tiên giao diện hội thoại đơn giản, hỗ trợ giọng nói/ngôn ngữ địa phương nếu khả thi, và có cơ chế chuyển tiếp (escalation) sang nhân sự thật khi câu hỏi vượt phạm vi tập ý định đã huấn luyện.
+Trợ lý ảo dựa trên xử lý ngôn ngữ tự nhiên (NLP) là một dạng hệ thống hội thoại (dialogue system); theo Jurafsky và Martin, các hệ thống này thường được phân theo hai kiến trúc chính: chatbot hướng mục tiêu (task-oriented, dùng để hoàn thành một tác vụ cụ thể như tra cứu đơn hàng) và chatbot trò chuyện mở (open-domain), trong đó phần lớn trợ lý ảo thương mại điện tử thuộc nhóm task-oriented với một tập intent (intent) và cơ sở tri thức giới hạn theo miền nghiệp vụ \parencite{jurafsky2023dialogue}. Với Farmery, trợ lý ảo task-oriented có thể hỗ trợ hai nhóm đối tượng: người mua (tư vấn chọn sản phẩm, giải đáp thắc mắc về truy xuất nguồn gốc, chính sách đổi trả) và nhà cung cấp (hướng dẫn quy trình đăng sản phẩm, ghi nhật ký canh tác, giải thích lý do bị từ chối kiểm duyệt). Việc thiết kế chatbot cho nhóm nông dân/HTX --- vốn có mức độ thành thạo công nghệ hạn chế như đã phân tích tại mục~\ref{sec:doituongnguoidung} --- cần ưu tiên giao diện hội thoại đơn giản, hỗ trợ giọng nói/ngôn ngữ địa phương nếu khả thi, và có cơ chế chuyển tiếp (escalation) sang nhân sự thật khi câu hỏi vượt phạm vi tập intent đã huấn luyện.
 
 
 \section{Kết chương}
 
 Chương này đã hệ thống hóa các kiến thức nền tảng cần thiết cho đồ án:
 \begin{itemize}
+    \item \textbf{Đặc điểm mặt hàng:} phạm vi khái niệm nông sản, các đặc điểm phân biệt nông sản với hàng hóa thông thường và hệ quả của chúng lên thiết kế, cùng hệ thống chứng nhận để nông sản ra thị trường.
     \item \textbf{Bối cảnh và tiêu chuẩn:} định hướng chuyển đổi số nông nghiệp, chương trình OCOP và hai chuẩn VietGAP/GlobalGAP làm căn cứ kiểm duyệt chứng nhận.
-    \item \textbf{Mô hình kinh doanh và chuỗi cung ứng:} B2B2C, marketplace nhiều người bán, SFSC/disintermediation, mô hình doanh thu marketplace, FEFO và 3PL --- làm nền cho ngữ cảnh nghiệp vụ tại mục~\ref{sec:ngucanh}.
+    \item \textbf{Mô hình kinh doanh và chuỗi cung ứng:} các mô hình thương mại điện tử, chuỗi cung ứng thực phẩm ngắn và rút ngắn tầng trung gian, mô hình doanh thu, nguyên tắc xuất trước hàng hết hạn trước và hợp tác với đơn vị vận chuyển thứ ba --- làm nền cho ngữ cảnh nghiệp vụ tại mục~\ref{sec:ngucanh}.
     \item \textbf{Niềm tin và minh bạch:} truy xuất nguồn gốc theo GS1, lý do chưa dùng blockchain, lý thuyết bất cân xứng thông tin và hệ thống uy tín --- làm nền cho vấn đề V4 tại mục~\ref{sec:vande}.
-    \item \textbf{Công nghệ nền tảng:} kiến trúc web phân lớp, RBAC, cổng thanh toán trung gian và escrow.
-    \item \textbf{Trí tuệ nhân tạo:} bốn bài toán gợi ý sản phẩm, dự báo nhu cầu/giá, phát hiện bất thường và trợ lý ảo.
+    \item \textbf{Công nghệ nền tảng:} kiến trúc web phân lớp, RBAC, cổng thanh toán trung gian và cơ chế tạm giữ tiền.
+    \item \textbf{Trí tuệ nhân tạo:} ba bài toán gợi ý sản phẩm, dự báo nhu cầu và giá, trợ lý ảo; cùng lý do giám sát bất thường được hiện thực bằng luật ngưỡng thay vì học máy trong phạm vi đồ án.
 \end{itemize}
 Các kiến thức trên đủ bao quát phần phân tích yêu cầu và thiết kế ở Chương~\ref{chap:hethong} và Chương~\ref{chap:phantich}. Riêng các công nghệ hiện thực cụ thể (framework front-end/back-end, thư viện và mô hình AI) sẽ được so sánh và lựa chọn tại mục~\ref{sec:giaiphapcongnghe} sau khi nhóm chốt giải pháp.
 % TODO: sau khi chốt công nghệ ở mục 5.2, bổ sung vào chương này phần kiến thức nền tảng về các framework/thư viện đã chọn (nếu hội đồng yêu cầu).

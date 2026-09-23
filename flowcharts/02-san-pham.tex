@@ -2,15 +2,15 @@
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
-    \node[farm/terminal] (start) at (0,0) {Nhà bán đã xác thực};
-    \node[farm/process] (create) at (0,-1.5) {Nhà bán: tạo sản phẩm, khai báo giá lẻ/sỉ, sản lượng, ngày thu hoạch và nhật ký theo lô};
+    \node[farm/terminal] (start) at (0,0) {Nhà cung cấp đã xác thực};
+    \node[farm/process] (create) at (0,-1.5) {Nhà cung cấp: tạo sản phẩm, khai báo giá lẻ/sỉ, sản lượng, ngày thu hoạch và nhật ký theo lô};
     \node[farm/decision] (complete) at (0,-3.6) {Có nhật ký gần nhất\\và ảnh thực tế?};
-    \node[farm/processnarrow] (supplement) at (6,-3.6) {Nhà bán: bổ sung nhật ký và hình ảnh còn thiếu};
+    \node[farm/processnarrow] (supplement) at (6,-3.6) {Nhà cung cấp: bổ sung nhật ký và hình ảnh còn thiếu};
     \node[farm/process] (automatic) at (0,-5.6) {Hệ thống: kiểm tra ảnh trùng lặp, từ khóa cấm và giá bất thường};
     \node[farm/decision] (passed) at (0,-7.4) {Đạt kiểm tra\\sơ bộ?};
-    \node[farm/processnarrow] (revise) at (6,-7.4) {Chưa duyệt; nhà bán chỉnh sửa thông tin sản phẩm};
-    \node[farm/decision] (trusted) at (0,-9.9) {Uy tín nhà bán\\$\geq 80/100$?};
-    \node[farm/processnarrow] (manual) at (6,-9.9) {Kiểm duyệt: kiểm tra thủ công sản phẩm mới / nhà bán chưa có lịch sử giao dịch};
+    \node[farm/processnarrow] (revise) at (6,-7.4) {Chưa duyệt; nhà cung cấp chỉnh sửa thông tin sản phẩm};
+    \node[farm/decision] (trusted) at (0,-9.9) {Uy tín nhà cung cấp\\$\geq 80/100$?};
+    \node[farm/processnarrow] (manual) at (6,-9.9) {Kiểm duyệt: kiểm tra thủ công sản phẩm mới / nhà cung cấp chưa có lịch sử giao dịch};
     \node[farm/decision] (accepted) at (6,-12.4) {Được duyệt?};
     \node[farm/process] (publish) at (0,-12.4) {Hệ thống: duyệt, công khai sản phẩm; sinh QR riêng cho lô, liên kết hồ sơ, chứng nhận, nhật ký và vận chuyển};
     \node[farm/decision] (changed) at (0,-14.6) {Thay đổi\\trọng yếu?};
@@ -20,7 +20,7 @@
     \node[farm/connector] (revisein) at (6,-0.2) {A};
     \node[farm/connector] (reviewout) at (9,-14.6) {B};
     \node[farm/connector] (reviewin) at (6,-5.6) {B};
-    \node[farm/note] at (2.7,-18.6) {\textbf{Cập nhật nhỏ:} thay đổi còn hàng/hết hàng không cần duyệt lại. Nhánh hậu kiểm nhanh chỉ áp dụng cho nhà bán đạt điểm uy tín từ 80/100 trở lên (mục~\ref{subsec:danhgianghiepvu}); việc kiểm tra được thực hiện sau khi công khai sản phẩm.\\[2pt]\textbf{Điểm nối:} vòng tròn A quay lại bước tạo/chỉnh sửa sản phẩm, vòng tròn B quay lại bước kiểm tra tự động --- quy ước ký hiệu xem Hình~\ref{fig:chu-thich-flowchart}.};
+    \node[farm/note] at (2.7,-18.6) {\textbf{Cập nhật nhỏ:} thay đổi còn hàng/hết hàng không cần duyệt lại. Nhánh hậu kiểm nhanh chỉ áp dụng cho nhà cung cấp đạt điểm uy tín từ 80/100 trở lên (mục~\ref{subsec:danhgianghiepvu}); việc kiểm tra được thực hiện sau khi công khai sản phẩm.\\[2pt]\textbf{Điểm nối:} vòng tròn A quay lại bước tạo/chỉnh sửa sản phẩm, vòng tròn B quay lại bước kiểm tra tự động --- quy ước ký hiệu xem Hình~\ref{fig:chu-thich-flowchart}.};
     \foreach \source/\target in {start/create,create/complete,automatic/passed,manual/accepted,publish/changed}
         \draw[farm/arrow] (\source) -- (\target);
     \draw[farm/arrow] (complete) -- node[farm/label,right] {Có} (automatic);

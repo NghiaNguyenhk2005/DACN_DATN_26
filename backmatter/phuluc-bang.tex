@@ -1,0 +1,145 @@
+% Các bảng dài tách khỏi thân báo cáo, được \input từ backmatter/phuluc.tex
+
+\section*{Phụ lục F. Ánh xạ vấn đề, hướng giải quyết và mục tiêu}
+\label{apdx:anhxa}
+\addcontentsline{toc}{section}{Phụ lục F. Ánh xạ vấn đề, hướng giải quyết và mục tiêu}
+
+Bảng~\ref{tab:vande-muctieu} ánh xạ từng vấn đề nêu tại mục~\ref{sec:vande}
+tới hướng giải quyết của Farmery và các mục tiêu cụ thể tương ứng tại
+mục~\ref{sec:muctieu}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{3.3cm} L{7.2cm} L{2.4cm}}
+\caption{Ánh xạ giữa vấn đề, hướng giải quyết và mục tiêu của đồ án}
+\label{tab:vande-muctieu} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Vấn đề} & \textbf{Hướng giải quyết của Farmery} & \textbf{Mục tiêu} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Vấn đề} & \textbf{Hướng giải quyết của Farmery} & \textbf{Mục tiêu} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{V1.} Cung dồn theo mùa vụ &
+Đặt hàng bán sỉ theo hợp đồng và lịch giao để nhà cung cấp chủ động sản xuất; nền tảng chủ động thu mua theo lô ở luồng bán lẻ, tạo thêm một đầu ra ổn định; mô-đun AI dự báo giá theo mùa vụ và vùng trồng. &
+MT3, MT4, MT6 \\
+\rowcolor{tblaltbg}
+\textbf{V2.} Thiếu kênh tiêu thụ &
+Hai luồng tiêu thụ song song trên cùng một tập nguồn cung, mở rộng thị trường ra ngoài phạm vi thương lái địa phương; nhà cung cấp không đủ năng lực bán lẻ vẫn tiêu thụ được hàng qua luồng nền tảng tự thu mua. &
+MT3, MT4 \\
+\textbf{V3.} Hao hụt, thiếu kho lạnh &
+Quy trình vận chuyển riêng cho hàng dễ hư hỏng, ưu tiên giao nhanh qua đối tác vận chuyển thứ ba; quản lý tồn kho theo lô với nguyên tắc xuất trước hàng hết hạn trước; giới hạn bán kính giao hàng lẻ để rút ngắn thời gian hàng nằm trên đường. &
+MT4, MT5 \\
+\rowcolor{tblaltbg}
+\textbf{V4.} Thiếu minh bạch, niềm tin &
+Xác thực nhà cung cấp và kiểm duyệt chứng nhận; mã QR truy xuất gắn nhật ký canh tác theo lô; hệ thống đánh giá và điểm uy tín; ở luồng bán lẻ, nền tảng trực tiếp chịu trách nhiệm chất lượng thay vì để người mua tự đòi từng người bán nhỏ lẻ. &
+MT1, MT2, MT4, MT7 \\
+\end{longtable}
+\endgroup
+
+\section*{Phụ lục G. Đối chiếu nông sản với các loại hàng hóa khác}
+\label{apdx:dacdiem}
+\addcontentsline{toc}{section}{Phụ lục G. Đối chiếu nông sản với các loại hàng hóa khác}
+
+Bảng~\ref{tab:dacdiem-hanghoa} đối chiếu nông sản tươi với hàng công nghiệp
+và hàng tiêu dùng đóng gói theo từng tiêu chí, kèm ràng buộc thiết kế mà
+mỗi khác biệt đặt ra cho hệ thống. Phần phân tích tóm tắt nằm tại
+mục~\ref{subsec:sosanhnongsan}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{2.6cm} L{3.4cm} L{3.4cm} L{4.6cm}}
+\caption{Đối chiếu đặc điểm nông sản với các loại hàng hóa khác}
+\label{tab:dacdiem-hanghoa} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Nông sản tươi} & \textbf{Hàng công nghiệp, tiêu dùng đóng gói} & \textbf{Ràng buộc đặt ra cho hệ thống} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Nông sản tươi} & \textbf{Hàng công nghiệp, tiêu dùng đóng gói} & \textbf{Ràng buộc đặt ra cho hệ thống} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Hạn sử dụng & Vài ngày đến vài tuần & Nhiều tháng đến nhiều năm & Quản lý tồn kho theo lô kèm hạn dùng; xuất trước lô hết hạn trước \\
+\rowcolor{tblaltbg}
+Nguồn cung & Theo mùa vụ, không điều chỉnh được trong ngắn hạn & Theo kế hoạch sản xuất, co giãn theo cầu & Cần dự báo nhu cầu và giá theo mùa vụ, vùng trồng \\
+Biến động giá & Mạnh, theo ngày và theo vụ & Ổn định, thay đổi theo chính sách giá & Giá phải cập nhật thường xuyên; biên lợi nhuận dễ bị bào mòn \\
+\rowcolor{tblaltbg}
+Tính đồng nhất & Khác nhau giữa các lô cùng giống & Đồng nhất theo mã hàng & Dữ liệu mô tả gắn theo lô, không gắn theo mã sản phẩm \\
+Đơn vị bán & Khối lượng, bó, thùng; khác nhau giữa lẻ và sỉ & Theo cái, theo hộp & Hỗ trợ nhiều đơn vị tính và quy đổi giữa chúng \\
+\rowcolor{tblaltbg}
+Khả năng kiểm chứng chất lượng & Người mua không tự kiểm chứng được, kể cả sau khi dùng & Kiểm chứng được bằng quan sát hoặc dùng thử & Bắt buộc có truy xuất nguồn gốc và chứng nhận bên thứ ba \\
+Ràng buộc pháp lý & An toàn thực phẩm, kiểm dịch & Chủ yếu về nhãn mác, tiêu chuẩn kỹ thuật & Kiểm duyệt không thể chỉ dựa vào tự động hóa \\
+\rowcolor{tblaltbg}
+Hao hụt vận chuyển & 20--40\% với rau quả tại Việt Nam & Gần như không đáng kể & Chi phí hao hụt phải tính vào mô hình kinh doanh \\
+Điều kiện bảo quản & Phụ thuộc chuỗi lạnh & Nhiệt độ thường & Phụ thuộc năng lực đối tác vận chuyển, nằm ngoài kiểm soát trực tiếp \\
+\end{longtable}
+\endgroup
+
+\section*{Phụ lục H. Chứng nhận nông sản phổ biến trên thế giới}
+\label{apdx:chungnhan}
+\addcontentsline{toc}{section}{Phụ lục H. Chứng nhận nông sản phổ biến trên thế giới}
+
+Bảng~\ref{tab:chungnhan} tổng hợp các chứng nhận và giấy tờ mà một lô nông
+sản cần có để ra thị trường, kèm mức độ hỗ trợ trong phạm vi đồ án. Phần
+phân tích tóm tắt nằm tại mục~\ref{subsec:chungnhan}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{3.1cm} L{4.1cm} L{3.6cm} L{3.2cm}}
+\caption{Chứng nhận và giấy tờ nông sản theo thị trường}
+\label{tab:chungnhan} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tên} & \textbf{Phạm vi chứng nhận} & \textbf{Thị trường đích} & \textbf{Farmery hỗ trợ} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tên} & \textbf{Phạm vi chứng nhận} & \textbf{Thị trường đích} & \textbf{Farmery hỗ trợ} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{4}{l}{\textbf{\textit{Thực hành sản xuất}}} \\
+VietGAP & Thực hành nông nghiệp tốt, khoảng 70 tiêu chí & Nội địa & Có, kiểm duyệt \\
+\rowcolor{tblaltbg}
+GlobalG.A.P. & Thực hành nông nghiệp tốt, 252 tiêu chuẩn & Xuất khẩu & Có, kiểm duyệt \\
+GRASP & Điều kiện lao động, bổ trợ GlobalG.A.P. & Xuất khẩu & Ghi nhận \\
+\rowcolor{tblaltbg}
+USDA Organic, EU Organic, JAS Organic & Canh tác hữu cơ & Hoa Kỳ, châu Âu, Nhật Bản & Có, kiểm duyệt \\
+\multicolumn{4}{l}{\textbf{\textit{An toàn thực phẩm, chế biến và đóng gói}}} \\
+HACCP & Phân tích mối nguy và điểm kiểm soát tới hạn & Nội địa và xuất khẩu & Có, kiểm duyệt \\
+\rowcolor{tblaltbg}
+ISO 22000, FSSC 22000 & Hệ thống quản lý an toàn thực phẩm & Xuất khẩu & Ghi nhận \\
+BRCGS Food Safety, IFS Food & Chuẩn do chuỗi bán lẻ lớn yêu cầu & Anh, châu Âu & Ghi nhận \\
+\multicolumn{4}{l}{\textbf{\textit{Thị trường ngách}}} \\
+\rowcolor{tblaltbg}
+Halal, Kosher & Yêu cầu tôn giáo & Thị trường tương ứng & Ghi nhận \\
+Fairtrade, Rainforest Alliance & Thương mại công bằng, bền vững & Châu Âu, Bắc Mỹ & Ghi nhận \\
+\multicolumn{4}{l}{\textbf{\textit{Giấy tờ đi theo từng lô hàng}}} \\
+\rowcolor{tblaltbg}
+Kiểm dịch thực vật & Tình trạng dịch hại của lô hàng & Xuất khẩu & Ngoài phạm vi \\
+Giấy chứng nhận xuất xứ & Nguồn gốc xuất xứ, ưu đãi thuế quan & Xuất khẩu & Ngoài phạm vi \\
+\rowcolor{tblaltbg}
+Phiếu kết quả phân tích & Dư lượng thuốc bảo vệ thực vật, kim loại nặng & Nội địa và xuất khẩu & Ngoài phạm vi \\
+Mã số vùng trồng, mã cơ sở đóng gói & Định danh nơi trồng và nơi đóng gói & Xuất khẩu chính ngạch & Ghi nhận \\
+\rowcolor{tblaltbg}
+Điều kiện an toàn thực phẩm, tự công bố sản phẩm & Điều kiện cơ sở và hồ sơ sản phẩm chế biến & Nội địa & Có, bắt buộc với nhóm chế biến sâu \\
+OCOP & Xếp hạng sản phẩm đặc trưng địa phương & Nội địa & Có, kiểm duyệt \\
+\end{longtable}
+\endgroup

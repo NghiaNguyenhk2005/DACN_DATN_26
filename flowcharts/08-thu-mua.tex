@@ -1,0 +1,29 @@
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Bắt đầu thu mua};
+    \node[farm/process] (offer) at (0,-1.8) {Nhà cung cấp: công bố lô sắp thu hoạch --- sản lượng dự kiến, ngày thu hoạch, giá chào};
+    \node[farm/process] (compare) at (0,-4.1) {Bộ phận thu mua: đối chiếu các chào hàng cùng loại, tham khảo dự báo giá và tồn kho hiện có};
+    \node[farm/decision] (decide) at (0,-6.7) {Quyết định\\mua lô này?};
+    \node[farm/exception] (skip) at (6.8,-6.7) {Bỏ qua lô; nhà cung cấp vẫn có thể tự bán qua kênh bán sỉ};
+    \node[farm/process] (order) at (0,-9.2) {Hai bên thống nhất giá và thời điểm giao; hệ thống sinh đơn thu mua};
+    \node[farm/process] (deliver) at (0,-11.3) {Nhà cung cấp: giao hàng về kho sơ chế tại vùng trồng};
+    \node[farm/decision] (qc) at (0,-13.5) {Chất lượng\\thực tế đạt?};
+    \node[farm/exception] (reject) at (6.8,-13.5) {Từ chối nhận hoặc nhận với giá điều chỉnh đã thống nhất lại; lệch nghiêm trọng ghi vào lịch sử uy tín};
+    \node[farm/process] (stockin) at (0,-16.2) {Nhập kho theo lô, kế thừa nguyên vẹn nhật ký canh tác và mã QR truy xuất của lô};
+    \node[farm/process] (pay) at (0,-18.4) {Hệ thống: thanh toán cho nhà cung cấp theo sản lượng đã nghiệm thu --- không chờ hàng bán được};
+    \node[farm/process] (price) at (0,-20.7) {Bộ phận thu mua: đặt giá bán lẻ theo giá vốn, hao hụt dự kiến và mặt bằng thị trường};
+    \node[farm/terminal] (finish) at (0,-22.7) {Lô mở bán ở kênh bán lẻ};
+    \node[farm/note,text width=4.6cm] at (8.2,-20.2) {\textbf{Hàng tồn lâu hoặc cận hạn:} hệ thống cảnh báo để chủ động giảm giá xả hàng.\\[4pt]\textbf{Lô bán sỉ sắp hết hạn:} hệ thống đề xuất Farmery thu mua lại với giá chiết khấu, chuyển sang kênh bán lẻ.};
+    \foreach \source/\target in {start/offer,offer/compare,compare/decide,order/deliver,deliver/qc,stockin/pay,pay/price,price/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (decide) -- node[farm/label,right] {Có} (order);
+    \draw[farm/arrow] (decide) -- node[farm/label,above] {Không} (skip);
+    \draw[farm/arrow] (qc) -- node[farm/label,right] {Đạt} (stockin);
+    \draw[farm/arrow] (qc) -- node[farm/label,above] {Không đạt} (reject);
+\end{tikzpicture}
+\end{adjustbox}
+\caption[Lưu đồ quy trình thu mua vào kho của nền tảng]{Lưu đồ quy trình thu mua vào kho của nền tảng (luồng 1P)}
+\label{fig:flow-thu-mua}
+\end{figure}

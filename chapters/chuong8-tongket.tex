@@ -2,7 +2,41 @@
 \label{chap:ketluan}
 
 \section{Kết quả đạt được}
-% TODO: đối chiếu với các mục tiêu MT1--MT6 tại mục~\ref{sec:muctieu} --- mục tiêu nào đã hoàn thành, mức độ hoàn thành.
+% TODO: đối chiếu với các mục tiêu MT1--MT7 tại mục~\ref{sec:muctieu} --- mục tiêu nào đã hoàn thành, mức độ hoàn thành, kèm số liệu từ Chương~\ref{chap:danhgia}.
+
+\section{Hạn chế của phiên bản hiện tại}
+
+Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, một số hạng mục được chủ động đưa ra khỏi phạm vi đồ án vì không thể kiểm chứng được bằng số đo trong điều kiện hiện có --- đúng theo nguyên tắc đặt ra tại mục~\ref{sec:muctieudanhgia}. Việc nêu rõ chúng ở đây nhằm tránh hiểu nhầm rằng hệ thống đã bao phủ toàn bộ nghiệp vụ của một nền tảng thương mại hoàn chỉnh:
+
+\begin{itemize}
+    \item \textbf{Phát hiện bất thường bằng học máy.} Hệ thống hiện chỉ dùng luật ngưỡng do quản trị viên cấu hình. Mô hình học máy đòi hỏi lưu lượng giao dịch thật đủ lớn để học được thế nào là bình thường, và một tập nhãn các trường hợp gian lận đã xác nhận để đo chất lượng --- cả hai đều chưa có.
+    \item \textbf{Phân quyền nội bộ trong tài khoản doanh nghiệp.} Mỗi tài khoản doanh nghiệp hiện do một người đại diện sử dụng. Việc phân tách vai trò nội bộ như người đặt hàng, kế toán và người duyệt chi là nhu cầu thật của doanh nghiệp quy mô lớn, nhưng không mang đặc thù nông sản nên được để lại.
+    \item \textbf{Mua trả sau và hạn mức tín dụng cho khách sỉ.} Hệ thống hiện yêu cầu thanh toán theo từng đợt giao. Cơ chế cho nợ theo kỳ hạn kéo theo bài toán thẩm định tín dụng và thu hồi nợ, vượt khỏi phạm vi một đồ án phần mềm.
+    \item \textbf{Ứng dụng di động riêng và kênh hỗ trợ qua mạng xã hội} cho nhóm nhà cung cấp ít rành công nghệ.
+\end{itemize}
 
 \section{Hướng phát triển}
-% TODO: nêu toàn bộ hạn chế của phiên bản hiện tại (bao gồm các hạng mục ngoài phạm vi tại mục~\ref{sec:phamvi}: tích hợp API xác minh chứng nhận, blockchain, kho trung chuyển, xuất khẩu) và liên kết mỗi hạn chế với hướng phát triển; các hướng thuộc giai đoạn Đồ án tốt nghiệp được đưa vào Kế hoạch thực hiện.
+
+\subsection{Mở rộng về nghiệp vụ}
+
+Các hạn chế nêu trên đều là hướng phát triển trực tiếp khi nền tảng đi vào vận hành thật. Thứ tự ưu tiên nên dựa vào điều kiện kích hoạt của từng hạng mục:
+\begin{itemize}
+    \item Khi đã tích lũy đủ lưu lượng giao dịch và tập nhãn từ chính phán quyết của quản trị viên, thay lớp luật ngưỡng bằng mô hình unsupervised learning, rồi chuyển dần sang supervised learning.
+    \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng.
+    \item Khi có nhu cầu xuất khẩu, bổ sung quản lý các giấy tờ đi theo lô hàng đã khảo sát tại mục~\ref{subsec:chungnhan} và kết nối với hệ thống cấp mã số vùng trồng.
+    \item Khi có kênh kết nối dữ liệu với cơ quan cấp chứng nhận, thay việc xác minh thủ công bằng đối chiếu tự động.
+\end{itemize}
+
+\subsection{Mở rộng về kiến trúc}
+
+Kiến trúc modular monolith (mục~\ref{sec:kientruc}) được thiết kế để có thể tách dần khi cần, nhờ ba ràng buộc RB1--RB3 đã tuân thủ ngay từ khi hiện thực. Nếu về sau phải tách, thứ tự hợp lý là:
+
+\begin{enumerate}
+    \item \textbf{Trang truy xuất nguồn gốc công khai} --- tách trước tiên vì chỉ đọc dữ liệu, không nằm trong giao dịch nào, và là nơi dễ bị tải đột biến nhất khi một lô hàng được nhiều người quét mã cùng lúc.
+    \item \textbf{Thông báo} --- đã chạy qua event queue nên tách gần như không phải sửa phần mã gọi.
+    \item \textbf{Tìm kiếm} --- khi thời gian truy vấn vượt ngưỡng đặt ra tại NFR1.1, chuyển sang search engine chuyên dụng.
+\end{enumerate}
+
+Ngược lại, \textbf{tồn kho và đơn hàng nên giữ chung} càng lâu càng tốt, vì việc chống bán vượt tồn kho khi một lô được giao dịch đồng thời ở hai luồng đang dựa vào transaction có row-level locking trong một cơ sở dữ liệu duy nhất; tách ra sẽ phải thay bằng cơ chế giữ chỗ và compensating transaction, phức tạp hơn nhiều mà lợi ích không tương xứng.
+
+Cần nói thẳng rằng với quy mô mà Farmery hướng tới, nhiều khả năng việc tách sẽ không bao giờ cần thiết. Kiến trúc microservices trả giá bằng độ phức tạp vận hành và chỉ thực sự đáng khi có nhiều đội phát triển làm việc song song trên cùng hệ thống, chứ không phải khi cần hệ thống chạy nhanh hơn.
