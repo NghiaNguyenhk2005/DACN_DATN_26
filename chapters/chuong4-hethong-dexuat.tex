@@ -267,28 +267,18 @@ Các chính sách dưới đây chi phối cách sàn vận hành và được c
 
 Farmery là nền tảng thương mại điện tử chuyên biệt cho nông sản, vận hành đồng thời hai luồng đã mô tả tại mục~\ref{sec:businessmodelcanvas}: một sàn bán sỉ nơi nông dân và hợp tác xã tự bán cho doanh nghiệp thu mua, và một gian hàng bán lẻ nơi chính nền tảng thu mua hàng rồi bán lại cho người tiêu dùng. Điểm xuyên suốt cả hai luồng là mọi sản phẩm đều gắn với một lô cụ thể có nhật ký canh tác và chứng nhận đã qua kiểm duyệt, tra cứu được bằng mã QR công khai.
 
-Để tránh hiểu nhầm về phạm vi, cần nói rõ Farmery \emph{không phải} những thứ sau:
-\begin{itemize}
-    \item \textbf{Không phải sàn thương mại điện tử tổng hợp:} danh mục hàng hóa giới hạn trong nhóm nông sản đã định nghĩa tại mục~\ref{subsec:dinhnghianongsan}; sản phẩm ngoài nhóm này bị từ chối ngay ở khâu đăng bán.
-    \item \textbf{Không phải dịch vụ đi chợ hộ:} nền tảng không nhận mua hộ theo yêu cầu từng khách, mà bán hàng đã thu mua sẵn theo lô.
-    \item \textbf{Không tự vận hành hệ thống kho lạnh quy mô lớn:} chỉ duy trì kho sơ chế và đóng gói nhỏ tại vùng trồng phục vụ luồng bán lẻ, phần vận chuyển thuê đơn vị thứ ba (mục~\ref{subsec:khobai}).
-\end{itemize}
+Để tránh hiểu nhầm về phạm vi: Farmery không phải sàn thương mại điện tử tổng hợp --- danh mục hàng hóa giới hạn trong nhóm nông sản đã định nghĩa tại mục~\ref{subsec:dinhnghianongsan}, sản phẩm ngoài nhóm này bị từ chối ngay ở khâu đăng bán; cũng không phải dịch vụ đi chợ hộ, vì nền tảng bán hàng đã thu mua sẵn theo lô chứ không mua hộ theo yêu cầu từng khách; và không tự vận hành hệ thống kho lạnh quy mô lớn mà chỉ duy trì kho sơ chế nhỏ tại vùng trồng, phần vận chuyển thuê đơn vị thứ ba (mục~\ref{subsec:khobai}).
 
 \subsubsection*{Các phân hệ chức năng}
 
-Nền tảng được tổ chức thành các phân hệ dưới đây, mỗi phân hệ ứng với một nhóm yêu cầu chức năng tại mục~\ref{sec:yeucauchucnang}:
+Nền tảng được tổ chức thành năm khối chức năng, mỗi khối gom các phân hệ có cùng mục đích nghiệp vụ và ứng với các nhóm yêu cầu chức năng tại mục~\ref{sec:yeucauchucnang}:
+
 \begin{itemize}
-    \item \textbf{Tài khoản và phân quyền} (FR1) --- đăng ký, xác thực, gán vai trò cho cả người dùng ngoài lẫn nhân sự nội bộ.
-    \item \textbf{Hồ sơ nhà cung cấp và chứng nhận} (FR2, FR3) --- gian hàng, vùng canh tác, quản lý hiệu lực chứng nhận.
-    \item \textbf{Sản phẩm và truy xuất nguồn gốc} (FR4) --- danh mục nông sản, nhật ký canh tác theo lô, sinh mã QR, trang truy xuất công khai.
-    \item \textbf{Bán sỉ} (FR6) --- bảng giá bậc, yêu cầu báo giá, hợp đồng và lịch giao theo đợt.
-    \item \textbf{Bán lẻ} (FR5) --- gian hàng do nền tảng vận hành, giỏ hàng, đặt hàng và đổi trả.
-    \item \textbf{Thu mua và tồn kho} (FR2.3, FR11.2) --- đơn thu mua theo lô, tồn kho theo nguyên tắc xuất trước hàng hết hạn trước, cảnh báo hàng cận hạn.
-    \item \textbf{Thanh toán} (FR7) --- kết nối cổng thanh toán, tạm giữ tiền cho đơn sỉ, đối soát.
-    \item \textbf{Vận chuyển và khiếu nại} (FR8) --- kết nối đơn vị vận chuyển, theo dõi hành trình, xử lý khiếu nại hàng hư hỏng.
-    \item \textbf{Đánh giá và uy tín} (FR9) --- điểm uy tín nhà cung cấp, kiểm soát đánh giá giả.
-    \item \textbf{Quản trị} (FR10) --- kiểm duyệt, xử lý vi phạm, báo cáo thống kê.
-    \item \textbf{Hỗ trợ AI} (FR12) --- gợi ý sản phẩm và dự báo giá.
+    \item \textbf{Nền tảng chung} --- tài khoản và phân quyền, thông báo (FR1, FR11).
+    \item \textbf{Nguồn cung} --- hồ sơ nhà cung cấp, quản lý chứng nhận, sản phẩm và truy xuất nguồn gốc theo lô, tồn kho (FR2--FR4).
+    \item \textbf{Giao dịch} --- bán sỉ qua báo giá và hợp đồng, bán lẻ từ gian hàng của nền tảng, thu mua vào kho, thanh toán (FR5--FR7).
+    \item \textbf{Sau bán} --- vận chuyển, khiếu nại, đánh giá và điểm uy tín (FR8, FR9).
+    \item \textbf{Vận hành và hỗ trợ ra quyết định} --- công cụ quản trị, các mô-đun AI (FR10, FR12).
 \end{itemize}
 
 \subsubsection*{Kênh truy cập}
@@ -314,53 +304,34 @@ Một nguyên tắc chi phối toàn hệ thống: nền tảng không cho phép
 \subsubsection*{Các nhóm người dùng}
 \label{sec:doituongnguoidung}
 
-Theo mô hình hai luồng tại mục~\ref{sec:businessmodelcanvas}, hệ thống phục vụ năm nhóm người dùng. Nhà cung cấp là nguồn hàng đầu chuỗi và tham gia cả hai luồng; khách sỉ chỉ xuất hiện ở luồng bán sỉ; khách lẻ chỉ xuất hiện ở luồng bán lẻ; bộ phận thu mua và quản trị viên là hai nhóm vận hành nội bộ của nền tảng. Mục này tập trung vào \emph{khó khăn} của từng nhóm --- phần nhu cầu được phát biểu thành user story tại mục~\ref{sec:yeucau} để dẫn thẳng sang yêu cầu hệ thống.
+Theo mô hình hai luồng tại mục~\ref{sec:businessmodelcanvas}, hệ thống phục vụ năm nhóm người dùng. Nhà cung cấp là nguồn hàng đầu chuỗi và tham gia cả hai luồng; khách sỉ chỉ xuất hiện ở luồng bán sỉ; khách lẻ chỉ xuất hiện ở luồng bán lẻ; bộ phận thu mua và quản trị viên là hai nhóm vận hành nội bộ của nền tảng. Bảng~\ref{tab:nhomnguoidung} tóm tắt vai trò và phạm vi tham gia của từng nhóm; chân dung chi tiết kèm điểm đau và kỳ vọng được trình bày ngay sau đó tại mục~\ref{subsec:customer-personas}.
 
-\paragraph*{a) Nhà cung cấp (nông dân, hợp tác xã)}
-\begin{itemize}
-    \item \textbf{Khó khăn:} hạn chế kỹ năng số và thiết bị (điện thoại thông minh, internet ổn định ở vùng sâu vùng xa); thiếu năng lực tự chụp ảnh, ghi nhật ký canh tác đúng chuẩn, và đặc biệt là không đủ nhân lực để phân loại, đóng gói, xử lý từng đơn lẻ vài ki-lô-gam; e ngại công nghệ và lo sợ bị nền tảng ``thu phí thay thương lái'' mà không mang lại giá tốt hơn thực chất.
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{seller} --- được gán sau khi hoàn tất xác thực (mục~\ref{sec:luongtiepcan}).
-\end{itemize}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{table}[H]
+\centering
+\caption{Năm nhóm người dùng và phạm vi tham gia}
+\label{tab:nhomnguoidung}
+\begin{tabular}{L{2.9cm} L{3.0cm} L{3.1cm} L{5.0cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nhóm} & \textbf{Vai trò RBAC} & \textbf{Tham gia luồng} & \textbf{Khó khăn chính} \\
+\midrule
+Nhà cung cấp (nông dân, hợp tác xã) & \texttt{seller} & Cả hai --- tự bán sỉ, hoặc bán đứt lô cho nền tảng & Hạn chế kỹ năng số và thiết bị; không đủ nhân lực phân loại, đóng gói, xử lý từng đơn lẻ vài ki-lô-gam; e ngại bị ``thu phí thay thương lái'' \\
+\rowcolor{tblaltbg}
+Khách sỉ (doanh nghiệp thu mua) & \texttt{buyer\_wholesale} & Bán sỉ (3P) & Khó xác minh nhiều nhà cung cấp nhỏ lẻ phân tán; rủi ro đứt gãy cung ứng khi mất mùa; thiếu công cụ quản lý hợp đồng tập trung \\
+Khách lẻ (người tiêu dùng) & \texttt{buyer\_retail} & Bán lẻ (1P) & Khó phân biệt sản phẩm ``sạch'' thật với hàng gắn mác; lo hàng tươi hư hỏng trên đường; thói quen mua tại chợ vẫn phổ biến \\
+\rowcolor{tblaltbg}
+Bộ phận thu mua & \texttt{ops\_sourcing} & Bán lẻ (1P) & Phải quyết định lượng mua khi chưa biết chắc nhu cầu --- mua thiếu thì hết hàng, mua thừa thì lỗ; giá đổi theo ngày nên biên lợi nhuận dễ bị bào mòn \\
+Quản trị viên & \texttt{admin\_moderator}, \texttt{admin\_ops}, \texttt{admin} & Cả hai, ở vai trò giám sát & Khối lượng kiểm duyệt lớn khi số nhà cung cấp tăng; khó xác minh chứng nhận khi chưa kết nối cơ quan cấp; áp lực thời gian xử lý khiếu nại với hàng dễ hư hỏng \\
+\bottomrule
+\end{tabular}
+\end{table}
+\endgroup
 
-\paragraph*{b) Khách sỉ --- doanh nghiệp thu mua (luồng bán sỉ)}
-\begin{itemize}
-    \item \textbf{Khó khăn:} khó tìm và xác minh nhiều nhà cung cấp nhỏ lẻ phân tán; rủi ro đứt gãy cung ứng khi mất mùa hoặc nhà cung cấp không đáp ứng sản lượng tối thiểu (MOQ); thiếu công cụ quản lý hợp đồng tập trung khi làm việc với nhiều nông dân và hợp tác xã riêng lẻ.
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{buyer\_wholesale} --- được gán sau khi đội ngũ kinh doanh xác minh hồ sơ doanh nghiệp (mục~\ref{sec:luongtiepcan}).
-\end{itemize}
-
-\paragraph*{c) Khách lẻ --- người tiêu dùng cá nhân (luồng bán lẻ)}
-\begin{itemize}
-    \item \textbf{Khó khăn:} khó phân biệt sản phẩm ``sạch'' thật với sản phẩm gắn mác marketing (do bất cân xứng thông tin --- mục~\ref{subsec:reputation}); lo ngại hàng tươi bị hư hỏng trong vận chuyển; thói quen mua tại chợ và siêu thị truyền thống vẫn phổ biến, đòi hỏi nền tảng phải tạo được lòng tin đủ lớn để thay đổi hành vi.
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{buyer\_retail} --- được gán ngay sau xác thực OTP (mục~\ref{sec:luongtiepcan}).
-\end{itemize}
-
-\paragraph*{d) Bộ phận thu mua và vận hành hàng của Farmery (luồng bán lẻ)}
-
-Đây là nhóm người dùng phát sinh riêng từ luồng bán lẻ: khác với sàn thuần trung gian, khi nền tảng tự mua hàng thì phải có người ra quyết định mua gì, mua giá nào và bán lại giá nào.
-\begin{itemize}
-    \item \textbf{Khó khăn:} phải quyết định số lượng thu mua khi chưa biết chắc nhu cầu thực tế --- mua thiếu thì hết hàng, mua thừa thì lỗ trực tiếp do hàng hỏng; giá nông sản biến động theo ngày nên biên lợi nhuận dễ bị bào mòn giữa lúc mua và lúc bán.
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{ops\_sourcing}.
-\end{itemize}
-
-\paragraph*{e) Quản trị viên hệ thống (vận hành nền tảng)}
-
-Nhóm quản trị viên được tách thành hai vai trò chuyên trách theo nguyên tắc đặc quyền tối thiểu (NFR3.1), cộng với một vai trò gộp quyền dành cho đội vận hành quy mô nhỏ.
-
-\subparagraph*{e1) Quản trị viên kiểm duyệt và tuân thủ}
-\begin{itemize}
-    \item \textbf{Khó khăn:} khối lượng kiểm duyệt lớn khi số nhà cung cấp tăng nhanh; cân bằng giữa kiểm duyệt chặt để đảm bảo chất lượng và tốc độ duyệt để không làm nản lòng nhà cung cấp mới; khó xác minh tính xác thực của chứng nhận VietGAP/GlobalGAP khi chưa có kết nối tới cơ quan cấp; thiếu bằng chứng rõ ràng ở các trường hợp nghi vấn nhưng chưa đủ căn cứ khóa tài khoản.
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{admin\_moderator}.
-\end{itemize}
-
-\subparagraph*{e2) Quản trị viên vận hành và hỗ trợ}
-\begin{itemize}
-    \item \textbf{Khó khăn:} thiếu thông tin đầy đủ hai chiều khi phân xử, trong khi áp lực thời gian xử lý rất cao với hàng nông sản dễ hư hỏng; dữ liệu phân tán qua nhiều phân hệ nên tổng hợp báo cáo chính xác không đơn giản; với hàng thuộc luồng bán sỉ thì không kiểm soát được kho vật lý do nhà cung cấp tự quản lý (mục~\ref{subsec:khobai}), phải dựa vào số liệu tồn kho họ tự khai báo (FR2.3).
-    \item \textbf{Vai trò hệ thống (RBAC):} \texttt{admin\_ops}.
-\end{itemize}
-
-\subparagraph*{e3) Quản trị viên cấp cao}
-Vai trò \texttt{admin} gộp toàn bộ quyền của hai vai trò trên, phục vụ đội vận hành quy mô nhỏ ở giai đoạn đầu khi chưa đủ nhân sự để tách bạch chức năng; khi quy mô tăng, việc thu hẹp về đúng hai vai trò chuyên trách không đòi hỏi thay đổi mô hình phân quyền (NFR2.1).
-
+\noindent\textbf{Về nhóm quản trị viên.} Nhóm này tách thành hai vai trò chuyên trách theo nguyên tắc đặc quyền tối thiểu (NFR3.1): \texttt{admin\_moderator} phụ trách kiểm duyệt hồ sơ, sản phẩm, chứng nhận và xử lý vi phạm (FR10.1, FR10.2); \texttt{admin\_ops} phụ trách phân xử khiếu nại, báo cáo thống kê và giám sát tồn kho, vận chuyển (FR10.3--FR10.5). Vai trò \texttt{admin} gộp toàn bộ quyền của hai vai trò trên, phục vụ đội vận hành quy mô nhỏ ở giai đoạn đầu; khi quy mô tăng, việc thu hẹp về đúng hai vai trò chuyên trách không đòi hỏi thay đổi mô hình phân quyền (NFR2.1).
 
 \subsubsection*{Luồng tiếp cận và tham gia hệ thống}
 \label{sec:luongtiepcan}
@@ -521,38 +492,14 @@ Toàn bộ yêu cầu trong mục này xuất phát từ nhu cầu thực tế c
 
 \subsubsection*{User story}
 
-\noindent\textbf{Nhà cung cấp:}
-\begin{itemize}
-    \item Là nông dân, tôi muốn biết giá thị trường trước khi chốt bán, để không bị ép giá khi vào vụ thu hoạch rộ.
-    \item Là nông dân, tôi muốn bán được cả lô ngay khi thu hoạch, để không phải lo hàng hỏng trong lúc chờ người mua.
-    \item Là hợp tác xã, tôi muốn chứng minh sản phẩm của mình đạt chuẩn, để bán được giá cao hơn hàng không có chứng nhận.
-    \item Là nông dân ít dùng điện thoại thông minh, tôi muốn thao tác đơn giản và có người hướng dẫn, để không bỏ cuộc giữa chừng.
-\end{itemize}
+Mỗi nhóm người dùng dưới đây được minh họa bằng hai user story tiêu biểu nhất --- những nhu cầu mà nếu không đáp ứng được thì nhóm đó không còn lý do dùng nền tảng. Danh sách đầy đủ cùng bảng truy vết sang mã yêu cầu nằm tại Phụ lục J.
 
-\noindent\textbf{Khách sỉ:}
 \begin{itemize}
-    \item Là bếp trưởng nhà hàng, tôi muốn đặt hàng định kỳ với sản lượng ổn định, để không phải tìm nguồn lại mỗi tuần.
-    \item Là bộ phận thu mua của siêu thị, tôi muốn xác minh được chứng nhận của nhà cung cấp, để đáp ứng yêu cầu kiểm soát chất lượng nội bộ.
-    \item Là doanh nghiệp, tôi muốn giá giảm theo sản lượng đặt, để đặt nhiều có lợi hơn đặt lẻ.
-\end{itemize}
-
-\noindent\textbf{Khách lẻ:}
-\begin{itemize}
-    \item Là người tiêu dùng, tôi muốn biết rau mình mua trồng ở đâu và ai trồng, để yên tâm về nguồn gốc.
-    \item Là người tiêu dùng, tôi muốn có một nơi chịu trách nhiệm khi hàng không đạt, để không phải tự đòi từng người bán nhỏ lẻ.
-    \item Là người đi làm, tôi muốn hàng giao nhanh trong ngày, để rau còn tươi khi về tới nhà.
-\end{itemize}
-
-\noindent\textbf{Bộ phận thu mua:}
-\begin{itemize}
-    \item Là nhân viên thu mua, tôi muốn so sánh chào giá giữa các nhà cung cấp theo mùa vụ, để quyết định mua của ai với giá nào.
-    \item Là nhân viên thu mua, tôi muốn được cảnh báo sớm các lô sắp hết hạn, để kịp xả hàng trước khi lỗ.
-\end{itemize}
-
-\noindent\textbf{Quản trị viên:}
-\begin{itemize}
-    \item Là quản trị viên kiểm duyệt, tôi muốn duyệt nhanh hồ sơ và sản phẩm, để nhà cung cấp mới không phải chờ lâu rồi bỏ đi.
-    \item Là quản trị viên vận hành, tôi muốn thấy bức tranh tổng thể về giao dịch và tồn kho, để phát hiện vấn đề trước khi nó thành sự cố.
+    \item \textbf{Nhà cung cấp:} ``Là nông dân, tôi muốn bán được cả lô ngay khi thu hoạch, để không phải lo hàng hỏng trong lúc chờ người mua.'' \quad ``Là hợp tác xã, tôi muốn chứng minh sản phẩm của mình đạt chuẩn, để bán được giá cao hơn hàng không có chứng nhận.''
+    \item \textbf{Khách sỉ:} ``Là bếp trưởng nhà hàng, tôi muốn đặt hàng định kỳ với sản lượng ổn định, để không phải tìm nguồn lại mỗi tuần.'' \quad ``Là bộ phận thu mua của siêu thị, tôi muốn xác minh được chứng nhận của nhà cung cấp, để đáp ứng yêu cầu kiểm soát chất lượng nội bộ.''
+    \item \textbf{Khách lẻ:} ``Là người tiêu dùng, tôi muốn biết rau mình mua trồng ở đâu và ai trồng, để yên tâm về nguồn gốc.'' \quad ``Là người tiêu dùng, tôi muốn có một nơi chịu trách nhiệm khi hàng không đạt, để không phải tự đòi từng người bán nhỏ lẻ.''
+    \item \textbf{Bộ phận thu mua:} ``Là nhân viên thu mua, tôi muốn so sánh chào giá giữa các nhà cung cấp theo mùa vụ, để quyết định mua của ai với giá nào.'' \quad ``Là nhân viên thu mua, tôi muốn được cảnh báo sớm các lô sắp hết hạn, để kịp xả hàng trước khi lỗ.''
+    \item \textbf{Quản trị viên:} ``Là quản trị viên kiểm duyệt, tôi muốn duyệt nhanh hồ sơ và sản phẩm, để nhà cung cấp mới không phải chờ lâu rồi bỏ đi.'' \quad ``Là quản trị viên vận hành, tôi muốn thấy bức tranh tổng thể về giao dịch và tồn kho, để phát hiện vấn đề trước khi nó thành sự cố.''
 \end{itemize}
 
 Phụ lục J trình bày hai bảng: bảng truy vết từ từng user story sang mã yêu cầu tương ứng, và bảng đối chiếu nhóm yêu cầu chức năng với nhóm người dùng sử dụng trực tiếp. Chi tiết từng yêu cầu được trình bày tại các mục con dưới đây.

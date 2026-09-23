@@ -32,52 +32,27 @@ Ranh giới này không chỉ mang tính học thuật: nó là căn cứ trực
 \subsection{Nông sản khác hàng hóa thông thường ở điểm nào}
 \label{subsec:sosanhnongsan}
 
-So với hàng công nghiệp và hàng tiêu dùng đóng gói --- nhóm hàng mà các sàn thương mại điện tử phổ thông được thiết kế để phục vụ --- nông sản có những khác biệt sau, mỗi khác biệt kéo theo một ràng buộc thiết kế cụ thể:
+So với hàng công nghiệp và hàng tiêu dùng đóng gói --- nhóm hàng mà các sàn thương mại điện tử phổ thông được thiết kế để phục vụ --- nông sản có bốn khác biệt chi phối toàn bộ thiết kế hệ thống:
 
 \begin{itemize}
-    \item \textbf{Mau hỏng, hạn sử dụng tính bằng ngày.} Hàng công nghiệp tồn kho hàng năm không mất giá trị; rau quả tươi mất giá trị theo từng ngày. Hệ quả: tồn kho phải quản lý theo lô kèm hạn sử dụng, ưu tiên xuất trước lô hết hạn trước, và thời gian giao hàng trở thành ràng buộc chứ không phải tiện ích.
+    \item \textbf{Mau hỏng, hạn sử dụng tính bằng ngày.} Hàng công nghiệp tồn kho hàng năm không mất giá trị; rau quả tươi mất giá trị theo từng ngày. Hệ quả: tồn kho phải quản lý theo lô kèm hạn sử dụng, ưu tiên xuất trước lô hết hạn trước, và thời gian giao hàng trở thành ràng buộc chứ không phải tiện ích. Đi kèm là tỷ lệ tổn thất sau thu hoạch 20--40\% (Chương~\ref{chap:gioithieu}), buộc phải tính chi phí hao hụt vào mô hình kinh doanh.
     \item \textbf{Nguồn cung theo mùa vụ, không theo đơn đặt hàng.} Nhà máy sản xuất thêm khi có cầu; nông dân không thể thu hoạch sớm hơn mùa vụ. Hệ quả: giá và sản lượng biến động mạnh theo thời điểm trong năm, cần dự báo thay vì chỉ ghi nhận.
-    \item \textbf{Chất lượng không đồng nhất giữa các lô.} Hai lô cùng giống, cùng vùng trồng vẫn khác nhau về kích cỡ và độ chín. Hệ quả: không thể mô tả sản phẩm một lần rồi dùng mãi như mã hàng công nghiệp; mỗi lô cần dữ liệu riêng.
-    \item \textbf{Khó chuẩn hóa đơn vị bán.} Hàng công nghiệp bán theo ``cái''; nông sản bán theo khối lượng, theo bó, theo thùng, và quy cách khác nhau giữa bán lẻ với bán sỉ. Hệ quả: hệ thống phải hỗ trợ nhiều đơn vị tính và quy đổi giữa chúng.
-    \item \textbf{Là hàng hóa mà người mua không tự kiểm chứng được chất lượng.} Người mua không thể nhìn quả cà chua để biết nó có dư lượng thuốc bảo vệ thực vật hay không --- kể cả sau khi đã ăn. Đây chính là loại hàng hóa mà lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}) mô tả, và là lý do truy xuất nguồn gốc cùng chứng nhận bên thứ ba trở thành bắt buộc chứ không phải tùy chọn.
-    \item \textbf{Chịu ràng buộc pháp lý về an toàn thực phẩm.} Bán hàng công nghiệp sai mô tả là vi phạm thương mại; bán thực phẩm không an toàn có thể gây hậu quả sức khỏe. Hệ quả: khâu kiểm duyệt không thể chỉ dựa vào tự động hóa.
-    \item \textbf{Hao hụt trong vận chuyển ở mức cao.} Tỷ lệ tổn thất sau thu hoạch của rau quả Việt Nam ở mức 20--40\% (Chương~\ref{chap:gioithieu}), trong khi hàng công nghiệp gần như không hao hụt. Hệ quả: chi phí hao hụt phải được tính vào mô hình kinh doanh, đặc biệt ở luồng mà nền tảng tự sở hữu hàng.
+    \item \textbf{Chất lượng không đồng nhất giữa các lô.} Hai lô cùng giống, cùng vùng trồng vẫn khác nhau về kích cỡ và độ chín, lại bán theo khối lượng hoặc theo bó chứ không theo ``cái''. Hệ quả: dữ liệu mô tả phải gắn theo từng lô thay vì theo mã sản phẩm, và hệ thống phải hỗ trợ nhiều đơn vị tính.
+    \item \textbf{Người mua không tự kiểm chứng được chất lượng.} Người mua không thể nhìn quả cà chua để biết nó có dư lượng thuốc bảo vệ thực vật hay không --- kể cả sau khi đã ăn. Đây chính là loại hàng hóa mà lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}) mô tả. Cộng với ràng buộc pháp lý về an toàn thực phẩm, truy xuất nguồn gốc và chứng nhận bên thứ ba trở thành bắt buộc chứ không phải tùy chọn, và khâu kiểm duyệt không thể chỉ dựa vào tự động hóa.
 \end{itemize}
 
-Bảng đối chiếu chi tiết giữa nông sản, hàng công nghiệp và hàng tiêu dùng đóng gói theo từng tiêu chí được trình bày tại Phụ lục G.
+Phụ lục G đối chiếu đầy đủ chín tiêu chí giữa nông sản, hàng công nghiệp và hàng tiêu dùng đóng gói, kèm ràng buộc thiết kế tương ứng của từng tiêu chí.
 
 \subsection{Chứng nhận và giấy tờ để nông sản ra thị trường}
 \label{subsec:chungnhan}
 
-Một lô nông sản muốn đi từ trang trại ra thị trường --- đặc biệt là thị trường xuất khẩu --- phải kèm theo hai loại hồ sơ: chứng nhận về \emph{cách thức sản xuất} và giấy tờ đi theo \emph{từng lô hàng cụ thể}.
+Một lô nông sản muốn đi từ trang trại ra thị trường --- đặc biệt là thị trường xuất khẩu --- phải kèm theo hai loại hồ sơ.
 
-\noindent\textbf{Chứng nhận thực hành sản xuất:}
-\begin{itemize}
-    \item \textbf{GlobalG.A.P.} --- chuẩn thực hành nông nghiệp tốt được công nhận rộng rãi nhất trên thế giới, bao phủ toàn bộ các khâu từ trước thu hoạch tới xử lý, đóng gói và lưu kho sau thu hoạch; có thể bổ sung mô-đun GRASP đánh giá điều kiện lao động \parencite{globalgap_ifa}.
-    \item \textbf{VietGAP} --- chuẩn trong nước, phù hợp chuỗi cung ứng nội địa.
-    \item \textbf{Chứng nhận hữu cơ} --- USDA Organic theo 7 CFR Part 205 (Hoa Kỳ) \parencite{usda_nop}, EU Organic theo Quy định (EU) 2018/848 (châu Âu) \parencite{eu_organic_2018848}, JAS Organic (Nhật Bản).
-\end{itemize}
+\noindent\textbf{Chứng nhận về cách thức sản xuất}, cấp cho cơ sở và có hiệu lực nhiều năm, chia thành ba nhóm. Nhóm \emph{thực hành nông nghiệp tốt} gồm GlobalG.A.P. --- chuẩn được công nhận rộng rãi nhất, bao phủ từ trước thu hoạch tới đóng gói, có thể bổ sung mô-đun GRASP về điều kiện lao động \parencite{globalgap_ifa} --- và VietGAP cho chuỗi cung ứng nội địa. Nhóm \emph{canh tác hữu cơ} gồm USDA Organic \parencite{usda_nop}, EU Organic \parencite{eu_organic_2018848} và JAS Organic. Nhóm \emph{an toàn thực phẩm cho khâu chế biến} lấy HACCP làm nền, phát triển lên thành ISO 22000, FSSC 22000, BRCGS Food Safety và IFS Food --- trong đó bốn chuẩn sau nằm trong danh sách được Sáng kiến An toàn Thực phẩm Toàn cầu công nhận \parencite{gfsi_cpo}. Ngoài ra còn các chứng nhận phục vụ thị trường ngách như Halal, Kosher, Fairtrade và Rainforest Alliance.
 
-\noindent\textbf{Chuẩn an toàn thực phẩm cho khâu chế biến và đóng gói:}
-\begin{itemize}
-    \item \textbf{HACCP} --- nguyên tắc phân tích mối nguy và điểm kiểm soát tới hạn, nền tảng của các chuẩn còn lại.
-    \item \textbf{ISO 22000} và \textbf{FSSC 22000} --- hệ thống quản lý an toàn thực phẩm, trong đó FSSC 22000 nằm trong danh sách chương trình được Sáng kiến An toàn Thực phẩm Toàn cầu (GFSI) công nhận \parencite{gfsi_cpo}.
-    \item \textbf{BRCGS Food Safety} và \textbf{IFS Food} --- hai chuẩn được các chuỗi bán lẻ lớn tại Anh và châu Âu yêu cầu, cũng thuộc danh sách được GFSI công nhận \parencite{gfsi_cpo}.
-\end{itemize}
+\noindent\textbf{Giấy tờ đi theo từng lô hàng}, cấp riêng cho mỗi chuyến hàng. Quan trọng nhất là giấy chứng nhận kiểm dịch thực vật lập theo chuẩn ISPM 12 \parencite{ippc_ispm12}, giấy chứng nhận xuất xứ để hưởng ưu đãi thuế quan, và phiếu kết quả phân tích dư lượng. Để xuất khẩu chính ngạch còn cần mã số vùng trồng và mã số cơ sở đóng gói, tại Việt Nam cấp theo Nghị định số 38/2026/NĐ-CP \parencite{ppd_masovungtrong}. Ở thị trường nội địa, nhóm chế biến sâu phải có giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm và bản tự công bố sản phẩm.
 
-\noindent\textbf{Chứng nhận phục vụ thị trường ngách:} Halal (thị trường Hồi giáo), Kosher (thị trường Do Thái), Fairtrade và Rainforest Alliance (thương mại công bằng và bền vững).
-
-\noindent\textbf{Giấy tờ đi theo từng lô hàng:}
-\begin{itemize}
-    \item \textbf{Giấy chứng nhận kiểm dịch thực vật} (Phytosanitary Certificate) --- bắt buộc với hầu hết lô hàng thực vật xuất khẩu, lập và cấp theo chuẩn quốc tế ISPM 12 \parencite{ippc_ispm12}.
-    \item \textbf{Giấy chứng nhận xuất xứ} (C/O) --- căn cứ hưởng ưu đãi thuế quan theo các hiệp định thương mại.
-    \item \textbf{Phiếu kết quả phân tích} (Certificate of Analysis) --- kết quả kiểm nghiệm dư lượng thuốc bảo vệ thực vật và kim loại nặng.
-    \item \textbf{Mã số vùng trồng và mã số cơ sở đóng gói} --- điều kiện bắt buộc để xuất khẩu chính ngạch sang nhiều thị trường, trong đó có Trung Quốc; tại Việt Nam việc cấp và quản lý mã số thực hiện theo Nghị định số 38/2026/NĐ-CP \parencite{ppd_masovungtrong}.
-    \item \textbf{Hồ sơ theo yêu cầu riêng của thị trường đích} --- ví dụ thông báo trước và chương trình xác minh nhà cung cấp nước ngoài khi vào Hoa Kỳ, hoặc hồ sơ trên hệ thống TRACES khi vào châu Âu.
-    \item \textbf{Hồ sơ trong nước:} giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm, bản tự công bố sản phẩm, và tem OCOP với sản phẩm đã được xếp hạng.
-\end{itemize}
-
-Bảng tổng hợp đầy đủ các chứng nhận kèm phạm vi áp dụng, cơ quan cấp, thị trường đích và mức độ hỗ trợ của Farmery được trình bày tại Phụ lục H. Trong phạm vi đồ án, hệ thống hỗ trợ tải lên và kiểm duyệt nhóm chứng nhận thực hành sản xuất cùng các chuẩn an toàn thực phẩm phổ biến; nhóm giấy tờ theo lô phục vụ xuất khẩu nằm ngoài phạm vi (mục~\ref{sec:phamvi}) nhưng được trình bày ở đây để làm rõ bức tranh đầy đủ mà một nền tảng nông sản hoàn chỉnh sẽ phải xử lý.
+Phụ lục H liệt kê đầy đủ từng chứng nhận kèm phạm vi áp dụng, thị trường đích và mức độ hỗ trợ của Farmery. Trong phạm vi đồ án, hệ thống hỗ trợ tải lên và kiểm duyệt nhóm chứng nhận về cách thức sản xuất; nhóm giấy tờ theo lô phục vụ xuất khẩu nằm ngoài phạm vi (mục~\ref{sec:phamvi}) nhưng được nêu ở đây để thấy bức tranh đầy đủ mà một nền tảng nông sản hoàn chỉnh phải xử lý.
 
 \section{Bối cảnh chính sách và tiêu chuẩn chất lượng nông sản}
 \label{sec:boicanhchinhsach}
