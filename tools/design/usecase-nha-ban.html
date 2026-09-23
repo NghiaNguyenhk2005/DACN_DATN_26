@@ -15,8 +15,8 @@
     font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
     color:var(--ink);
   }
-  h1{font-size:26px; margin:0 0 4px; font-weight:800;}
-  .sub{color:var(--sub); font-size:14px; margin:0 0 20px; max-width:1200px;}
+  h1{font-size:45.24px; margin:0 0 4px; font-weight:800;}
+  .sub{color:var(--sub); font-size:24.36px; margin:0 0 20px; max-width:1200px;}
   .stage{
     position:relative;
     background:#fff; border:1px solid var(--line); border-radius:16px;
@@ -27,138 +27,138 @@
     position:absolute; border:1.5px solid #9aa6a0; border-radius:14px;
   }
   .boundary .b-title{
-    position:absolute; top:-13px; left:18px; background:#fff; padding:0 8px;
-    font-size:13px; font-weight:800; color:var(--sub);
+    position:absolute; top:-22.62px; left:18px; background:#fff; padding:0 8px;
+    font-size:22.62px; font-weight:800; color:var(--sub);
   }
   .actor{
     position:absolute; width:104px; text-align:center;
-    font-size:12px; font-weight:700; color:#12351f;
+    font-size:20.88px; font-weight:700; color:#12351f;
   }
   .actor svg{display:block; margin:0 auto 4px;}
   .uc{
-    position:absolute; border:1.5px solid; border-radius:22px; background:#fff;
+    position:absolute; border:1.5px solid; border-radius:39.38px; background:#fff;
     display:flex; align-items:center; justify-content:center; text-align:center;
-    font-size:12px; font-weight:700; line-height:1.2; padding:4px 12px;
+    font-size:20.88px; font-weight:700; line-height:1.2; padding:4px 12px;
   }
   .uc.main{ border-color:var(--main); background:#eaf7ef; color:#0f5c31; }
   .uc.ai{ border-color:var(--ai); background:#f1eef8; color:#4a3878; }
   .uc.ext{ border-color:var(--ext); background:#fdf1dc; color:#8a5c0f; }
   .rel-label{
-    position:absolute; font-size:10px; font-style:italic; color:#6b7670;
+    position:absolute; font-size:17.4px; font-style:italic; color:#6b7670;
     background:#fff; padding:0 5px; white-space:nowrap;
   }
-  .legend{display:flex; gap:16px; margin-top:16px; font-size:12px; color:var(--sub); flex-wrap:wrap; align-items:center;}
+  .legend{display:flex; gap:16px; margin-top:28.64px; font-size:20.88px; color:var(--sub); flex-wrap:wrap; align-items:center;}
   .legend span{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; margin-right:10px;}
-  .swatch{width:14px; height:14px; border-radius:8px; display:inline-block; border:2px solid; flex:none; background:#fff;}
-  footer{margin-top:16px; font-size:11px; color:#9aa6a0;}
+  .swatch{width:14px; height:25.06px; border-radius:8px; display:inline-block; border:2px solid; flex:none; background:#fff;}
+  footer{margin-top:28.64px; font-size:19.14px; color:#9aa6a0;}
 </style>
 </head>
 <body>
-  <h1>Sơ đồ Use Case chi tiết — Actor "Nhà bán"</h1>
+  <h1>Sơ đồ Use Case chi tiết — Actor "Nhà cung cấp"</h1>
   <p class="sub">Nhóm B (Sản phẩm &amp; truy xuất nguồn gốc), minh họa quan hệ &lt;&lt;include&gt;&gt; và &lt;&lt;extend&gt;&gt; theo chuẩn UML. Đường nối đi theo trục ngang/dọc (orthogonal) để không cắt chéo qua các use case khác.</p>
 
-  <div class="stage" style="width:1280px; height:660px;">
-    <div class="boundary" style="left:230px; top:24px; width:900px; height:612px;">
+  <div class="stage" style="width:1280px; height:1181.4px;">
+    <div class="boundary" style="left:230px; top:42.96px; width:900px; height:1095.48px;">
       <span class="b-title">Hệ thống Farmery</span>
     </div>
 
-    <!-- ACTOR: Nhà bán -->
-    <div class="actor" style="left:20px; top:318px;">
-      <svg width="36" height="48" viewBox="0 0 36 48"><circle cx="18" cy="9" r="8.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="17.5" x2="18" y2="35" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="5" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="31" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="6" y2="47" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="30" y2="47" stroke="#12351f" stroke-width="1.7"/></svg>
-      Nhà bán
+    <!-- ACTOR: Nhà cung cấp -->
+    <div class="actor" style="left:20px; top:569.22px;">
+      <svg width="62.64" height="83.52" viewBox="0 0 36 48"><circle cx="18" cy="9" r="8.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="17.5" x2="18" y2="35" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="5" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="31" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="6" y2="47" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="30" y2="47" stroke="#12351f" stroke-width="1.7"/></svg>
+      Nhà cung cấp
     </div>
 
     <!-- ACTOR phụ: QTV Kiểm duyệt -->
-    <div class="actor" style="left:1150px; top:60px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
+    <div class="actor" style="left:1150px; top:107.4px;">
+      <svg width="55.68" height="76.56" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
       QTV Kiểm duyệt
     </div>
 
     <!-- ACTOR phụ: Hệ thống AI -->
-    <div class="actor" style="left:1150px; top:470px;">
-      <svg width="30" height="30" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#6b4fa0" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#6b4fa0" font-weight="700">AI</text></svg>
+    <div class="actor" style="left:1150px; top:841.3px;">
+      <svg width="52.2" height="52.2" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#6b4fa0" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#6b4fa0" font-weight="700">AI</text></svg>
       Hệ thống AI
     </div>
 
-    <!-- Cột 1: use case chính của Nhà bán -->
-    <div class="uc main" style="left:270px; top:60px;  width:210px; height:54px;">Đăng bán sản phẩm</div>
-    <div class="uc main" style="left:270px; top:160px; width:210px; height:54px;">Ghi nhật ký canh tác theo lô</div>
-    <div class="uc main" style="left:270px; top:260px; width:210px; height:54px;">Quản lý tồn kho theo lô</div>
-    <div class="uc main" style="left:270px; top:378px; width:210px; height:54px;">Công bố bảng giá bán sỉ (MOQ)</div>
-    <div class="uc main" style="left:270px; top:478px; width:210px; height:54px;">Theo dõi doanh thu &amp; lịch sử bán</div>
+    <!-- Cột 1: use case chính của Nhà cung cấp -->
+    <div class="uc main" style="left:270px; top:107.4px;  width:210px; height:96.66px;">Đăng bán sản phẩm</div>
+    <div class="uc main" style="left:270px; top:286.4px; width:210px; height:96.66px;">Ghi nhật ký canh tác theo lô</div>
+    <div class="uc main" style="left:270px; top:465.4px; width:210px; height:96.66px;">Quản lý tồn kho theo lô</div>
+    <div class="uc main" style="left:270px; top:676.62px; width:210px; height:96.66px;">Công bố bảng giá bán sỉ (MOQ)</div>
+    <div class="uc main" style="left:270px; top:855.62px; width:210px; height:96.66px;">Theo dõi doanh thu &amp; lịch sử bán</div>
 
     <!-- Cột 2: include/extend -->
-    <div class="uc main" style="left:600px; top:110px; width:220px; height:54px;">Sinh mã QR truy xuất nguồn gốc</div>
-    <div class="uc ext"  style="left:600px; top:250px; width:220px; height:54px;">Đính chính bản ghi (tạo bản ghi mới)</div>
-    <div class="uc ai"   style="left:600px; top:405px; width:220px; height:54px;">Cảnh báo giá bất thường</div>
+    <div class="uc main" style="left:600px; top:196.9px; width:220px; height:96.66px;">Sinh mã QR truy xuất nguồn gốc</div>
+    <div class="uc ext"  style="left:600px; top:447.5px; width:220px; height:96.66px;">Đính chính bản ghi (tạo bản ghi mới)</div>
+    <div class="uc ai"   style="left:600px; top:724.95px; width:220px; height:96.66px;">Cảnh báo giá bất thường</div>
 
     <!-- Cột 3 -->
-    <div class="uc main" style="left:930px; top:60px;  width:200px; height:54px;">Kiểm duyệt sản phẩm mới</div>
-    <div class="uc ai"   style="left:930px; top:478px; width:200px; height:54px;">Xem dự báo nhu cầu &amp; giá theo mùa vụ</div>
+    <div class="uc main" style="left:930px; top:107.4px;  width:200px; height:96.66px;">Kiểm duyệt sản phẩm mới</div>
+    <div class="uc ai"   style="left:930px; top:855.62px; width:200px; height:96.66px;">Xem dự báo nhu cầu &amp; giá theo mùa vụ</div>
 
     <!-- ================== ĐƯỜNG NỐI ================== -->
-    <svg width="1280" height="660" style="position:absolute; left:0; top:0; pointer-events:none;">
+    <svg width="1280" height="1181.4" style="position:absolute; left:0; top:0; pointer-events:none;">
       <defs>
         <marker id="oh" markerWidth="9" markerHeight="8" refX="7" refY="4" orient="auto">
           <path d="M0,0 L7,4 L0,8" fill="none" stroke="#5b6b63" stroke-width="1.3"/>
         </marker>
       </defs>
 
-      <!-- Association: Nhà bán -> 5 use case chính -->
-      <line x1="56" y1="342" x2="140" y2="342" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="87"  x2="140" y2="505" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="87"  x2="270" y2="87"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="187" x2="270" y2="187" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="287" x2="270" y2="287" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="405" x2="270" y2="405" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="505" x2="270" y2="505" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- Association: Nhà cung cấp -> 5 use case chính -->
+      <line x1="56" y1="612.18" x2="140" y2="612.18" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="155.73"  x2="140" y2="903.95" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="155.73"  x2="270" y2="155.73"  stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="334.73" x2="270" y2="334.73" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="513.73" x2="270" y2="513.73" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="724.95" x2="270" y2="724.95" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="140" y1="903.95" x2="270" y2="903.95" stroke="var(--wire)" stroke-width="1.3"/>
 
       <!-- Include: Đăng bán sản phẩm -> Sinh mã QR -->
-      <line x1="480" y1="87"  x2="520" y2="87"  stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="520" y1="87"  x2="520" y2="137" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="520" y1="137" x2="600" y2="137" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
+      <line x1="480" y1="155.73"  x2="520" y2="155.73"  stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="520" y1="155.73"  x2="520" y2="245.23" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="520" y1="245.23" x2="600" y2="245.23" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
       <text class="rel-label" x="486" y="80">&laquo;include&raquo;</text>
 
       <!-- Include: Ghi nhật ký canh tác -> Sinh mã QR -->
-      <line x1="480" y1="187" x2="560" y2="187" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="560" y1="187" x2="560" y2="137" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="560" y1="137" x2="600" y2="137" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
+      <line x1="480" y1="334.73" x2="560" y2="334.73" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="560" y1="334.73" x2="560" y2="245.23" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="560" y1="245.23" x2="600" y2="245.23" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
 
       <!-- Association: Sinh mã QR -> Kiểm duyệt sản phẩm mới -->
-      <line x1="820" y1="137" x2="875" y2="137" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="875" y1="137" x2="875" y2="87"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="875" y1="87"  x2="930" y2="87"  stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="820" y1="245.23" x2="875" y2="245.23" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="875" y1="245.23" x2="875" y2="155.73"  stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="875" y1="155.73"  x2="930" y2="155.73"  stroke="var(--wire)" stroke-width="1.3"/>
 
       <!-- Association: QTV Kiểm duyệt -> Kiểm duyệt sản phẩm mới -->
-      <line x1="1130" y1="87" x2="1150" y2="87" stroke="var(--wire)" stroke-width="1.3"/>
+      <line x1="1130" y1="155.73" x2="1150" y2="155.73" stroke="var(--wire)" stroke-width="1.3"/>
 
       <!-- Extend: Đính chính bản ghi -> Ghi nhật ký canh tác -->
-      <line x1="600" y1="277" x2="540" y2="277" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="540" y1="277" x2="540" y2="187" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="540" y1="187" x2="480" y2="187" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
+      <line x1="600" y1="495.83" x2="540" y2="495.83" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="540" y1="495.83" x2="540" y2="334.73" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <line x1="540" y1="334.73" x2="480" y2="334.73" stroke="#c98a1a" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
       <text class="rel-label" x="545" y="270">&laquo;extend&raquo;</text>
 
       <!-- Extend: Cảnh báo giá bất thường -> Đăng bán sản phẩm -->
-      <line x1="600" y1="432" x2="505" y2="432" stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4"/>
-      <line x1="505" y1="432" x2="505" y2="87"  stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4"/>
-      <line x1="505" y1="87"  x2="480" y2="87"  stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#oh)"/>
+      <line x1="600" y1="773.28" x2="505" y2="773.28" stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4"/>
+      <line x1="505" y1="773.28" x2="505" y2="155.73"  stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4"/>
+      <line x1="505" y1="155.73"  x2="480" y2="155.73"  stroke="#6b4fa0" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#oh)"/>
       <text class="rel-label" x="515" y="350" style="color:#6b4fa0;">&laquo;extend&raquo;</text>
 
       <!-- Association: AI -> Cảnh báo giá bất thường (use case mid 432)
            Xuất phát từ mép trái actor AI (x=1150, y=485), đi lên tới y=468
            (khe trống giữa use case Cảnh báo bottom=459 và Xem dự báo top=478),
            rồi sang trái tới x=820, cuối cùng rẽ lên mép phải use case Cảnh báo. -->
-      <line x1="1150" y1="485" x2="1150" y2="468" stroke="#6b4fa0" stroke-width="1.2"/>
-      <line x1="1150" y1="468" x2="820"  y2="468" stroke="#6b4fa0" stroke-width="1.2"/>
-      <line x1="820"  y1="468" x2="820"  y2="432" stroke="#6b4fa0" stroke-width="1.2"/>
+      <line x1="1150" y1="868.15" x2="1150" y2="837.72" stroke="#6b4fa0" stroke-width="1.2"/>
+      <line x1="1150" y1="837.72" x2="820"  y2="837.72" stroke="#6b4fa0" stroke-width="1.2"/>
+      <line x1="820"  y1="837.72" x2="820"  y2="773.28" stroke="#6b4fa0" stroke-width="1.2"/>
 
       <!-- Association: AI -> Xem dự báo nhu cầu (use case mid 505)
            Xuất phát từ mép trái actor AI (x=1150, y=490), đi xuống mép phải use case Xem dự báo (x=1130). -->
-      <line x1="1150" y1="490" x2="1150" y2="505" stroke="#6b4fa0" stroke-width="1.2"/>
-      <line x1="1150" y1="505" x2="1130" y2="505" stroke="#6b4fa0" stroke-width="1.2"/>
+      <line x1="1150" y1="877.1" x2="1150" y2="903.95" stroke="#6b4fa0" stroke-width="1.2"/>
+      <line x1="1150" y1="903.95" x2="1130" y2="903.95" stroke="#6b4fa0" stroke-width="1.2"/>
 
       <!-- Association: Theo dõi doanh thu -> Xem dự báo nhu cầu -->
-      <line x1="480" y1="505" x2="930" y2="505" stroke="var(--wire)" stroke-width="1" stroke-dasharray="1 4"/>
+      <line x1="480" y1="903.95" x2="930" y2="903.95" stroke="var(--wire)" stroke-width="1" stroke-dasharray="1 4"/>
     </svg>
   </div>
 
@@ -168,6 +168,6 @@
     <span><span class="swatch" style="border-color:#6b4fa0;"></span>Liên quan mô-đun AI</span>
     <span>―― association &nbsp; ┄┄→ include / extend</span>
   </div>
-  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case chi tiết actor Nhà bán (Hình 5.y)</footer>
+  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case chi tiết actor Nhà cung cấp</footer>
 </body>
 </html>

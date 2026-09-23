@@ -555,6 +555,26 @@ bây giờ đâu còn đắt" khi bảo vệ.
 **Đánh đổi:** dài thêm hai trang ở Chương 2 vừa mới rút gọn, đổi lấy một lập luận
 không thể bị lật bằng một lần tra nguồn.
 
+### Phóng cỡ chữ sơ đồ use case và đổi cách đặt hình gần trọn trang — 2026-09-24
+**Bối cảnh:** Năm sơ đồ use case in ra chỉ 3,2--4,0pt so với thân bài 12pt, gần
+như không đọc được. Nguyên nhân là tỉ lệ `font_px / body_width_px`: ảnh rộng
+1360--1620px luôn bị ép về 16cm.
+**Quyết định:** giữ nguyên trục ngang, chỉ nhân cỡ chữ và trục dọc --- hình hẹp
+lại và cao lên, tận dụng chiều cao trang vốn đang bỏ trống. Cả năm hình nay đạt
+~7pt. Riêng sơ đồ tổng quan được viết lại hẳn theo bố cục hai cột.
+**Lý do không chọn cách khác:** phóng đều mọi kích thước không đổi được gì vì tỉ
+lệ giữ nguyên; xoay ngang trang chỉ được 1,34 lần và người dùng đã bác cách trình
+bày nằm ngang từ trước.
+**Hệ quả về bố cục:** hình cao 18--20cm không vừa `[H]`, bị đẩy sang trang sau và
+bỏ lại 2/3 trang trắng. Đổi sang `[p]` (trang float riêng) kèm `adjustbox` chặn
+chiều cao theo `\textheight-2.5cm`. Phần chữ nay chạy liên tục, báo cáo bớt một
+trang dù hình to hơn hẳn.
+**Sửa kèm:** thống nhất tên tác nhân trong hình theo báo cáo (Nhà cung cấp, Khách
+lẻ, Khách sỉ --- trước đó hình ghi Nhà bán, Người mua lẻ, Người mua sỉ trong khi
+caption đã dùng tên mới); bỏ số hình giữ chỗ "Hình 5.y/5.z" ở chân các hình; thêm
+`\captionsetup{justification=centering}` để caption dài hơn một dòng được căn giữa
+thay vì canh đều.
+
 ### Nhận đặc tả use case và vẽ lại sơ đồ tổng quan cho khớp phạm vi — 2026-09-24
 **Bối cảnh:** `_incoming/dac-ta-usecase.tex` có phần chữ đã đúng phạm vi mới
 (có `ops_sourcing`, luồng 1P, actor AI chỉ còn FR12.1/FR12.2), nhưng năm ảnh

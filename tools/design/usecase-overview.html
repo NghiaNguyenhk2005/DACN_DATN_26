@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <style>
+  /* Cỡ chữ in ra (pt) = font_px x 16 / body_width_px x 28,45.
+     Body 1420px + chữ use case 22px => ~7,05pt, đạt ngưỡng tối thiểu của dự án. */
   :root{
     --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63; --wire:#8b9892;
     --pkg-a:#eaf7ef; --pkg-a-b:#1f8a4c;
@@ -13,193 +15,191 @@
   }
   *{box-sizing:border-box;}
   body{
-    margin:0; padding:40px 46px; width:1620px;
+    margin:0; padding:30px 40px; width:1420px;
     background:var(--bg);
     font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
     color:var(--ink);
   }
-  h1{font-size:28px; margin:0 0 4px; font-weight:800;}
-  .sub{color:var(--sub); font-size:14px; margin:0 0 22px;}
+  h1{font-size:34px; margin:0 0 6px; font-weight:800;}
+  .sub{color:var(--sub); font-size:19px; margin:0 0 20px; line-height:1.35;}
   .stage{
-    position:relative;
-    background:#fff; border:1px solid #c7d1cb; border-radius:16px;
-    padding:0; box-shadow:0 2px 10px rgba(20,40,30,.06);
+    position:relative; width:1340px; height:1420px;
+    background:#fff; border:1px solid #c7d1cb; border-radius:18px;
+    box-shadow:0 2px 10px rgba(20,40,30,.06);
   }
   .actor{
-    position:absolute; width:100px; text-align:center;
-    font-size:12.5px; font-weight:700; color:var(--ink);
+    position:absolute; width:128px; text-align:center;
+    font-size:19px; font-weight:700; color:var(--ink); line-height:1.2;
   }
-  .actor svg{display:block; margin:0 auto 4px;}
-  .pkg{
-    position:absolute; border-radius:14px; border:1.5px dashed;
-  }
-  /* QUAN TRỌNG: nowrap để tiêu đề package dài không bị xuống dòng đè lên use case bên dưới */
+  .actor svg{display:block; margin:0 auto 6px;}
+  .pkg{position:absolute; border-radius:16px; border:2px dashed;}
   .pkg .pkg-title{
-    position:absolute; top:-13px; left:18px; background:#fff;
-    padding:0 8px; font-size:13px; font-weight:800;
-    white-space:nowrap;
+    position:absolute; top:-16px; left:22px; background:#fff;
+    padding:0 10px; font-size:21px; font-weight:800; white-space:nowrap;
   }
   .uc{
-    position:absolute; height:44px;
-    border:1.3px solid; border-radius:22px;
+    position:absolute; height:70px; width:460px; left:15px;
+    border:2px solid; border-radius:35px;
     display:flex; align-items:center; justify-content:center;
-    font-size:11.5px; font-weight:600; text-align:center;
-    padding:0 10px; line-height:1.15; background:#fff;
+    font-size:22px; font-weight:600; text-align:center;
+    padding:0 16px; line-height:1.18; background:#fff;
   }
-  .legend{display:flex; gap:10px; margin-top:18px; font-size:12px; color:var(--sub); flex-wrap:wrap; align-items:center;}
-  .legend span{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; margin-right:8px;}
-  .swatch{width:14px; height:14px; border-radius:4px; display:inline-block; border:2px solid; background:#fff; flex:none;}
-  footer{margin-top:16px; font-size:11px; color:#9aa6a0;}
+  .legend{display:flex; gap:14px; margin-top:20px; font-size:18px; color:var(--sub); flex-wrap:wrap; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:9px; white-space:nowrap; margin-right:10px;}
+  .swatch{width:19px; height:19px; border-radius:5px; display:inline-block; border:3px solid; background:#fff; flex:none;}
+  footer{margin-top:16px; font-size:16px; color:#9aa6a0;}
 </style>
 </head>
 <body>
   <h1>Sơ đồ Use Case tổng quan — hệ thống Farmery</h1>
-  <p class="sub">Nhóm theo 5 gói chức năng, bám theo FR1–FR12. Mỗi actor có một trục thân dọc riêng (đường đứng bên trái mỗi package); đường association rẽ ngang vào đúng use case, không cắt chéo qua package khác. Xem sơ đồ chi tiết theo actor ở các hình kế tiếp.</p>
+  <p class="sub">Nhóm theo năm gói chức năng, bám theo FR1–FR12. Mỗi tác nhân có một trục dọc riêng; đường association rẽ ngang vào đúng use case. Sơ đồ chi tiết theo từng tác nhân ở các hình kế tiếp.</p>
 
-  <div class="stage" style="width:1560px; height:1120px;">
+  <div class="stage">
 
     <!-- ============ ACTORS TRÁI ============ -->
-    <div class="actor" style="left:10px; top:150px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      Nhà bán
+    <div class="actor" style="left:0px; top:250px;">
+      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
+      Nhà cung cấp
     </div>
-    <div class="actor" style="left:10px; top:520px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      Người mua lẻ (B2C)
+    <div class="actor" style="left:0px; top:750px;">
+      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
+      Khách lẻ<br>(B2C)
     </div>
-    <div class="actor" style="left:10px; top:840px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      Người mua sỉ (B2B)
+    <div class="actor" style="left:0px; top:1030px;">
+      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
+      Khách sỉ<br>(B2B)
     </div>
-    <div class="actor" style="left:10px; top:975px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      Bộ phận thu mua<br>(nội bộ, 1P)
+    <div class="actor" style="left:0px; top:1268px;">
+      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
+      Bộ phận<br>thu mua (1P)
     </div>
 
     <!-- ============ ACTORS PHẢI ============ -->
-    <div class="actor" style="left:1465px; top:180px;">
-      <svg width="32" height="44" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
+    <div class="actor" style="left:1212px; top:250px;">
+      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
       Quản trị viên<br>(3 vai trò)
     </div>
-    <div class="actor" style="left:1465px; top:580px;">
-      <svg width="30" height="30" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#5b6b63" font-weight="700">AI</text></svg>
+    <div class="actor" style="left:1212px; top:768px;">
+      <svg width="40" height="40" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.7" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#5b6b63" font-weight="700">AI</text></svg>
       Hệ thống AI
     </div>
-    <div class="actor" style="left:1465px; top:820px;">
-      <svg width="30" height="30" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="20" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">Cổng</text><text x="15" y="27" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">TT</text></svg>
-      Cổng TT / 3PL
+    <div class="actor" style="left:1212px; top:1020px;">
+      <svg width="40" height="40" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.7" stroke-dasharray="3 2"/><text x="15" y="14" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">Cổng</text><text x="15" y="23" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">TT</text></svg>
+      Cổng thanh toán<br>/ 3PL
     </div>
 
-    <!-- ============ PACKAGE A ============ -->
-    <div class="pkg" style="left:150px; top:30px; width:320px; height:200px; border-color:var(--pkg-a-b); background:var(--pkg-a);">
+    <!-- ============ CỘT TRÁI: PACKAGE A, B, C ============ -->
+    <div class="pkg" style="left:165px; top:30px; width:490px; height:290px; border-color:var(--pkg-a-b); background:var(--pkg-a);">
       <span class="pkg-title" style="color:var(--pkg-a-b);">A. Đăng ký &amp; xác thực (FR1–FR3)</span>
-      <div class="uc" style="left:15px; top:34px;  width:290px; border-color:var(--pkg-a-b);">Đăng ký &amp; xác thực nhà bán (eKYC)</div>
-      <div class="uc" style="left:15px; top:98px;  width:290px; border-color:var(--pkg-a-b);">Tải &amp; theo dõi chứng nhận chất lượng</div>
-      <div class="uc" style="left:15px; top:154px; width:290px; border-color:var(--pkg-a-b);">Kiểm duyệt hồ sơ &amp; chứng nhận</div>
+      <div class="uc" style="top:40px;  border-color:var(--pkg-a-b);">Đăng ký &amp; xác thực nhà cung cấp (eKYC)</div>
+      <div class="uc" style="top:120px; border-color:var(--pkg-a-b);">Tải &amp; theo dõi chứng nhận chất lượng</div>
+      <div class="uc" style="top:200px; border-color:var(--pkg-a-b);">Kiểm duyệt hồ sơ &amp; chứng nhận</div>
     </div>
 
-    <!-- ============ PACKAGE B ============ -->
-    <div class="pkg" style="left:150px; top:260px; width:320px; height:260px; border-color:var(--pkg-b-b); background:var(--pkg-b);">
+    <div class="pkg" style="left:165px; top:350px; width:490px; height:370px; border-color:var(--pkg-b-b); background:var(--pkg-b);">
       <span class="pkg-title" style="color:var(--pkg-b-b);">B. Sản phẩm &amp; truy xuất nguồn gốc (FR4)</span>
-      <div class="uc" style="left:15px; top:34px;  width:290px; border-color:var(--pkg-b-b);">Đăng bán sản phẩm &amp; quản lý tồn kho</div>
-      <div class="uc" style="left:15px; top:90px;  width:290px; border-color:var(--pkg-b-b); font-weight:800;">Ghi nhật ký canh tác theo lô</div>
-      <div class="uc" style="left:15px; top:146px; width:290px; border-color:var(--pkg-b-b);">Sinh mã QR truy xuất nguồn gốc</div>
-      <div class="uc" style="left:15px; top:202px; width:290px; border-color:var(--pkg-b-b);">Tìm kiếm &amp; tra cứu truy xuất nguồn gốc</div>
+      <div class="uc" style="top:40px;  border-color:var(--pkg-b-b);">Đăng bán sản phẩm &amp; quản lý tồn kho</div>
+      <div class="uc" style="top:120px; border-color:var(--pkg-b-b); font-weight:800;">Ghi nhật ký canh tác theo lô</div>
+      <div class="uc" style="top:200px; border-color:var(--pkg-b-b);">Sinh mã QR truy xuất nguồn gốc</div>
+      <div class="uc" style="top:280px; border-color:var(--pkg-b-b);">Tìm kiếm &amp; tra cứu truy xuất nguồn gốc</div>
     </div>
 
-    <!-- ============ PACKAGE C ============ -->
-    <div class="pkg" style="left:150px; top:550px; width:320px; height:426px; border-color:var(--pkg-c-b); background:var(--pkg-c);">
+    <div class="pkg" style="left:165px; top:750px; width:490px; height:610px; border-color:var(--pkg-c-b); background:var(--pkg-c);">
       <span class="pkg-title" style="color:var(--pkg-c-b);">C. Giao dịch, thu mua &amp; thanh toán (FR5–FR7)</span>
-      <div class="uc" style="left:15px; top:34px;  width:290px; border-color:var(--pkg-c-b);">Đặt hàng &amp; thanh toán bán lẻ (B2C)</div>
-      <div class="uc" style="left:15px; top:90px;  width:290px; border-color:var(--pkg-c-b);">Đàm phán RFQ &amp; ký hợp đồng bán sỉ (B2B)</div>
-      <div class="uc" style="left:15px; top:146px; width:290px; border-color:var(--pkg-c-b);">Ký quỹ trung gian &amp; giải ngân (escrow)</div>
-      <div class="uc" style="left:15px; top:202px; width:290px; border-color:var(--pkg-c-b);">Đánh giá sản phẩm &amp; nhà bán</div>
-      <div class="uc" style="left:15px; top:258px; width:290px; border-color:var(--pkg-c-b);">Nhắn tin &amp; theo dõi gian hàng</div>
-      <div class="uc" style="left:15px; top:314px; width:290px; border-color:var(--pkg-c-b); font-weight:800;">Quyết định &amp; tạo đơn thu mua theo lô (1P)</div>
-      <div class="uc" style="left:15px; top:370px; width:290px; border-color:var(--pkg-c-b); font-weight:800;">Nhập kho theo lô &amp; định giá bán lẻ</div>
+      <div class="uc" style="top:40px;  border-color:var(--pkg-c-b);">Đặt hàng &amp; thanh toán bán lẻ (B2C)</div>
+      <div class="uc" style="top:120px; border-color:var(--pkg-c-b);">Đàm phán RFQ &amp; ký hợp đồng bán sỉ (B2B)</div>
+      <div class="uc" style="top:200px; border-color:var(--pkg-c-b);">Ký quỹ trung gian &amp; giải ngân</div>
+      <div class="uc" style="top:280px; border-color:var(--pkg-c-b);">Đánh giá sản phẩm &amp; nhà cung cấp</div>
+      <div class="uc" style="top:360px; border-color:var(--pkg-c-b);">Nhắn tin &amp; theo dõi gian hàng</div>
+      <div class="uc" style="top:440px; border-color:var(--pkg-c-b); font-weight:800;">Quyết định &amp; tạo đơn thu mua theo lô (1P)</div>
+      <div class="uc" style="top:520px; border-color:var(--pkg-c-b); font-weight:800;">Nhập kho theo lô &amp; định giá bán lẻ</div>
     </div>
 
-    <!-- ============ PACKAGE D ============ -->
-    <div class="pkg" style="left:620px; top:30px; width:330px; height:440px; border-color:var(--pkg-d-b); background:var(--pkg-d);">
+    <!-- ============ CỘT PHẢI: PACKAGE D, E ============ -->
+    <div class="pkg" style="left:695px; top:30px; width:490px; height:610px; border-color:var(--pkg-d-b); background:var(--pkg-d);">
       <span class="pkg-title" style="color:var(--pkg-d-b);">D. Vận chuyển, khiếu nại &amp; quản trị (FR8, FR10, FR11)</span>
-      <div class="uc" style="left:15px; top:34px;  width:300px; border-color:var(--pkg-d-b);">Vận chuyển &amp; giám sát tồn kho (FEFO)</div>
-      <div class="uc" style="left:15px; top:90px;  width:300px; border-color:var(--pkg-d-b);">Gửi &amp; xử lý khiếu nại</div>
-      <div class="uc" style="left:15px; top:146px; width:300px; border-color:var(--pkg-d-b);">Kiểm duyệt sản phẩm &amp; giám sát vi phạm</div>
-      <div class="uc" style="left:15px; top:202px; width:300px; border-color:var(--pkg-d-b);">Xử lý vi phạm theo phân cấp</div>
-      <div class="uc" style="left:15px; top:258px; width:300px; border-color:var(--pkg-d-b);">Phân xử tranh chấp</div>
-      <div class="uc" style="left:15px; top:314px; width:300px; border-color:var(--pkg-d-b);">Xem báo cáo thống kê vận hành</div>
-      <div class="uc" style="left:15px; top:370px; width:300px; border-color:var(--pkg-d-b); font-weight:800;">Giám sát bất thường theo luật ngưỡng</div>
+      <div class="uc" style="top:40px;  border-color:var(--pkg-d-b);">Vận chuyển &amp; giám sát tồn kho (FEFO)</div>
+      <div class="uc" style="top:120px; border-color:var(--pkg-d-b);">Gửi &amp; xử lý khiếu nại</div>
+      <div class="uc" style="top:200px; border-color:var(--pkg-d-b);">Kiểm duyệt sản phẩm &amp; giám sát vi phạm</div>
+      <div class="uc" style="top:280px; border-color:var(--pkg-d-b);">Xử lý vi phạm theo phân cấp</div>
+      <div class="uc" style="top:360px; border-color:var(--pkg-d-b);">Phân xử tranh chấp</div>
+      <div class="uc" style="top:440px; border-color:var(--pkg-d-b);">Xem báo cáo thống kê vận hành</div>
+      <div class="uc" style="top:520px; border-color:var(--pkg-d-b); font-weight:800;">Giám sát bất thường theo luật ngưỡng</div>
     </div>
 
-    <!-- ============ PACKAGE E ============ -->
-    <div class="pkg" style="left:620px; top:500px; width:330px; height:190px; border-color:var(--pkg-e-b); background:var(--pkg-e);">
+    <div class="pkg" style="left:695px; top:690px; width:490px; height:210px; border-color:var(--pkg-e-b); background:var(--pkg-e);">
       <span class="pkg-title" style="color:var(--pkg-e-b);">E. Hỗ trợ AI (FR12)</span>
-      <div class="uc" style="left:15px; top:34px;  width:300px; border-color:var(--pkg-e-b);">Gợi ý sản phẩm cá nhân hóa (FR12.1)</div>
-      <div class="uc" style="left:15px; top:90px;  width:300px; border-color:var(--pkg-e-b);">Dự báo nhu cầu &amp; giá theo mùa vụ (FR12.2)</div>
+      <div class="uc" style="top:40px;  border-color:var(--pkg-e-b);">Gợi ý sản phẩm cá nhân hóa (FR12.1)</div>
+      <div class="uc" style="top:120px; border-color:var(--pkg-e-b);">Dự báo nhu cầu &amp; giá theo mùa vụ (FR12.2)</div>
+    </div>
+
+    <!-- Ghi chú hai luồng — lấp khoảng trống cột phải bằng nội dung thật -->
+    <div style="position:absolute; left:695px; top:950px; width:490px; height:420px;
+                border:2px dashed #b7c2bc; border-radius:16px; background:#fafbfa;
+                padding:24px 26px; font-size:21px; line-height:1.45; color:var(--ink);">
+      <div style="font-weight:800; margin-bottom:12px; font-size:22px;">Hai luồng giao dịch dùng chung kho lô hàng</div>
+      <div style="margin-bottom:12px;"><b>Luồng 3P (bán sỉ):</b> nhà cung cấp giữ quyền sở hữu hàng, nền tảng chỉ làm trung gian giữa nhà cung cấp và khách sỉ.</div>
+      <div style="margin-bottom:12px;"><b>Luồng 1P (bán lẻ):</b> nền tảng mua đứt lô hàng rồi bán lại cho khách lẻ. Bộ phận thu mua là tác nhân nội bộ, chỉ xuất hiện ở luồng này.</div>
+      <div style="color:var(--sub);">Một lô có thể được giao dịch đồng thời ở cả hai luồng — ràng buộc chống bán vượt tồn kho (NFR1.2, NFR4.1).</div>
     </div>
 
     <!-- ================== ĐƯỜNG NỐI ================== -->
-    <svg width="1560" height="1120" style="position:absolute; left:0; top:0; pointer-events:none;">
+    <svg width="1340" height="1420" style="position:absolute; left:0; top:0; pointer-events:none;">
 
-      <!-- ========== NHÀ BÁN -> pkg A, pkg B ========== -->
-      <line x1="46" y1="196" x2="80"  y2="196" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="80" y1="86"  x2="80"  y2="316" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="80" y1="86"  x2="150" y2="86"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="80" y1="150" x2="150" y2="150" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="80" y1="206" x2="150" y2="206" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="80" y1="316" x2="150" y2="316" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- NHÀ CUNG CẤP -> A (3 UC) + B (nhật ký, QR, đăng bán) -->
+      <line x1="64"  y1="308" x2="132" y2="308" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="105" x2="132" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="105" x2="165" y2="105" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="185" x2="165" y2="185" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="425" x2="165" y2="425" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="505" x2="165" y2="505" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="585" x2="165" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== NGƯỜI MUA LẺ -> pkg B, pkg C ========== -->
-      <line x1="46" y1="542" x2="105" y2="542" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="105" y1="484" x2="105" y2="774" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="105" y1="484" x2="150" y2="484" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="105" y1="606" x2="150" y2="606" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="105" y1="774" x2="150" y2="774" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- KHÁCH LẺ -> B (tra cứu) + C (đặt hàng, đánh giá) -->
+      <line x1="64"  y1="808" x2="144" y2="808" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="144" y1="665" x2="144" y2="1065" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="144" y1="665" x2="165" y2="665" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="144" y1="825" x2="165" y2="825" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="144" y1="1065" x2="165" y2="1065" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== NGƯỜI MUA SỈ -> pkg B, pkg C ========== -->
-      <line x1="46" y1="862" x2="130" y2="862" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="130" y1="428" x2="130" y2="862" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="130" y1="428" x2="150" y2="428" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="130" y1="662" x2="150" y2="662" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="130" y1="718" x2="150" y2="718" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- KHÁCH SỈ -> C (RFQ, ký quỹ) -->
+      <line x1="64"  y1="1088" x2="156" y2="1088" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="156" y1="905" x2="156" y2="1088" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="156" y1="905" x2="165" y2="905" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="156" y1="985" x2="165" y2="985" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== BỘ PHẬN THU MUA -> pkg C (2 use case thu mua 1P) ========== -->
-      <line x1="46" y1="1021" x2="60"  y2="1021" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="60" y1="886"  x2="60"  y2="1021" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="60" y1="886"  x2="150" y2="886"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="60" y1="942"  x2="150" y2="942"  stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- BỘ PHẬN THU MUA -> C (2 use case thu mua 1P) -->
+      <line x1="64"  y1="1326" x2="132" y2="1326" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="1225" x2="132" y2="1326" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="1225" x2="165" y2="1225" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="132" y1="1305" x2="165" y2="1305" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== QUẢN TRỊ VIÊN -> pkg A (vòng trên đỉnh pkg D) + pkg D ========== -->
-      <!-- Xuất phát từ actor -->
-      <line x1="1465" y1="200" x2="1420" y2="200" stroke="var(--wire)" stroke-width="1.3"/>
-      <!-- Trục dọc chính x=1420 (đặt lệch khỏi trục Cổng TT x=1450) -->
-      <line x1="1420" y1="10"  x2="1420" y2="422" stroke="var(--wire)" stroke-width="1.3"/>
-      <!-- Nhánh lên pkg A: đi ngang y=10 (trên đỉnh pkg D ở y=30), rồi rẽ xuống mép phải pkg A -->
-      <line x1="470"  y1="10"  x2="1420" y2="10"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="470"  y1="10"  x2="470"  y2="150" stroke="var(--wire)" stroke-width="1.3"/>
-      <!-- Nhánh vào pkg D tại 5 use case (mép phải pkg D ở x=950) -->
-      <line x1="950"  y1="198" x2="1420" y2="198" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="950"  y1="254" x2="1420" y2="254" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="950"  y1="310" x2="1420" y2="310" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="950"  y1="366" x2="1420" y2="366" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="950"  y1="422" x2="1420" y2="422" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- QUẢN TRỊ VIÊN -> D (5 UC) + A (kiểm duyệt, vòng trên đỉnh) -->
+      <line x1="1212" y1="308" x2="1200" y2="308" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1200" y1="12"  x2="1200" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="655"  y1="12"  x2="1200" y2="12"  stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="655"  y1="12"  x2="655"  y2="265" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="185" x2="1200" y2="185" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="265" x2="1200" y2="265" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="345" x2="1200" y2="345" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="425" x2="1200" y2="425" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="505" x2="1200" y2="505" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1185" y1="585" x2="1200" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== HỆ THỐNG AI -> pkg E (chỉ còn 2 mô-đun) ========== -->
-      <line x1="1465" y1="602" x2="1400" y2="602" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="1400" y1="556" x2="1400" y2="612" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="1400" y1="556" x2="950"  y2="556" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="1400" y1="612" x2="950"  y2="612" stroke="var(--wire)" stroke-width="1.3"/>
+      <!-- HỆ THỐNG AI -> E (2 mô-đun) -->
+      <line x1="1212" y1="800" x2="1196" y2="800" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1196" y1="765" x2="1196" y2="845" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1196" y1="765" x2="1185" y2="765" stroke="var(--wire)" stroke-width="1.8"/>
+      <line x1="1196" y1="845" x2="1185" y2="845" stroke="var(--wire)" stroke-width="1.8"/>
 
-      <!-- ========== CỔNG TT / 3PL -> pkg D (UC1) + pkg C (vòng dưới đáy) ========== -->
-      <!-- Lên pkg D: trục dọc x=1450 nằm ngoài actor trái -->
-      <line x1="1465" y1="843" x2="1450" y2="843" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="1450" y1="86"  x2="1450" y2="843" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="1450" y1="86"  x2="950"  y2="86"  stroke="var(--wire)" stroke-width="1.3"/>
-      <!-- Vòng xuống đáy vào use case ký quỹ: trục x=5 nằm NGOÀI actor trái -->
-      <line x1="1450" y1="843" x2="1450" y2="1080" stroke="var(--wire)" stroke-width="1"/>
-      <line x1="5"    y1="1080" x2="1450" y2="1080" stroke="var(--wire)" stroke-width="1"/>
-      <line x1="5"    y1="718" x2="5"    y2="1080" stroke="var(--wire)" stroke-width="1"/>
-      <line x1="5"    y1="718" x2="150"  y2="718" stroke="var(--wire)" stroke-width="1"/>
+      <!-- CỔNG THANH TOÁN / 3PL -> D (vận chuyển) + C (ký quỹ, vòng dưới đáy) -->
+      <line x1="1212" y1="1058" x2="1224" y2="1058" stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="1224" y1="105"  x2="1224" y2="1058" stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="1224" y1="105"  x2="1185" y2="105"  stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="1224" y1="1058" x2="1224" y2="1395" stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="160"  y1="1395" x2="1224" y2="1395" stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="160"  y1="1395" x2="160"  y2="985"  stroke="var(--wire)" stroke-width="1.5"/>
+      <line x1="160"  y1="985"  x2="165"  y2="985"  stroke="var(--wire)" stroke-width="1.5"/>
     </svg>
   </div>
 
@@ -210,6 +210,6 @@
     <span><span class="swatch" style="border-color:var(--pkg-d-b);"></span>D. Vận chuyển, khiếu nại &amp; quản trị</span>
     <span><span class="swatch" style="border-color:var(--pkg-e-b);"></span>E. Hỗ trợ AI</span>
   </div>
-  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case tổng quan (Hình 5.x)</footer>
+  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case tổng quan</footer>
 </body>
 </html>

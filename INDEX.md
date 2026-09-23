@@ -1,7 +1,8 @@
 # INDEX.md — Chỉ mục file/thư mục
 
 Cập nhật lần cuối: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
-kiểm chứng; ghép đặc tả use case và 5 sơ đồ use case vào Chương 5).
+kiểm chứng; ghép đặc tả use case vào Chương 5; phóng cỡ chữ 5 sơ đồ use case lên
+ngưỡng 7pt và chuyển sang trang float riêng).
 
 ## Gốc dự án
 
@@ -9,7 +10,7 @@ kiểm chứng; ghép đặc tả use case và 5 sơ đồ use case vào Chươn
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 165 trang |
+| `main.pdf` | Bản build gần nhất, 166 trang (154 trang đánh số Ả Rập + 12 trang đầu đánh số La Mã) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
@@ -73,7 +74,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 
 **Các nội dung so sánh nay dùng bảng LaTeX, không dùng ảnh** — `tools/design/` chỉ còn các infographic thật sự cần đồ họa.
 
-**Cỡ chữ trong hình:** cỡ chữ in ra (pt) = `font_px × 16 / body_width_px × 28,45`, vì ảnh luôn bị ép về `\textwidth` = 16cm. Giữ tối thiểu ~7pt cho chữ nhỏ nhất khi sửa bất kỳ file HTML nào.
+**Cỡ chữ trong hình:** cỡ chữ in ra (pt) = `font_px × 16 / body_width_px × 28,45`, vì ảnh luôn bị ép về `\textwidth` = 16cm. Giữ tối thiểu ~7pt cho chữ nhỏ nhất khi sửa bất kỳ file HTML nào. Cách tăng cỡ chữ in ra: **giữ nguyên trục ngang, chỉ nhân cỡ chữ và trục dọc** — hình hẹp lại, cao lên, tận dụng chiều cao trang. Hình gần trọn trang phải bọc trong `adjustbox` chặn chiều cao và đặt `[p]` thay vì `[H]`, nếu không sẽ bỏ lại 2/3 trang trắng.
 
 Sửa số liệu/nội dung infographic → sửa file HTML tương ứng, chạy `npm run shot`,
 rồi rebuild PDF. Không sửa trực tiếp file PNG.
