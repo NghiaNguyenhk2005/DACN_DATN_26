@@ -1,93 +1,113 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-09-15 (sau khi bổ sung 5 mảng nội dung lớn: ToS mở
-rộng, business model, đánh giá SP/nhà bán, AI/chatbot đào sâu, kho bãi & 3PL).
+Cập nhật lần cuối: 2026-09-23 (sau phiên chỉnh sửa 18 hạng mục, đợt 3: so sánh
+chuyển sang bảng LaTeX, sửa đánh số phụ lục, cô đọng nội dung).
 
 ## Gốc dự án
 
 | File | Vai trò |
 |---|---|
-| `main.tex` | File LaTeX chính (`\documentclass{report}`), `\input` toàn bộ front/back matter + 6 chương theo đúng thứ tự |
-| `references.bib` | Toàn bộ tài liệu tham khảo (BibTeX), style `ieeetr` |
-| `main.pdf` | Bản build gần nhất (build thủ công bằng MiKTeX: `pdflatex` → `bibtex` → `pdflatex` ×2), 52 trang |
+| `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
+| `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
+| `main.pdf` | Bản build gần nhất, 134 trang |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
 | `package.json` | Tooling Node/Playwright để render infographic HTML → PNG (`npm run shot`) |
 | `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md` |
-| `_archive-old-tex/` | File .tex/flowchart gốc trước khi tái cấu trúc/vẽ lại — chỉ lưu tham khảo, nội dung đã gộp hết vào cấu trúc hiện tại |
+| `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo |
 
-## `tools/` — Render infographic thành ảnh
+**Quy trình build:** `pdflatex` → **`biber`** (không phải `bibtex` — dự án
+dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 
-| File | Vai trò |
+## `chapters/` — Nội dung chính (8 chương)
+
+| File | Nội dung | Trạng thái |
+|---|---|---|
+| `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, đặc thù nông sản, 4 vấn đề V1–V4) · 1.2 Mục tiêu (tổng quát, MT1–MT7, **mục tiêu đánh giá**) · 1.3 Phạm vi (**không gian, thời gian, nội dung, giới hạn kỹ thuật**) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong |
+| `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản (mới: định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market)** · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền · 2.4 Ứng dụng AI | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
+| `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · **3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này (mới)** · 3.4 Kết chương (research gap) | Xong; còn TODO bổ sung nghiên cứu ở 3.1 |
+| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, **quy tắc chống đăng sai sản phẩm**) · 4.2 Mô tả hệ thống (**Farmery là gì, phân hệ, kênh truy cập**, 5 nhóm người dùng, NC1–NC5, thách thức) · 4.3 Yêu cầu (**câu chuyện người dùng** → FR1–FR12, NFR) | Xong |
+| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · **5.2 Giải pháp công nghệ (mới: đối sánh 12 hạng mục + 3 mô-đun AI)** · 5.3 Thiết kế (**kiến trúc modular monolith + RB1–RB3**, CSDL, AI, API, UI/UX, test case) | 5.2, 5.3.1, 5.3.5, 5.3.6 xong; sitemap/sequence/class/API/UI còn TODO |
+| `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | Toàn bộ TODO |
+| `chuong7-danhgia.tex` | **7.1 Mục tiêu và phương pháp đánh giá (mới)** · 7.2 Chức năng · 7.3 Front-end · 7.4 Back-end · 7.5 AI · 7.6 Kết chương | Khung xong, chờ số liệu thực nghiệm |
+| `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
+
+## `backmatter/` — Phụ lục A–L
+
+Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ.
+
+| File | Nội dung |
 |---|---|
-| `render-comparison-tables.js` | Script Playwright: chụp các HTML ở `design/` thành PNG ở `image/comparison/` |
-| `design/thuc-trang-chuoi-cung-ung.html` | Nguồn Hình 1.1 (Ch.1, thực trạng chuỗi cung ứng) |
-| `design/ocop-2024-2025.html` | Nguồn Hình 2.x (Ch.2, tăng trưởng OCOP) |
-| `design/business-model-canvas.html` | Nguồn Hình 3.1 (Ch.3, Business Model Canvas Farmery) |
-| `design/so-sanh-trong-nuoc.html` | Nguồn Hình so sánh sàn trong nước (Ch.2) |
-| `design/so-sanh-quoc-te.html` | Nguồn Hình so sánh mô hình quốc tế (Ch.2) |
-| `design/research-gap.html` | Nguồn Hình ma trận research gap (Ch.2) |
-
-Sửa số liệu/nội dung infographic → sửa file HTML tương ứng trong
-`tools/design/`, chạy lại `npm run shot`, rồi rebuild PDF. Không sửa trực
-tiếp file PNG.
-
-## `image/comparison/` — Ảnh PNG đã render (output của `tools/`, không sửa tay)
-
-`thuc-trang-chuoi-cung-ung.png`, `ocop-2024-2025.png`,
-`business-model-canvas.png`, `so-sanh-trong-nuoc.png`, `so-sanh-quoc-te.png`,
-`research-gap.png` — nhúng bằng `\includegraphics` trong
-`chapters/chuong1-gioithieu.tex`, `chapters/chuong2-coso-lythuyet.tex` và
-`chapters/chuong3-phantich-thietke.tex`.
+| `phuluc.tex` | Khung phụ lục A, B, C, E; `\input` các file bên dưới |
+| `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 15 điều, viết để đọc độc lập (không dùng mã vai trò, mã FR hay tham chiếu chéo vào thân báo cáo) |
+| `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản thế giới |
+| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh giải pháp công nghệ và mô hình AI |
+| `phuluc-yeucau.tex` | **Phụ lục J** — truy vết câu chuyện người dùng → yêu cầu, và bảng FR theo nhóm người dùng |
+| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đầy đủ (8 nhóm thực thể) |
+| `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI |
+| `kehoach.tex` | Kế hoạch thực hiện 15 tuần |
+| `tailieuthamkhao.tex` | `\printbibliography` |
 
 ## `frontmatter/` — Phần mở đầu
 
 | File | Trạng thái |
 |---|---|
-| `biaphu.tex` | Xong (giống bìa chính theo yêu cầu giảng viên) |
-| `phieunhiemvu.tex` | Khung mẫu, cần chữ ký thật |
+| `biaphu.tex` | Xong |
 | `loicamon.tex` | TODO — trống |
 | `tomtat.tex` | TODO — trống (VN + Abstract) |
-| `danhmuc-tuvietat.tex` | Xong — bảng thuật ngữ (B2B, MOQ, GS1, RBAC...) |
+| `danhmuc-tuvietat.tex` | Xong |
+| `phieunhiemvu.tex` | **Không còn được `\input` từ `main.tex`** (đã bỏ theo yêu cầu 2026-09-23); giữ file phòng khi cần dùng lại |
 
-## `chapters/` — Nội dung chính
-
-| File | Mục lục | Trạng thái |
-|---|---|---|
-| `chuong1-gioithieu.tex` | 1.1 Đặt vấn đề (có Hình 1.1) · 1.2 Mục tiêu · 1.3 Ý nghĩa khoa học/thực tiễn · 1.4 Phạm vi (`sec:phamvi`) · 1.5 Cấu trúc báo cáo | 1.1 xong, 1.2–1.5 nháp cần rà (xem `NOTES.md`) |
-| `chuong2-coso-lythuyet.tex` | 2.1 Related work (so sánh sàn có hình, research gap) · 2.2 Lý thuyết nền (B2B2C, SFSC, GS1/blockchain, reputation, RBAC/escrow, **business model**, **kho bãi/3PL**) · 2.3 Lý thuyết AI (có trích dẫn học thuật) | Nội dung đầy đủ |
-| `chuong3-phantich-thietke.tex` | 3.1 Phân tích người dùng (+RBAC role) · 3.2 Luồng tiếp cận · **3.3 Phân tích mô hình kinh doanh (mới, có Hình 3.1 BMC)** · 3.4–3.5 Yêu cầu chức năng/phi chức năng · 3.6 Quy trình nghiệp vụ (3.6.1–3.6.6, gồm **3.6.4 Đánh giá SP/nhà bán mới** + flowchart 7, và 3.6.5 đổi tên gồm quản lý tồn kho) · 3.7 Luồng vận hành · 3.8 Kiến trúc · 3.9 ERD · 3.10 Sơ đồ thiết kế chi tiết · **3.11 Thiết kế AI (viết lại: pipeline 5 bước + kiến trúc chatbot riêng)** | 3.1–3.3, 3.6, 3.11 xong; 3.7–3.10 khung TODO |
-| `chuong4-hienthuc.tex` | Môi trường, triển khai, 8 module (gồm AI, đánh giá, tồn kho) | Toàn bộ TODO |
-| `chuong5-danhgia.tex` | Test case, kết quả, hiệu năng, AI, UX, thảo luận | Toàn bộ TODO |
-| `chuong6-ketluan.tex` | Tóm tắt, hạn chế, hướng phát triển | Toàn bộ TODO |
-
-## `backmatter/`
+## `tools/` — Render infographic thành ảnh
 
 | File | Vai trò |
 |---|---|
-| `tailieuthamkhao.tex` | `\bibliography{references}`, label `chap:references` |
-| `phuluc.tex` | Phụ lục A/B/C — TODO; **Phụ lục D (Điều khoản dịch vụ) — 13 điều + định nghĩa thuật ngữ**, TODO chỉ còn mức phí cụ thể (Điều 5) và SLA (Điều 7, 8) |
+| `render-comparison-tables.js` | Script Playwright chụp HTML ở `design/` thành PNG ở `image/comparison/`. Viewport khớp cả **chiều rộng lẫn chiều cao** nội dung để ảnh không thừa nền trắng phía dưới |
+| `design/thuc-trang-chuoi-cung-ung.html` | Hình thực trạng chuỗi cung ứng (Ch.1) |
+| `design/ocop-2024-2025.html` | Hình tăng trưởng OCOP (Ch.2) |
+| `design/bmc-cum1.html`, `bmc-cum2.html`, `bmc-cum3.html` | **3 cụm BMC dùng trong thân báo cáo** (thay ảnh ngang cũ khó đọc) |
+
+**Các nội dung so sánh nay dùng bảng LaTeX, không dùng ảnh** — `tools/design/` chỉ còn các infographic thật sự cần đồ họa.
+
+**Cỡ chữ trong hình:** cỡ chữ in ra (pt) = `font_px × 16 / body_width_px × 28,45`, vì ảnh luôn bị ép về `	extwidth` = 16cm. Giữ tối thiểu ~7pt cho chữ nhỏ nhất khi sửa bất kỳ file HTML nào.
+
+Sửa số liệu/nội dung infographic → sửa file HTML tương ứng, chạy `npm run shot`,
+rồi rebuild PDF. Không sửa trực tiếp file PNG.
 
 ## `flowcharts/`
 
-7 file: `01-dang-ky.tex`, `02-san-pham.tex`, `03-ban-le.tex`, `04-ban-si.tex`
-(cả 2 vẽ theo góc nhìn nhà bán, có `\resizebox` chống tràn trang),
-`05-van-chuyen.tex`, `06-quan-tri.tex`, **`07-danh-gia.tex` (mới — quy
-trình đánh giá sản phẩm/nhà bán, label `fig:flow-danh-gia`)** + `styles.tex`,
-được `\input` từ mục 3.6 trong `chapters/chuong3-phantich-thietke.tex`.
-File `.tex` cũ (03/04 phiên bản mua lẻ/mua sỉ) đã chuyển vào `_archive-old-tex/`.
+10 file lưu đồ TikZ + `styles.tex` + `00-chu-thich.tex`, được `\input` từ mục
+5.1 trong `chapters/chuong5-phantich-thietke.tex`.
 
-## Nhãn (`\label`) quan trọng dùng để tham chiếu chéo
+## Nhãn (`\label`) quan trọng
 
-`chap:gioithieu`, `chap:coso`, `chap:phantich`, `chap:hienthuc`,
-`chap:danhgia`, `chap:ketluan`, `chap:references`; `subsec:reputation`,
-`subsec:gs1blockchain`, `subsec:sosanhtrongnuoc`, `subsec:sosanhquocte`,
-`subsec:researchgap`, `subsec:businessmodel`, `subsec:khobai`;
-`sec:doituongnguoidung`, `sec:luongtiepcan`, `sec:businessmodelcanvas`,
-`sec:quytrinhnghiepvu`, `subsec:danhgianghiepvu`, `sec:luongvanhanh`,
-`sec:kientruc`, `sec:csdl`, `sec:sddchitiet`, `sec:thietkeAI`,
-`sec:hienthucAI`, `sec:yeucauchucnang`, `sec:yeucauphichucnang`,
-`sec:danhgiahieunang`, `sec:danhgiaux`, `sec:phamvi`; `fig:thuctrang`,
-`fig:ocop`, `fig:bmc`, `fig:flow-ban-le`, `fig:flow-ban-si`,
-`fig:flow-danh-gia`.
+**Chương:** `chap:gioithieu`, `chap:coso`, `chap:lienquan`, `chap:hethong`,
+`chap:phantich`, `chap:hienthuc`, `chap:danhgia`, `chap:ketluan`,
+`chap:references`.
+
+**Mục:** `sec:dongco`, `sec:vande`, `sec:muctieu`, **`sec:muctieudanhgia`**,
+`sec:phamvi`, `sec:ynghia`; **`sec:dacdiemnongsan`**,
+**`subsec:dinhnghianongsan`**, **`subsec:sosanhnongsan`**,
+**`subsec:chungnhan`**, `subsec:reputation`, `subsec:gs1blockchain`,
+`subsec:businessmodel`, `subsec:khobai`; `subsec:sosanhtrongnuoc`,
+`subsec:sosanhquocte`, **`sec:visaochualam`**, `subsec:researchgap`;
+`sec:ngucanh`, `sec:businessmodelcanvas`, `sec:quytrinhnghiepvu`,
+`subsec:danhgianghiepvu`, `sec:motahethong`, `sec:luongvanhanh`,
+`sec:doituongnguoidung`, `sec:luongtiepcan`, `sec:yeucau`,
+`sec:yeucauchucnang`, `sec:yeucauphichucnang`; `sec:giaiphapcongnghe`,
+`sec:kientruc`, `sec:csdl`, `subsec:dacta-csdl`, `subsec:erd`,
+`sec:thietkeAI`; **`sec:muctieuphuongphap`**, `sec:danhgiaux`,
+`sec:danhgiahieunang`, `sec:danhgiaAI`.
+
+**Hình:** `fig:thuctrang`, `fig:ocop`, **`fig:bmc-cum1`**, **`fig:bmc-cum2`**,
+**`fig:bmc-cum3`**, `fig:bmc-full`, **`fig:flow-thu-mua`**, `tab:sosanhtrongnuoc`,
+`tab:sosanhquocte`, `tab:researchgap`, các `fig:flow-*`.
+
+**Bảng:** **`tab:hailuong`** (trong thân báo cáo), `tab:vande-muctieu`,
+`tab:dacdiem-hanghoa`, `tab:chungnhan`, `tab:sosanh-congnghe`,
+`tab:sosanh-ai`, `tab:truyvet-us`, `tab:fr-nguoidung`, `tab:db-nhom1`–`4`,
+`tab:nguongNFR`, `tab:nguongAI` (tất cả trừ `tab:hailuong` đều nằm ở phụ lục).
+
+**Lưu ý:** các phụ lục dùng `\section*` nên **không đánh số tự động** — trong
+thân báo cáo phải viết thẳng "Phụ lục G", không dùng `\ref`.

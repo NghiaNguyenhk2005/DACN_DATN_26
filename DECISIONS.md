@@ -270,3 +270,200 @@ và `~/.claude/CLAUDE.md`, muốn áp dụng cho dự án đồ án này.
 vận hành/release thật, chỉ là tài liệu LaTeX.
 **Đánh đổi:** Không dùng `README.md` riêng vì mục đích tương đương đã có ở
 `INDEX.md` + phần "Cấu trúc báo cáo" trong Ch.1.
+
+### Mô hình kinh doanh hai luồng: sàn bán sỉ (3P) + bán lẻ tự thu mua (1P) — 2026-09-23
+**Bối cảnh:** Báo cáo cũ mô tả Farmery thuần marketplace nhiều người bán,
+phục vụ song song B2C và B2B nhưng nhà bán tự bán ở cả hai kênh. User chỉ ra
+mô hình đang thiên hẳn về B2B và yêu cầu khảo sát thêm hướng B2C kiểu "hệ
+thống mua hàng từ người dùng rồi bán lại cho người khác".
+**Quyết định:** Giữ song song hai luồng nhưng tách bạch ranh giới theo tiêu
+chí *ai sở hữu hàng hóa trong lúc giao dịch*: luồng bán sỉ là marketplace 3P
+(nhà cung cấp giữ hàng, Farmery ăn hoa hồng), luồng bán lẻ là 1P (Farmery mua
+đứt theo lô, tự định giá, ăn chênh lệch). Lý do ghép được: nông dân/HTX thường
+không đủ năng lực phân loại, đóng gói và xử lý từng đơn lẻ vài kg, nên 1P lấp
+đúng khoảng trống đó; còn đơn sỉ khối lượng lớn thì giao thẳng hiệu quả hơn.
+**Đánh đổi:** Farmery phải có vốn lưu động, chịu lỗ trực tiếp với mỗi lô không
+bán hết, và vận hành hai mô hình kinh doanh trên cùng một hệ thống. Để đánh
+đổi này chấp nhận được, phạm vi thí điểm bị thu hẹp về địa bàn.
+
+### Nhóm người dùng: 5 nhóm, gộp vai trò quản trị 5 thành 3 — 2026-09-23
+**Bối cảnh:** User yêu cầu tập trung trọng tâm vào sản phẩm và thay đổi lại
+nhóm người dùng. Bản cũ có 4 nhóm với cách gọi "Nhóm B/Nhóm C" khó đọc, và
+tách quản trị viên thành 5 vai trò con khá chi tiết so với trọng tâm đề tài.
+**Quyết định:** Đổi thành 5 nhóm gọi theo tên nghiệp vụ: nhà cung cấp, khách
+sỉ, khách lẻ, bộ phận thu mua (vai trò `ops_sourcing` mới, phát sinh từ luồng
+1P), và quản trị viên. Vai trò quản trị gộp từ 5 xuống 3: `admin_moderator`
+(kiểm duyệt và tuân thủ), `admin_ops` (vận hành, hỗ trợ, tồn kho), `admin`
+(gộp quyền cho đội nhỏ).
+**Đánh đổi:** Mất một phần chi tiết về phân công nội bộ, đổi lại phần mô tả
+người dùng dồn trọng tâm vào các nhóm thực sự tạo ra giá trị của sản phẩm.
+
+### Cắt phạm vi: bỏ phân quyền nội bộ DN, công nợ B2B, mô-đun AI phát hiện gian lận — 2026-09-23
+**Bối cảnh:** Việc thêm luồng 1P làm tăng đáng kể khối lượng, trong khi đây là
+đồ án chuyên ngành 15 tuần. User hỏi ý kiến nên giữ những gì.
+**Quyết định:** Áp dụng nguyên tắc *cái gì không đánh giá được bằng số trong
+điều kiện đồ án thì không đưa vào phạm vi* — nguyên tắc này được viết thẳng
+vào mục Mục tiêu đánh giá ở Ch.1. Theo đó:
+- Cắt xuống Ch.8: FR1.4 phân quyền nội bộ tài khoản doanh nghiệp (bài toán
+  quản trị tổ chức, không đặc thù nông sản); công nợ B2B và hạn mức tín dụng
+  (nghiệp vụ tài chính, không chứng minh luận điểm nào của đề tài).
+- Giữ: thanh toán theo từng đợt giao; cơ chế tạm giữ tiền cho đơn sỉ (trả lời
+  trực tiếp vấn đề V4 về niềm tin, hiện thực bằng máy trạng thái trên cổng
+  thanh toán sandbox, viết trung thực là không phải ký quỹ pháp lý thật).
+- AI từ 4 mô-đun xuống 3. Giữ gợi ý sản phẩm và trợ lý ảo (làm thật), dự báo
+  giá (thử nghiệm ngoại tuyến trên dữ liệu công khai vì sàn chưa có dữ liệu).
+  Hạ mô-đun phát hiện gian lận xuống luật ngưỡng cấu hình được, gọi đúng tên
+  là luật ngưỡng chứ không gọi là AI, vì thiếu cả lưu lượng thật lẫn tập nhãn
+  nên không đo được bằng số.
+**Đánh đổi:** Báo cáo trông ít tính năng hơn, nhưng mọi thứ còn lại đều kiểm
+chứng được — đổi bề rộng lấy khả năng bảo vệ.
+
+### Phạm vi không gian và thời gian — 2026-09-23
+**Bối cảnh:** Bản cũ hoàn toàn không nêu phạm vi không gian; user yêu cầu bổ
+sung và chuyển cách viết phạm vi sang dạng giới thiệu.
+**Quyết định:** Nguồn cung thí điểm tại Lâm Đồng, giao hàng lẻ trong TP.HCM
+(cự ly khoảng 300 km, có xe lạnh chạy hằng ngày); đơn sỉ giao toàn quốc qua
+đơn vị vận chuyển thứ ba. Thời gian: số liệu tham chiếu 2020-2026, dữ liệu
+đánh giá là dữ liệu mô phỏng.
+**Lý do:** Ràng buộc này xuất phát trực tiếp từ luồng 1P — vì nền tảng tự sở
+hữu hàng nên mọi giờ hàng nằm trên đường đều là chi phí do chính nền tảng
+gánh. Luồng bán sỉ không chịu ràng buộc này vì khối lượng lớn bù được chi phí
+vận chuyển.
+
+### Kiến trúc: khối đơn chia mô-đun, kèm 3 ràng buộc để sau này tách được — 2026-09-23
+**Bối cảnh:** User hỏi liệu sau này có tách được sang microservice không.
+**Quyết định:** Chọn khối đơn có chia mô-đun, tách riêng duy nhất dịch vụ AI.
+Kèm ba ràng buộc thiết kế bắt buộc: RB1 ranh giới mô-đun theo miền nghiệp vụ
+(không theo tầng kỹ thuật); RB2 mô-đun gọi nhau qua giao diện công khai; RB3
+không kết nối bảng xuyên mô-đun. Biện pháp bảo đảm: mỗi mô-đun một lược đồ
+riêng trong cùng một PostgreSQL.
+**Lý do không chọn microservice:** nghiệp vụ khó nhất của hệ thống — chống bán
+vượt tồn kho khi một lô được giao dịch đồng thời ở hai luồng — dựa vào giao
+dịch có khóa dòng trong một cơ sở dữ liệu; tách ra phải thay bằng giao dịch bù
+trừ, phức tạp hơn nhiều mà gần như không được gì. Thứ tự tách nếu về sau cần
+(trang truy xuất QR, rồi thông báo, rồi tìm kiếm) được viết vào Ch.8.
+
+### Chọn PostgreSQL làm mắt xích công nghệ trung tâm — 2026-09-23
+**Quyết định:** PostgreSQL gom được bốn nhu cầu mà nếu chọn khác phải dựng bốn
+hạ tầng riêng: giao dịch có khóa dòng (chống bán vượt tồn kho), dữ liệu không
+gian (vùng trồng, bán kính giao hàng), tìm kiếm vector (cơ sở tri thức trợ lý
+ảo), và JSON có chỉ mục (nhật ký canh tác khác trường giữa các loại cây).
+Kéo theo: chưa dùng Elasticsearch (tìm kiếm toàn văn sẵn có đủ cho quy mô mục
+tiêu), chưa dùng vector database riêng.
+**Nguyên tắc nền:** giảm tối đa số thành phần hạ tầng phải vận hành — mỗi
+thành phần thêm vào đều kéo theo chi phí cài đặt, giám sát và đồng bộ.
+**Lưu ý:** phần back-end framework (NestJS) là đề xuất, cần nhóm xác nhận lại
+theo ngôn ngữ nhóm thực sự quen; PostgreSQL thì nên giữ bất kể.
+
+### Trình bày: bảng dài xuống phụ lục, BMC tách 3 cụm dọc, bỏ từ MVP — 2026-09-23
+**Bối cảnh:** User phản ánh bảng chiếm chỗ trong báo cáo, một số bảng thừa
+khoảng trống phía dưới và chữ nhỏ, BMC đặt ngang phải xoay màn hình mới đọc
+được, chú giải ký hiệu ở bảng so sánh bị lặp 2 lần.
+**Quyết định:**
+- Tách 7 phụ lục mới (F đến L) chứa toàn bộ bảng dài; thân báo cáo giữ tóm tắt
+  và trỏ tới phụ lục. Mỗi phụ lục là một file `.tex` riêng trong `backmatter/`.
+- BMC bỏ `sidewaysfigure`, tách thành 3 cụm dọc (tạo giá trị cho ai, làm thế
+  nào, tiền vào tiền ra); canvas 9 ô đầy đủ chuyển xuống Phụ lục E.
+- Bỏ toàn bộ từ "MVP" (8 vị trí cộng dòng trong danh mục từ viết tắt), thay
+  bằng cách diễn đạt theo phạm vi đồ án.
+- Tách Shopee và Lazada thành 2 cột hoặc 2 thẻ riêng trong các hình so sánh.
+**Nguyên nhân gốc của lỗi chú giải lặp ký hiệu:** class `.badge` trong
+`research-gap.html` đã sinh ký tự bằng `::before`, mà legend lại gõ thêm ký tự
+vào trong span nên render ra ký tự kép. Đã bỏ ký tự gõ tay trong legend.
+**Nguyên nhân gốc của lỗi thừa khoảng trắng dưới bảng:** script render đặt
+viewport cao cố định 800px rồi chụp `fullPage`; khi nội dung thấp hơn, ảnh vẫn
+lấy trọn viewport và sinh nền trắng thừa. Đã sửa ở gốc — script nay đo cả
+chiều cao nội dung thật, áp dụng cho mọi ảnh chứ không riêng ảnh mới.
+
+### Điều khoản dịch vụ viết để đọc độc lập — 2026-09-23
+**Bối cảnh:** User yêu cầu bỏ việc chèn thuật ngữ kỹ thuật như escrow, lẻ-sĩ
+vào Điều khoản dịch vụ.
+**Quyết định:** Viết lại toàn bộ Phụ lục D (11 điều thành 15 điều), bỏ khối
+"Định nghĩa thuật ngữ" mang tính kỹ thuật, bỏ mọi mã vai trò RBAC, mã FR và
+tham chiếu chéo vào thân báo cáo. "Escrow" đổi thành "tiền được đơn vị trung
+gian thanh toán được cấp phép giữ lại"; cặp "bán lẻ/bán sỉ" đổi thành "giao
+dịch với người tiêu dùng" và "giao dịch số lượng lớn". Bổ sung 2 điều mới: quy
+định hàng hóa được phép đăng bán, và phân định trách nhiệm giữa hàng do nhà
+cung cấp bán với hàng do Farmery mua lại rồi bán.
+**Lý do:** ToS là văn bản pháp lý dành cho người dùng cuối, phải đọc được mà
+không cần đọc báo cáo; tham chiếu chéo vào mục của báo cáo khiến nó vô nghĩa
+khi tách ra dùng thật.
+
+### Bỏ Phiếu nhiệm vụ đồ án chuyên ngành khỏi báo cáo — 2026-09-23
+**Quyết định:** Gỡ `\input{frontmatter/phieunhiemvu}` khỏi `main.tex`, giữ lại
+dòng `\pagenumbering{roman}` vốn nằm chung khối đó. File `phieunhiemvu.tex`
+vẫn còn trong repo phòng khi cần dùng lại. Đồng thời bổ sung Chương 1 vào mục
+Cấu trúc báo cáo, trước đây chỉ liệt kê Ch.2 đến Ch.8.
+
+### Lưu ý kỹ thuật: build bằng biber, không phải bibtex — 2026-09-23
+**Bối cảnh:** `INDEX.md` cũ ghi quy trình build là `pdflatex` rồi `bibtex`.
+Chạy `bibtex` sinh ra 37 cảnh báo citation không phân giải được.
+**Nguyên nhân:** dự án dùng `\usepackage[style=ieee,backend=biber]{biblatex}`
+với `\parencite`, nên phải chạy `biber` chứ không phải `bibtex`.
+**Đã sửa:** ghi đúng quy trình vào `INDEX.md`.
+
+### Ưu tiên thuật ngữ tiếng Anh trong thân báo cáo, trừ Điều khoản dịch vụ — 2026-09-23
+**Bối cảnh:** Ở đợt sửa trước, nhiều thuật ngữ kỹ thuật đã bị Việt hóa (row-level
+locking thành "giao dịch có khóa dòng", SSR thành "kết xuất phía máy chủ", RAG
+thành "truy hồi tri thức", modular monolith thành "khối đơn có chia mô-đun"...).
+User yêu cầu đảo lại: ưu tiên để nguyên tiếng Anh.
+**Quyết định:** Trong thân báo cáo và các phụ lục kỹ thuật, dùng thuật ngữ tiếng
+Anh làm chính, kèm chú giải tiếng Việt ở lần xuất hiện đầu khi cần. Đã thay 131
+vị trí. Bổ sung vào danh mục từ viết tắt: 1P, 3P, LLM, RAG, SSR.
+**Ngoại lệ:** `backmatter/phuluc-tos.tex` (Điều khoản dịch vụ) giữ nguyên tiếng
+Việt thuần, không có thuật ngữ kỹ thuật — nhất quán với quyết định trước đó là
+ToS phải đọc độc lập được bởi người dùng cuối.
+
+### Cỡ chữ trong hình: tính theo tỉ lệ px trên bề rộng thiết kế — 2026-09-23
+**Bối cảnh:** User phản ánh một số ảnh có chữ quá nhỏ.
+**Nguyên nhân gốc:** ảnh được ép về `\textwidth` (16cm) khi chèn, nên cỡ chữ thực
+tế in ra phụ thuộc tỉ lệ `font_px / body_width_px`, không phụ thuộc độ phân giải
+ảnh. Đo lại thì ma trận research gap chỉ còn 3,8pt và hai hình so sánh sàn còn
+3,9pt — so với chữ báo cáo 12pt.
+**Quyết định:** Chuẩn hóa mục tiêu tối thiểu khoảng 7pt cho chữ nhỏ nhất và 8--9pt
+cho chữ chính. Đã phóng cỡ chữ theo từng file (research gap ×2,3; so sánh sàn
+×1,8; BMC cụm ×1,45), đồng thời rút gọn nhãn trong ô của ma trận research gap để
+ô không bị vỡ khi chữ to lên, và đổi badge từ bo tròn hoàn toàn sang bo góc 14px
+để badge nhiều dòng không phình thành hình bầu dục.
+**Cách kiểm tra lại về sau:** cỡ chữ in ra (pt) = font_px × 16 / body_width_px ×
+28,45. Giữ con số này ở mức tối thiểu 7pt khi sửa bất kỳ file HTML nào trong
+`tools/design/`.
+
+### Lưu đồ: thêm quy trình thu mua, sửa luồng bán lẻ theo mô hình 1P — 2026-09-23
+**Bối cảnh:** Sau khi đổi sang mô hình hai luồng, các lưu đồ TikZ vẫn vẽ theo mô
+hình cũ (nhà bán trực tiếp bán cho người tiêu dùng).
+**Quyết định:** Thêm `flowcharts/08-thu-mua.tex` cho quy trình thu mua 1P (nhãn
+`fig:flow-thu-mua`), đặt ngay trước hai lưu đồ bán lẻ để đúng thứ tự nghiệp vụ.
+Sửa `03-ban-le.tex` và `03b-ban-le-giao-nhan.tex`: bên bán là Farmery, hàng lấy từ
+kho đã thu mua, bước trừ tồn kho nêu rõ dùng transaction có row-level lock, và
+trách nhiệm đổi trả thuộc về Farmery. Tổng số quy trình nghiệp vụ từ 7 lên 8 —
+đã sửa đồng bộ các chỗ đếm số ở Ch.4 và Ch.5.
+
+### So sánh thể hiện bằng bảng LaTeX thay vì ảnh — 2026-09-23
+**Bối cảnh:** User yêu cầu ưu tiên thể hiện so sánh dưới dạng bảng, và phản ánh
+hình Business Model Canvas ở phụ lục hiển thị không tốt.
+**Quyết định:** Chuyển toàn bộ 4 nội dung so sánh từ ảnh HTML sang bảng LaTeX:
+so sánh sàn trong nước, so sánh nền tảng quốc tế, ma trận research gap (Ch.3), và
+Business Model Canvas đầy đủ (Phụ lục E).
+**Lý do:** bảng LaTeX dùng chính cỡ chữ của báo cáo nên không còn bài toán chữ
+quá nhỏ vốn phát sinh khi ép ảnh về `\textwidth`; đồng thời gọn hơn nhiều --- ma
+trận research gap từ chiếm trọn một trang xuống còn khoảng một phần ba trang.
+Bảng cũng tra cứu và sửa được trực tiếp, không phải render lại.
+**Đã dọn theo:** xoá 4 file HTML và 4 file PNG không còn dùng, gỡ khỏi script
+render. `tools/design/` nay chỉ còn 5 file: thực trạng chuỗi cung ứng, OCOP và 3
+cụm BMC --- đều là infographic thật sự cần đồ họa, không phải bảng so sánh.
+
+### Sửa lỗi đánh số hình/bảng ở phần sau Chương 8 — 2026-09-23
+**Vấn đề phát hiện:** toàn bộ 14 bảng trong phụ lục bị đánh số nối tiếp Chương 8
+(``Bảng 8.1`` đến ``Bảng 8.14``), và hình trong phụ lục thành ``Hình 8.1`` ---
+trong khi Chương 8 là Tổng kết và không có hình bảng nào. Nguyên nhân: phụ lục
+dùng `\chapter*` nên không đặt lại bộ đếm.
+**Quyết định:** Trong `main.tex`, đặt lại bộ đếm và đổi tiền tố ngay trước phần
+kết thúc: `KH.` cho Kế hoạch thực hiện, `PL.` cho Phụ lục. Nay ra ``Bảng PL.1``,
+``Bảng KH.1`` --- đọc là biết thuộc phần nào.
+
+### Thu hẹp khoảng trắng quanh hình và bảng — 2026-09-23
+**Quyết định:** Đặt lại các tham số float trong preamble: `\intextsep` 8pt,
+`\textfloatsep` 10pt, `\floatsep` 8pt, `\abovecaptionskip` 5pt,
+`\belowcaptionskip` 2pt. Mặc định của lớp `report` rộng gấp đôi, gây cảm giác
+trang bị loãng ở những chỗ có nhiều hình liên tiếp như mục lưu đồ quy trình.
