@@ -9,7 +9,7 @@ customer journey, ma trận FR/NFR, yêu cầu dữ liệu — và bỏ mô-đun
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 143 trang |
+| `main.pdf` | Bản build gần nhất, 151 trang |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |

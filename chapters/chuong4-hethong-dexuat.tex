@@ -512,51 +512,7 @@ quy trình nghiệp vụ (mục~\ref{sec:quytrinhnghiepvu}), hệ thống cần 
 nhóm yêu cầu chức năng sau. Các mã FRx.x dùng để đối chiếu 1--1 với use case
 tại mục~\ref{sec:sddchitiet} và phần hiện thực ở Chương~4.
 
-\subsubsection*{Ma trận phân loại mức độ ưu tiên, tính khả thi và kiểm thử của FR}
-\label{subsec:fr-matrix}
-
-Để phục vụ quản lý dự án phần mềm và làm căn cứ lập kế hoạch kiểm thử ở Chương~\ref{chap:hienthuc}, toàn bộ 12 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính cốt lõi: Mức độ ưu tiên (MoSCoW: Must/Should/Could), Tính khả thi kỹ thuật (High/Medium/Challenging) và Phương pháp kiểm thử (Testability) tại Bảng~\ref{tab:fr-matrix}.
-
-\begingroup
-\small
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
-\caption{Ma trận đánh giá Priority, Feasibility và Testability cho các FR}
-\label{tab:fr-matrix} \\
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Mã FR} & \textbf{Tên chức năng} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Tiêu chí} \\
-\midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Mã FR} & \textbf{Tên chức năng} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Tiêu chí} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-\textbf{FR1} & Tài khoản \& RBAC (eKYC, OTP) & Must & High & \textit{Integration / Security Test:} Xác thực OTP qua SMS/Email; phân quyền 5 nhóm người dùng chặn truy cập trái phép 100\%. \\
-\rowcolor{tblaltbg}
-\textbf{FR2} & Gian hàng \& Tồn kho theo lô & Must & High & \textit{Unit / Integration Test:} Thao tác nhập/xuất kho; tính tồn kho khả dụng chính xác sau mỗi đơn. \\
-\textbf{FR3} & Quản lý chứng nhận chất lượng & Must & High & \textit{Functional E2E Test:} Luồng tải lên ảnh chứng chỉ $\rightarrow$ Admin duyệt $\rightarrow$ Hiển thị badge xác minh trên gian hàng. \\
-\rowcolor{tblaltbg}
-\textbf{FR4} & Sản phẩm \& Truy xuất nguồn gốc QR & Must & Medium & \textit{Integration Test:} Sinh mã QR theo định danh GS1; quét QR đọc đúng nhật ký canh tác tương ứng. \\
-\textbf{FR5} & Giao dịch bán lẻ (gian hàng 1P) & Must & Medium & \textit{E2E Test:} Đặt hàng từ gian hàng của nền tảng $\rightarrow$ trừ tồn kho đúng lô $\rightarrow$ sinh đơn kèm phí vận chuyển. \\
-\rowcolor{tblaltbg}
-\textbf{FR6} & Bán sỉ B2B (RFQ, Hợp đồng, Đợt giao) & Must & Medium & \textit{Integration / State Test:} Quy trình RFQ chuyển trạng thái hợp lệ; sinh hợp đồng PDF và theo dõi đợt giao. \\
-\textbf{FR7} & Thanh toán đa kênh \& Ký quỹ Escrow & Must & Medium & \textit{Integration Test (Sandbox):} Tạo mã VietQR tự động; webhook cập nhật trạng thái thanh toán và khóa tiền escrow. \\
-\rowcolor{tblaltbg}
-\textbf{FR8} & Vận chuyển 3PL \& Xử lý khiếu nại & Should & Medium & \textit{API Integration Test:} Tính cước tự động theo tọa độ/khối lượng; webhook cập nhật hành trình vận đơn. \\
-\textbf{FR9} & Chat nội bộ \& Wishlist & Could & High & \textit{E2E / WebSocket Test:} Tin nhắn tức thời giữa Người mua và Shop có độ trễ $< 500$ms. \\
-\rowcolor{tblaltbg}
-\textbf{FR10} & Quản trị hệ thống \& Dashboard & Must & High & \textit{Functional / Security Test:} Admin kiểm duyệt, khóa tài khoản vi phạm; dashboard thống kê doanh thu toàn sàn. \\
-\textbf{FR11} & Thông báo đa kênh (App/Email/SMS) & Should & High & \textit{Integration Test:} Bắn notification khi đơn hàng đổi trạng thái; gửi email cảnh báo hết hạn chứng nhận. \\
-\rowcolor{tblaltbg}
-\textbf{FR12.1} & AI Gợi ý sản phẩm cá nhân hóa & Should & Challenging & \textit{Data Test / A/B Test:} Đo lường CTR uplift danh sách gợi ý so với sản phẩm mới nhất ($> 20\%$). \\
-\textbf{FR12.2} & AI Dự báo giá \& Nhu cầu mùa vụ & Could & Challenging & \textit{Model Evaluation:} Đo lường sai số dự báo trên dữ liệu chuỗi thời gian kiểm thử (MAPE $< 20\%$). \\
-\end{longtable}
-\endgroup
+\noindent\textbf{Mức độ ưu tiên, tính khả thi và cách kiểm thử.} Toàn bộ 12 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính: mức độ ưu tiên theo MoSCoW, tính khả thi kỹ thuật, và phương pháp kiểm thử tương ứng. Phân bố cho thấy \textbf{8 nhóm ở mức Must} --- đây là phần lõi không thể cắt, gồm tài khoản và phân quyền, hồ sơ nhà cung cấp và tồn kho, chứng nhận, sản phẩm và truy xuất nguồn gốc, hai luồng giao dịch, thanh toán và quản trị. Ba nhóm ở mức Should (vận chuyển và khiếu nại, thông báo, gợi ý sản phẩm) và hai nhóm ở mức Could (tương tác người dùng, dự báo giá). Về tính khả thi, hai mô-đun AI là hai hạng mục duy nhất được đánh giá ở mức Challenging, phản ánh đúng rủi ro đã nêu tại mục~\ref{subsec:vandenghiencuu} về việc thiếu dữ liệu ở giai đoạn đầu. Ma trận đầy đủ kèm phương pháp kiểm thử cho từng nhóm được trình bày tại Phụ lục M.
 
 \subsubsection*{FR1: Quản lý tài khoản \& phân quyền}
 \begin{itemize}
@@ -812,45 +768,7 @@ Các yêu cầu phi chức năng dưới đây cũng tuân theo nguyên tắc đ
     truy xuất --- liên hệ mục~\ref{subsec:gs1blockchain}.
 \end{itemize}
 
-\subsubsection*{Ma trận phân loại Priority, Feasibility và Testability cho các NFR}
-\label{subsec:nfr-matrix}
-
-Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi và cơ chế kiểm thử cho 9 nhóm yêu cầu phi chức năng:
-
-\begingroup
-\small
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
-\caption{Ma trận Priority, Feasibility và Testability cho NFR}
-\label{tab:nfr-matrix} \\
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Mã NFR} & \textbf{Tiêu chí đo lường} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Công cụ} \\
-\midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Mã NFR} & \textbf{Tiêu chí đo lường} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Công cụ} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-\textbf{NFR1.1} & Thời gian đáp ứng p95 $< 2$ giây & Must & High & \textit{Load Testing:} Công cụ k6/JMeter mô phỏng truy vấn duyệt web thông thường. \\
-\rowcolor{tblaltbg}
-\textbf{NFR1.2} & Tỷ lệ bán vượt tồn kho (Oversell) = 0\% & Must & Medium & \textit{Concurrency Testing:} 50 luồng đồng thời tranh mua 10 sản phẩm cuối cùng; kiểm tra khóa bi quan (Pessimistic lock). \\
-\textbf{NFR2.1} & Kiến trúc mở rộng vai trò không lỗi & Should & High & \textit{Regression Testing:} Chạy lại bộ kiểm thử tự động đạt 100\% PASS khi gắn thêm module mới. \\
-\rowcolor{tblaltbg}
-\textbf{NFR2.2} & Chịu tải 100 người dùng đồng thời & Must & Medium & \textit{Stress Testing:} Kịch bản k6 tạo 100 CCU đặt hàng; tỷ lệ lỗi HTTP $< 1\%$. \\
-\textbf{NFR3.1} & Phân quyền RBAC tuyệt đối 100\% & Must & High & \textit{Security Audit Test:} Script gọi tự động 100\% endpoint nhạy cảm bằng tài khoản không có quyền $\rightarrow$ Trả về lỗi 403. \\
-\rowcolor{tblaltbg}
-\textbf{NFR3.2} & Mã hóa dữ liệu định danh (PII) & Must & High & \textit{Database Inspection:} Rà soát bảng dữ liệu đảm bảo không lưu số CCCD/MST dưới dạng plaintext. \\
-\textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
-\rowcolor{tblaltbg}
-\textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Khảo sát thực tế với nhóm đối tượng nông dân theo thang đo SUS. \\
-\textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\
-\end{longtable}
-\endgroup
+\noindent\textbf{Mức độ ưu tiên và cách kiểm thử.} Chín nhóm yêu cầu phi chức năng cũng được đánh giá theo cùng ba thuộc tính như phần yêu cầu chức năng. Bảy nhóm ở mức Must --- trong đó hai nhóm khó nhất về mặt kỹ thuật là chống bán vượt tồn kho khi giao dịch đồng thời, và chịu tải ở mức 100 người dùng --- còn hai nhóm ở mức Should là khả năng mở rộng vai trò và độ khả dụng cho nhóm nhà cung cấp. Ma trận đầy đủ kèm công cụ kiểm thử cho từng nhóm được trình bày tại Phụ lục M.
 
 \subsubsection*{Ngưỡng đo lường và căn cứ}
 \label{subsec:nguongNFR}
