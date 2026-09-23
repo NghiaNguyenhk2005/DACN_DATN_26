@@ -14,6 +14,12 @@ const pages = [
   'bmc-cum1.html',
   'bmc-cum2.html',
   'bmc-cum3.html',
+  // Sơ đồ Use Case (tổng quan + chi tiết theo từng actor) — chương Phân tích & thiết kế
+  'usecase-overview.html',
+  'usecase-nha-ban.html',
+  'usecase-nguoi-mua-le.html',
+  'usecase-nguoi-mua-si.html',
+  'usecase-quan-tri-vien.html',
 ];
 
 (async () => {
