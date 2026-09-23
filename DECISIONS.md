@@ -555,6 +555,28 @@ bây giờ đâu còn đắt" khi bảo vệ.
 **Đánh đổi:** dài thêm hai trang ở Chương 2 vừa mới rút gọn, đổi lấy một lập luận
 không thể bị lật bằng một lần tra nguồn.
 
+### Nhận đặc tả use case và vẽ lại sơ đồ tổng quan cho khớp phạm vi — 2026-09-24
+**Bối cảnh:** `_incoming/dac-ta-usecase.tex` có phần chữ đã đúng phạm vi mới
+(có `ops_sourcing`, luồng 1P, actor AI chỉ còn FR12.1/FR12.2), nhưng năm ảnh
+PNG đi kèm vẫn vẽ theo phạm vi cũ.
+**Quyết định:** nhận file đặc tả, vẽ lại `usecase-overview.html` trước khi ghép.
+Bốn sơ đồ chi tiết còn lại kiểm tra thì đã đúng --- riêng `usecase-quan-tri-vien`
+đã vẽ đúng hai vai trò chuyên trách cộng generalization từ `admin`, nên cảnh báo
+"cần vẽ lại" trong file `.tex` là cảnh báo cũ chưa dọn.
+**Bốn sửa đổi trên sơ đồ tổng quan:**
+- Bỏ use case trợ lý ảo (chatbot) --- chức năng đã cắt khỏi phạm vi.
+- Chuyển "phát hiện bất thường" khỏi gói AI sang gói quản trị và đổi tên thành
+  "giám sát bất thường theo luật ngưỡng", đúng với quyết định hạ cấp ngày 23/9:
+  năng lực vẫn còn nhưng thuộc FR10/NFR9.1, không phải FR12.
+- Thêm actor Bộ phận thu mua (`ops_sourcing`) và hai use case thu mua 1P vào gói
+  giao dịch; gói này đổi tên thành "Giao dịch, thu mua & thanh toán".
+- Sửa nhãn actor quản trị viên từ "2 vai trò" thành "3 vai trò".
+**Dọn khi ghép:** bỏ toàn bộ khối comment bàn giao, cảnh báo RBAC lỗi thời, và
+câu "khác với giả định ban đầu về 5 vai trò admin" --- lịch sử nội bộ không thuộc
+về văn bản báo cáo.
+**Còn lại:** mới đặc tả chi tiết 6 trong số hơn 45 use case đã liệt kê; nếu cần
+đặc tả đầy đủ thì làm tiếp theo đúng mẫu bảng hiện có.
+
 ### Sửa số vai trò quản trị còn sót ở NFR2.1 — 2026-09-24
 **Bối cảnh:** Quyết định ngày 23/9 gộp vai trò quản trị từ 5 xuống 3, nhưng NFR2.1
 ở Chương 4 vẫn còn hai chỗ ghi "5 vai trò", khiến chương tự mâu thuẫn với Bảng 4.2
