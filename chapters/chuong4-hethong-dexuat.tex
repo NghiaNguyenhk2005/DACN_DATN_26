@@ -288,7 +288,7 @@ Nền tảng được tổ chức thành các phân hệ dưới đây, mỗi ph
     \item \textbf{Vận chuyển và khiếu nại} (FR8) --- kết nối đơn vị vận chuyển, theo dõi hành trình, xử lý khiếu nại hàng hư hỏng.
     \item \textbf{Đánh giá và uy tín} (FR9) --- điểm uy tín nhà cung cấp, kiểm soát đánh giá giả.
     \item \textbf{Quản trị} (FR10) --- kiểm duyệt, xử lý vi phạm, báo cáo thống kê.
-    \item \textbf{Hỗ trợ AI} (FR12) --- gợi ý sản phẩm, dự báo giá, trợ lý ảo.
+    \item \textbf{Hỗ trợ AI} (FR12) --- gợi ý sản phẩm và dự báo giá.
 \end{itemize}
 
 \subsubsection*{Kênh truy cập}
@@ -399,6 +399,96 @@ Mục này làm rõ cách mỗi nhóm người dùng ở mục~\ref{sec:doituong
 
 Khi hoàn tất thủ tục tham gia ở trên, mọi tài khoản đều chịu sự ràng buộc của Điều khoản dịch vụ (Phụ lục D) --- quy định đầy đủ quyền, nghĩa vụ, phí và cơ chế xử lý tranh chấp giữa các bên.
 
+\subsubsection{Chân dung khách hàng đại diện (Customer Personas)}
+\label{subsec:customer-personas}
+
+Để cụ thể hóa các nhóm người dùng đã nêu, bốn chân dung đại diện (persona) được xây dựng cho bốn nhóm trực tiếp tạo ra hoặc tiêu thụ giá trị trên nền tảng:
+
+\begin{itemize}
+    \item \textbf{Persona 1: Nhà cung cấp (nông dân, giám đốc hợp tác xã)}
+    \begin{itemize}
+        \item \textit{Nhân vật:} Bác Ba Hưng, 52 tuổi, Giám đốc HTX Nông nghiệp Rau sạch Cần Đước (Long An).
+        \item \textit{Đặc điểm số \& Thiết bị:} Sử dụng điện thoại Android tầm trung, mạng 4G không ổn định; thường dùng Zalo trao đổi thông tin, ngại thao tác máy tính và biểu mẫu phần mềm phức tạp.
+        \item \textit{Mục tiêu:} Tìm đầu ra ổn định, giảm phụ thuộc thương lái trung gian ép giá vụ mùa; có hai lựa chọn đầu ra --- tự bán sỉ cho chuỗi bán lẻ và bếp ăn công nghiệp, hoặc bán đứt cả lô cho Farmery khi cần tiền ngay; minh bạch quy trình VietGAP của hợp tác xã để nâng giá trị nông sản.
+        \item \textit{Điểm đau (Pain points):} Sợ quy trình đăng bán và ghi nhật ký rườm rà mất thời gian canh tác; e ngại giao hàng rồi mà chưa chắc nhận được tiền; thiếu công cụ dự báo giá nên không biết nên bán ngay hay chờ.
+        \item \textit{Kỳ vọng ở Farmery:} Giao diện tối giản trên di động (liên hệ NFR6), hỗ trợ tạo mã QR lô hàng nhanh chóng (FR4.2), có đội ngũ hỗ trợ vùng hướng dẫn trực tiếp khi vướng thao tác, và cơ chế giữ tiền trung gian (escrow) đảm bảo chắc chắn nhận được thanh toán sau khi giao hàng (FR7.3).
+    \end{itemize}
+
+    \item \textbf{Persona 2: Khách sỉ (doanh nghiệp thu mua)}
+    \begin{itemize}
+        \item \textit{Nhân vật:} Chị Mai Phương, 35 tuổi, Trưởng phòng Thu mua chuỗi cửa hàng thực phẩm GreenMart (TP.HCM).
+        \item \textit{Đặc điểm số \& Thiết bị:} Thành thạo máy tính và phần mềm quản lý ERP; yêu cầu tính chuẩn xác, hợp đồng pháp lý minh bạch và hóa đơn VAT đầy đủ.
+        \item \textit{Mục tiêu:} Đảm bảo nguồn cung 5--10 tấn rau củ quả đạt chuẩn VietGAP/GlobalGAP mỗi tháng; tối ưu giá thông qua khung giá sỉ theo sản lượng; chia lịch nhận hàng nhiều đợt theo tuần.
+        \item \textit{Điểm đau (Pain points):} Tốn nhiều thời gian tìm kiếm và thẩm định giấy tờ chứng nhận của từng nông hộ nhỏ lẻ; rủi ro đứt gãy nguồn cung do mùa vụ; khó kiểm soát chất lượng đồng đều giữa các đợt giao.
+        \item \textit{Kỳ vọng ở Farmery:} Quy trình RFQ linh hoạt (FR6.1--FR6.2), hỗ trợ hợp đồng điện tử pháp lý (FR6.3), bảng giá sỉ theo bậc/MOQ (FR6.4), theo dõi giao hàng theo đợt (FR6.5) và cảnh báo khan hiếm nông sản từ AI (FR12.3).
+    \end{itemize}
+
+    \item \textbf{Persona 3: Khách lẻ (người tiêu dùng cá nhân)}
+    \begin{itemize}
+        \item \textit{Nhân vật:} Anh Minh Trí, 29 tuổi, Kỹ sư phần mềm sống tại Quận Bình Thạnh, TP.HCM, đã lập gia đình và có con nhỏ.
+        \item \textit{Đặc điểm số \& Thiết bị:} Sử dụng smartphone thành thạo, thường xuyên mua sắm qua các ứng dụng TMĐT, thanh toán không dùng tiền mặt (VietQR/Ví điện tử).
+        \item \textit{Mục tiêu:} Mua thực phẩm tươi, sạch, an toàn hàng ngày cho gia đình với giá xuất phát từ nông trại (farm-to-table); giao hàng nhanh trong ngày hoặc sáng sớm hôm sau.
+        \item \textit{Điểm đau (Pain points):} Mất niềm tin do hiện tượng rau trôi nổi gắn mác hữu cơ/VietGAP giả; lo sợ hàng tươi bị dập nát, hỏng hóc trong quá trình vận chuyển nhưng khó đổi trả.
+        \item \textit{Kỳ vọng ở Farmery:} Quét mã QR xem chi tiết nhật ký gieo trồng và chứng nhận đã duyệt (FR4.2, FR3.2), hệ thống gợi ý sản phẩm tươi ngon theo mùa (FR12.1), chính sách hoàn tiền/đổi trả rõ ràng khi có sự cố (FR5.4); ở kênh bán lẻ, Farmery là bên bán nên chịu trách nhiệm đổi trả trực tiếp.
+    \end{itemize}
+
+    \item \textbf{Persona 4: Nhân viên thu mua của Farmery (luồng 1P)}
+    \begin{itemize}
+        \item \textit{Nhân vật:} Chị Thu Hà, 27 tuổi, phụ trách thu mua khu vực Lâm Đồng, làm việc chủ yếu tại vùng trồng và kho sơ chế.
+        \item \textit{Đặc điểm số \& Thiết bị:} Dùng laptop tại kho và điện thoại khi đi thực địa; cần thao tác nhanh ngay tại ruộng, nơi sóng yếu.
+        \item \textit{Mục tiêu:} Mua đúng lượng hàng mà kênh bán lẻ tiêu thụ được trong thời hạn bảo quản; giữ biên lợi nhuận dương sau khi trừ hao hụt; duy trì quan hệ lâu dài với các nhà cung cấp tốt.
+        \item \textit{Điểm đau (Pain points):} Phải quyết định số lượng thu mua khi chưa biết chắc nhu cầu --- mua thiếu thì hết hàng, mua thừa thì lỗ trực tiếp; giá nông sản đổi theo ngày nên biên lợi nhuận dễ bị bào mòn giữa lúc mua và lúc bán; khó phát hiện sớm lô nào đang tồn lâu.
+        \item \textit{Kỳ vọng ở Farmery:} Công cụ so sánh chào hàng cùng loại trong kỳ, dự báo giá theo mùa vụ làm căn cứ quyết định (FR12.2), quản lý tồn kho theo lô kèm hạn sử dụng (FR2.3) và cảnh báo sớm lô cận hạn để kịp xả hàng (FR11.2).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Bản đồ hành trình khách hàng (Customer Journey Maps)}
+\label{subsec:customer-journey}
+
+Hành trình trải nghiệm của khách hàng trên Farmery được mô hình hóa qua 5 giai đoạn chính: \textit{Nhận biết/Khám phá $\rightarrow$ Cân nhắc/Thẩm định $\rightarrow$ Giao dịch/Đặt hàng $\rightarrow$ Giao nhận/Nghiệm thu $\rightarrow$ Đánh giá/Tái gắn kết}. Bảng~\ref{tab:customer-journey} mô tả hành vi, điểm chạm và các chức năng liên quan cho hai luồng. Lưu ý khác biệt căn bản: ở luồng bán lẻ, bên bán là chính Farmery nên khách lẻ chỉ giao dịch với một đầu mối; còn ở luồng bán sỉ, khách sỉ giao dịch trực tiếp với từng nhà cung cấp.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{L{2.0cm} L{3.5cm} L{3.5cm} L{4.5cm}}
+\caption{Bản đồ hành trình khách hàng trên hệ thống Farmery}
+\label{tab:customer-journey} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm \& FR liên quan} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm \& FR liên quan} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{1. Khám phá} &
+Tìm nông sản sạch theo danh mục, khu vực hoặc gợi ý cá nhân hóa trên trang chủ (FR12.1). &
+Tìm nhà cung ứng có sản lượng lớn, tra cứu hồ sơ năng lực và chứng chỉ VietGAP/GlobalGAP (FR3.1--FR3.2). &
+\textbf{Touchpoints:} Mobile Web, Trang chủ, Bộ lọc đa tiêu chí (FR4.5), AI Recommendation (FR12.1).\\
+\rowcolor{tblaltbg}
+\textbf{2. Cân nhắc} &
+Xem chi tiết sản phẩm, quét mã QR xem nhật ký canh tác của lô hàng (FR4.2), đọc đánh giá của người mua trước (FR5.5). &
+So sánh bảng giá bậc/MOQ (FR6.4), gửi yêu cầu báo giá (RFQ) riêng biệt (FR6.1). &
+\textbf{Touchpoints:} Trang chi tiết SP, Modal nhật ký GS1/QR (FR4.2), Trình đàm phán RFQ trực tuyến (FR6.2).\\
+\textbf{3. Giao dịch} &
+Chọn khung giờ giao phù hợp hàng tươi, thanh toán qua VietQR hoặc khi nhận hàng (FR7.1), áp dụng mã giảm giá (FR5.3). &
+Thống nhất điều khoản RFQ, ký hợp đồng điện tử (FR6.3), tiền thanh toán đợt 1 được nền tảng giữ trung gian. &
+\textbf{Touchpoints:} Trang thanh toán (FR5.2), Cổng thanh toán (FR7.1), Ví trung gian giữ tiền -- escrow (FR7.3).\\
+\rowcolor{tblaltbg}
+\textbf{4. Giao nhận} &
+Theo dõi tiến độ vận đơn 3PL theo thời gian thực (FR8.1); kiểm tra độ tươi ngon khi nhận hàng; nếu không đạt thì Farmery chịu trách nhiệm đổi trả trực tiếp (FR8.3). &
+Theo dõi nhiều đợt giao trên hợp đồng (FR6.5); kiểm định số lượng/chất lượng tại kho và xác nhận biên bản. &
+\textbf{Touchpoints:} Webhook tracking 3PL (FR8.1), Quản lý đợt giao (FR6.5), Giải ngân tiền giữ trung gian sau khi xác nhận hoàn tất hoặc hết hạn khiếu nại (FR7.3, FR8.3).\\
+\textbf{5. Đánh giá \& Gắn kết} &
+Để lại điểm số, hình ảnh đánh giá sản phẩm (FR5.5); nhận gợi ý mua lại khi đến chu kỳ tiêu thụ (FR12.1). &
+Đánh giá mức độ tuân thủ hợp đồng của nhà cung cấp; tái ký hợp đồng cho mùa vụ mới (FR6.3). &
+\textbf{Touchpoints:} Phân hệ đánh giá và uy tín (FR5.5), thông báo chu kỳ mua lại (FR11.1).\\
+\end{longtable}
+\endgroup
 
 \subsection{Các vấn đề nghiên cứu}
 \label{subsec:vandenghiencuu}
@@ -474,6 +564,52 @@ Dựa trên phân tích đối tượng người dùng (mục~\ref{sec:doituongn
 quy trình nghiệp vụ (mục~\ref{sec:quytrinhnghiepvu}), hệ thống cần đáp ứng các
 nhóm yêu cầu chức năng sau. Các mã FRx.x dùng để đối chiếu 1--1 với use case
 tại mục~\ref{sec:sddchitiet} và phần hiện thực ở Chương~4.
+
+\subsubsection*{Ma trận phân loại mức độ ưu tiên, tính khả thi và kiểm thử của FR}
+\label{subsec:fr-matrix}
+
+Để phục vụ quản lý dự án phần mềm và làm căn cứ lập kế hoạch kiểm thử ở Chương~\ref{chap:hienthuc}, toàn bộ 12 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính cốt lõi: Mức độ ưu tiên (MoSCoW: Must/Should/Could), Tính khả thi kỹ thuật (High/Medium/Challenging) và Phương pháp kiểm thử (Testability) tại Bảng~\ref{tab:fr-matrix}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
+\caption{Ma trận đánh giá Priority, Feasibility và Testability cho các FR}
+\label{tab:fr-matrix} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã FR} & \textbf{Tên chức năng} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Tiêu chí} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã FR} & \textbf{Tên chức năng} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Tiêu chí} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{FR1} & Tài khoản \& RBAC (eKYC, OTP) & Must & High & \textit{Integration / Security Test:} Xác thực OTP qua SMS/Email; phân quyền 5 nhóm người dùng chặn truy cập trái phép 100\%. \\
+\rowcolor{tblaltbg}
+\textbf{FR2} & Gian hàng \& Tồn kho theo lô & Must & High & \textit{Unit / Integration Test:} Thao tác nhập/xuất kho; tính tồn kho khả dụng chính xác sau mỗi đơn. \\
+\textbf{FR3} & Quản lý chứng nhận chất lượng & Must & High & \textit{Functional E2E Test:} Luồng tải lên ảnh chứng chỉ $\rightarrow$ Admin duyệt $\rightarrow$ Hiển thị badge xác minh trên gian hàng. \\
+\rowcolor{tblaltbg}
+\textbf{FR4} & Sản phẩm \& Truy xuất nguồn gốc QR & Must & Medium & \textit{Integration Test:} Sinh mã QR theo định danh GS1; quét QR đọc đúng nhật ký canh tác tương ứng. \\
+\textbf{FR5} & Giao dịch bán lẻ (gian hàng 1P) & Must & Medium & \textit{E2E Test:} Đặt hàng từ gian hàng của nền tảng $\rightarrow$ trừ tồn kho đúng lô $\rightarrow$ sinh đơn kèm phí vận chuyển. \\
+\rowcolor{tblaltbg}
+\textbf{FR6} & Bán sỉ B2B (RFQ, Hợp đồng, Đợt giao) & Must & Medium & \textit{Integration / State Test:} Quy trình RFQ chuyển trạng thái hợp lệ; sinh hợp đồng PDF và theo dõi đợt giao. \\
+\textbf{FR7} & Thanh toán đa kênh \& Ký quỹ Escrow & Must & Medium & \textit{Integration Test (Sandbox):} Tạo mã VietQR tự động; webhook cập nhật trạng thái thanh toán và khóa tiền escrow. \\
+\rowcolor{tblaltbg}
+\textbf{FR8} & Vận chuyển 3PL \& Xử lý khiếu nại & Should & Medium & \textit{API Integration Test:} Tính cước tự động theo tọa độ/khối lượng; webhook cập nhật hành trình vận đơn. \\
+\textbf{FR9} & Chat nội bộ \& Wishlist & Could & High & \textit{E2E / WebSocket Test:} Tin nhắn tức thời giữa Người mua và Shop có độ trễ $< 500$ms. \\
+\rowcolor{tblaltbg}
+\textbf{FR10} & Quản trị hệ thống \& Dashboard & Must & High & \textit{Functional / Security Test:} Admin kiểm duyệt, khóa tài khoản vi phạm; dashboard thống kê doanh thu toàn sàn. \\
+\textbf{FR11} & Thông báo đa kênh (App/Email/SMS) & Should & High & \textit{Integration Test:} Bắn notification khi đơn hàng đổi trạng thái; gửi email cảnh báo hết hạn chứng nhận. \\
+\rowcolor{tblaltbg}
+\textbf{FR12.1} & AI Gợi ý sản phẩm cá nhân hóa & Should & Challenging & \textit{Data Test / A/B Test:} Đo lường CTR uplift danh sách gợi ý so với sản phẩm mới nhất ($> 20\%$). \\
+\textbf{FR12.2} & AI Dự báo giá \& Nhu cầu mùa vụ & Could & Challenging & \textit{Model Evaluation:} Đo lường sai số dự báo trên dữ liệu chuỗi thời gian kiểm thử (MAPE $< 20\%$). \\
+\end{longtable}
+\endgroup
 
 \subsubsection*{FR1: Quản lý tài khoản \& phân quyền}
 \begin{itemize}
@@ -628,8 +764,6 @@ Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
     dựa trên lịch sử tìm kiếm/mua hàng.
     \item \textbf{FR12.2:} Dự báo nhu cầu và xu hướng giá theo mùa vụ, hỗ
     trợ nông dân/HTX và doanh nghiệp thu mua lập kế hoạch.
-    \item \textbf{FR12.3:} Trợ lý ảo hỗ trợ người dùng ít rành công nghệ
-    (đặc biệt nhóm nông dân/HTX) thao tác trên hệ thống.
 \end{itemize}
 
 
@@ -696,7 +830,7 @@ Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
     \item \textbf{NFR6.1:} Giao diện đơn giản, hướng dẫn rõ ràng cho nhóm
     nông dân/HTX (mục~\ref{sec:doituongnguoidung}), ưu tiên hiển thị tốt
     trên thiết bị di động.
-    \item \textbf{NFR6.2:} Có hỗ trợ trợ lý ảo (liên hệ FR12.3) để giảm rào
+    \item \textbf{NFR6.2:} Có kênh hỗ trợ trực tiếp từ đội ngũ vận hành để giảm rào
     cản thao tác cho người dùng ít quen thuộc với công nghệ.
     \item \textbf{NFR6.3:} Luồng đăng bán sản phẩm và ghi nhật ký canh tác
     được thiết kế tối giản, giảm số bước nhập liệu.
@@ -729,6 +863,46 @@ Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
     truy xuất --- liên hệ mục~\ref{subsec:gs1blockchain}.
 \end{itemize}
 
+\subsubsection*{Ma trận phân loại Priority, Feasibility và Testability cho các NFR}
+\label{subsec:nfr-matrix}
+
+Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi và cơ chế kiểm thử cho 9 nhóm yêu cầu phi chức năng:
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
+\caption{Ma trận Priority, Feasibility và Testability cho NFR}
+\label{tab:nfr-matrix} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã NFR} & \textbf{Tiêu chí đo lường} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Công cụ} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã NFR} & \textbf{Tiêu chí đo lường} & \textbf{Priority} & \textbf{Feasibility} & \textbf{Phương pháp kiểm thử \& Công cụ} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{NFR1.1} & Thời gian đáp ứng p95 $< 2$ giây & Must & High & \textit{Load Testing:} Công cụ k6/JMeter mô phỏng truy vấn duyệt web thông thường. \\
+\rowcolor{tblaltbg}
+\textbf{NFR1.2} & Tỷ lệ bán vượt tồn kho (Oversell) = 0\% & Must & Medium & \textit{Concurrency Testing:} 50 luồng đồng thời tranh mua 10 sản phẩm cuối cùng; kiểm tra khóa bi quan (Pessimistic lock). \\
+\textbf{NFR2.1} & Kiến trúc mở rộng vai trò không lỗi & Should & High & \textit{Regression Testing:} Chạy lại bộ kiểm thử tự động đạt 100\% PASS khi gắn thêm module mới. \\
+\rowcolor{tblaltbg}
+\textbf{NFR2.2} & Chịu tải 100 người dùng đồng thời & Must & Medium & \textit{Stress Testing:} Kịch bản k6 tạo 100 CCU đặt hàng; tỷ lệ lỗi HTTP $< 1\%$. \\
+\textbf{NFR3.1} & Phân quyền RBAC tuyệt đối 100\% & Must & High & \textit{Security Audit Test:} Script gọi tự động 100\% endpoint nhạy cảm bằng tài khoản không có quyền $\rightarrow$ Trả về lỗi 403. \\
+\rowcolor{tblaltbg}
+\textbf{NFR3.2} & Mã hóa dữ liệu định danh (PII) & Must & High & \textit{Database Inspection:} Rà soát bảng dữ liệu đảm bảo không lưu số CCCD/MST dưới dạng plaintext. \\
+\textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
+\rowcolor{tblaltbg}
+\textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Khảo sát thực tế với nhóm đối tượng nông dân theo thang đo SUS. \\
+\textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\
+\end{longtable}
+\endgroup
+
 \subsubsection*{Ngưỡng đo lường và căn cứ}
 \label{subsec:nguongNFR}
 
@@ -744,22 +918,39 @@ không xuất hiện trong bảng đó.
 \subsection{Yêu cầu dữ liệu}
 \label{subsec:yeucaudulieu}
 
-\noindent\textbf{Dữ liệu cần quản lý:}
+Hệ thống sàn thương mại điện tử nông nghiệp Farmery vận hành theo mô hình B2B2C, đòi hỏi xử lý song song các luồng dữ liệu thương mại tức thời, dữ liệu chuỗi cung ứng bất biến và dữ liệu phục vụ phân tích/học máy. Mục này xác lập các yêu cầu dữ liệu chuẩn tắc làm cơ sở trực tiếp cho thiết kế cơ sở dữ liệu chi tiết tại mục~\ref{sec:csdl}.
+
+\subsubsection*{1. Phân loại các miền dữ liệu (Data Domains)}
 \begin{itemize}
-    \item \textbf{Người dùng và phân quyền:} thông tin định danh, vai trò RBAC, hồ sơ doanh nghiệp (MST, GPKD) và thành viên nội bộ.
-    \item \textbf{Nhà cung cấp và truy xuất nguồn gốc:} gian hàng, kết quả eKYC, chứng nhận kèm hạn hiệu lực, sản phẩm, bảng giá sỉ, lô hàng, mã QR và nhật ký canh tác theo lô.
-    \item \textbf{Giao dịch:} giỏ hàng, đơn hàng chính/con, RFQ và lịch sử đàm phán, hợp đồng, đợt giao, thanh toán và trạng thái tạm giữ tiền.
-    \item \textbf{Vận hành:} vận chuyển và lịch sử trạng thái, khiếu nại, đánh giá, điểm uy tín, tin nhắn, thông báo.
-    \item \textbf{Quản trị và AI:} nhật ký thao tác quản trị, vi phạm, cảnh báo do luật ngưỡng kích hoạt; lịch sử gợi ý, kết quả dự báo và phản hồi của người dùng làm dữ liệu huấn luyện lại.
+    \item \textbf{Dữ liệu định danh và phân quyền (IAM):} thông tin tài khoản, mã băm mật khẩu, thông tin liên lạc đã xác thực OTP, vai trò RBAC, hồ sơ doanh nghiệp (mã số thuế, giấy phép kinh doanh) và hồ sơ eKYC của nhà cung cấp.
+    \item \textbf{Dữ liệu danh mục và sản phẩm:} cây danh mục nông sản đa cấp đóng, đơn vị tính hợp lệ theo danh mục, giá bán lẻ, bảng giá sỉ theo bậc sản lượng, thông tin vùng trồng và mùa vụ.
+    \item \textbf{Dữ liệu truy xuất nguồn gốc và chứng nhận:} định danh lô sản xuất, nhật ký canh tác theo mốc thời gian (gieo giống, xử lý phân bón và thuốc bảo vệ thực vật, thu hoạch), hồ sơ chứng nhận chất lượng kèm cơ quan cấp và thời hạn hiệu lực, mã QR định danh theo nguyên lý GS1.
+    \item \textbf{Dữ liệu thu mua (luồng 1P):} chào hàng của nhà cung cấp, đơn thu mua theo lô, kết quả nghiệm thu chất lượng khi nhập kho, giá vốn và tỷ lệ hao hụt thực tế theo từng lô.
+    \item \textbf{Dữ liệu giao dịch thương mại:} giỏ hàng phiên và đơn bán lẻ; yêu cầu báo giá (RFQ), lịch sử đàm phán, hợp đồng điện tử và biên bản giao nhận theo đợt ở luồng bán sỉ; giao dịch thanh toán và trạng thái tạm giữ tiền.
+    \item \textbf{Dữ liệu vận chuyển và tồn kho:} sổ địa chỉ giao nhận, vận đơn tích hợp đơn vị vận chuyển thứ ba, lịch sử trạng thái hành trình, tồn kho theo lô kèm hạn sử dụng theo nguyên tắc FEFO và phiếu khiếu nại chất lượng.
+    \item \textbf{Dữ liệu uy tín và tương tác:} điểm đánh giá, nội dung nhận xét, hình ảnh thực tế khi nhận hàng, điểm uy tín tổng hợp của nhà cung cấp tính theo trọng số thời gian, nhật ký tin nhắn hỗ trợ.
+    \item \textbf{Dữ liệu phân tích và học máy:} nhật ký sự kiện hành vi (clickstream, từ khóa tìm kiếm, lượt thêm giỏ); chuỗi time series lịch sử giá và sản lượng theo vùng; cảnh báo do luật ngưỡng sinh ra kèm phán quyết của quản trị viên, tích lũy làm nhãn cho giai đoạn sau.
+    \item \textbf{Dữ liệu quản trị và lưu vết:} nhật ký thao tác quản trị, hồ sơ vi phạm và quyết định xử lý kèm lý do.
 \end{itemize}
 
-\noindent\textbf{Ràng buộc đối với dữ liệu:}
+\subsubsection*{2. Ràng buộc toàn vẹn và chất lượng dữ liệu}
 \begin{itemize}
-    \item Dữ liệu định danh nhạy cảm (CCCD, MST, tài khoản ngân hàng) phải được mã hóa khi lưu trữ (NFR3.2).
-    \item Nhật ký canh tác và chứng nhận đã công khai không được sửa hoặc xóa trực tiếp; mọi đính chính lưu thành bản ghi mới có lý do (NFR9.1).
-    \item Số liệu tồn kho và số dư phải nhất quán trong phạm vi một giao dịch cơ sở dữ liệu (NFR4.1).
-    \item Mọi quyết định quản trị phải truy vết được người thực hiện và lý do.
-    \item Dữ liệu được sao lưu tối thiểu mỗi ngày (NFR4.2).
+    \item \textbf{Ràng buộc nhất quán giao dịch (ACID):} Mọi thao tác biến động số dư ký quỹ hoặc trừ kho hàng khi đặt hàng bắt buộc phải thực thi trong cùng một transaction; số lượng tồn kho khả dụng không được phép mang giá trị âm ($AvailableQty \ge 0$).
+    \item \textbf{Tính bất biến của dữ liệu truy xuất (Append-only):} Nhật ký canh tác và chứng chỉ chất lượng một khi đã được quản trị viên phê duyệt công khai không được phép sửa đổi hoặc xóa trực tiếp. Mọi bổ sung, đính chính phải được ghi nhận dưới dạng bản ghi mới (versioning) kèm định danh người sửa và lý do.
+    \item \textbf{Toàn vẹn giá vốn và doanh thu (luồng 1P):} mỗi đơn bán lẻ phải truy được về đúng lô đã thu mua, để đối chiếu giá bán với giá vốn và tỷ lệ hao hụt thực tế của lô đó.
+\end{itemize}
+
+\subsubsection*{3. Bảo mật, quyền riêng tư và vòng đời dữ liệu}
+\begin{itemize}
+    \item \textbf{Tuân thủ Nghị định 13/2023/NĐ-CP về dữ liệu cá nhân:} Dữ liệu nhạy cảm (số CCCD, tài khoản ngân hàng, mã số thuế) phải được mã hóa ở mức lưu trữ (Encryption at Rest) bằng thuật toán AES-256. Mật khẩu người dùng được băm một chiều bằng Bcrypt (cost factor $\ge 10$).
+    \item \textbf{Không lưu trữ thông tin thẻ thanh toán:} Tuyệt đối không lưu trữ số thẻ tín dụng/CVV trên hệ thống Farmery; toàn bộ luồng thanh toán ủy quyền qua cổng trung gian đạt chuẩn PCI-DSS (NFR3.4).
+    \item \textbf{Vòng đời và sao lưu dữ liệu (Backup \& Archiving):} Thực hiện snapshot CSDL tự động định kỳ 24 giờ một lần (RPO $\le 24$h, RTO $\le 4$h). Dữ liệu giao dịch hoàn tất sau 1 năm được chuyển sang phân vùng lưu trữ lạnh (Cold storage) để tối ưu hiệu năng truy vấn cho bảng hoạt động.
+\end{itemize}
+
+\subsubsection*{4. Yêu cầu dữ liệu cho các mô-đun AI}
+\begin{itemize}
+    \item \textbf{Xử lý bài toán thiếu dữ liệu khởi đầu (Cold-start):} Mô hình gợi ý sản phẩm phải kết hợp đặc trưng nông sản tĩnh (vùng miền, mùa vụ, chứng nhận OCOP/VietGAP) với lọc cộng tác (collaborative filtering) để gợi ý được ngay cho người dùng mới chưa có lịch sử mua sắm.
+    \item \textbf{Chuẩn hóa chuỗi thời gian dự báo giá:} Dữ liệu giá nông sản cần được nội suy làm sạch giá trị khuyết (missing data), làm mịn dữ liệu đột biến do thời tiết cực đoan và gắn nhãn theo tuần/tháng.
 \end{itemize}
 Đặc tả chi tiết các thực thể và quan hệ được trình bày tại mục~\ref{sec:csdl}.
 

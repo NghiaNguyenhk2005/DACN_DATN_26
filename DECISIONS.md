@@ -467,3 +467,41 @@ kết thúc: `KH.` cho Kế hoạch thực hiện, `PL.` cho Phụ lục. Nay ra
 `\textfloatsep` 10pt, `\floatsep` 8pt, `\abovecaptionskip` 5pt,
 `\belowcaptionskip` 2pt. Mặc định của lớp `report` rộng gấp đôi, gây cảm giác
 trang bị loãng ở những chỗ có nhiều hình liên tiếp như mục lưu đồ quy trình.
+
+### Ghép commit của thành viên khác và xử lý số liệu đánh giá chưa đo — 2026-09-23
+**Bối cảnh:** Commit `3e8a115` của dungpham2005 bổ sung customer persona, customer
+journey, ma trận Priority/Feasibility/Testability cho FR và NFR, yêu cầu dữ liệu, và
+một Chương 7 hoàn chỉnh với số liệu cụ thể. Commit này đụng đúng hai file đang sửa
+nặng trong phiên.
+**Kết quả rà soát trước khi ghép:**
+- Mã FR/NFR: 35 mã được trích dẫn, chỉ 2 mã gãy (FR7.4, FR12.4). Nguy hiểm hơn là
+  FR12.3 vẫn tồn tại nhưng đã đổi nghĩa, nên trích dẫn sai mà LaTeX không báo lỗi.
+- 18 chỗ còn bám mô hình 3P cũ: split-order đa shop, công nợ Net 15/Net 30, thành
+  viên nội bộ doanh nghiệp.
+- Chương 7 có 10/10 chỉ số đều đạt ngưỡng, trong đó một phép tính không khớp (CTR
+  8,4% so với 6,6% cho ra 27,3% chứ không phải 26,5% như ghi), và MAPE 16,8% tức
+  vượt cả công trình đối chứng Farm2Market. Trong khi đó Chương 6 Hiện thực còn 15
+  dòng TODO và 0 dòng nội dung thật.
+**Quyết định (user xác nhận số liệu là dự kiến, chưa đo):**
+- Giữ toàn bộ phương pháp và công cụ đánh giá họ chọn (k6, SUS, Lighthouse, kiểm thử
+  tranh chấp, security audit) vì đều là lựa chọn hợp lý; chuyển Chương 7 về dạng mô
+  tả phương pháp kèm ô trống chờ điền, bỏ hết số liệu chưa đo.
+- Bổ sung vào phần kết chương lời nhắc phải nêu cả chỉ số chưa đạt ngưỡng --- đây là
+  phần hội đồng quan tâm hơn danh sách chỉ số đã đạt.
+- Ghép đủ 4 khối nội dung ở Chương 4, sửa cho khớp mô hình hai luồng, thêm persona
+  thứ tư cho bộ phận thu mua (luồng 1P) vốn họ chưa có.
+**Cách làm git:** commit toàn bộ việc của phiên trước (3 commit), rồi merge để giữ
+quyền tác giả của họ trong lịch sử, thay vì chép tay.
+
+### Bỏ mô-đun trợ lý ảo khỏi phạm vi — 2026-09-23
+**Quyết định:** AI từ 3 mô-đun xuống 2, chỉ còn gợi ý sản phẩm và dự báo giá.
+**Hệ quả đã xử lý đồng bộ:** bỏ mục lý thuyết chatbot ở Ch.2; bỏ FR12.3 và sửa
+NFR6.2 (đổi từ trợ lý ảo sang kênh hỗ trợ trực tiếp từ đội vận hành); bỏ phần đối
+sánh LLM/RAG và mục kiến trúc chatbot ở Ch.5; bỏ dòng ngưỡng chatbot ở Phụ lục L và
+dòng đối sánh ở Phụ lục I; bỏ cơ sở tri thức chatbot khỏi yêu cầu dữ liệu; bỏ LLM,
+RAG, NLP khỏi danh mục từ viết tắt.
+**Ảnh hưởng tới lập luận chọn PostgreSQL:** trước đây PostgreSQL được chọn vì gom
+được bốn nhu cầu, trong đó có vector search phục vụ RAG của chatbot. Bỏ chatbot thì
+nhu cầu đó biến mất, nên lập luận rút còn ba nhu cầu: transaction có row-level
+locking, dữ liệu không gian, và JSON có chỉ mục. Lập luận vẫn đứng vững vì
+row-level locking mới là lý do cốt lõi.

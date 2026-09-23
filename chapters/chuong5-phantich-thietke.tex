@@ -87,11 +87,10 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 \noindent\textbf{Framework --- phương án chọn: NestJS trên nền Node.js và TypeScript.} Các ứng viên gồm NestJS, Spring Boot, Django hoặc FastAPI, và Laravel. NestJS được chọn vì dùng chung ngôn ngữ TypeScript với phần giao diện, nhờ đó giảm một lần học và cho phép chia sẻ định nghĩa kiểu dữ liệu giữa hai phía; cấu trúc chia theo mô-đun cùng cơ chế guard kiểm soát quyền truy cập có sẵn cũng phù hợp trực tiếp với mô hình phân quyền nhiều vai trò của Farmery (mục~\ref{sec:doituongnguoidung}).
 
-\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được bốn nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
+\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được ba nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
 \begin{itemize}
     \item \textbf{Transaction có row-level locking} --- cần thiết để chống bán vượt tồn kho khi cùng một lô hàng được giao dịch song song ở hai luồng (NFR4.1). Đây là ràng buộc kỹ thuật khó nhất của hệ thống, và cơ sở dữ liệu hướng tài liệu như MongoDB xử lý kém hơn hẳn.
     \item \textbf{Dữ liệu không gian (PostGIS)} --- phục vụ quản lý vùng trồng và tính bán kính giao hàng, khớp trực tiếp với phạm vi không gian đã xác định tại mục~\ref{sec:phamvi}.
-    \item \textbf{Vector search} --- phục vụ cơ sở tri thức của trợ lý ảo, nhờ đó không phải dựng thêm một cơ sở dữ liệu vector riêng.
     \item \textbf{Kiểu dữ liệu JSON có đánh chỉ mục} --- phù hợp với nhật ký canh tác, vốn có tập trường khác nhau giữa từng loại cây trồng.
 \end{itemize}
 
@@ -105,13 +104,11 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 \subsection{Thuật toán, công nghệ và mô hình AI}
 
-Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ riêng viết bằng Python với khung FastAPI, do toàn bộ thư viện học máy cần dùng đều thuộc hệ sinh thái Python. Việc lựa chọn mô hình cho từng mô-đun bám theo ngưỡng chất lượng đã đặt tại Bảng~\ref{tab:nguongAI}; bảng đối sánh chi tiết các hướng tiếp cận nằm tại Phụ lục I.
+Hai mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ riêng viết bằng Python với khung FastAPI, do toàn bộ thư viện học máy cần dùng đều thuộc hệ sinh thái Python. Việc lựa chọn mô hình cho từng mô-đun bám theo ngưỡng chất lượng đã đặt tại Bảng~\ref{tab:nguongAI}; bảng đối sánh chi tiết các hướng tiếp cận nằm tại Phụ lục I.
 
 \noindent\textbf{Gợi ý sản phẩm --- phương án chọn: mô hình hybrid giữa content-based filtering và collaborative filtering.} Các hướng được cân nhắc gồm collaborative filtering thuần túy, content-based filtering thuần túy, mô hình hybrid, và các mô hình mạng nơ-ron. Vấn đề quyết định là hiện tượng cold start đã nêu tại NC4: một nền tảng mới chưa có lịch sử tương tác, nên collaborative filtering thuần túy không hoạt động được ở giai đoạn đầu. Mô hình hybrid cho phép dựa vào đặc trưng sẵn có của nông sản --- mùa vụ, vùng trồng, loại chứng nhận, danh mục --- ngay từ khi chưa có dữ liệu hành vi, rồi tăng dần trọng số của thành phần collaborative filtering khi dữ liệu tích lũy.
 
 \noindent\textbf{Dự báo giá --- phương án chọn: mô hình time series có thành phần mùa vụ (ARIMA, SARIMA, Prophet), đối chứng với mô hình gradient boosting.} Các hướng được cân nhắc gồm mô hình thống kê cổ điển (ARIMA, SARIMA), mô hình gradient boosting trên đặc trưng thời gian, và mạng nơ-ron hồi quy (RNN, LSTM). Các mô hình học sâu bị loại ở giai đoạn này vì chúng đòi hỏi lượng dữ liệu lớn hơn nhiều so với những gì có thể thu thập được; với chuỗi time series ngắn nhưng có tính mùa vụ rõ --- đúng đặc điểm giá nông sản --- mô hình thống kê thường cho kết quả tốt hơn mà lại dễ giải thích. Đây là một đánh đổi có ý thức: chọn mô hình đơn giản hơn nhưng kiểm chứng được, thay vì mô hình phức tạp hơn nhưng không đủ dữ liệu để đánh giá.
-
-\noindent\textbf{Trợ lý ảo --- phương án chọn: LLM kết hợp RAG (Retrieval-Augmented Generation).} Các hướng được cân nhắc gồm intent classification theo cách cổ điển, LLM dùng trực tiếp, và LLM kết hợp RAG (Retrieval-Augmented Generation) từ dữ liệu của chính nền tảng. Hướng thứ nhất đòi hỏi công sức gán nhãn và bảo trì tập intent rất lớn. Hướng thứ hai có nguy cơ sinh ra hallucination về chính sách và sản phẩm --- rủi ro nghiêm trọng với nhóm nông dân vốn đã e ngại công nghệ. Hướng thứ ba khắc phục được cả hai: câu trả lời luôn dựa trên tài liệu thật của nền tảng gồm dữ liệu sản phẩm, thông tin truy xuất nguồn gốc và điều khoản dịch vụ, đồng thời tận dụng được năng lực hiểu tiếng Việt của LLM.
 
 \noindent\textbf{Giám sát bất thường} không dùng mô hình học máy trong phạm vi đồ án mà hiện thực bằng các luật ngưỡng do quản trị viên cấu hình, với lý do đã phân tích tại Chương~\ref{chap:coso}.
 
@@ -194,7 +191,7 @@ riêng theo ràng buộc RB3:
     \item \textbf{Giao dịch bán sỉ} (FR6) --- bảng giá bậc, yêu cầu báo giá, lịch sử thương lượng, hợp đồng, đợt giao hàng.
     \item \textbf{Vận chuyển và khiếu nại} (FR8) --- vận đơn, mốc hành trình, khiếu nại và phán quyết.
     \item \textbf{Tương tác và thông báo} (FR9, FR11) --- đánh giá, phản hồi của nhà cung cấp, tin nhắn, thông báo.
-    \item \textbf{Hỗ trợ AI} (FR12) --- sự kiện hành vi, kết quả gợi ý, kết quả dự báo, hội thoại trợ lý ảo.
+    \item \textbf{Hỗ trợ AI} (FR12) --- sự kiện hành vi, kết quả gợi ý và kết quả dự báo.
     \item \textbf{Quản trị, vi phạm và lưu vết} (FR10, NFR9.1) --- hồ sơ vi phạm, cảnh báo do luật ngưỡng sinh ra, nhật ký thao tác quản trị.
 \end{enumerate}
 
@@ -227,12 +224,12 @@ tính năng AI, cùng nhóm bảng quản trị/lưu vết vi phạm.
 \subsubsection*{Luồng dữ liệu tổng thể}
 
 % TODO: nhóm bổ sung sơ đồ kiến trúc cụ thể (\includegraphics) minh họa luồng mô tả dưới đây, và chốt công nghệ/mô hình dùng cho từng bước khi hiện thực (mục~\ref{sec:hienthucAI}).
-Cả ba mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng dữ liệu chung gồm 5 bước:
+Cả hai mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng dữ liệu chung gồm 5 bước:
 \begin{enumerate}
     \item \textbf{Thu thập}: ghi nhận sự kiện từ các quy trình nghiệp vụ (lượt xem/mua sản phẩm, đơn hàng, đánh giá, hành vi hủy đơn) vào kho dữ liệu.
     \item \textbf{Tiền xử lý}: làm sạch, chuẩn hóa và trích xuất đặc trưng (feature engineering) theo từng bài toán.
-    \item \textbf{Huấn luyện/suy luận}: huấn luyện định kỳ (batch, ví dụ theo tuần) đối với mô hình gợi ý/dự báo, hoặc suy luận theo thời gian thực (online inference) đối với phát hiện bất thường và chatbot.
-    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang chủ, trang quản trị, trợ lý ảo).
+    \item \textbf{Huấn luyện và suy luận}: huấn luyện định kỳ theo lô (batch, ví dụ mỗi tuần) cho cả hai mô-đun; riêng phần gợi ý có thêm bước suy luận trực tuyến (online inference) để phản hồi ngay theo phiên duyệt của người dùng.
+    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang chủ, trang quản trị).
     \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (có nhấp vào gợi ý không, đánh giá đúng/sai của quản trị viên với cảnh báo gian lận) để làm dữ liệu huấn luyện lại, cải thiện mô hình theo thời gian.
 \end{enumerate}
 
@@ -240,24 +237,13 @@ Danh sách dưới đây tóm tắt đầu vào/đầu ra riêng của từng m�
 \begin{itemize}
     \item \textbf{Gợi ý sản phẩm}: đầu vào là lịch sử tương tác/mua hàng của người dùng và đặc trưng sản phẩm (danh mục, vùng trồng, mùa vụ); đầu ra là danh sách sản phẩm được xếp hạng theo mức độ phù hợp, hiển thị tại trang chủ và trang sản phẩm liên quan.
     \item \textbf{Dự báo nhu cầu/giá}: đầu vào là dữ liệu lịch sử đơn hàng, sản lượng theo mùa vụ và vùng trồng; đầu ra là ước lượng nhu cầu/giá cho giai đoạn tới, hiển thị cho nhà cung cấp như gợi ý kế hoạch sản xuất và cho quản trị viên như dữ liệu cảnh báo dư cung/khan hiếm.
-    \item \textbf{Trợ lý ảo}: đầu vào là câu hỏi của người dùng cùng ngữ cảnh tài khoản; đầu ra là câu trả lời dựa trên cơ sở tri thức của nền tảng, hoặc chuyển tiếp sang nhân sự hỗ trợ khi độ tin cậy thấp (chi tiết tại mục dưới).
 \end{itemize}
 
 \subsubsection*{Ngưỡng chất lượng mục tiêu}
 \label{subsec:nguongAI}
 
-Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: mức tăng click-through rate (CTR) so với danh sách baseline cho gợi ý sản phẩm, MAPE cho dự báo giá, và ngưỡng độ tin cậy intent recognition cho trợ lý ảo. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
+Vì cả hai mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: mức tăng click-through rate (CTR) so với danh sách baseline cho gợi ý sản phẩm, và MAPE cho dự báo giá. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
 
-
-\subsubsection*{Kiến trúc trợ lý ảo (chatbot)}
-
-Dựa trên phân loại task-oriented/open-domain tại Chương~\ref{chap:coso}, trợ lý ảo Farmery được thiết kế theo kiến trúc task-oriented gồm ba thành phần chính:
-\begin{itemize}
-    \item \textbf{Intent recognition (intent recognition)}: phân loại câu hỏi của người dùng vào một tập intent giới hạn theo miền nghiệp vụ (ví dụ: tra cứu đơn hàng, hỏi truy xuất nguồn gốc, hướng dẫn đăng sản phẩm, hỏi chính sách đổi trả), trích xuất thực thể liên quan (mã đơn hàng, mã lô sản phẩm).
-    \item \textbf{Cơ sở tri thức}: tổng hợp từ dữ liệu sản phẩm/chứng nhận/truy xuất nguồn gốc đang có trên nền tảng, nội dung Điều khoản dịch vụ (Phụ lục D) và các câu hỏi thường gặp theo từng vai trò người dùng (mục~\ref{sec:doituongnguoidung}).
-    \item \textbf{Sinh phản hồi và chuyển tiếp}: sinh câu trả lời dựa trên ý định và cơ sở tri thức đã khớp; khi độ tin cậy intent recognition thấp hoặc câu hỏi nằm ngoài tập intent đã huấn luyện, hệ thống chuyển tiếp (escalate) sang nhân sự CSKH thật (mục~\ref{sec:luongtiepcan}) kèm theo lịch sử hội thoại để tránh người dùng phải lặp lại câu hỏi.
-\end{itemize}
-Với nhóm nông dân/HTX ít rành công nghệ (mục~\ref{sec:doituongnguoidung}), giao diện hội thoại ưu tiên câu trả lời ngắn, gợi ý sẵn các lựa chọn bấm thay vì bắt buộc gõ văn bản tự do, và hỗ trợ giọng nói/ngôn ngữ địa phương khi khả thi.
 
 \subsection{Thiết kế API}
 % TODO: danh sách endpoint chính theo nhóm FR (phương thức, đường dẫn, quyền truy cập RBAC, dữ liệu vào/ra); document hóa theo OpenAPI/Swagger (NFR5.2).
@@ -283,5 +269,5 @@ Với nhóm nông dân/HTX ít rành công nghệ (mục~\ref{sec:doituongnguoid
 
 \section{Kết chương}
 
-Chương này đã mô hình hóa tám quy trình nghiệp vụ bằng lưu đồ, trình bày thiết kế cơ sở dữ liệu tám nhóm thực thể, thiết kế ba mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
+Chương này đã mô hình hóa tám quy trình nghiệp vụ bằng lưu đồ, trình bày thiết kế cơ sở dữ liệu tám nhóm thực thể, thiết kế hai mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
 % TODO: cập nhật kết chương sau khi hoàn thiện use case, giải pháp công nghệ, kiến trúc, sitemap, lược đồ tuần tự/lớp, API, UI/UX và test case.

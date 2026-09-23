@@ -69,7 +69,7 @@ RPO 24 giờ là mức tối thiểu chấp nhận được trong phạm vi đ�
 Dùng chính danh sách FRx.x đã đặc tả làm checklist đối chiếu, tránh bỏ sót tài liệu cho các endpoint ít được chú ý nhưng vẫn được module khác/đội vận hành sử dụng. \\
 \rowcolor{tblaltbg}
 \textbf{NFR6.1--6.3} &
-Trong usability test (usability test) với đại diện nhóm nông dân/HTX (mục~\ref{sec:danhgiaux}), task completion rate (task completion rate) cho luồng đăng bán sản phẩm và ghi nhật ký canh tác đạt tối thiểu 80\%, không cần người quan sát hỗ trợ trực tiếp. &
+Trong usability test với đại diện nhóm nông dân/HTX (mục~\ref{sec:danhgiaux}), task completion rate cho luồng đăng bán sản phẩm và ghi nhật ký canh tác đạt tối thiểu 80\%, không cần người quan sát hỗ trợ trực tiếp. &
 80\% là ngưỡng thường dùng để coi một luồng thao tác là ``đủ khả dụng'' trong kiểm thử usability với cỡ mẫu nhỏ, phù hợp quy mô khảo sát khả thi của một đồ án. \\
 \textbf{NFR7.1} &
 100\% tích hợp với bên thứ ba (đơn vị vận chuyển 3PL, cổng thanh toán) thực hiện qua REST API có tài liệu; mỗi lần gọi có thời gian chờ tối đa 5 giây và có cơ chế thử lại khi gặp lỗi tạm thời. &
@@ -110,8 +110,5 @@ Click-through rate (CTR) vào danh sách gợi ý cá nhân hóa cao hơn tối 
 \textbf{Dự báo giá} &
 MAPE (Mean Absolute Percentage Error) dưới 20\% trên tập kiểm tra tách theo thời gian (time-based split), tương đương độ chính xác từ khoảng 80\% trở lên. Đo trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng. &
 Đặt thấp hơn một chút so với mức khoảng 82\% Farm2Market (2025) công bố cho bài toán dự báo giá nông sản tương tự \parencite{farm2market_2025}, do đây là công trình nghiên cứu học thuật có thể đã tối ưu trên bộ dữ liệu chọn lọc; 80\% là mục tiêu khả thi, kiểm chứng được trong phạm vi đồ án và vẫn đủ hữu ích để hỗ trợ ra quyết định. \\
-\textbf{Trợ lý ảo (chatbot)} &
-Ngưỡng độ tin cậy intent recognition (intent confidence) tối thiểu 70\% để hệ thống tự trả lời; dưới ngưỡng này, hội thoại được chuyển tiếp (escalate) sang nhân sự CSKH thật (mô tả tại mục dưới). &
-70\% là điểm cân bằng giữa hai rủi ro đối lập: ngưỡng quá thấp khiến chatbot trả lời sai ý định, gây mất lòng tin với nhóm nông dân/HTX vốn e ngại công nghệ (mục~\ref{sec:doituongnguoidung}); ngưỡng quá cao khiến phần lớn câu hỏi bị escalate không cần thiết, làm mất giá trị tự động hóa (NFR6.2). \\
 \end{longtable}
 \endgroup

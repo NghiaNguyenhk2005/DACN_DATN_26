@@ -183,10 +183,6 @@ Một sàn giao dịch luôn cần cơ chế phát hiện các dấu hiệu bấ
 
 Tuy nhiên, các kỹ thuật này đòi hỏi hai điều kiện mà một nền tảng mới chưa có: lưu lượng giao dịch thật đủ lớn để học được thế nào là ``bình thường'', và tập nhãn các trường hợp gian lận đã xác nhận để đo được chất lượng mô hình. Thiếu cả hai, mô hình học máy sẽ không kiểm chứng được bằng số đo --- mâu thuẫn với mục tiêu đánh giá đặt ra tại mục~\ref{sec:muctieudanhgia}. Vì vậy trong phạm vi đồ án, Farmery dùng \emph{luật ngưỡng} do quản trị viên cấu hình (ví dụ: số đánh giá năm sao từ cùng một người mua trong khoảng thời gian ngắn, tỷ lệ hủy đơn vượt mức, giá lệch quá một biên độ so với trung vị danh mục) làm lớp cảnh báo sơ bộ trước khi quản trị viên xem xét thủ công. Việc thay thế lớp luật ngưỡng này bằng mô hình học máy được đặt ở hướng phát triển (Chương~\ref{chap:ketluan}), khi nền tảng đã tích lũy đủ dữ liệu vận hành và nhãn từ chính phản hồi của quản trị viên.
 
-\subsection{Trợ lý ảo / chatbot hỗ trợ tư vấn}
-Trợ lý ảo dựa trên xử lý ngôn ngữ tự nhiên (NLP) là một dạng hệ thống hội thoại (dialogue system); theo Jurafsky và Martin, các hệ thống này thường được phân theo hai kiến trúc chính: chatbot hướng mục tiêu (task-oriented, dùng để hoàn thành một tác vụ cụ thể như tra cứu đơn hàng) và chatbot trò chuyện mở (open-domain), trong đó phần lớn trợ lý ảo thương mại điện tử thuộc nhóm task-oriented với một tập intent (intent) và cơ sở tri thức giới hạn theo miền nghiệp vụ \parencite{jurafsky2023dialogue}. Với Farmery, trợ lý ảo task-oriented có thể hỗ trợ hai nhóm đối tượng: người mua (tư vấn chọn sản phẩm, giải đáp thắc mắc về truy xuất nguồn gốc, chính sách đổi trả) và nhà cung cấp (hướng dẫn quy trình đăng sản phẩm, ghi nhật ký canh tác, giải thích lý do bị từ chối kiểm duyệt). Việc thiết kế chatbot cho nhóm nông dân/HTX --- vốn có mức độ thành thạo công nghệ hạn chế như đã phân tích tại mục~\ref{sec:doituongnguoidung} --- cần ưu tiên giao diện hội thoại đơn giản, hỗ trợ giọng nói/ngôn ngữ địa phương nếu khả thi, và có cơ chế chuyển tiếp (escalation) sang nhân sự thật khi câu hỏi vượt phạm vi tập intent đã huấn luyện.
-
-
 \section{Kết chương}
 
 Chương này đã hệ thống hóa các kiến thức nền tảng cần thiết cho đồ án:
@@ -196,7 +192,7 @@ Chương này đã hệ thống hóa các kiến thức nền tảng cần thi�
     \item \textbf{Mô hình kinh doanh và chuỗi cung ứng:} các mô hình thương mại điện tử, chuỗi cung ứng thực phẩm ngắn và rút ngắn tầng trung gian, mô hình doanh thu, nguyên tắc xuất trước hàng hết hạn trước và hợp tác với đơn vị vận chuyển thứ ba --- làm nền cho ngữ cảnh nghiệp vụ tại mục~\ref{sec:ngucanh}.
     \item \textbf{Niềm tin và minh bạch:} truy xuất nguồn gốc theo GS1, lý do chưa dùng blockchain, lý thuyết bất cân xứng thông tin và hệ thống uy tín --- làm nền cho vấn đề V4 tại mục~\ref{sec:vande}.
     \item \textbf{Công nghệ nền tảng:} kiến trúc web phân lớp, RBAC, cổng thanh toán trung gian và cơ chế tạm giữ tiền.
-    \item \textbf{Trí tuệ nhân tạo:} ba bài toán gợi ý sản phẩm, dự báo nhu cầu và giá, trợ lý ảo; cùng lý do giám sát bất thường được hiện thực bằng luật ngưỡng thay vì học máy trong phạm vi đồ án.
+    \item \textbf{Trí tuệ nhân tạo:} hai bài toán gợi ý sản phẩm và dự báo nhu cầu, giá; cùng lý do giám sát bất thường được hiện thực bằng luật ngưỡng thay vì học máy trong phạm vi đồ án.
 \end{itemize}
 Các kiến thức trên đủ bao quát phần phân tích yêu cầu và thiết kế ở Chương~\ref{chap:hethong} và Chương~\ref{chap:phantich}. Riêng các công nghệ hiện thực cụ thể (framework front-end/back-end, thư viện và mô hình AI) sẽ được so sánh và lựa chọn tại mục~\ref{sec:giaiphapcongnghe} sau khi nhóm chốt giải pháp.
 % TODO: sau khi chốt công nghệ ở mục 5.2, bổ sung vào chương này phần kiến thức nền tảng về các framework/thư viện đã chọn (nếu hội đồng yêu cầu).
