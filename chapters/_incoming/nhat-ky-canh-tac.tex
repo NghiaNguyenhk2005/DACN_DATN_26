@@ -1,0 +1,139 @@
+% ============================================================
+% FILE RỜI — CHƯA \input VÀO main.tex
+% Nội dung: làm rõ "nhật ký canh tác" về giấy tờ/quy chuẩn/quy cách, đối
+% chiếu trong nước (VietGAP/GlobalGAP, đã có ở subsec:chungnhan) và mở rộng
+% thảo luận riêng cho THỊ TRƯỜNG XUẤT KHẨU.
+%
+% QUYẾT ĐỊNH ĐàCHỐT VỚI NHÓM: giữ nguyên phạm vi MVP hiện tại (không đổi
+% use case/FR/thiết kế cho xuất khẩu). Phần xuất khẩu dưới đây CHỈ là mục
+% thảo luận/so sánh mang tính lý thuyết, đề xuất vị trí:
+%   - Phần A (giấy tờ/quy chuẩn trong nước): bổ sung vào cuối
+%     chapters/chuong2-kienthuc-nentang.tex, subsec:chungnhan (đã có sẵn
+%     khung nhưng thiếu mã số vùng trồng và hệ thống truy xuất quốc gia).
+%   - Phần B (thảo luận xuất khẩu): thêm mới thành \subsection*{} riêng ngay
+%     sau subsec:chungnhan hoặc sau subsec:gs1blockchain.
+%   - Phần C (bảng khoảng cách + đề xuất hướng phát triển): nối vào
+%     chapters/chuong8-tongket.tex, mục "Mở rộng về nghiệp vụ" — đã có sẵn
+%     1 gạch đầu dòng ngắn về xuất khẩu, phần này làm rõ chi tiết hơn.
+% ============================================================
+
+% ------------------------------------------------------------
+% PHẦN A — Bổ sung cho subsec:chungnhan (Ch.2) — giấy tờ/quy chuẩn trong nước
+% còn thiếu so với bản hiện tại: mã số vùng trồng chính thức và hệ thống
+% truy xuất nguồn gốc quốc gia.
+% ------------------------------------------------------------
+
+\noindent\textbf{Mã số vùng trồng và hệ thống truy xuất nguồn gốc quốc gia (bổ sung).} Bên cạnh các chứng nhận và giấy tờ đã liệt kê ở trên, hai căn cứ sau làm rõ thêm phần ``giấy tờ đi theo từng lô hàng'':
+\begin{itemize}
+    \item \textbf{Mã số vùng trồng} theo Quyết định số 3156/QĐ-BNN-TT và TCCS 774:2020/BVTV do Cục Trồng trọt và Bảo vệ thực vật cấp --- là định danh chính thức gắn với một vùng trồng cụ thể, kèm yêu cầu giám sát sinh vật gây hại theo quy trình quản lý dịch hại tổng hợp (IPM). Đây là điều kiện bắt buộc để xuất khẩu chính ngạch nhiều loại nông sản, đặc biệt sang Trung Quốc.
+    \item \textbf{Hệ thống truy xuất nguồn gốc nông sản quốc gia} (CheckVN, vận hành chính thức từ 1/7/2026, quản lý bởi Bộ Nông nghiệp và Môi trường) --- có cấu trúc dữ liệu tương đồng với thiết kế \texttt{FarmingLog} của Farmery (nông hộ $\to$ vùng trồng $\to$ lô hàng $\to$ cơ sở đóng gói), và đã được chia sẻ trực tiếp với cơ quan hải quan Trung Quốc để hỗ trợ phê duyệt mã vùng trồng/cơ sở đóng gói cho hàng xuất khẩu.
+\end{itemize}
+Trong phạm vi đồ án, trường vùng trồng của Farmery (FR2.1) hiện là trường mô tả tự do, chưa mô hình hóa như một định danh có thể xác thực chéo với dữ liệu Nhà nước --- khoảng cách này được phân tích cụ thể ở phần thảo luận xuất khẩu dưới đây và đưa vào hướng phát triển tại Chương~\ref{chap:ketluan}.
+
+% ------------------------------------------------------------
+% PHẦN B — Thảo luận riêng: nhật ký canh tác cho thị trường xuất khẩu
+% (mục thảo luận lý thuyết, KHÔNG đổi phạm vi MVP)
+% ------------------------------------------------------------
+
+\subsection*{Thảo luận: nhật ký canh tác cho thị trường xuất khẩu}
+\label{subsec:nhatkycanhtac-xuatkhau}
+
+Mục~\ref{subsec:dinhnghianongsan} và mục~\ref{sec:phamvi} đã xác định nghiệp vụ xuất khẩu xuyên biên giới nằm ngoài phạm vi MVP của Farmery. Mục này trình bày một phân tích ngắn về khoảng cách giữa thiết kế nhật ký canh tác hiện tại (FR4.2) với yêu cầu thực tế của thị trường xuất khẩu, nhằm làm rõ bức tranh đầy đủ và đặt nền cho hướng phát triển tại Chương~\ref{chap:ketluan} --- không nhằm thay đổi thiết kế hiện tại.
+
+\noindent\textbf{Quy định đáng chú ý (2026).} Lệnh 280 của Tổng cục Hải quan Trung Quốc (GACC), có hiệu lực từ 1/6/2026, yêu cầu doanh nghiệp nước ngoài --- kể cả cơ sở sản xuất, đóng gói, kho bảo quản --- phải đăng ký mã số với GACC; đối với 17 nhóm thực phẩm, việc đăng ký phải thông qua cơ quan thẩm quyền của nước xuất khẩu chứ không thể tự đăng ký trực tiếp. Việt Nam đã chia sẻ hệ thống CheckVN với GACC để hỗ trợ quy trình này. Ở thị trường châu Âu, Quy định (EC) 178/2002 (General Food Law), Điều 18, yêu cầu truy xuất ``one-up-one-down'' xuyên suốt farm-to-fork và lưu hồ sơ tối thiểu 5 năm (6 tháng với hàng dễ hư hỏng) --- áp dụng cho mọi tác nhân từ sản xuất đến bán lẻ.
+
+\noindent\textbf{Khoảng cách so với thiết kế MVP.} Bảng~\ref{tab:khoangcachxuatkhau} đối chiếu cụ thể.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{L{3.0cm} L{5.5cm} L{5.5cm}}
+\caption{Khoảng cách giữa nhật ký canh tác MVP và yêu cầu xuất khẩu}
+\label{tab:khoangcachxuatkhau} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Farmery MVP hiện tại} & \textbf{Yêu cầu xuất khẩu (GACC/EU)} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Farmery MVP hiện tại} & \textbf{Yêu cầu xuất khẩu (GACC/EU)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Xác minh chứng nhận & Thủ công bởi quản trị viên kiểm duyệt (FR3.2), ngoài phạm vi tích hợp API xác minh & Phải qua đăng ký/phê duyệt với cơ quan quản lý nước xuất khẩu, sau đó GACC phê duyệt riêng \\
+\rowcolor{tblaltbg}
+Định danh vùng trồng & Trường mô tả tự do (FR2.1) & Mã số vùng trồng chính thức do Cục Trồng trọt-BVTV cấp, có thể bị thu hồi nếu vi phạm \\
+Thời hạn lưu trữ hồ sơ & Chưa quy định cụ thể (chỉ có nguyên tắc bất biến --- NFR9.1) & Tối thiểu 5 năm (EU), hoặc theo thời hạn nước nhập khẩu quy định \\
+\rowcolor{tblaltbg}
+Phạm vi bên tham gia truy xuất & Nhà cung cấp + Farmery (2 lớp) & Nhà cung cấp, cơ sở đóng gói, đơn vị kiểm dịch, hải quan, nhà nhập khẩu (nhiều bên độc lập) \\
+Giám sát sinh vật gây hại & Không có trong quy trình hiện tại & Bắt buộc theo IPM, có bẫy/giám sát định kỳ, hồ sơ riêng \\
+\end{longtable}
+\endgroup
+
+\noindent\textbf{Kết luận của phần thảo luận.} Khoảng cách trên xác nhận quyết định đặt xuất khẩu ngoài phạm vi MVP (mục~\ref{sec:phamvi}) là hợp lý: yêu cầu xuất khẩu không chỉ là ``thêm trường dữ liệu'' mà kéo theo thay đổi về quy trình xác minh (qua đầu mối Nhà nước thay vì nội bộ), thời hạn lưu trữ, và số bên tham gia truy xuất --- vượt khỏi khối lượng hợp lý của một đồ án. Điều kiện cụ thể để mở rộng được trình bày tại Chương~\ref{chap:ketluan}.
+
+% ------------------------------------------------------------
+% PHẦN C — Nối vào chapters/chuong8-tongket.tex, mục "Mở rộng về nghiệp vụ"
+% Thay thế/mở rộng gạch đầu dòng đã có sẵn: "Khi có nhu cầu xuất khẩu, bổ
+% sung quản lý các giấy tờ đi theo lô hàng đã khảo sát tại mục~subsec:chungnhan
+% và kết nối với hệ thống cấp mã số vùng trồng."
+% ------------------------------------------------------------
+
+% Bản mở rộng đề xuất cho gạch đầu dòng xuất khẩu tại Ch.8:
+%
+% \item Khi có nhu cầu xuất khẩu (liên hệ thảo luận tại
+%   mục~\ref{subsec:nhatkycanhtac-xuatkhau}), ba thay đổi cần thực hiện theo
+%   thứ tự: \textbf{(a)} thay trường vùng trồng tự do bằng tham chiếu tới mã
+%   số vùng trồng chính thức, có thể xác thực chéo với hệ thống CheckVN của
+%   Bộ Nông nghiệp và Môi trường; \textbf{(b)} kéo dài thời hạn lưu trữ nhật
+%   ký canh tác theo yêu cầu thị trường đích (tối thiểu 5 năm với EU); và
+%   \textbf{(c)} mở rộng mô hình actor truy xuất để bao gồm cơ quan kiểm
+%   dịch thực vật và cơ sở đóng gói được cấp phép, thay vì chỉ hai lớp nhà
+%   cung cấp và Farmery như hiện tại.
+
+% ============================================================
+% Nguồn tham khảo cần bổ sung vào references.bib khi merge:
+%
+% @misc{qd3156_2022,
+%   author = {{Bộ Nông nghiệp và Phát triển nông thôn}},
+%   title  = {{Quyết định số 3156/QĐ-BNN-TT về mã số vùng trồng}},
+%   year   = {2022}
+% }
+%
+% @online{checkvn_traceviet,
+%   author  = {{Bộ Nông nghiệp và Môi trường}},
+%   title   = {{Hệ thống truy xuất nguồn gốc nông sản quốc gia (CheckVN)}},
+%   year    = {2026},
+%   url     = {https://traceviet.mae.gov.vn/},
+%   urldate = {2026-09-23}
+% }
+%
+% @misc{gacc_order280_2026,
+%   author = {{Tổng cục Hải quan Trung Quốc (GACC)}},
+%   title  = {{Lệnh số 280 về đăng ký doanh nghiệp sản xuất thực phẩm nước ngoài}},
+%   year   = {2026}
+% }
+%
+% @misc{eu_regulation178_2002,
+%   author = {{Nghị viện và Hội đồng châu Âu}},
+%   title  = {{Regulation (EC) No 178/2002 -- General Food Law}},
+%   year   = {2002}
+% }
+% ============================================================
+
+% ============================================================
+% VIỆC CẦN NHÓM XÁC NHẬN TRƯỚC KHI MERGE:
+% 1. Phần A (bổ sung mã số vùng trồng/CheckVN) nối vào cuối subsec:chungnhan
+%    — xác nhận không trùng lặp với đoạn "Giấy tờ đi theo từng lô hàng" đã
+%    có sẵn (đoạn đã có nhắc "Mã số vùng trồng và mã số cơ sở đóng gói" một
+%    câu ngắn; phần A ở đây mở rộng chi tiết hơn, có thể cần rút gọn khi
+%    merge để tránh lặp ý).
+% 2. Phần B (mục thảo luận xuất khẩu) đặt vị trí nào — đề xuất ngay sau
+%    subsec:gs1blockchain, cùng mạch "niềm tin và minh bạch" của chương.
+% 3. Cách trích dẫn văn bản pháp quy nước ngoài (GACC, EU) cho khớp style
+%    ieee đang dùng — nhóm xác nhận format \parencite phù hợp.
+% 4. Bản mở rộng gạch đầu dòng ở Phần C — xác nhận thay thế gạch đầu dòng cũ
+%    hay giữ cả hai (giữ câu cũ ngắn, thêm 3 gạch đầu dòng con a/b/c).
+% ============================================================
