@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:44px 49px; width:1280px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  .sub{color:var(--sub); font-size:29.4px; margin:0 0 18px;}
+  .grid{
+    display:grid;
+    grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
+    gap:14px; align-items:start;
+  }
+  .col{display:grid; gap:14px;}
+  .cell{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:20px 23px; box-shadow:0 2px 8px rgba(20,40,30,.05);
+    border-top:5px solid var(--bar);
+  }
+  .cell h2{font-size:27.3px; margin:0 0 9px; text-transform:uppercase; letter-spacing:.3px; color:var(--bar); font-weight:800;}
+  .cell ul{margin:0; padding:0; list-style:none;}
+  .cell li{font-size:26.2px; line-height:1.45; margin-bottom:7px; padding-left:14px; position:relative; color:#2c3a33;}
+  .cell li::before{content:"•"; position:absolute; left:0; color:var(--bar); font-weight:900;}
+  .activities{--bar:#2f7d4f;}
+  .resources{--bar:#2f7d4f;}
+  .partners{--bar:#7b3fe4;}
+  .channels{--bar:#0a3d91;}
+  .tag{
+    display:inline-block; font-size:19.6px; font-weight:800; letter-spacing:.4px;
+    padding:1px 10px; border-radius:5px; margin-right:6px; vertical-align:2px;
+  }
+  .t-3p{background:#e4eef9; color:#0a3d91;}
+  .t-1p{background:#e5f6ea; color:#128a3e;}
+  footer{margin-top:16px; font-size:23.1px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <p class="sub">Cụm 2 — Làm thế nào · <span class="tag t-3p">3P</span> luồng bán sỉ qua sàn &nbsp;
+  <span class="tag t-1p">1P</span> luồng bán lẻ do Farmery thu mua và bán lại</p>
+
+  <div class="grid">
+    <div class="col">
+      <div class="cell activities">
+        <h2>Hoạt động chính</h2>
+        <ul>
+          <li><span class="tag t-3p">3P</span>Kiểm duyệt nhà cung cấp, sản phẩm và chứng nhận</li>
+          <li><span class="tag t-3p">3P</span>Kết nối cung cầu, xử lý báo giá và hợp đồng bán sỉ</li>
+          <li><span class="tag t-1p">1P</span>Khảo giá và đặt mua theo lô tại vùng trồng</li>
+          <li><span class="tag t-1p">1P</span>Phân loại, đóng gói và định giá bán lẻ</li>
+          <li><span class="tag t-1p">1P</span>Quản lý tồn kho và xử lý hàng cận hạn</li>
+          <li>Vận hành nền tảng, hệ thống đánh giá uy tín và các mô-đun AI</li>
+        </ul>
+      </div>
+      <div class="cell resources">
+        <h2>Nguồn lực chính</h2>
+        <ul>
+          <li>Nền tảng web/app và hạ tầng cho mô-đun AI</li>
+          <li>Dữ liệu truy xuất nguồn gốc và nhật ký canh tác tích lũy theo thời gian</li>
+          <li>Đội ngũ kiểm duyệt, chăm sóc khách hàng, phụ trách khách sỉ</li>
+          <li><span class="tag t-1p">1P</span>Vốn lưu động để thu mua trước khi bán được hàng</li>
+          <li><span class="tag t-1p">1P</span>Kho sơ chế và đóng gói quy mô nhỏ đặt tại vùng trồng</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="cell partners">
+        <h2>Đối tác chính</h2>
+        <ul>
+          <li>Đơn vị vận chuyển thứ ba (3PL)</li>
+          <li>Cổng thanh toán trung gian được cấp phép</li>
+          <li>Cơ quan cấp chứng nhận VietGAP, GlobalGAP</li>
+          <li>Hội nông dân và hợp tác xã địa phương</li>
+          <li>Chương trình OCOP</li>
+        </ul>
+      </div>
+      <div class="cell channels">
+        <h2>Kênh phân phối</h2>
+        <ul>
+          <li>Web và ứng dụng Farmery</li>
+          <li>Mạng xã hội, tối ưu tìm kiếm</li>
+          <li>Hội nông dân, hợp tác xã, chương trình OCOP</li>
+          <li><span class="tag t-3p">3P</span>Đội kinh doanh tiếp cận khách sỉ</li>
+          <li><span class="tag t-1p">1P</span>Đội thu mua đặt tại vùng trồng</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Khung Business Model Canvas, Osterwalder &amp; Pigneur (2010)</footer>
+</body>
+</html>
