@@ -1,13 +1,17 @@
 \usetikzlibrary{shapes.geometric}
+% Cỡ chữ và giãn dòng trong lưu đồ cố định tuyệt đối (không theo cỡ chữ/giãn dòng của thân báo cáo),
+% vì tọa độ các ô được tính theo kích thước chữ này; đổi cỡ chữ báo cáo không làm ô chồng lên nhau.
+\newcommand{\farmfont}{\linespread{1}\fontsize{9}{11}\selectfont}
+\newcommand{\farmsmallfont}{\linespread{1}\fontsize{8}{9.5}\selectfont}
 \tikzset{
-    farm/chart/.style={font=\small, every node/.style={align=center}, node distance=1cm},
+    farm/chart/.style={font=\farmfont, every node/.style={align=center}, node distance=1cm},
     farm/process/.style={rectangle, draw=blue!45!black, fill=blue!4, line width=0.6pt, text width=4.9cm, minimum height=0.85cm, inner sep=5pt},
-    farm/side/.style={farm/process, text width=3.8cm},
-    farm/decision/.style={diamond, aspect=2.5, font=\footnotesize, draw=orange!60!black, fill=orange!8, line width=0.6pt, text width=2.9cm, inner sep=1pt, minimum height=1.35cm},
+    farm/processnarrow/.style={farm/process, text width=3.8cm},
+    farm/decision/.style={diamond, aspect=2.5, font=\farmsmallfont, draw=orange!60!black, fill=orange!8, line width=0.6pt, text width=2.9cm, inner sep=1pt, minimum height=1.35cm},
     farm/terminal/.style={rectangle, rounded corners=12pt, draw=green!35!black, fill=green!7, line width=0.7pt, text width=3.2cm, minimum height=0.65cm, inner sep=4pt},
-    farm/exception/.style={farm/side, draw=red!55!black, fill=red!4},
+    farm/exception/.style={farm/processnarrow, draw=red!55!black, fill=red!4},
     farm/note/.style={rectangle, rounded corners=3pt, dashed, draw=black!50, fill=black!2, text width=10.8cm, align=left, inner sep=7pt},
-    farm/connector/.style={circle, draw=black!70, fill=white, font=\bfseries\footnotesize, minimum size=0.55cm, inner sep=2pt},
+    farm/connector/.style={circle, draw=black!70, fill=white, font=\bfseries\farmsmallfont, minimum size=0.55cm, inner sep=2pt},
     farm/arrow/.style={->, >=stealth, line width=0.7pt, draw=black!75},
-    farm/label/.style={font=\footnotesize, fill=white, inner sep=1.5pt}
+    farm/label/.style={font=\farmsmallfont, fill=white, inner sep=1.5pt}
 }

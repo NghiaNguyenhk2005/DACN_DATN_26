@@ -9,16 +9,16 @@
   }
   *{box-sizing:border-box;}
   body{
-    margin:0; padding:36px 44px; width:1600px;
+    margin:0; padding:36px 44px; width:1400px;
     background:var(--bg);
     font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
     color:var(--ink);
   }
-  h1{font-size:28px; margin:0 0 4px; font-weight:800;}
-  .sub{color:var(--sub); font-size:14px; margin:0 0 20px;}
+  h1{font-size:40.6px; margin:0 0 4px; font-weight:800;}
+  .sub{color:var(--sub); font-size:20.3px; margin:0 0 20px;}
   .grid{
     display:grid;
-    grid-template-columns: 1fr 1fr 1.3fr 1fr 1fr;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
     grid-template-rows: auto auto;
     gap:14px;
   }
@@ -27,9 +27,9 @@
     padding:14px 16px; box-shadow:0 2px 8px rgba(20,40,30,.05);
     border-top:5px solid var(--bar);
   }
-  .cell h2{font-size:13px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.3px; color:var(--bar); font-weight:800;}
+  .cell h2{font-size:18.8px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.3px; color:var(--bar); font-weight:800;}
   .cell ul{margin:0; padding:0; list-style:none;}
-  .cell li{font-size:12.5px; line-height:1.45; margin-bottom:6px; padding-left:14px; position:relative; color:#2c3a33;}
+  .cell li{font-size:18.1px; line-height:1.45; margin-bottom:6px; padding-left:14px; position:relative; color:#2c3a33;}
   .cell li::before{content:"•"; position:absolute; left:0; color:var(--bar); font-weight:900;}
   .partners{grid-column:1; grid-row:1 / span 2; --bar:#7b3fe4;}
   .activities{grid-column:2; grid-row:1; --bar:#2f7d4f;}
@@ -38,17 +38,16 @@
   .relationships{grid-column:4; grid-row:1; --bar:#0a3d91;}
   .channels{grid-column:4; grid-row:2; --bar:#0a3d91;}
   .segments{grid-column:5; grid-row:1 / span 2; --bar:#c98a1a;}
-  .bottom{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  .bottom{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; margin-top:14px;}
   .cost{--bar:#c23b3b;}
   .revenue{--bar:#128a3e;}
   .value .prop{margin-bottom:10px; padding-bottom:8px; border-bottom:1px dashed var(--line);}
   .value .prop:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
-  .value .prop b{display:block; font-size:12px; color:#7a3420; margin-bottom:3px;}
-  footer{margin-top:18px; font-size:11px; color:#9aa6a0;}
+  .value .prop b{display:block; font-size:17.4px; color:#7a3420; margin-bottom:3px;}
+  footer{margin-top:18px; font-size:15.9px; color:#9aa6a0;}
 </style>
 </head>
 <body>
-  <h1>Business Model Canvas — Farmery</h1>
   <p class="sub">Mô hình kinh doanh marketplace nông sản B2B2C, xây dựng theo khung Osterwalder &amp; Pigneur (2010)</p>
 
   <div class="grid">
@@ -136,6 +135,6 @@
     </div>
   </div>
 
-  <footer>Farmery — Đồ án chuyên ngành CO4029 · Hình 3.1 · Nguồn khung: Osterwalder &amp; Pigneur, 2010</footer>
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Nguồn khung: Osterwalder &amp; Pigneur, 2010</footer>
 </body>
 </html>

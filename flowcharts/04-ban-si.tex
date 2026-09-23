@@ -1,40 +1,30 @@
-\clearpage
-\begin{figure}[p]
+\begin{figure}[H]
 \centering
-\resizebox{!}{\dimexpr\textheight-2cm\relax}{%
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu bán sỉ};
-    \node[farm/process] (pricelist) at (0,-1.4) {Nhà bán: công bố bảng giá bán sỉ theo bậc số lượng, MOQ và lịch giao dự kiến cho từng lô hàng};
-    \node[farm/process] (rfq) at (0,-2.9) {Doanh nghiệp: xem bảng giá công khai, gửi RFQ tham chiếu bảng giá hoặc yêu cầu tùy chỉnh (số lượng, chất lượng, lịch giao)};
-    \node[farm/decision] (moq) at (0,-4.8) {Đạt MOQ\\của nhà bán?};
-    \node[farm/side] (alternative) at (6,-4.8) {Hệ thống: gợi ý gộp đơn cùng khu vực hoặc chuyển kênh bán lẻ};
-    \node[farm/terminal] (retail) at (6,-6.8) {Chuyển sang bán lẻ (B2C)};
-    \node[farm/process] (quote) at (0,-6.8) {Nhà bán: xác nhận/điều chỉnh báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
-    \node[farm/process] (negotiate) at (0,-8.3) {Hai bên: thương lượng qua hệ thống nhắn tin nội bộ};
-    \node[farm/decision] (agreed) at (0,-10.1) {Thống nhất\\điều khoản?};
-    \node[farm/process] (contract) at (0,-12.1) {Hệ thống: sinh hợp đồng, gồm phạt vi phạm và công nợ; hai bên ký điện tử / mã xác nhận};
-    \node[farm/process] (delivery) at (0,-13.9) {Nhà bán giao theo từng đợt; hệ thống lập hóa đơn và cập nhật sổ công nợ};
-    \node[farm/process] (settle) at (0,-15.6) {Doanh nghiệp: xác nhận số lượng, chất lượng từng đợt; thanh toán theo kỳ hạn};
-    \node[farm/decision] (complete) at (0,-17.5) {Còn đợt giao\\theo hợp đồng?};
-    \node[farm/side] (reconcile) at (6,-17.5) {Hai bên: đối soát, hoàn tất thanh toán công nợ theo kỳ hạn};
-    \node[farm/process] (sellerdone) at (0,-19.5) {Nhà bán: hợp đồng hoàn tất — hệ thống cập nhật doanh thu và lịch sử bán sỉ của nhà bán};
-    \node[farm/terminal] (finish) at (0,-21.1) {Hoàn tất hợp đồng};
-    \node[farm/exception,text width=3.8cm] (exceptions) at (6,-12.1) {\textbf{Ngoại lệ hợp đồng}\\[3pt]Giao thiếu / trễ: áp dụng phạt và ghi lịch sử uy tín.\\[4pt]Quá hạn công nợ: nhắc tự động; có thể khóa RFQ mới đến khi trả đủ.\\[4pt]Hủy giữa kỳ: xử lý theo điều khoản hủy đã ký.};
-    \foreach \source/\target in {start/pricelist,pricelist/rfq,rfq/moq,quote/negotiate,negotiate/agreed,contract/delivery,delivery/settle,settle/complete,sellerdone/finish}
+    \node[farm/process] (pricelist) at (0,-1.6) {Nhà bán: công bố bảng giá bán sỉ theo bậc số lượng, MOQ và lịch giao dự kiến cho từng lô hàng};
+    \node[farm/process] (rfq) at (0,-3.6) {Doanh nghiệp: xem bảng giá công khai, gửi RFQ tham chiếu bảng giá hoặc yêu cầu tùy chỉnh (số lượng, chất lượng, lịch giao)};
+    \node[farm/decision] (moq) at (0,-5.8) {Đạt MOQ\\của nhà bán?};
+    \node[farm/processnarrow] (alternative) at (6,-5.8) {Hệ thống: gợi ý gộp đơn cùng khu vực hoặc chuyển kênh bán lẻ};
+    \node[farm/terminal] (retail) at (6,-8.1) {Chuyển sang bán lẻ (B2C)};
+    \node[farm/process] (quote) at (0,-8.1) {Nhà bán: xác nhận/điều chỉnh báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
+    \node[farm/process] (negotiate) at (0,-10) {Hai bên: thương lượng qua hệ thống nhắn tin nội bộ};
+    \node[farm/decision] (agreed) at (0,-12) {Thống nhất\\điều khoản?};
+    \node[farm/process] (contract) at (0,-14.7) {Hệ thống: sinh hợp đồng điện tử gồm điều khoản phạt vi phạm và công nợ; hai bên ký điện tử hoặc mã xác nhận};
+    \node[farm/connector] (connA) at (0,-16.7) {A};
+    \node[farm/processnarrow] (connAnote) at (3.9,-16.7) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-b} (ký quỹ, giao hàng và công nợ)};
+    \draw[farm/arrow,dashed] (connA) -- (connAnote);
+    \foreach \source/\target in {start/pricelist,pricelist/rfq,rfq/moq,quote/negotiate,negotiate/agreed,contract/connA}
         \draw[farm/arrow] (\source) -- (\target);
     \draw[farm/arrow] (moq) -- node[farm/label,right] {Có} (quote);
     \draw[farm/arrow] (moq) -- node[farm/label,above] {Không} (alternative);
     \draw[farm/arrow] (alternative.north) |- node[farm/label,near start,right] {Gộp đơn, gửi lại} (rfq.east);
     \draw[farm/arrow] (alternative) -- node[farm/label,right] {Chuyển kênh} (retail);
     \draw[farm/arrow] (agreed) -- node[farm/label,right] {Có} (contract);
-    \draw[farm/arrow] (agreed.west) -- (-3.5,-10.1) |- node[farm/label,near start,left] {Chưa} (quote.west);
-    \draw[farm/arrow] (complete) -- node[farm/label,above] {Không} (reconcile);
-    \draw[farm/arrow] (reconcile.south) |- (sellerdone.east);
-    \draw[farm/arrow] (complete.west) -- (-3.5,-17.5) |- node[farm/label,near start,left] {Có} (delivery.west);
-    \draw[farm/arrow,dashed] (contract) -- (exceptions);
-\end{tikzpicture}%
-}
-\caption{Flowchart bán sỉ (B2B): công bố bảng giá, báo giá/RFQ, hợp đồng, giao hàng và công nợ.}
-\label{fig:flow-ban-si}
+    \draw[farm/arrow] (agreed.west) -- (-3.5,-12) |- node[farm/label,near start,left] {Chưa} (quote.west);
+\end{tikzpicture}
+\end{adjustbox}
+\caption[Lưu đồ quy trình bán sỉ B2B (phần 1)]{Lưu đồ quy trình bán sỉ B2B (phần 1): công bố bảng giá, RFQ, đàm phán và ký hợp đồng}
+\label{fig:flow-ban-si-a}
 \end{figure}
-\clearpage

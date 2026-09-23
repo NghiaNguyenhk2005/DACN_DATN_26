@@ -1,0 +1,24 @@
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
+\begin{tikzpicture}[farm/chart]
+    \node[farm/connector] (connA) at (0,0) {A};
+    \node[farm/processnarrow] (connAnote) at (3.4,0) {Tiếp nối vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-le-a} (đơn đã xác nhận)};
+    \node[farm/process] (ship) at (0,-2) {Nhà bán: đóng gói hàng dễ hư hỏng, bàn giao vận chuyển};
+    \node[farm/decision] (refused) at (0,-4.1) {Người nhận\\từ chối COD?};
+    \node[farm/exception] (return) at (6.5,-4.1) {Hoàn hàng; xử lý phí vận chuyển hai chiều theo chính sách};
+    \node[farm/process] (receive) at (0,-6.4) {Người mua: xác nhận nhận hàng, đánh giá sản phẩm và nhà bán trong thời hạn quy định};
+    \node[farm/process] (sellerdone) at (0,-8.4) {Nhà bán: đơn hoàn tất --- hệ thống cập nhật doanh thu và lịch sử bán lẻ};
+    \node[farm/terminal] (finish) at (0,-10.3) {Kết thúc};
+    \node[farm/note] at (2.7,-12) {\textbf{Hàng hư hỏng:} người nhận khiếu nại và được xử lý theo flowchart vận chuyển và khiếu nại tại Hình~\ref{fig:flow-van-chuyen}.};
+    \foreach \source/\target in {connA/ship,ship/refused,receive/sellerdone,sellerdone/finish}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow,dashed] (connAnote) -- (connA);
+    \draw[farm/arrow] (refused) -- node[farm/label,right] {Không} (receive);
+    \draw[farm/arrow] (refused) -- node[farm/label,above] {Có} (return);
+    \draw[farm/arrow] (return.south) |- (finish.east);
+\end{tikzpicture}
+\end{adjustbox}
+\caption[Lưu đồ quy trình bán lẻ B2C (phần 2)]{Lưu đồ quy trình bán lẻ B2C (phần 2): giao hàng, nhận hàng và hoàn tất đơn}
+\label{fig:flow-ban-le-b}
+\end{figure}

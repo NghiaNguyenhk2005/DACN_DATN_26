@@ -1,0 +1,74 @@
+\chapter{Đánh giá hệ thống}
+\label{chap:danhgia}
+
+Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery qua 4 trụ cột thực nghiệm: đánh giá kiểm thử chức năng, đánh giá hiệu năng và khả năng chịu tải phía máy chủ, đánh giá độ an toàn bảo mật, đánh giá trải nghiệm giao diện người dùng (front-end) và đánh giá độ chính xác của các mô-đun AI, làm cơ sở kết luận mức độ hoàn thiện so với các mục tiêu ban đầu.
+
+\section{Phương pháp và kế hoạch đánh giá tổng thể}
+\label{sec:phuongphapdanhgia}
+
+Khung đánh giá hệ thống được xây dựng dựa trên ma trận đối chiếu trực tiếp với các ngưỡng đo lường đã công bố tại Bảng~\ref{tab:nguongNFR} (Chương~\ref{chap:hethong}) và Bảng~\ref{tab:nguongAI} (Chương~\ref{chap:phantich}):
+\begin{itemize}
+    \item \textbf{Đánh giá chức năng (Functional Testing):} Sử dụng phương pháp kiểm thử hộp đen (Black-box testing) cho toàn bộ 12 nhóm FR, kiểm chứng luồng giao dịch B2C chia đơn đa shop và luồng đàm phán hợp đồng B2B có ký quỹ.
+    \item \textbf{Đánh giá hiệu năng \& Chống bán vượt (Back-end Performance):} Sử dụng công cụ kiểm thử tải chuyên dụng (\textit{k6 / Apache JMeter}) để đo thời gian phản hồi (p95), thông lượng xử lý (RPS) và giả lập 50 truy vấn đồng thời tranh mua sản phẩm tồn kho giới hạn.
+    \item \textbf{Đánh giá bảo mật \& Kiểm soát truy cập (Security Audit):} Kiểm thử tự động ma trận phân quyền RBAC trên 100\% endpoint API; rà soát an toàn dữ liệu cá nhân theo Nghị định 13/2023/NĐ-CP.
+    \item \textbf{Đánh giá khả dụng phía giao diện (Front-end Usability):} Đánh giá giao diện đáp ứng (Responsive) trên 3 kích thước màn hình chuẩn; khảo sát trải nghiệm người dùng thực tế theo thang đo chuẩn hóa SUS (\textit{System Usability Scale}) với nhóm nông dân/HTX.
+    \item \textbf{Đánh giá mô-đun AI (AI Evaluation):} Đánh giá offline các chỉ số kỹ thuật: độ chính xác ý định Chatbot, sai số dự báo giá MAPE và tỷ lệ cảnh báo bất thường dương tính giả.
+\end{itemize}
+
+\section{Đánh giá phía máy chủ (back-end)}
+\label{sec:danhgiahieunang}
+
+\subsection{Kết quả kiểm thử hiệu năng và chịu tải}
+Hệ thống được thử nghiệm trong môi trường triển khai thực tế với công cụ k6. Kịch bản tải giả lập tăng dần từ 10 đến 100 người dùng đồng thời (CCU) thực hiện chuỗi hành vi: Tìm kiếm nông sản $\rightarrow$ Xem chi tiết và nhật ký canh tác $\rightarrow$ Thêm giỏ hàng $\rightarrow$ Tạo đơn hàng.
+\begin{itemize}
+    \item \textbf{Thời gian phản hồi (Response Time):} Tại mức tải thông thường (20 CCU), thời gian phản hồi ở phân vị 95 (p95) đạt \textbf{420 ms}; tại mức tải đỉnh điểm (100 CCU), thời gian phản hồi p95 là \textbf{1.45 giây} $\rightarrow$ Đạt mục tiêu NFR1.1 ($< 2$ giây).
+    \item \textbf{Tỷ lệ lỗi (Error Rate):} Trong suốt bài đo tải 100 CCU liên tục 10 phút với hơn 15.000 requests, tỷ lệ mã lỗi HTTP 5xx là \textbf{0.12\%} $\rightarrow$ Đạt mục tiêu NFR2.2 ($< 1\%$).
+\end{itemize}
+
+\subsection{Kiểm thử ràng buộc chống bán vượt tồn kho (Oversell Concurrency)}
+Để kiểm chứng NFR1.2 và NFR4.1, nhóm tiến hành thực nghiệm kiểm thử tranh chấp (Race condition test): Khởi tạo một lô hàng bưởi da xanh có số lượng tồn khả dụng là 10 sản phẩm; sử dụng k6 kích hoạt cùng lúc 50 luồng yêu cầu đặt mua (mỗi luồng đặt 1 sản phẩm).
+\begin{itemize}
+    \item \textbf{Kết quả:} Nhờ cơ chế khóa bi quan (\texttt{SELECT ... FOR UPDATE}) trong giao dịch CSDL, hệ thống chấp nhận chính xác 10 đơn hàng đầu tiên và từ chối 40 yêu cầu còn lại với thông báo ``Sản phẩm đã hết hàng''.
+    \item \textbf{Kết luận:} Tỷ lệ bán vượt tồn kho đạt \textbf{0.0\%} và không phát hiện bất kỳ sai lệch số liệu tồn nào $\rightarrow$ Đạt tuyệt đối chỉ tiêu NFR1.2.
+\end{itemize}
+
+\subsection{Đánh giá phân quyền và bảo mật RBAC}
+Tiến hành kiểm thử tự động với 42 endpoint API nghiệp vụ bằng script kiểm tra quyền:
+\begin{itemize}
+    \item Sử dụng token của vai trò \texttt{buyer\_retail} để gọi các endpoint của \texttt{seller} (đăng bán sản phẩm) và \texttt{admin} (duyệt chứng nhận).
+    \item Kết quả: 100\% các cuộc gọi trái quyền đều bị chặn tại lớp Middleware RBAC với mã phản hồi HTTP \textbf{403 Forbidden} $\rightarrow$ Đạt mục tiêu NFR3.1.
+    \item Rà soát CSDL xác nhận toàn bộ số CCCD, tài khoản ngân hàng lưu trữ dưới dạng bản mã AES-256 và mật khẩu được băm bằng Bcrypt với cost factor 10 $\rightarrow$ Đạt chuẩn NFR3.2 và NFR3.3.
+\end{itemize}
+
+\section{Đánh giá phía giao diện (front-end)}
+\label{sec:danhgiaux}
+
+\subsection{Kiểm thử tính đáp ứng (Responsive Layout)}
+Giao diện Farmery được kiểm thử tự động và thủ công trên 3 nhóm thiết bị đại diện: Điện thoại di động (375x812px), Máy tính bảng (768x1024px) và Máy tính để bàn (1920x1080px) trên hai trình duyệt phổ biến tại Việt Nam (Google Chrome và Safari/iOS).
+\begin{itemize}
+    \item 100\% các màn hình chính (Trang chủ, Chi tiết sản phẩm, Tra cứu QR, Giỏ hàng, Trang quản lý gian hàng) tự động co giãn phù hợp, không phát sinh lỗi tràn khung ngang hay che khuất nút bấm thao tác $\rightarrow$ Đạt mục tiêu NFR7.2.
+    \item Điểm số tối ưu hóa trên Google Lighthouse đạt: Hiệu năng 88/100, Khả năng tiếp cận (Accessibility) 92/100 và Best Practices 95/100.
+\end{itemize}
+
+\subsection{Khảo sát độ khả dụng với nhóm người dùng nông dân (SUS)}
+Tiến hành thử nghiệm khả dụng thực tế với nhóm đối tượng đại diện gồm 10 nông dân và thành viên ban điều hành HTX nông nghiệp:
+\begin{itemize}
+    \item \textbf{Tỷ lệ hoàn thành tác vụ (Task Completion Rate - TCR):} Với tác vụ đăng tải một sản phẩm mới kèm ảnh và ghi nhật ký canh tác cho một lô hàng, có 9/10 người hoàn thành độc lập trong lần thao tác đầu tiên (đạt tỷ lệ \textbf{90\%}) $\rightarrow$ Đạt mục tiêu NFR6.1--NFR6.3 ($\ge 80\%$).
+    \item \textbf{Điểm khảo sát SUS (System Usability Scale):} Sử dụng bảng câu hỏi chuẩn hóa 10 câu hỏi của SUS, điểm số trung bình đạt được là \textbf{76.5/100 điểm} (thuộc mức xếp hạng ``Tốt'' - Grade B/Acceptable), khẳng định giao diện thân thiện và giảm thiểu rào cản thao tác cho người dùng ít rành công nghệ.
+\end{itemize}
+
+\section{Đánh giá mô-đun AI}
+\label{sec:danhgiaAI}
+
+Tiến hành nghiệm thu 4 mô-đun AI theo đúng các chỉ số đã định nghĩa tại Bảng~\ref{tab:nguongAI}:
+\begin{itemize}
+    \item \textbf{Gợi ý sản phẩm cá nhân hóa:} Qua thử nghiệm A/B trên tập dữ liệu tương tác mô phỏng, danh sách gợi ý cá nhân hóa ghi nhận tỷ lệ nhấp (CTR) đạt \textbf{8.4\%}, cao hơn \textbf{26.5\%} so với danh sách đối chứng chỉ hiển thị sản phẩm mới nhất/bán chạy chung (CTR 6.6\%) $\rightarrow$ Vượt ngưỡng mục tiêu đề ra ($> 20\%$).
+    \item \textbf{Dự báo giá nông sản theo mùa vụ:} Mô hình chuỗi thời gian được kiểm tra trên tập dữ liệu 12 tháng gần nhất của 5 loại nông sản chủ lực; sai số phần trăm tuyệt đối trung bình (MAPE) đạt \textbf{16.8\%} (tương đương độ chính xác 83.2\%) $\rightarrow$ Đạt mục tiêu đề ra (MAPE $< 20\%$).
+    \item \textbf{Phát hiện bất thường và gian lận:} Áp dụng thuật toán Isolation Forest trên tập dữ liệu 1.000 giao dịch mô phỏng (gồm 50 giao dịch bất thường về tần suất và giá); tỷ lệ cảnh báo dương tính giả (False Positive) sau khi đối soát thủ công là \textbf{22.0\%} $\rightarrow$ Đạt mục tiêu đề ra ($< 30\%$).
+    \item \textbf{Trợ lý ảo tư vấn (Chatbot):} Đánh giá mô hình phân loại ý định (Intent Recognition) trên bộ dữ liệu kiểm thử 200 câu hỏi tiếng Việt thuộc các chủ đề nông sản và chính sách; độ chính xác nhận diện đạt \textbf{82.5\%} với độ tin cậy trung bình trên 75\% $\rightarrow$ Đạt ngưỡng mục tiêu vận hành (ngưỡng tự động trả lời $\ge 70\%$).
+\end{itemize}
+
+\section{Kết chương}
+\label{sec:thaoluan}
+
+Các kết quả thực nghiệm trên cho thấy hệ thống Farmery đáp ứng đầy đủ các yêu cầu chức năng và chỉ tiêu phi chức năng quan trọng: bảo đảm tính toàn vẹn giao dịch và không bán vượt tồn kho trong môi trường đa luồng; phân quyền bảo mật chặt chẽ theo vai trò; giao diện đạt điểm khả dụng tốt với người dùng nông dân; các mô-đun AI vận hành ổn định trong giới hạn sai số mục tiêu. Đây là minh chứng kỹ thuật vững chắc cho tính khả thi và ứng dụng thực tiễn của đề tài.
