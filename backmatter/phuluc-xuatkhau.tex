@@ -1,0 +1,72 @@
+\section*{Phụ lục N. Khoảng cách với yêu cầu thị trường xuất khẩu}
+\label{apdx:xuatkhau}
+\addcontentsline{toc}{section}{Phụ lục N. Khoảng cách với yêu cầu thị trường xuất khẩu}
+
+Bảng dưới đây đối chiếu thiết kế nhật ký canh tác hiện tại của Farmery với yêu cầu của hai thị trường xuất khẩu lớn, làm căn cứ cho phần thảo luận tại mục~\ref{subsec:nhatkycanhtac-xuatkhau}. Bảng không mô tả phạm vi đồ án mà mô tả phần nằm ngoài phạm vi.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{L{3.0cm} L{5.4cm} L{5.4cm}}
+\caption{Khoảng cách giữa nhật ký canh tác hiện tại và yêu cầu xuất khẩu}
+\label{tab:khoangcachxuatkhau} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Farmery trong phạm vi đồ án} & \textbf{Yêu cầu xuất khẩu (Trung Quốc, EU)} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tiêu chí} & \textbf{Farmery trong phạm vi đồ án} & \textbf{Yêu cầu xuất khẩu (Trung Quốc, EU)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Xác minh chứng nhận & Quản trị viên kiểm duyệt thủ công; không tích hợp API xác minh với cơ quan cấp & Cơ quan thẩm quyền nước xuất khẩu tiến cử, sau đó hải quan nước nhập khẩu phê duyệt riêng \\
+\rowcolor{tblaltbg}
+Định danh vùng trồng & Trường mô tả tự do do nhà cung cấp tự nhập & Mã số vùng trồng chính thức, cấp theo Nghị định số 38/2026/NĐ-CP, có thể bị đình chỉ hoặc thu hồi khi vi phạm \\
+Thời hạn lưu trữ hồ sơ & Chưa quy định cụ thể; chỉ có nguyên tắc bất biến sau khi công khai (NFR9.1) & Theo hướng dẫn thi hành của EU: sáu tháng với hàng có hạn sử dụng dưới ba tháng, năm năm với hàng không ghi hạn sử dụng \\
+\rowcolor{tblaltbg}
+Số bên tham gia truy xuất & Hai lớp: nhà cung cấp và Farmery & Nhà cung cấp, cơ sở đóng gói, đơn vị kiểm dịch thực vật, hải quan nước xuất và nước nhập, nhà nhập khẩu \\
+Giám sát sinh vật gây hại & Không có trong quy trình & Bắt buộc theo quy trình quản lý dịch hại tổng hợp, có giám sát định kỳ và hồ sơ riêng \\
+\end{longtable}
+\endgroup
+
+\section*{Phụ lục O. Nguồn dữ liệu nông sản khảo sát cho mô-đun AI}
+\label{apdx:nguondulieu}
+\addcontentsline{toc}{section}{Phụ lục O. Nguồn dữ liệu nông sản khảo sát cho mô-đun AI}
+
+Bảng dưới đây là kết quả khảo sát nguồn dữ liệu phục vụ hai mô-đun AI, làm căn cứ cho nhận định tại mục~\ref{subsec:nguondulieunongsan}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{L{3.4cm} L{2.6cm} L{4.2cm} L{3.4cm}}
+\caption{Nguồn dữ liệu nông sản khảo sát cho mô-đun AI}
+\label{tab:nguondulieu} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nguồn} & \textbf{Đơn vị quản lý} & \textbf{Loại dữ liệu} & \textbf{Mức khả dụng} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nguồn} & \textbf{Đơn vị quản lý} & \textbf{Loại dữ liệu} & \textbf{Mức khả dụng} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Cổng dữ liệu mở quốc gia & Bộ Khoa học và Công nghệ & Đa ngành; mục Nông nghiệp hiện chỉ có hai bộ dữ liệu & Thấp --- chỉ dùng đối chiếu phụ \\
+\rowcolor{tblaltbg}
+Cục Thống kê & Bộ Tài chính & Diện tích gieo trồng, năng suất, sản lượng theo cây trồng, địa phương và năm & Trung bình --- tần suất quý và năm, đủ dựng đường nền mùa vụ \\
+Hệ thống truy xuất nguồn gốc nông sản quốc gia & Bộ Nông nghiệp và Môi trường & Nông hộ, vùng trồng, lô hàng, cơ sở đóng gói & Cao khi tham chiếu thiết kế lược đồ; thấp khi lấy dữ liệu huấn luyện \\
+\rowcolor{tblaltbg}
+Mã số vùng trồng và cơ sở đóng gói & Cục Trồng trọt và Bảo vệ thực vật & Danh mục vùng trồng đã cấp mã theo tỉnh và loại cây & Trung bình --- dùng xác thực trường vùng trồng \\
+Cục Xuất nhập khẩu & Bộ Công Thương & Kim ngạch xuất khẩu nông sản theo thị trường và mặt hàng, theo tháng & Trung bình --- dữ liệu ngữ cảnh thị trường \\
+\rowcolor{tblaltbg}
+Sàn thương mại điện tử nông sản đối chứng & Doanh nghiệp & Giá niêm yết công khai & Thấp đến trung bình --- không có API chính thức, thu thập quy mô lớn có rủi ro pháp lý \\
+FAOSTAT, World Bank Open Data & FAO, World Bank & Sản lượng, xuất nhập khẩu ở cấp quốc gia & Trung bình --- đối chiếu quốc tế, không đủ chi tiết cho giá nội địa \\
+\rowcolor{tblaltbg}
+Dữ liệu nội sinh của Farmery & Farmery tự thu thập & Lịch sử giá thực tế theo sản phẩm, vùng và thời điểm; hành vi duyệt sản phẩm & Cao nhất về độ khớp, nhưng chỉ có sau khi vận hành \\
+\end{longtable}
+\endgroup

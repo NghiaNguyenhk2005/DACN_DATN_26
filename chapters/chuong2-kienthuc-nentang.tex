@@ -54,6 +54,19 @@ Một lô nông sản muốn đi từ trang trại ra thị trường --- đặc
 
 Phụ lục H liệt kê đầy đủ từng chứng nhận kèm phạm vi áp dụng, thị trường đích và mức độ hỗ trợ của Farmery. Trong phạm vi đồ án, hệ thống hỗ trợ tải lên và kiểm duyệt nhóm chứng nhận về cách thức sản xuất; nhóm giấy tờ theo lô phục vụ xuất khẩu nằm ngoài phạm vi (mục~\ref{sec:phamvi}) nhưng được nêu ở đây để thấy bức tranh đầy đủ mà một nền tảng nông sản hoàn chỉnh phải xử lý.
 
+\noindent\textbf{Hệ thống truy xuất nguồn gốc nông sản quốc gia.} Từ ngày 1/7/2026, Bộ Nông nghiệp và Môi trường vận hành chính thức hệ thống truy xuất nguồn gốc nông, lâm, thủy sản của Nhà nước \parencite{traceviet_2026}. Cách hệ thống này tổ chức dữ liệu --- nông hộ, vùng trồng, lô hàng, cơ sở đóng gói --- trùng với cách Farmery tổ chức nhật ký canh tác theo lô, nên dùng được làm tham chiếu khi thiết kế lược đồ dữ liệu ở mục~\ref{subsec:dacta-csdl}. Tuy vậy trường vùng trồng của Farmery hiện chỉ là mô tả tự do, chưa mô hình hóa thành định danh xác thực chéo được với mã số vùng trồng do Nhà nước cấp --- khoảng cách này được phân tích ngay ở mục kế tiếp.
+
+\subsection{Thảo luận: nhật ký canh tác cho thị trường xuất khẩu}
+\label{subsec:nhatkycanhtac-xuatkhau}
+
+Mục~\ref{sec:phamvi} đã đặt nghiệp vụ xuất khẩu xuyên biên giới ra ngoài phạm vi đồ án. Mục này đối chiếu thiết kế nhật ký canh tác hiện tại với yêu cầu thực tế của thị trường xuất khẩu --- không nhằm thay đổi thiết kế, mà để cho thấy việc thu hẹp phạm vi dựa trên hiểu biết cụ thể về phần bị bỏ ra.
+
+\noindent\textbf{Hai khung quy định đáng chú ý.} Lệnh số 248 của Tổng cục Hải quan Trung Quốc, ban hành ngày 12/4/2021 và có hiệu lực từ 1/1/2022, buộc mọi cơ sở sản xuất, chế biến và bảo quản thực phẩm nước ngoài phải đăng ký mã số trước khi xuất hàng vào Trung Quốc. Riêng mười tám nhóm thực phẩm rủi ro cao --- trong đó có rau quả tươi và rau quả sấy khô --- phải do cơ quan thẩm quyền của nước xuất khẩu tiến cử, doanh nghiệp không tự đăng ký trực tiếp được \parencite{gacc_decree248}. Ở châu Âu, Điều 18 Quy định (EC) số 178/2002 buộc mọi tác nhân trong chuỗi thực phẩm phải xác định được nhà cung cấp liền trước và khách hàng liền sau của mình, tức nguyên tắc ``một bước lùi, một bước tiến'' \parencite{eu_gfl_178_2002}. Cần lưu ý bản thân Điều 18 không ấn định thời hạn lưu hồ sơ; các mốc cụ thể nằm ở hướng dẫn thi hành của Uỷ ban châu Âu, theo đó hàng có hạn sử dụng dưới ba tháng chỉ cần lưu sáu tháng, còn hàng không ghi hạn sử dụng thì lưu năm năm \parencite{ec_gfl_guidance}.
+
+\noindent\textbf{Khoảng cách so với thiết kế hiện tại.} Phụ lục N đối chiếu năm tiêu chí: cách xác minh chứng nhận, cách định danh vùng trồng, thời hạn lưu trữ hồ sơ, số bên tham gia truy xuất, và yêu cầu giám sát sinh vật gây hại. Điểm chung của cả năm là chúng không phải chuyện ``thêm vài trường dữ liệu''. Xác minh chứng nhận phải đi qua đầu mối Nhà nước thay vì do quản trị viên tự kiểm duyệt; định danh vùng trồng phải là mã số chính thức có thể bị thu hồi; và chuỗi truy xuất giãn từ hai lớp --- nhà cung cấp và nền tảng --- thành năm sáu bên độc lập gồm cả cơ sở đóng gói, đơn vị kiểm dịch và hải quan hai nước.
+
+Khoảng cách đó xác nhận quyết định đặt xuất khẩu ngoài phạm vi là hợp lý: nó kéo theo thay đổi về quy trình xác minh, thời hạn lưu trữ và số bên tham gia, vượt khỏi khối lượng hợp lý của một đồ án một học kỳ. Điều kiện cụ thể để mở rộng về sau được trình bày tại Chương~\ref{chap:ketluan}.
+
 \section{Bối cảnh chính sách và tiêu chuẩn chất lượng nông sản}
 \label{sec:boicanhchinhsach}
 
@@ -111,7 +124,24 @@ GS1 là tổ chức quốc tế phi lợi nhuận xây dựng các chuẩn đị
 
 Blockchain là công nghệ chuỗi khối phân tán, cho phép ghi chép và lưu trữ thông tin theo cách không thể thay đổi hoặc làm giả, nhờ đó đảm bảo tính minh bạch, tin cậy và bảo mật cao cho các giao dịch. Trong lĩnh vực thương mại điện tử, blockchain có thể hỗ trợ các bên (doanh nghiệp, nông dân, đơn vị vận chuyển) trong truy xuất nguồn gốc sản phẩm, tối ưu hóa quản lý chuỗi cung ứng và nâng cao hiệu quả giao dịch thương mại quốc tế.
 
-Tuy nhiên, blockchain vấp phải một giới hạn căn bản khi áp dụng cho truy xuất nguồn gốc thực phẩm: nó chỉ bảo đảm dữ liệu không bị sửa \emph{sau khi đã ghi}, chứ không xác minh được dữ liệu đưa vào ban đầu có đúng hay không. Nông dân và cơ sở chế biến nhỏ vẫn nhập thông tin thủ công, nên gian lận tại nguồn hoặc tráo hàng trước khi đóng gói vẫn xảy ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Vì vậy Farmery lưu nhật ký canh tác trên cơ sở dữ liệu tập trung theo nguyên lý định danh của GS1, kèm cơ chế bất biến sau khi công khai (NFR9.1); blockchain chỉ đáng cân nhắc khi số bên tham gia độc lập vào chuỗi đủ lớn để lợi ích phi tập trung vượt chi phí vận hành.
+Tuy nhiên, blockchain vấp phải một giới hạn căn bản khi áp dụng cho truy xuất nguồn gốc thực phẩm: nó chỉ bảo đảm dữ liệu không bị sửa \emph{sau khi đã ghi}, chứ không xác minh được dữ liệu đưa vào ban đầu có đúng hay không. Nông dân và cơ sở chế biến nhỏ vẫn nhập thông tin thủ công, nên gian lận tại nguồn hoặc tráo hàng trước khi đóng gói vẫn xảy ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Vì vậy Farmery lưu nhật ký canh tác trên cơ sở dữ liệu tập trung theo nguyên lý định danh của GS1, kèm cơ chế bất biến sau khi công khai (NFR9.1).
+
+Điều kiện để blockchain thực sự phát huy tác dụng thể hiện rõ ở trường hợp thành công được trích dẫn nhiều nhất: Walmart phối hợp với IBM Food Trust rút thời gian truy vết nguồn gốc một lô xoài bán tại Hoa Kỳ từ bảy ngày xuống còn 2,2 giây \parencite{walmart_ibm_foodtrust}. Kết quả này có một tiền đề mà Farmery không có: Walmart đủ lớn để buộc toàn bộ nhà cung cấp trong chuỗi nhập liệu đúng chuẩn lên cùng một hệ thống. Một sàn thương mại điện tử mới, với nhiều nhà cung cấp nhỏ lẻ phân tán, không có đòn bẩy đàm phán tương đương --- mà chính chất lượng dữ liệu đầu vào mới quyết định giá trị của bản ghi bất biến.
+
+Lý do thường được viện dẫn để trì hoãn blockchain --- chi phí hạ tầng --- lại không đứng vững khi kiểm chứng. Một nghiên cứu so sánh chi phí hạ tầng công nghệ thông tin giữa mô hình tập trung và mô hình blockchain trên mười ba kịch bản triển khai cho chuỗi cung ứng gia cầm tại Thái Lan kết luận blockchain có chi phí hạ tầng thấp hơn khoảng 43\% so với cách làm tập trung đang vận hành \parencite{thai_broiler_blockchain_2025}. Báo cáo này vì vậy không lấy chi phí làm căn cứ để chưa dùng blockchain.
+
+Căn cứ thật nằm ở nhóm rào cản khác. Một nghiên cứu năm 2025 về rào cản áp dụng blockchain cho chuỗi cung ứng thực phẩm dễ hư hỏng --- cùng đặc thù dễ hư hỏng của nông sản mà Farmery phục vụ --- xếp hạng mười bốn rào cản, ba vị trí cao nhất lần lượt là lo ngại bảo mật dữ liệu đi kèm mức độ trưởng thành công nghệ chưa đủ, nguy cơ xâm phạm quyền riêng tư dữ liệu, và thiếu hạ tầng số \parencite{perishable_blockchain_barriers_2025}. Rào cản thứ ba trùng khít với đặc điểm đã phân tích của nhóm nhà cung cấp tại mục~\ref{sec:doituongnguoidung}: hạn chế về kỹ năng số và thiết bị. Nói cách khác, đưa blockchain vào lúc này sẽ dựng thêm rào cản gia nhập cho đúng nhóm người dùng mà đề tài đặt mục tiêu hạ rào cản.
+
+\subsection{Nguồn dữ liệu nông sản cho phân tích và mô hình AI}
+\label{subsec:nguondulieunongsan}
+
+Hai mô-đun AI trong phạm vi đồ án --- gợi ý sản phẩm và dự báo nhu cầu, giá theo mùa vụ --- cần dữ liệu nông sản làm đầu vào huấn luyện và đánh giá. Mục này khảo sát các nguồn công khai tại Việt Nam có thể phục vụ mục đích đó, đối chiếu với dữ liệu mà chính nền tảng sẽ tạo ra sau khi vận hành. Phụ lục O tổng hợp bảy nguồn đã khảo sát kèm mức khả dụng của từng nguồn.
+
+Một quan sát đáng nêu thẳng: mục ``Nông nghiệp'' trên Cổng dữ liệu mở quốc gia chỉ có hai bộ dữ liệu được công bố tại thời điểm khảo sát, ít hơn hẳn các lĩnh vực khác trên cùng cổng \parencite{opendata_govvn}. Nguồn có giá trị nhất về mặt thống kê là số liệu diện tích, năng suất và sản lượng theo cây trồng và địa phương do Cục Thống kê công bố \parencite{cucthongke_nongnghiep}, nhưng tần suất theo quý và năm nên chỉ đủ dựng đường nền theo mùa vụ, không đủ chi tiết để dự báo giá ngắn hạn.
+
+\noindent\textbf{Nhận định.} Không có nguồn mở nào đủ tốt để huấn luyện thẳng mô-đun dự báo ngay từ ngày đầu vận hành. Hướng khả thi kết hợp ba lớp. Thứ nhất, số liệu vĩ mô của Cục Thống kê và FAOSTAT làm đường nền theo mùa vụ. Thứ hai, dữ liệu do chính Farmery tích lũy sau khi vận hành --- giai đoạn đầu chưa đủ dữ liệu thì dùng phương pháp thống kê đơn giản theo mùa vụ, chuyển sang mô hình học máy khi lượng giao dịch đủ lớn. Thứ ba, hệ thống truy xuất quốc gia và mã số vùng trồng dùng để \emph{chuẩn hóa lược đồ định danh}, không phải để lấy dữ liệu huấn luyện --- nhất quán với nguyên lý định danh GS1 đã chọn ở mục~\ref{subsec:gs1blockchain}.
+
+Hạn chế về dữ liệu này được nêu lại khi đánh giá mô-đun AI tại Chương~\ref{chap:danhgia}, thay vì né tránh.
 
 \subsection{Hệ thống đánh giá, uy tín và niềm tin (reputation, information asymmetry)}
 \label{subsec:reputation}

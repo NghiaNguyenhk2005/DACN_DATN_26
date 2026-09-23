@@ -529,3 +529,107 @@ kỳ. Ghi rõ tuần 14 không có dự phòng nên chậm trễ phải xử lý
 sinh.
 **Sửa đồng bộ:** mục Phạm vi thời gian và mục Cấu trúc báo cáo ở Chương 1 trước
 đây đều nhắc "kế hoạch mười lăm tuần", nay đổi theo hai mốc ngày thật.
+
+### Lập luận blockchain: bỏ căn cứ chi phí, chuyển sang căn cứ rào cản người dùng — 2026-09-24
+**Bối cảnh:** Nhánh của thành viên khác đưa vào `chapters/_incoming/` một bản mở
+rộng cho `subsec:gs1blockchain` kèm năm nguồn mới. Rà soát từng nguồn thì bốn
+trong năm khẳng định sai hoặc không kiểm chứng được: Walmart/IBM là truy xuất
+**xoài** từ **bảy ngày** xuống 2,2 giây chứ không phải rau lá xanh từ hơn sáu
+ngày; TE-FOOD xử lý 12.000 heo/ngày chứ không phải 18.000, và câu "garbage in,
+garbage out" gán cho TE-FOOD không tìm được nguồn; nghiên cứu Thái Lan 2025 được
+viện dẫn để nói blockchain đắt, trong khi chính nó kết luận blockchain rẻ hơn
+khoảng 43%; khẳng định lấy từ Longo 2020 không xác nhận được.
+**Quyết định:** Không merge file `_incoming/nghien-cuu-blockchain.tex`. Thay vào
+đó tự viết ba đoạn nối sau đoạn thứ ba của `subsec:gs1blockchain`, chỉ dùng ba
+nguồn đã kiểm chứng đầy đủ (case study Hyperledger về Walmart; Pongnumkul và cộng
+sự 2025; Garg và cộng sự 2025).
+**Thay đổi về lập luận:** trước đây đoạn kết nói blockchain "chỉ đáng cân nhắc
+khi lợi ích phi tập trung vượt **chi phí vận hành**" --- căn cứ này đã bị chính
+nguồn Thái Lan bác bỏ. Nay báo cáo **nêu thẳng rằng chi phí không phải lý do**,
+và đặt căn cứ vào hai thứ khác: blockchain không xác minh được dữ liệu đầu vào,
+và ba rào cản hàng đầu theo Garg 2025 --- trong đó "thiếu hạ tầng số" trùng khít
+với đặc điểm nhóm nhà cung cấp tại `sec:doituongnguoidung`.
+**Lý do:** thừa nhận một bằng chứng ngược lại rồi vẫn giữ được kết luận thì lập
+luận vững hơn là né bằng chứng đó; đồng thời chặn trước câu phản biện "blockchain
+bây giờ đâu còn đắt" khi bảo vệ.
+**Đánh đổi:** dài thêm hai trang ở Chương 2 vừa mới rút gọn, đổi lấy một lập luận
+không thể bị lật bằng một lần tra nguồn.
+
+### Nhận hai file _incoming còn lại sau khi sửa lỗi dữ kiện — 2026-09-24
+**Bối cảnh:** Trước đó hoãn `nguon-du-lieu-nong-san.tex` vì file tự ghi `% TODO`
+cần chốt số liệu 18.000 vs 18.500 sản phẩm, 24 vs 26 tỉnh. Rà lại thì **những con
+số đó chỉ nằm trong chính dòng TODO, không có trong nội dung** --- lý do hoãn đã
+lỗi thời.
+**Lỗi dữ kiện phát hiện và đã sửa trước khi nhận:**
+- `nhat-ky-canh-tac.tex` ghi "Lệnh 280 của GACC, hiệu lực 1/6/2026, áp dụng cho
+  17 nhóm thực phẩm" --- cả ba đều sai. Đúng là **Lệnh 248**, ban hành 12/4/2021,
+  **hiệu lực 1/1/2022**, áp dụng cho **18 nhóm**.
+- Thời hạn lưu hồ sơ 5 năm được gán cho Điều 18 EC 178/2002. Điều 18 **không ấn
+  định thời hạn**; các mốc nằm ở hướng dẫn thi hành của Uỷ ban châu Âu, và mốc 6
+  tháng áp cho hàng có hạn sử dụng dưới 3 tháng chứ không phải "hàng dễ hư hỏng".
+- Cả hai file gọi hệ thống truy xuất quốc gia là **"CheckVN"**. CheckVN là ứng
+  dụng quét tem chống hàng giả của IDE, không phải hệ thống của Bộ NN&MT.
+- "Tổng cục Thống kê" --- từ 1/3/2025 là **Cục Thống kê** thuộc Bộ Tài chính.
+- Tám chỗ dùng từ "MVP", vốn đã được loại khỏi báo cáo từ trước.
+**Đã kiểm chứng đúng:** hệ thống truy xuất quốc gia vận hành từ 1/7/2026;
+Nghị định 38/2026/NĐ-CP về mã số vùng trồng (báo cáo đang dẫn văn bản này, mới
+hơn QĐ 3156/2022 mà file _incoming đề xuất --- nên giữ nguyên bản đang có).
+**Cách ghép:** hai bảng dài đưa xuống Phụ lục N và O, thân bài chỉ giữ phần lập
+luận. Phần thảo luận xuất khẩu đặt tại `subsec:nhatkycanhtac-xuatkhau` (Chương 2),
+phần nguồn dữ liệu AI đặt sau `subsec:gs1blockchain`, phần hướng phát triển nối
+vào Chương 8.
+**Lý do giữ phần thảo luận xuất khẩu:** bảng khoảng cách năm tiêu chí là bằng
+chứng cho thấy việc đặt xuất khẩu ngoài phạm vi là quyết định có cân nhắc, không
+phải né việc.
+
+### Phóng cỡ chữ sơ đồ use case và đổi cách đặt hình gần trọn trang — 2026-09-24
+**Bối cảnh:** Năm sơ đồ use case in ra chỉ 3,2--4,0pt so với thân bài 12pt, gần
+như không đọc được. Nguyên nhân là tỉ lệ `font_px / body_width_px`: ảnh rộng
+1360--1620px luôn bị ép về 16cm.
+**Quyết định:** giữ nguyên trục ngang, chỉ nhân cỡ chữ và trục dọc --- hình hẹp
+lại và cao lên, tận dụng chiều cao trang vốn đang bỏ trống. Cả năm hình nay đạt
+~7pt. Riêng sơ đồ tổng quan được viết lại hẳn theo bố cục hai cột.
+**Lý do không chọn cách khác:** phóng đều mọi kích thước không đổi được gì vì tỉ
+lệ giữ nguyên; xoay ngang trang chỉ được 1,34 lần và người dùng đã bác cách trình
+bày nằm ngang từ trước.
+**Hệ quả về bố cục:** hình cao 18--20cm không vừa `[H]`, bị đẩy sang trang sau và
+bỏ lại 2/3 trang trắng. Đổi sang `[p]` (trang float riêng) kèm `adjustbox` chặn
+chiều cao theo `\textheight-2.5cm`. Phần chữ nay chạy liên tục, báo cáo bớt một
+trang dù hình to hơn hẳn.
+**Sửa kèm:** thống nhất tên tác nhân trong hình theo báo cáo (Nhà cung cấp, Khách
+lẻ, Khách sỉ --- trước đó hình ghi Nhà bán, Người mua lẻ, Người mua sỉ trong khi
+caption đã dùng tên mới); bỏ số hình giữ chỗ "Hình 5.y/5.z" ở chân các hình; thêm
+`\captionsetup{justification=centering}` để caption dài hơn một dòng được căn giữa
+thay vì canh đều.
+
+### Nhận đặc tả use case và vẽ lại sơ đồ tổng quan cho khớp phạm vi — 2026-09-24
+**Bối cảnh:** `_incoming/dac-ta-usecase.tex` có phần chữ đã đúng phạm vi mới
+(có `ops_sourcing`, luồng 1P, actor AI chỉ còn FR12.1/FR12.2), nhưng năm ảnh
+PNG đi kèm vẫn vẽ theo phạm vi cũ.
+**Quyết định:** nhận file đặc tả, vẽ lại `usecase-overview.html` trước khi ghép.
+Bốn sơ đồ chi tiết còn lại kiểm tra thì đã đúng --- riêng `usecase-quan-tri-vien`
+đã vẽ đúng hai vai trò chuyên trách cộng generalization từ `admin`, nên cảnh báo
+"cần vẽ lại" trong file `.tex` là cảnh báo cũ chưa dọn.
+**Bốn sửa đổi trên sơ đồ tổng quan:**
+- Bỏ use case trợ lý ảo (chatbot) --- chức năng đã cắt khỏi phạm vi.
+- Chuyển "phát hiện bất thường" khỏi gói AI sang gói quản trị và đổi tên thành
+  "giám sát bất thường theo luật ngưỡng", đúng với quyết định hạ cấp ngày 23/9:
+  năng lực vẫn còn nhưng thuộc FR10/NFR9.1, không phải FR12.
+- Thêm actor Bộ phận thu mua (`ops_sourcing`) và hai use case thu mua 1P vào gói
+  giao dịch; gói này đổi tên thành "Giao dịch, thu mua & thanh toán".
+- Sửa nhãn actor quản trị viên từ "2 vai trò" thành "3 vai trò".
+**Dọn khi ghép:** bỏ toàn bộ khối comment bàn giao, cảnh báo RBAC lỗi thời, và
+câu "khác với giả định ban đầu về 5 vai trò admin" --- lịch sử nội bộ không thuộc
+về văn bản báo cáo.
+**Còn lại:** mới đặc tả chi tiết 6 trong số hơn 45 use case đã liệt kê; nếu cần
+đặc tả đầy đủ thì làm tiếp theo đúng mẫu bảng hiện có.
+
+### Sửa số vai trò quản trị còn sót ở NFR2.1 — 2026-09-24
+**Bối cảnh:** Quyết định ngày 23/9 gộp vai trò quản trị từ 5 xuống 3, nhưng NFR2.1
+ở Chương 4 vẫn còn hai chỗ ghi "5 vai trò", khiến chương tự mâu thuẫn với Bảng 4.2
+của chính nó.
+**Quyết định:** sửa thành "ba vai trò đã thiết kế" và "hai vai trò chuyên trách
+cộng một vai trò gộp quyền".
+**Ghi chú:** một bản rà soát từ nhánh khác cũng báo `phuluc-matran.tex` FR1 ghi
+"5 nhóm người dùng" là tàn dư --- kiểm lại thì **không phải lỗi**, hệ thống thật
+sự có năm nhóm người dùng. Giữ nguyên.
