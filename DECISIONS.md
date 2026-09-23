@@ -505,3 +505,27 @@ RAG, NLP khỏi danh mục từ viết tắt.
 nhu cầu đó biến mất, nên lập luận rút còn ba nhu cầu: transaction có row-level
 locking, dữ liệu không gian, và JSON có chỉ mục. Lập luận vẫn đứng vững vì
 row-level locking mới là lý do cốt lõi.
+
+### Kế hoạch thực hiện viết lại theo hai giai đoạn có mốc ngày thật — 2026-09-23
+**Bối cảnh:** Bản cũ là nháp 15 tuần đánh số chung chung, không có ngày, không
+phản ánh việc đồ án chia hai đợt nộp, và đã lệch thực tế --- tuần 3--4 theo kế
+hoạch lẽ ra xong phần thiết kế nhưng tới 23/9 vẫn còn nguyên bảy hạng mục.
+**Quyết định (user chốt):**
+- Hai mốc là nộp giữa kỳ 15/10/2026 và nộp cuối kỳ 31/12/2026, cả hai đều thuộc
+  môn Đồ án chuyên ngành CO4029 này. Đổi tiêu đề từ "Kế hoạch thực hiện Đồ án tốt
+  nghiệp" thành "Kế hoạch thực hiện" cho đúng.
+- Một bảng duy nhất bao trọn từ 23/9 tới 31/12, chia hai dải giai đoạn, mỗi tuần
+  có khoảng ngày cụ thể.
+- Bỏ hẳn cột "Phụ trách".
+**Cách phân bổ:** giai đoạn 1 ba tuần dành cho phần thiết kế còn dang dở cộng
+dựng nền hệ thống; giai đoạn 2 mười một tuần cho hiện thực, kiểm thử, đánh giá.
+Cột "Kết quả" ghi rõ mục nào trong báo cáo được hoàn thiện, để tiến độ truy được
+về nội dung cụ thể thay vì chỉ là mô tả công việc.
+**Bổ sung phần rủi ro tiến độ:** nêu thẳng giai đoạn 2 phải làm tám module nghiệp
+vụ và hai mô-đun AI trong mười một tuần, kèm hai biện pháp đã chuẩn bị --- thứ tự
+hiện thực bám mức độ ưu tiên MoSCoW ở Phụ lục M (nếu thiếu thời gian thì cắt nhóm
+Could), và xếp module khó nhất (chống bán vượt tồn kho) vào tuần 6--7 thay vì cuối
+kỳ. Ghi rõ tuần 14 không có dự phòng nên chậm trễ phải xử lý ngay trong tuần phát
+sinh.
+**Sửa đồng bộ:** mục Phạm vi thời gian và mục Cấu trúc báo cáo ở Chương 1 trước
+đây đều nhắc "kế hoạch mười lăm tuần", nay đổi theo hai mốc ngày thật.
