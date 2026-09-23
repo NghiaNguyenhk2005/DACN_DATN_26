@@ -529,3 +529,38 @@ kỳ. Ghi rõ tuần 14 không có dự phòng nên chậm trễ phải xử lý
 sinh.
 **Sửa đồng bộ:** mục Phạm vi thời gian và mục Cấu trúc báo cáo ở Chương 1 trước
 đây đều nhắc "kế hoạch mười lăm tuần", nay đổi theo hai mốc ngày thật.
+
+### Lập luận blockchain: bỏ căn cứ chi phí, chuyển sang căn cứ rào cản người dùng — 2026-09-24
+**Bối cảnh:** Nhánh của thành viên khác đưa vào `chapters/_incoming/` một bản mở
+rộng cho `subsec:gs1blockchain` kèm năm nguồn mới. Rà soát từng nguồn thì bốn
+trong năm khẳng định sai hoặc không kiểm chứng được: Walmart/IBM là truy xuất
+**xoài** từ **bảy ngày** xuống 2,2 giây chứ không phải rau lá xanh từ hơn sáu
+ngày; TE-FOOD xử lý 12.000 heo/ngày chứ không phải 18.000, và câu "garbage in,
+garbage out" gán cho TE-FOOD không tìm được nguồn; nghiên cứu Thái Lan 2025 được
+viện dẫn để nói blockchain đắt, trong khi chính nó kết luận blockchain rẻ hơn
+khoảng 43%; khẳng định lấy từ Longo 2020 không xác nhận được.
+**Quyết định:** Không merge file `_incoming/nghien-cuu-blockchain.tex`. Thay vào
+đó tự viết ba đoạn nối sau đoạn thứ ba của `subsec:gs1blockchain`, chỉ dùng ba
+nguồn đã kiểm chứng đầy đủ (case study Hyperledger về Walmart; Pongnumkul và cộng
+sự 2025; Garg và cộng sự 2025).
+**Thay đổi về lập luận:** trước đây đoạn kết nói blockchain "chỉ đáng cân nhắc
+khi lợi ích phi tập trung vượt **chi phí vận hành**" --- căn cứ này đã bị chính
+nguồn Thái Lan bác bỏ. Nay báo cáo **nêu thẳng rằng chi phí không phải lý do**,
+và đặt căn cứ vào hai thứ khác: blockchain không xác minh được dữ liệu đầu vào,
+và ba rào cản hàng đầu theo Garg 2025 --- trong đó "thiếu hạ tầng số" trùng khít
+với đặc điểm nhóm nhà cung cấp tại `sec:doituongnguoidung`.
+**Lý do:** thừa nhận một bằng chứng ngược lại rồi vẫn giữ được kết luận thì lập
+luận vững hơn là né bằng chứng đó; đồng thời chặn trước câu phản biện "blockchain
+bây giờ đâu còn đắt" khi bảo vệ.
+**Đánh đổi:** dài thêm hai trang ở Chương 2 vừa mới rút gọn, đổi lấy một lập luận
+không thể bị lật bằng một lần tra nguồn.
+
+### Sửa số vai trò quản trị còn sót ở NFR2.1 — 2026-09-24
+**Bối cảnh:** Quyết định ngày 23/9 gộp vai trò quản trị từ 5 xuống 3, nhưng NFR2.1
+ở Chương 4 vẫn còn hai chỗ ghi "5 vai trò", khiến chương tự mâu thuẫn với Bảng 4.2
+của chính nó.
+**Quyết định:** sửa thành "ba vai trò đã thiết kế" và "hai vai trò chuyên trách
+cộng một vai trò gộp quyền".
+**Ghi chú:** một bản rà soát từ nhánh khác cũng báo `phuluc-matran.tex` FR1 ghi
+"5 nhóm người dùng" là tàn dư --- kiểm lại thì **không phải lỗi**, hệ thống thật
+sự có năm nhóm người dùng. Giữ nguyên.
