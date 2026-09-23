@@ -1,0 +1,177 @@
+% Phụ lục B — bộ công cụ khảo sát khả dụng, dùng cho mục 7.4.2.
+% Soạn sẵn để khi hệ thống chạy được là mang đi khảo sát ngay.
+
+\section*{Phụ lục B. Bộ công cụ khảo sát độ khả dụng}
+\label{apdx:khaosat}
+\addcontentsline{toc}{section}{Phụ lục B. Bộ công cụ khảo sát độ khả dụng}
+
+Phụ lục này cung cấp đầy đủ công cụ để tiến hành khảo sát độ khả dụng nêu tại
+mục~\ref{sec:danhgiaux}: kịch bản tác vụ cho người quan sát, phiếu ghi kết quả,
+bộ câu hỏi SUS và công thức quy đổi điểm.
+
+\subsection*{B.1. Thiết kế khảo sát}
+
+\noindent\textbf{Đối tượng tham gia.} Nông dân và thành viên ban điều hành hợp
+tác xã tại vùng trồng thí điểm --- nhóm có mức độ thành thạo công nghệ thấp
+nhất trong các nhóm người dùng (mục~\ref{sec:doituongnguoidung}). Đây là phép
+thử khó nhất: nếu nhóm này dùng được thì các nhóm còn lại không phải trở ngại.
+
+\noindent\textbf{Cỡ mẫu.} Tối thiểu 8 người. Với kiểm thử khả dụng, 5 người đã
+đủ phát hiện phần lớn lỗi nghiêm trọng về giao diện; 8--10 người cho điểm SUS
+ổn định hơn mà vẫn khả thi trong phạm vi đồ án.
+
+\noindent\textbf{Nguyên tắc tiến hành:}
+\begin{itemize}
+    \item Người quan sát \textbf{không hướng dẫn thao tác}. Chỉ đọc bối cảnh tác
+    vụ rồi quan sát. Khi người tham gia hỏi, trả lời bằng câu trung lập kiểu
+    ``anh/chị thử xem trên màn hình có gì giúp được không''.
+    \item Ghi lại thời điểm bắt đầu và kết thúc từng tác vụ, số lần người tham
+    gia bế tắc, và \emph{nguyên văn} câu than phiền nếu có --- câu nói tự nhiên
+    của người dùng thường chỉ thẳng ra vấn đề giao diện.
+    \item Một tác vụ được tính là \textbf{hoàn thành} khi người tham gia tự làm
+    xong mà không cần người quan sát chỉ dẫn thao tác cụ thể.
+    \item Phát bộ câu hỏi SUS \emph{ngay sau} khi làm xong toàn bộ tác vụ, trước
+    khi trao đổi thêm, để tránh ảnh hưởng tới cảm nhận.
+\end{itemize}
+
+\subsection*{B.2. Kịch bản tác vụ}
+
+Ba tác vụ dưới đây bao phủ các thao tác mà nhà cung cấp phải làm thường xuyên
+nhất. Người quan sát đọc to phần bối cảnh, không đọc phần tiêu chí hoàn thành.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{1.1cm} L{6.4cm} L{6.6cm}}
+\caption{Kịch bản tác vụ dùng trong khảo sát độ khả dụng}
+\label{tab:kichban-khaosat} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Bối cảnh đọc cho người tham gia} & \textbf{Tiêu chí hoàn thành} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Bối cảnh đọc cho người tham gia} & \textbf{Tiêu chí hoàn thành} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{T1} & ``Anh/chị vừa thu hoạch một lô rau và muốn đưa lên bán. Hãy đăng lô rau này lên hệ thống, có kèm ảnh.'' & Sản phẩm được tạo, gắn đúng danh mục lá, có ít nhất một ảnh, nhập đủ đơn vị tính và ngày thu hoạch, và chuyển sang trạng thái chờ duyệt. \\
+\rowcolor{tblaltbg}
+\textbf{T2} & ``Hôm nay anh/chị vừa bón phân cho lô rau vừa đăng. Hãy ghi lại việc đó vào hệ thống.'' & Tạo được một bản ghi nhật ký canh tác gắn đúng lô, có ngày và nội dung hoạt động. \\
+\textbf{T3} & ``Có người hỏi lô rau này trồng ở đâu. Hãy tìm mã QR của lô để đưa cho họ tra cứu.'' & Tìm tới được mã QR của đúng lô và mở được trang truy xuất tương ứng. \\
+\end{longtable}
+\endgroup
+
+\noindent\textbf{Tác vụ bổ sung (tùy chọn).} Nếu còn thời gian và người tham
+gia chưa mệt, thử thêm tác vụ xem báo giá thu mua của nền tảng và phản hồi đồng
+ý bán --- đây là luồng đặc thù của mô hình 1P.
+
+\subsection*{B.3. Phiếu ghi kết quả của người quan sát}
+
+Mỗi người tham gia dùng một phiếu.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.6}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{1.1cm} L{2.4cm} L{2.2cm} L{2.0cm} L{5.8cm}}
+\caption{Phiếu ghi kết quả quan sát theo từng tác vụ}
+\label{tab:phieu-quansat} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tác vụ} & \textbf{Hoàn thành?} & \textbf{Thời gian} & \textbf{Số lần bế tắc} & \textbf{Ghi chú, nguyên văn câu than phiền} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tác vụ} & \textbf{Hoàn thành?} & \textbf{Thời gian} & \textbf{Số lần bế tắc} & \textbf{Ghi chú, nguyên văn câu than phiền} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+T1 & Có / Không & \hrulefill & \hrulefill & \hrulefill \\
+\rowcolor{tblaltbg}
+T2 & Có / Không & \hrulefill & \hrulefill & \hrulefill \\
+T3 & Có / Không & \hrulefill & \hrulefill & \hrulefill \\
+\end{longtable}
+\endgroup
+
+\noindent Thông tin nền cần ghi cho mỗi người tham gia: độ tuổi, vai trò (nông
+dân hay cán bộ hợp tác xã), loại thiết bị đang dùng, và mức độ quen dùng ứng
+dụng mua sắm trực tuyến (thường xuyên / thỉnh thoảng / chưa từng).
+
+\subsection*{B.4. Bộ câu hỏi SUS}
+
+Bộ câu hỏi System Usability Scale gồm mười câu, trả lời theo thang năm mức:
+\textbf{1 = rất không đồng ý} đến \textbf{5 = rất đồng ý}. Bản dịch dưới đây
+giữ nguyên cấu trúc xen kẽ câu thuận và câu nghịch của thang gốc, nhưng dùng
+cách diễn đạt đời thường để người tham gia không quen thuật ngữ vẫn hiểu.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.4}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{0.8cm} L{10.2cm} L{3.4cm}}
+\caption{Bộ mười câu hỏi SUS đánh giá độ khả dụng}
+\label{tab:cauhoi-sus} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{STT} & \textbf{Câu hỏi} & \textbf{Mức chọn} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{STT} & \textbf{Câu hỏi} & \textbf{Mức chọn} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & Tôi nghĩ mình sẽ dùng hệ thống này thường xuyên. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\rowcolor{tblaltbg}
+2 & Tôi thấy hệ thống phức tạp một cách không cần thiết. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+3 & Tôi thấy hệ thống dễ dùng. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\rowcolor{tblaltbg}
+4 & Tôi nghĩ mình cần người hỗ trợ kỹ thuật thì mới dùng được hệ thống này. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+5 & Tôi thấy các chức năng trong hệ thống được sắp xếp gắn kết với nhau. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\rowcolor{tblaltbg}
+6 & Tôi thấy hệ thống có nhiều chỗ không nhất quán. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+7 & Tôi nghĩ phần lớn mọi người sẽ học cách dùng hệ thống này rất nhanh. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\rowcolor{tblaltbg}
+8 & Tôi thấy hệ thống rườm rà, khó thao tác. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+9 & Tôi cảm thấy tự tin khi dùng hệ thống. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\rowcolor{tblaltbg}
+10 & Tôi cần học rất nhiều thứ trước khi có thể dùng được hệ thống này. & 1 \quad 2 \quad 3 \quad 4 \quad 5 \\
+\end{longtable}
+\endgroup
+
+\subsection*{B.5. Cách tính điểm SUS}
+
+Điểm SUS không phải trung bình cộng đơn thuần, mà tính theo ba bước:
+
+\begin{enumerate}
+    \item \textbf{Câu lẻ} (1, 3, 5, 7, 9) --- lấy điểm người trả lời chọn \emph{trừ đi} 1.
+    \item \textbf{Câu chẵn} (2, 4, 6, 8, 10) --- lấy 5 \emph{trừ đi} điểm người trả lời chọn.
+    \item Cộng mười giá trị vừa tính rồi \textbf{nhân với 2{,}5} để quy về thang 100.
+\end{enumerate}
+
+Gọi $x_i$ là điểm người trả lời chọn ở câu $i$, điểm SUS của một người tham gia là:
+\[
+\text{SUS} = 2{,}5 \times \left( \sum_{i \in \{1,3,5,7,9\}} (x_i - 1) \;+\; \sum_{i \in \{2,4,6,8,10\}} (5 - x_i) \right)
+\]
+
+Điểm cuối cùng của hệ thống là trung bình cộng điểm SUS của tất cả người tham gia.
+
+\noindent\textbf{Cách đọc kết quả.} Thang SUS có mốc tham chiếu quen thuộc:
+điểm 68 là mức trung bình của các hệ thống đã được khảo sát; dưới 68 là dưới
+trung bình; khoảng 73--80 thường được xếp loại tốt; trên 80 là rất tốt. Lưu ý
+điểm SUS là điểm \emph{tương đối trên thang 100}, không phải tỷ lệ phần trăm ---
+tránh diễn giải nhầm thành ``76,5\% người dùng hài lòng''.
+
+\noindent\textbf{Lưu ý khi báo cáo kết quả.} Ngoài điểm trung bình, nên báo cáo
+cả khoảng dao động giữa người thấp nhất và cao nhất. Với cỡ mẫu nhỏ, một người
+gặp khó khăn nặng đủ kéo tụt điểm trung bình --- chính trường hợp đó mới là
+thông tin đáng giá để sửa giao diện, không nên làm mờ đi bằng cách chỉ nêu
+trung bình.

@@ -31,28 +31,28 @@ khi đánh giá kết quả tại Chương~\ref{chap:danhgia}.
 \endfoot
 \textbf{NFR1.1} &
 Thời gian phản hồi tại percentile 95 (p95) dưới 2 giây với tải truy cập thông thường; số đo thực tế đối chiếu tại mục~\ref{sec:danhgiahieunang}. &
-2 giây là ngưỡng phổ biến được xem là ranh giới giữa trải nghiệm ``nhanh'' và ``chậm'' khi duyệt web, phù hợp làm mục tiêu cho một hệ thống chưa đầu tư tối ưu hạ tầng; đo ở p95 thay vì trung bình để tránh số liệu bị pha loãng bởi phần lớn truy vấn nhanh trong khi một số ít truy vấn chậm bất thường vẫn ảnh hưởng trải nghiệm thực tế. \\
+Xuất phát từ nhà cung cấp: họ dùng điện thoại tầm trung với mạng 4G không ổn định ở vùng trồng (persona 1, mục~\ref{sec:doituongnguoidung}), nên mọi độ trễ từ phía máy chủ đều cộng dồn lên độ trễ đường truyền vốn đã cao. Nếu thao tác đăng sản phẩm bị chậm, họ sẽ bỏ dở --- đúng điểm đau ``sợ quy trình rườm rà mất thời gian canh tác''. Chọn 2 giây vì đây là ngưỡng người dùng bắt đầu cảm nhận được là chậm; đo ở p95 thay vì trung bình vì chính nhóm mạng yếu nằm ở phần đuôi phân bố, nếu lấy trung bình thì trải nghiệm của họ bị che mất. \\
 \rowcolor{tblaltbg}
 \textbf{NFR1.2} &
 Kiểm thử với tối thiểu 50 yêu cầu đặt hàng đồng thời trên cùng một lô có tồn kho giới hạn; tỷ lệ đơn hàng gây vượt tồn kho phải bằng 0\%. &
 Đây là ràng buộc nghiệp vụ cứng, không có mức ``sai số nhỏ chấp nhận được'' -- oversell lớn hơn 0\% gây thiệt hại tài chính và uy tín trực tiếp cho nhà cung cấp (liên hệ mục~\ref{subsec:danhgianghiepvu}). \\
 \textbf{NFR2.1} &
 Khi bổ sung một vai trò/mô-đun mới, toàn bộ test case hồi quy (regression) của các module hiện có phải PASS -- 0 test case bị phá vỡ. &
-Đồ án không có điều kiện đo trực tiếp ``chi phí thay đổi kiến trúc'' bằng một con số; số test case hồi quy bị phá vỡ là chỉ số gián tiếp nhưng kiểm chứng được. \\
+Xuất phát từ nhu cầu vận hành: nền tảng sẽ phải thêm vai trò và phân hệ mới khi mở rộng địa bàn hoặc thêm loại hàng, mà mỗi lần thêm lại làm hỏng chức năng cũ thì người dùng đang quen việc sẽ mất niềm tin. Đồ án không đo trực tiếp được ``chi phí thay đổi kiến trúc'' bằng một con số, nên dùng số test case hồi quy bị phá vỡ làm chỉ số gián tiếp nhưng kiểm chứng được. \\
 \rowcolor{tblaltbg}
 \textbf{NFR2.2} &
 Đáp ứng tối thiểu 100 người dùng thao tác tìm kiếm/đặt hàng đồng thời, thời gian phản hồi trung vị dưới 3 giây, tỷ lệ lỗi dưới 1\%, đo bằng công cụ kiểm thử tải (mục~\ref{sec:danhgiahieunang}). &
-Mốc 100 người dùng đồng thời tương ứng quy mô một nền tảng mới ra mắt, không phải quy mô của Shopee hay Lazada đã dẫn ở Chương~\ref{chap:lienquan}; mức này đủ để bộc lộ điểm nghẽn kiến trúc mà không đòi hỏi hạ tầng thử tải vượt phạm vi đồ án. \\
+Xuất phát từ đặc thù hành vi mua nông sản: nhu cầu không trải đều trong ngày mà dồn vào khung sáng sớm và chiều tối, và dồn mạnh hơn nữa vào lúc mở bán một lô hàng mới --- vì hàng tươi có số lượng giới hạn nên khách lẻ có xu hướng vào cùng lúc để tranh mua. Mốc 100 người đồng thời ước lượng cho tình huống dồn tải đó ở địa bàn thí điểm, không phải quy mô của Shopee hay Lazada đã dẫn ở Chương~\ref{chap:lienquan}. \\
 \textbf{NFR3.1} &
 100\% endpoint API thao tác trên dữ liệu/tài nguyên nhạy cảm được kiểm soát quyền; gọi trực tiếp các endpoint đó với tài khoản không đủ quyền phải trả về lỗi 403 trong mọi trường hợp. &
-RBAC chỉ có giá trị nếu áp dụng triệt để -- một endpoint bị bỏ sót đã đủ phá vỡ toàn bộ mô hình phân quyền, nên ngưỡng chấp nhận là 100\%, không có mức trung gian. \\
+Xuất phát từ nhu cầu của khách sỉ và nhà cung cấp: khách sỉ cần chắc chắn bảng giá riêng và nội dung đàm phán của mình không lọt sang đối thủ, còn nhà cung cấp cần chắc chắn không ai sửa được nhật ký canh tác hay giá bán của họ. Một endpoint bị bỏ sót đã đủ phá vỡ cam kết đó, nên ngưỡng chấp nhận là 100\%, không có mức trung gian. \\
 \rowcolor{tblaltbg}
 \textbf{NFR3.2} &
 Rà soát cơ sở dữ liệu xác nhận không có trường dữ liệu định danh nào lưu dạng plaintext. &
 Đây là dữ liệu cá nhân thuộc phạm vi Nghị định 13/2023/NĐ-CP (NFR8.2); rò rỉ dù một bản ghi cũng là vi phạm nên yêu cầu là tuyệt đối, không đặt ngưỡng tỷ lệ. \\
 \textbf{NFR3.3} &
 Bcrypt với hệ số chi phí (cost factor) tối thiểu 10, hoặc Argon2id với tham số khuyến nghị tương đương. &
-Cost factor 10 là mức khuyến nghị phổ biến hiện nay, cân bằng giữa thời gian băm chấp nhận được cho người dùng thật và chi phí đủ lớn để cản trở tấn công dò mật khẩu ngoại tuyến. \\
+Cân bằng giữa hai nhu cầu đối lập của cùng một nhóm người dùng: nhà cung cấp đăng nhập trên thiết bị yếu nên không chịu được thời gian băm quá lâu, nhưng cũng chính họ là nhóm dễ đặt mật khẩu đơn giản nhất nên cần chi phí băm đủ lớn để cản trở tấn công dò mật khẩu ngoại tuyến. Cost factor 10 là mức khuyến nghị phổ biến đáp ứng được cả hai. \\
 \rowcolor{tblaltbg}
 \textbf{NFR3.5} &
 Khóa tạm thời tài khoản trong 30 phút sau tối đa 5 lần đăng nhập/xác thực sai liên tiếp. &
@@ -63,14 +63,14 @@ Thống nhất với ngưỡng đã áp dụng cho luồng xác thực OTP tại
 \rowcolor{tblaltbg}
 \textbf{NFR4.2} &
 Sao lưu tự động tối thiểu 1 lần/ngày, mục tiêu điểm khôi phục (RPO) không quá 24 giờ; thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (mục~\ref{sec:danhgiahieunang}). &
-RPO 24 giờ là mức tối thiểu chấp nhận được trong phạm vi đồ án -- đủ để không mất toàn bộ dữ liệu khi có sự cố -- trong khi backup liên tục (RPO gần 0) đòi hỏi hạ tầng vượt phạm vi nguồn lực đồ án. \\
+Xuất phát từ thiệt hại thực tế nếu mất dữ liệu: nhật ký canh tác là thứ nhà cung cấp phải ghi ngay tại ruộng và gần như không thể khôi phục lại từ trí nhớ, còn dữ liệu tồn kho của luồng 1P mà sai thì kéo theo bán vượt và lỗ trực tiếp. Mất tối đa một ngày dữ liệu là mức thiệt hại còn khắc phục được bằng đối chiếu thủ công; backup liên tục (RPO gần 0) đòi hỏi hạ tầng vượt phạm vi nguồn lực đồ án. \\
 \textbf{NFR5.2} &
 100\% endpoint thuộc các nhóm FR1--FR12 (mục~\ref{sec:yeucauchucnang}) được document hóa theo OpenAPI/Swagger. &
-Dùng chính danh sách FRx.x đã đặc tả làm checklist đối chiếu, tránh bỏ sót tài liệu cho các endpoint ít được chú ý nhưng vẫn được module khác/đội vận hành sử dụng. \\
+Xuất phát từ nhu cầu của đội vận hành nội bộ: bộ phận thu mua và quản trị viên phải tra cứu và đối soát dữ liệu hằng ngày, endpoint không có tài liệu là chỗ họ phải hỏi lại đội kỹ thuật. Dùng chính danh sách FRx.x đã đặc tả làm checklist đối chiếu, tránh bỏ sót các endpoint ít được chú ý nhưng vẫn được sử dụng thường xuyên. \\
 \rowcolor{tblaltbg}
 \textbf{NFR6.1--6.3} &
 Trong usability test với đại diện nhóm nông dân/HTX (mục~\ref{sec:danhgiaux}), task completion rate cho luồng đăng bán sản phẩm và ghi nhật ký canh tác đạt tối thiểu 80\%, không cần người quan sát hỗ trợ trực tiếp. &
-80\% là ngưỡng thường dùng để coi một luồng thao tác là ``đủ khả dụng'' trong kiểm thử usability với cỡ mẫu nhỏ, phù hợp quy mô khảo sát khả thi của một đồ án. \\
+Xuất phát từ điểm đau đã xác định của nhà cung cấp: họ ngại biểu mẫu phần mềm phức tạp và lo tốn thời gian canh tác (persona 1, mục~\ref{sec:doituongnguoidung}), nên chỉ cần một lần thất bại là họ bỏ hẳn, quay về bán cho thương lái. Chọn hai tác vụ đăng sản phẩm và ghi nhật ký canh tác làm phép đo vì đó là việc họ phải làm lặp đi lặp lại; ngưỡng 80\% nghĩa là cứ năm người thì nhiều nhất một người cần trợ giúp --- mức mà đội hỗ trợ vùng còn kham được. \\
 \textbf{NFR7.1} &
 100\% tích hợp với bên thứ ba (đơn vị vận chuyển 3PL, cổng thanh toán) thực hiện qua REST API có tài liệu; mỗi lần gọi có thời gian chờ tối đa 5 giây và có cơ chế thử lại khi gặp lỗi tạm thời. &
 Hệ thống phụ thuộc vào đối tác bên ngoài mà nhóm không kiểm soát được chất lượng dịch vụ, nên phải chặn thời gian chờ để một API chậm không kéo theo cả luồng đặt hàng vượt ngưỡng NFR1.1. \\

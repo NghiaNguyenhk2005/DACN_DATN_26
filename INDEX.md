@@ -1,7 +1,7 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-09-23 (đợt 4: ghép commit của thành viên khác — persona,
-customer journey, ma trận FR/NFR, yêu cầu dữ liệu — và bỏ mô-đun trợ lý ảo).
+Cập nhật lần cuối: 2026-09-23 (đợt 5: bổ sung trích dẫn đã kiểm chứng, nghiên cứu
+liên quan, bộ khảo sát SUS; rút gọn trùng lặp và chuyển ma trận FR/NFR xuống phụ lục).
 
 ## Gốc dự án
 
@@ -9,7 +9,7 @@ customer journey, ma trận FR/NFR, yêu cầu dữ liệu — và bỏ mô-đun
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 143 trang |
+| `main.pdf` | Bản build gần nhất, 151 trang |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
@@ -27,26 +27,28 @@ dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 | `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, đặc thù nông sản, 4 vấn đề V1–V4) · 1.2 Mục tiêu (tổng quát, MT1–MT7, **mục tiêu đánh giá**) · 1.3 Phạm vi (**không gian, thời gian, nội dung, giới hạn kỹ thuật**) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong |
 | `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản** (định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market) · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền (**2.3.1 hai trục phân loại: B2B/B2C/B2B2C và 1P/3P**) · 2.4 Ứng dụng AI (**2 bài toán**: gợi ý, dự báo giá) | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · **3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này (mới)** · 3.4 Kết chương (research gap) | Xong; còn TODO bổ sung nghiên cứu ở 3.1 |
-| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập, 5 nhóm người dùng, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR12, NFR, **2 ma trận Priority/Feasibility/Testability**, yêu cầu dữ liệu 9 miền) | Xong |
+| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập, 5 nhóm người dùng, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR12, NFR, yêu cầu dữ liệu 9 miền; 2 ma trận Priority/Feasibility/Testability ở Phụ lục M) | Xong |
 | `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **2 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | 5.2, 5.3.1, 5.3.5, 5.3.6 xong; use case/sitemap/sequence/class/API/UI/test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | Toàn bộ TODO |
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (5 trụ cột: chức năng, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (k6, SUS, Lighthouse); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
 | `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
 
-## `backmatter/` — Phụ lục A–L
+## `backmatter/` — Phụ lục A–M
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ.
 
 | File | Nội dung |
 |---|---|
-| `phuluc.tex` | Khung phụ lục A, B, C (còn TODO) và E (Business Model Canvas dạng bảng); `\input` các file bên dưới |
+| `phuluc.tex` | Khung phụ lục A, C (còn TODO) và E (Business Model Canvas dạng bảng); `\input` các file bên dưới |
+| `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ khảo sát SUS: thiết kế khảo sát, 3 kịch bản tác vụ, phiếu quan sát, 10 câu hỏi, công thức tính điểm |
 | `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 15 điều, viết để đọc độc lập (không dùng mã vai trò, mã FR hay tham chiếu chéo vào thân báo cáo) |
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản thế giới |
 | `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh giải pháp công nghệ và mô hình AI |
 | `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, và bảng FR theo nhóm người dùng |
 | `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu, đặc tả chi tiết 4 nhóm thực thể cốt lõi (4 nhóm còn lại chỉ liệt kê ở mục 5.3.5, chi tiết chờ Chương 6) |
-| `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI |
-| `kehoach.tex` | Kế hoạch thực hiện 15 tuần |
+| `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI, mỗi căn cứ dẫn từ một nhu cầu người dùng cụ thể |
+| `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
+| `kehoach.tex` | Kế hoạch thực hiện theo hai giai đoạn, có mốc ngày thật: giai đoạn 1 tới 15/10/2026 (nộp giữa kỳ), giai đoạn 2 tới 31/12/2026 (nộp cuối kỳ); kèm phân tích rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
 ## `frontmatter/` — Phần mở đầu
@@ -106,14 +108,16 @@ gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
 `fig:flow-van-chuyen`, `fig:flow-quan-tri`.
 
-**Bảng trong thân báo cáo (7):** `tab:hailuong` (đối chiếu hai luồng),
+**Bảng trong thân báo cáo (6):** `tab:hailuong` (đối chiếu hai luồng),
 `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap`,
-`tab:customer-journey`, `tab:fr-matrix`, `tab:nfr-matrix`.
+`tab:nhomnguoidung`, `tab:customer-journey`.
 
-**Bảng ở phụ lục:** `tab:vande-muctieu` (F), `tab:dacdiem-hanghoa` (G),
-`tab:chungnhan` (H), `tab:sosanh-congnghe` và `tab:sosanh-ai` (I),
-`tab:truyvet-us` và `tab:fr-nguoidung` (J), `tab:db-nhom1`–`4` (K),
-`tab:nguongNFR` và `tab:nguongAI` (L), `tab:bmc-full` (E), `tab:kehoach`.
+**Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` và
+`tab:cauhoi-sus` (B), `tab:bmc-full` (E), `tab:vande-muctieu` (F),
+`tab:dacdiem-hanghoa` (G), `tab:chungnhan` (H), `tab:sosanh-congnghe` và
+`tab:sosanh-ai` (I), `tab:truyvet-us` và `tab:fr-nguoidung` (J),
+`tab:db-nhom1`–`4` (K), `tab:nguongNFR` và `tab:nguongAI` (L),
+`tab:fr-matrix` và `tab:nfr-matrix` (M), `tab:kehoach`.
 
 ## Hai điểm dễ vấp khi sửa
 
