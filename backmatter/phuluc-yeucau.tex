@@ -1,0 +1,94 @@
+% Phụ lục J — bảng truy vết yêu cầu, tách khỏi thân báo cáo.
+% User story và phần dẫn nằm tại mục 4.3.
+
+\section*{Phụ lục J. Truy vết từ nhu cầu người dùng tới yêu cầu}
+\label{apdx:yeucau}
+\addcontentsline{toc}{section}{Phụ lục J. Truy vết từ nhu cầu người dùng tới yêu cầu}
+
+Bảng~\ref{tab:truyvet-us} truy vết từ từng user story nêu tại
+mục~\ref{sec:yeucau} sang các mã yêu cầu tương ứng.
+Bảng~\ref{tab:fr-nguoidung} đối chiếu nhóm yêu cầu chức năng với nhóm người
+dùng sử dụng trực tiếp.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{2.6cm} L{8.2cm} L{3.0cm}}
+\caption{Truy vết từ user story sang yêu cầu}
+\label{tab:truyvet-us} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nhóm} & \textbf{Nhu cầu phát biểu theo user story} & \textbf{Yêu cầu tương ứng} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nhóm} & \textbf{Nhu cầu phát biểu theo user story} & \textbf{Yêu cầu tương ứng} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Nhà cung cấp & Biết giá thị trường trước khi chốt bán, để không bị ép giá khi vào vụ & FR12.2 \\
+\rowcolor{tblaltbg}
+& Bán được cả lô ngay khi thu hoạch, không phải lo hàng hỏng trong lúc chờ & FR2.3, quy trình thu mua \\
+& Chứng minh sản phẩm đạt chuẩn để bán được giá cao hơn & FR3.1--FR3.3, FR4.2 \\
+\rowcolor{tblaltbg}
+& Thao tác đơn giản, có người hướng dẫn để không bỏ cuộc & NFR6.1--NFR6.3, FR12.3 \\
+& Theo dõi doanh thu và đơn hàng của mình & FR2.2 \\
+\rowcolor{tblaltbg}
+Khách sỉ & Đặt hàng định kỳ với sản lượng ổn định & FR6.3, FR6.5 \\
+& Xác minh được chứng nhận của nhà cung cấp & FR3.2, FR4.2 \\
+\rowcolor{tblaltbg}
+& Giá giảm theo sản lượng đặt & FR6.1, FR6.4 \\
+& Yên tâm rằng tiền chỉ chuyển đi khi đã nhận đủ hàng & FR7.3 \\
+\rowcolor{tblaltbg}
+Khách lẻ & Biết rau mình mua trồng ở đâu, ai trồng & FR4.2, FR4.5 \\
+& Có một nơi chịu trách nhiệm khi hàng không đạt & FR8.3, quy trình bán lẻ \\
+\rowcolor{tblaltbg}
+& Hàng giao nhanh trong ngày để rau còn tươi & FR8.1, FR8.2, NFR1.1 \\
+& Tìm được đúng loại nông sản mình cần & FR4.4, FR4.5, FR12.1 \\
+\rowcolor{tblaltbg}
+Bộ phận thu mua & So sánh chào giá giữa các nhà cung cấp theo mùa vụ & FR12.2, FR6.1 \\
+& Được cảnh báo sớm các lô sắp hết hạn để kịp xả hàng & FR2.3, FR11.2 \\
+\rowcolor{tblaltbg}
+Quản trị viên & Duyệt nhanh hồ sơ và sản phẩm để không làm nản nhà cung cấp mới & FR10.1, FR3.2, FR4.6 \\
+& Thấy bức tranh tổng thể về giao dịch và tồn kho & FR10.4, FR10.5 \\
+\rowcolor{tblaltbg}
+& Xử lý được sản phẩm đăng sai loại hàng & FR4.7, FR10.2 \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{L{4.6cm} >{\centering\arraybackslash}p{2.1cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{1.9cm}}
+\caption{Nhóm yêu cầu chức năng theo nhóm người dùng}
+\label{tab:fr-nguoidung} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nhóm yêu cầu} & \textbf{Nhà cung cấp} & \textbf{Khách sỉ} & \textbf{Khách lẻ} & \textbf{Thu mua} & \textbf{Quản trị} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Nhóm yêu cầu} & \textbf{Nhà cung cấp} & \textbf{Khách sỉ} & \textbf{Khách lẻ} & \textbf{Thu mua} & \textbf{Quản trị} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+FR1: Tài khoản \& phân quyền & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\rowcolor{tblaltbg} FR2: Hồ sơ nhà cung cấp \& tồn kho & \checkmark & & & \checkmark & \\
+FR3: Chứng nhận chất lượng & \checkmark & \checkmark & & & \checkmark \\
+\rowcolor{tblaltbg} FR4: Sản phẩm \& truy xuất nguồn gốc & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+FR5: Giao dịch bán lẻ & & & \checkmark & \checkmark & \\
+\rowcolor{tblaltbg} FR6: Giao dịch bán sỉ & \checkmark & \checkmark & & & \\
+FR7: Thanh toán & \checkmark & \checkmark & \checkmark & \checkmark & \\
+\rowcolor{tblaltbg} FR8: Vận chuyển \& khiếu nại & \checkmark & \checkmark & \checkmark & & \checkmark \\
+FR9: Tương tác người dùng & \checkmark & \checkmark & \checkmark & & \\
+\rowcolor{tblaltbg} FR10: Quản trị hệ thống & & & & & \checkmark \\
+FR11: Thông báo & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\rowcolor{tblaltbg} FR12: Hỗ trợ AI & \checkmark & \checkmark & \checkmark & \checkmark & \\
+\end{longtable}
+\endgroup

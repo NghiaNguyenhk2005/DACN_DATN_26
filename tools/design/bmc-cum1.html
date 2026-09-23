@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:44px 49px; width:1280px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  .sub{color:var(--sub); font-size:29.4px; margin:0 0 18px;}
+  .grid{
+    display:grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);
+    gap:14px; align-items:stretch;
+  }
+  .cell{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:20px 23px; box-shadow:0 2px 8px rgba(20,40,30,.05);
+    border-top:5px solid var(--bar);
+  }
+  .cell h2{font-size:27.3px; margin:0 0 9px; text-transform:uppercase; letter-spacing:.3px; color:var(--bar); font-weight:800;}
+  .cell ul{margin:0; padding:0; list-style:none;}
+  .cell li{font-size:26.2px; line-height:1.45; margin-bottom:7px; padding-left:14px; position:relative; color:#2c3a33;}
+  .cell li::before{content:"•"; position:absolute; left:0; color:var(--bar); font-weight:900;}
+  .segments{--bar:#c98a1a;}
+  .value{--bar:#ee4d2d;}
+  .relationships{--bar:#0a3d91;}
+  .value .prop{margin-bottom:11px; padding-bottom:9px; border-bottom:1px dashed var(--line);}
+  .value .prop:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+  .value .prop b{display:block; font-size:25.2px; color:#7a3420; margin-bottom:3px;}
+  .value .prop{font-size:26.2px; line-height:1.45; color:#2c3a33;}
+  .tag{
+    display:inline-block; font-size:19.6px; font-weight:800; letter-spacing:.4px;
+    padding:1px 10px; border-radius:5px; margin-right:6px; vertical-align:2px;
+  }
+  .t-3p{background:#e4eef9; color:#0a3d91;}
+  .t-1p{background:#e5f6ea; color:#128a3e;}
+  footer{margin-top:16px; font-size:23.1px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <p class="sub">Cụm 1 — Tạo giá trị cho ai · <span class="tag t-3p">3P</span> luồng bán sỉ qua sàn &nbsp;
+  <span class="tag t-1p">1P</span> luồng bán lẻ do Farmery thu mua và bán lại</p>
+
+  <div class="grid">
+    <div class="cell segments">
+      <h2>Phân khúc khách hàng</h2>
+      <ul>
+        <li>Nhà cung cấp: nông dân, hợp tác xã tại vùng trồng thí điểm</li>
+        <li><span class="tag t-3p">3P</span>Khách sỉ: nhà hàng, siêu thị, nhà phân phối</li>
+        <li><span class="tag t-1p">1P</span>Khách lẻ: người tiêu dùng cá nhân trong bán kính giao hàng</li>
+      </ul>
+    </div>
+
+    <div class="cell value">
+      <h2>Giá trị đề xuất</h2>
+      <div class="prop"><b>Nhà cung cấp</b>Hai lựa chọn đầu ra thay vì phụ thuộc thương lái: tự bán sỉ trên sàn để giữ toàn bộ giá bán, hoặc bán đứt cả lô cho Farmery để nhận tiền ngay mà không phải chờ bán hết</div>
+      <div class="prop"><b>Khách sỉ</b><span class="tag t-3p">3P</span>Nguồn cung đã xác thực chứng nhận, giá bậc minh bạch theo sản lượng, truy xuất tới từng lô</div>
+      <div class="prop"><b>Khách lẻ</b><span class="tag t-1p">1P</span>Hàng đã được Farmery phân loại và đóng gói, một đầu mối duy nhất chịu trách nhiệm chất lượng và đổi trả</div>
+    </div>
+
+    <div class="cell relationships">
+      <h2>Quan hệ khách hàng</h2>
+      <ul>
+        <li>Tự phục vụ trên web/app cho khách lẻ</li>
+        <li>Nhân sự phụ trách khách hàng đồng hành cho khách sỉ</li>
+        <li>Hỗ trợ vùng qua hotline/Zalo cho nhà cung cấp ít rành công nghệ</li>
+        <li><span class="tag t-1p">1P</span>Đội thu mua làm việc trực tiếp với nhà cung cấp theo mùa vụ</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Khung Business Model Canvas, Osterwalder &amp; Pigneur (2010)</footer>
+</body>
+</html>

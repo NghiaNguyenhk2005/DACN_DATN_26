@@ -3,17 +3,17 @@
 \begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-4.6cm\relax},center}
 \begin{tikzpicture}[farm/chart]
     \node[farm/terminal] (start) at (0,0) {Bắt đầu bán sỉ};
-    \node[farm/process] (pricelist) at (0,-1.6) {Nhà bán: công bố bảng giá bán sỉ theo bậc số lượng, MOQ và lịch giao dự kiến cho từng lô hàng};
+    \node[farm/process] (pricelist) at (0,-1.6) {Nhà cung cấp: công bố bảng giá bán sỉ theo bậc số lượng, MOQ và lịch giao dự kiến cho từng lô hàng};
     \node[farm/process] (rfq) at (0,-3.6) {Doanh nghiệp: xem bảng giá công khai, gửi RFQ tham chiếu bảng giá hoặc yêu cầu tùy chỉnh (số lượng, chất lượng, lịch giao)};
-    \node[farm/decision] (moq) at (0,-5.8) {Đạt MOQ\\của nhà bán?};
+    \node[farm/decision] (moq) at (0,-5.8) {Đạt MOQ\\của nhà cung cấp?};
     \node[farm/processnarrow] (alternative) at (6,-5.8) {Hệ thống: gợi ý gộp đơn cùng khu vực hoặc chuyển kênh bán lẻ};
     \node[farm/terminal] (retail) at (6,-8.1) {Chuyển sang bán lẻ (B2C)};
-    \node[farm/process] (quote) at (0,-8.1) {Nhà bán: xác nhận/điều chỉnh báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
+    \node[farm/process] (quote) at (0,-8.1) {Nhà cung cấp: xác nhận/điều chỉnh báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
     \node[farm/process] (negotiate) at (0,-10) {Hai bên: thương lượng qua hệ thống nhắn tin nội bộ};
     \node[farm/decision] (agreed) at (0,-12) {Thống nhất\\điều khoản?};
-    \node[farm/process] (contract) at (0,-14.7) {Hệ thống: sinh hợp đồng điện tử gồm điều khoản phạt vi phạm và công nợ; hai bên ký điện tử hoặc mã xác nhận};
+    \node[farm/process] (contract) at (0,-14.7) {Hệ thống: sinh hợp đồng điện tử gồm điều khoản phạt vi phạm và thanh toán theo đợt; hai bên ký điện tử hoặc mã xác nhận};
     \node[farm/connector] (connA) at (0,-16.7) {A};
-    \node[farm/processnarrow] (connAnote) at (3.9,-16.7) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-b} (ký quỹ, giao hàng và công nợ)};
+    \node[farm/processnarrow] (connAnote) at (3.9,-16.7) {Luồng đi tiếp tại vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-si-b} (tạm giữ tiền, giao hàng và thanh toán theo đợt)};
     \draw[farm/arrow,dashed] (connA) -- (connAnote);
     \foreach \source/\target in {start/pricelist,pricelist/rfq,rfq/moq,quote/negotiate,negotiate/agreed,contract/connA}
         \draw[farm/arrow] (\source) -- (\target);

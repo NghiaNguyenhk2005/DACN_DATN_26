@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63;
+    --card:#ffffff; --line:#e3e8e5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 46px; width:1180px;
+    background:var(--bg);
+    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
+    color:var(--ink);
+  }
+  .sub{color:var(--sub); font-size:27.4px; margin:0 0 18px;}
+  .grid{
+    display:grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap:14px; align-items:start;
+  }
+  .cell{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:19px 22px; box-shadow:0 2px 8px rgba(20,40,30,.05);
+    border-top:5px solid var(--bar);
+  }
+  .cell h2{font-size:25.4px; margin:0 0 9px; text-transform:uppercase; letter-spacing:.3px; color:var(--bar); font-weight:800;}
+  .cell ul{margin:0; padding:0; list-style:none;}
+  .cell li{font-size:24.4px; line-height:1.45; margin-bottom:7px; padding-left:14px; position:relative; color:#2c3a33;}
+  .cell li::before{content:"•"; position:absolute; left:0; color:var(--bar); font-weight:900;}
+  .revenue{--bar:#128a3e;}
+  .cost{--bar:#c23b3b;}
+  .tag{
+    display:inline-block; font-size:18.2px; font-weight:800; letter-spacing:.4px;
+    padding:1px 9px; border-radius:5px; margin-right:6px; vertical-align:2px;
+  }
+  .t-3p{background:#e4eef9; color:#0a3d91;}
+  .t-1p{background:#e5f6ea; color:#128a3e;}
+  .note{
+    margin-top:14px; background:#fff8e8; border:1px solid #f0e0bd; border-left:5px solid #c98a1a;
+    border-radius:10px; padding:16px 22px; font-size:23.5px; line-height:1.5; color:#5a4a26;
+  }
+  footer{margin-top:16px; font-size:21.5px; color:#9aa6a0;}
+</style>
+</head>
+<body>
+  <p class="sub">Cụm 3 — Tiền vào và tiền ra · <span class="tag t-3p">3P</span> luồng bán sỉ qua sàn &nbsp;
+  <span class="tag t-1p">1P</span> luồng bán lẻ do Farmery thu mua và bán lại</p>
+
+  <div class="grid">
+    <div class="cell revenue">
+      <h2>Dòng doanh thu</h2>
+      <ul>
+        <li><span class="tag t-3p">3P</span>Hoa hồng trên mỗi giao dịch bán sỉ thành công</li>
+        <li><span class="tag t-1p">1P</span>Biên lợi nhuận bán lại: chênh lệch giữa giá thu mua và giá bán lẻ</li>
+        <li>Phí dịch vụ giá trị gia tăng: xác thực chứng nhận nhanh, gói hiển thị nổi bật</li>
+        <li>Không thu phí đăng ký hay phí duy trì tài khoản nhà cung cấp</li>
+      </ul>
+    </div>
+
+    <div class="cell cost">
+      <h2>Cơ cấu chi phí</h2>
+      <ul>
+        <li><span class="tag t-1p">1P</span>Giá vốn hàng mua vào — khoản chi lớn nhất</li>
+        <li><span class="tag t-1p">1P</span>Hao hụt sau thu hoạch và hàng không bán hết trước hạn</li>
+        <li><span class="tag t-1p">1P</span>Sơ chế, đóng gói và vận chuyển chặng đầu về kho</li>
+        <li>Vận hành nền tảng: hạ tầng máy chủ, đội ngũ kỹ thuật</li>
+        <li>Nhân sự kiểm duyệt, chăm sóc khách hàng, thu mua</li>
+        <li>Marketing thu hút nhà cung cấp và người mua</li>
+        <li>Tích hợp bên thứ ba: thanh toán, vận chuyển, xác minh chứng nhận</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Khác biệt then chốt giữa hai luồng:</b> ở luồng bán sỉ, nền tảng chỉ thu hoa hồng và
+    không chịu rủi ro tồn kho. Ở luồng bán lẻ, nền tảng bỏ vốn mua hàng trước nên mỗi lô
+    không bán hết đều trở thành lỗ trực tiếp — đây là cái giá phải trả để kiểm soát được
+    chất lượng và trải nghiệm giao hàng tới người tiêu dùng cuối.
+  </div>
+
+  <footer>Farmery — Đồ án chuyên ngành CO4029 · Khung Business Model Canvas, Osterwalder &amp; Pigneur (2010)</footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+% Phụ lục L — bảng ngưỡng đo lường, tách khỏi thân báo cáo.
+
+\section*{Phụ lục L. Ngưỡng đo lường và căn cứ}
+\label{apdx:nguong}
+\addcontentsline{toc}{section}{Phụ lục L. Ngưỡng đo lường và căn cứ}
+
+Bảng~\ref{tab:nguongNFR} trình bày ngưỡng đo lường cho các yêu cầu phi chức
+năng tại mục~\ref{sec:yeucauphichucnang}; Bảng~\ref{tab:nguongAI} trình bày
+ngưỡng chất lượng mục tiêu cho từng mô-đun AI tại mục~\ref{sec:thietkeAI}.
+Cả hai bảng đều được xác lập trước khi hiện thực, dùng làm căn cứ đối chiếu
+khi đánh giá kết quả tại Chương~\ref{chap:danhgia}.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{1.5cm} L{6.0cm} L{5.9cm}}
+\caption{Ngưỡng đo lường cụ thể cho các yêu cầu phi chức năng}
+\label{tab:nguongNFR} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Đo lường} & \textbf{Căn cứ} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Đo lường} & \textbf{Căn cứ} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{NFR1.1} &
+Thời gian phản hồi tại percentile 95 (p95) dưới 2 giây với tải truy cập thông thường; số đo thực tế đối chiếu tại mục~\ref{sec:danhgiahieunang}. &
+2 giây là ngưỡng phổ biến được xem là ranh giới giữa trải nghiệm ``nhanh'' và ``chậm'' khi duyệt web, phù hợp làm mục tiêu cho một hệ thống chưa đầu tư tối ưu hạ tầng; đo ở p95 thay vì trung bình để tránh số liệu bị pha loãng bởi phần lớn truy vấn nhanh trong khi một số ít truy vấn chậm bất thường vẫn ảnh hưởng trải nghiệm thực tế. \\
+\rowcolor{tblaltbg}
+\textbf{NFR1.2} &
+Kiểm thử với tối thiểu 50 yêu cầu đặt hàng đồng thời trên cùng một lô có tồn kho giới hạn; tỷ lệ đơn hàng gây vượt tồn kho phải bằng 0\%. &
+Đây là ràng buộc nghiệp vụ cứng, không có mức ``sai số nhỏ chấp nhận được'' -- oversell lớn hơn 0\% gây thiệt hại tài chính và uy tín trực tiếp cho nhà cung cấp (liên hệ mục~\ref{subsec:danhgianghiepvu}). \\
+\textbf{NFR2.1} &
+Khi bổ sung một vai trò/mô-đun mới, toàn bộ test case hồi quy (regression) của các module hiện có phải PASS -- 0 test case bị phá vỡ. &
+Đồ án không có điều kiện đo trực tiếp ``chi phí thay đổi kiến trúc'' bằng một con số; số test case hồi quy bị phá vỡ là chỉ số gián tiếp nhưng kiểm chứng được. \\
+\rowcolor{tblaltbg}
+\textbf{NFR2.2} &
+Đáp ứng tối thiểu 100 người dùng thao tác tìm kiếm/đặt hàng đồng thời, thời gian phản hồi trung vị dưới 3 giây, tỷ lệ lỗi dưới 1\%, đo bằng công cụ kiểm thử tải (mục~\ref{sec:danhgiahieunang}). &
+Mốc 100 người dùng đồng thời tương ứng quy mô một nền tảng mới ra mắt, không phải quy mô của Shopee hay Lazada đã dẫn ở Chương~\ref{chap:lienquan}; mức này đủ để bộc lộ điểm nghẽn kiến trúc mà không đòi hỏi hạ tầng thử tải vượt phạm vi đồ án. \\
+\textbf{NFR3.1} &
+100\% endpoint API thao tác trên dữ liệu/tài nguyên nhạy cảm được kiểm soát quyền; gọi trực tiếp các endpoint đó với tài khoản không đủ quyền phải trả về lỗi 403 trong mọi trường hợp. &
+RBAC chỉ có giá trị nếu áp dụng triệt để -- một endpoint bị bỏ sót đã đủ phá vỡ toàn bộ mô hình phân quyền, nên ngưỡng chấp nhận là 100\%, không có mức trung gian. \\
+\rowcolor{tblaltbg}
+\textbf{NFR3.2} &
+Rà soát cơ sở dữ liệu xác nhận không có trường dữ liệu định danh nào lưu dạng plaintext. &
+Đây là dữ liệu cá nhân thuộc phạm vi Nghị định 13/2023/NĐ-CP (NFR8.2); rò rỉ dù một bản ghi cũng là vi phạm nên yêu cầu là tuyệt đối, không đặt ngưỡng tỷ lệ. \\
+\textbf{NFR3.3} &
+Bcrypt với hệ số chi phí (cost factor) tối thiểu 10, hoặc Argon2id với tham số khuyến nghị tương đương. &
+Cost factor 10 là mức khuyến nghị phổ biến hiện nay, cân bằng giữa thời gian băm chấp nhận được cho người dùng thật và chi phí đủ lớn để cản trở tấn công dò mật khẩu ngoại tuyến. \\
+\rowcolor{tblaltbg}
+\textbf{NFR3.5} &
+Khóa tạm thời tài khoản trong 30 phút sau tối đa 5 lần đăng nhập/xác thực sai liên tiếp. &
+Thống nhất với ngưỡng đã áp dụng cho luồng xác thực OTP tại mục~\ref{sec:quytrinhnghiepvu} (Đăng ký và xác thực nhà cung cấp), vừa hạn chế dò mật khẩu tự động vừa không gây phiền hà cho người dùng nhập nhầm. \\
+\textbf{NFR4.1} &
+0 trường hợp sai lệch số liệu tồn kho/số dư phát hiện được qua kiểm thử giao dịch đồng thời (liên hệ NFR1.2). &
+Đây là yêu cầu toàn vẹn dữ liệu tài chính/tồn kho, không tồn tại mức ``sai số nhỏ chấp nhận được''. \\
+\rowcolor{tblaltbg}
+\textbf{NFR4.2} &
+Sao lưu tự động tối thiểu 1 lần/ngày, mục tiêu điểm khôi phục (RPO) không quá 24 giờ; thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (mục~\ref{sec:danhgiahieunang}). &
+RPO 24 giờ là mức tối thiểu chấp nhận được trong phạm vi đồ án -- đủ để không mất toàn bộ dữ liệu khi có sự cố -- trong khi backup liên tục (RPO gần 0) đòi hỏi hạ tầng vượt phạm vi nguồn lực đồ án. \\
+\textbf{NFR5.2} &
+100\% endpoint thuộc các nhóm FR1--FR12 (mục~\ref{sec:yeucauchucnang}) được document hóa theo OpenAPI/Swagger. &
+Dùng chính danh sách FRx.x đã đặc tả làm checklist đối chiếu, tránh bỏ sót tài liệu cho các endpoint ít được chú ý nhưng vẫn được module khác/đội vận hành sử dụng. \\
+\rowcolor{tblaltbg}
+\textbf{NFR6.1--6.3} &
+Trong usability test với đại diện nhóm nông dân/HTX (mục~\ref{sec:danhgiaux}), task completion rate cho luồng đăng bán sản phẩm và ghi nhật ký canh tác đạt tối thiểu 80\%, không cần người quan sát hỗ trợ trực tiếp. &
+80\% là ngưỡng thường dùng để coi một luồng thao tác là ``đủ khả dụng'' trong kiểm thử usability với cỡ mẫu nhỏ, phù hợp quy mô khảo sát khả thi của một đồ án. \\
+\textbf{NFR7.1} &
+100\% tích hợp với bên thứ ba (đơn vị vận chuyển 3PL, cổng thanh toán) thực hiện qua REST API có tài liệu; mỗi lần gọi có thời gian chờ tối đa 5 giây và có cơ chế thử lại khi gặp lỗi tạm thời. &
+Hệ thống phụ thuộc vào đối tác bên ngoài mà nhóm không kiểm soát được chất lượng dịch vụ, nên phải chặn thời gian chờ để một API chậm không kéo theo cả luồng đặt hàng vượt ngưỡng NFR1.1. \\
+\rowcolor{tblaltbg}
+\textbf{NFR7.2} &
+Giao diện hiển thị đúng bố cục (không vỡ layout, không cuộn ngang) trên tối thiểu 3 kích thước màn hình đại diện (điện thoại, máy tính bảng, máy tính để bàn) và 2 trình duyệt phổ biến nhất tại Việt Nam. &
+Nhóm nông dân/HTX và phần lớn người tiêu dùng cá nhân được xác định truy cập chủ yếu qua điện thoại (mục~\ref{sec:doituongnguoidung}), nên hiển thị tốt trên di động là điều kiện bắt buộc phải kiểm chứng, không chỉ là tính năng ``hỗ trợ thêm''. \\
+\textbf{NFR9.1} &
+0 bản ghi đã công khai bị chỉnh sửa/xóa trực tiếp -- mọi thay đổi sau khi công khai chỉ qua cơ chế correction có ghi log (bản ghi mới kèm lý do, không ghi đè); kiểm tra qua rà soát log thao tác. &
+Mục tiêu là tính bất biến sau khi công khai nên chỉ tiêu đo phải tuyệt đối, nhất quán với lý do chọn giải pháp cơ sở dữ liệu tập trung có kiểm soát thay vì blockchain tại mục~\ref{subsec:gs1blockchain}. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{L{2.2cm} L{5.3cm} L{5.7cm}}
+\caption{Ngưỡng chất lượng mục tiêu cho từng mô-đun AI}
+\label{tab:nguongAI} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Chỉ số / ngưỡng mục tiêu} & \textbf{Căn cứ} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Chỉ số / ngưỡng mục tiêu} & \textbf{Căn cứ} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{Gợi ý sản phẩm} &
+Click-through rate (CTR) vào danh sách gợi ý cá nhân hóa cao hơn tối thiểu 20\% so với danh sách baseline không cá nhân hóa (sản phẩm mới nhất/bán chạy chung), đo qua thử nghiệm A/B hoặc so sánh trước--sau khi bật tính năng. &
+Đồ án không có đủ dữ liệu lịch sử lớn để đặt mục tiêu precision/recall tuyệt đối như các hệ thống gợi ý thương mại đã vận hành lâu năm; đo uplift CTR so với một baseline không cá nhân hóa khả thi hơn và vẫn phản ánh đúng giá trị thực tế mà tính năng cần tạo ra. \\
+\rowcolor{tblaltbg}
+\textbf{Dự báo giá} &
+MAPE (Mean Absolute Percentage Error) dưới 20\% trên tập kiểm tra tách theo thời gian (time-based split), tương đương độ chính xác từ khoảng 80\% trở lên. Đo trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng. &
+Đặt thấp hơn một chút so với mức khoảng 82\% Farm2Market (2025) công bố cho bài toán dự báo giá nông sản tương tự \parencite{farm2market_2025}, do đây là công trình nghiên cứu học thuật có thể đã tối ưu trên bộ dữ liệu chọn lọc; 80\% là mục tiêu khả thi, kiểm chứng được trong phạm vi đồ án và vẫn đủ hữu ích để hỗ trợ ra quyết định. \\
+\end{longtable}
+\endgroup

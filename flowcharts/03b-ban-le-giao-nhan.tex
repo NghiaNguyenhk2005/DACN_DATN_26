@@ -4,13 +4,13 @@
 \begin{tikzpicture}[farm/chart]
     \node[farm/connector] (connA) at (0,0) {A};
     \node[farm/processnarrow] (connAnote) at (3.4,0) {Tiếp nối vòng tròn \textbf{A} của Hình~\ref{fig:flow-ban-le-a} (đơn đã xác nhận)};
-    \node[farm/process] (ship) at (0,-2) {Nhà bán: đóng gói hàng dễ hư hỏng, bàn giao vận chuyển};
+    \node[farm/process] (ship) at (0,-2) {Kho Farmery: đóng gói hàng dễ hư hỏng, bàn giao đơn vị vận chuyển};
     \node[farm/decision] (refused) at (0,-4.1) {Người nhận\\từ chối COD?};
-    \node[farm/exception] (return) at (6.5,-4.1) {Hoàn hàng; xử lý phí vận chuyển hai chiều theo chính sách};
-    \node[farm/process] (receive) at (0,-6.4) {Người mua: xác nhận nhận hàng, đánh giá sản phẩm và nhà bán trong thời hạn quy định};
-    \node[farm/process] (sellerdone) at (0,-8.4) {Nhà bán: đơn hoàn tất --- hệ thống cập nhật doanh thu và lịch sử bán lẻ};
+    \node[farm/exception] (return) at (6.5,-4.1) {Hoàn hàng về kho; đánh giá lại chất lượng lô trước khi quyết định bán tiếp hay hủy};
+    \node[farm/process] (receive) at (0,-6.4) {Khách lẻ: xác nhận nhận hàng và đánh giá sản phẩm trong thời hạn quy định};
+    \node[farm/process] (sellerdone) at (0,-8.4) {Hệ thống: đơn hoàn tất, ghi nhận doanh thu và biên lợi nhuận của lô};
     \node[farm/terminal] (finish) at (0,-10.3) {Kết thúc};
-    \node[farm/note] at (2.7,-12) {\textbf{Hàng hư hỏng:} người nhận khiếu nại và được xử lý theo flowchart vận chuyển và khiếu nại tại Hình~\ref{fig:flow-van-chuyen}.};
+    \node[farm/note] at (2.7,-12) {\textbf{Hàng không đạt:} Farmery chịu trách nhiệm đổi trả trực tiếp với khách lẻ, sau đó mới đối chiếu lại với nhà cung cấp gốc nếu lỗi thuộc khâu cung ứng (Hình~\ref{fig:flow-van-chuyen}).};
     \foreach \source/\target in {connA/ship,ship/refused,receive/sellerdone,sellerdone/finish}
         \draw[farm/arrow] (\source) -- (\target);
     \draw[farm/arrow,dashed] (connAnote) -- (connA);
