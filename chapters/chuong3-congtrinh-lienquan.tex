@@ -6,8 +6,32 @@ Chương này khảo sát các công trình liên quan tới Farmery theo hai nh
 \section{Các nghiên cứu liên quan}
 \label{sec:nghiencuulienquan}
 
-% TODO: bổ sung thêm các bài báo/nghiên cứu đã đọc (nền tảng TMĐT nông sản, truy xuất nguồn gốc, hệ thống uy tín, AI trong nông nghiệp) để mục này không chỉ dựa vào một công trình; mỗi công trình nêu: phương pháp, kết quả, hạn chế so với Farmery.
-\textbf{Farm2Market} (2025) là nghiên cứu học thuật gần nhất về ý tưởng với Farmery: kết hợp blockchain (ký quỹ qua smart contract), AI dự báo giá đạt khoảng 82\% độ chính xác và mã QR truy xuất nguồn gốc \parencite{farm2market_2025}. Hạn chế của công trình này là mới dừng ở mức đề xuất, chưa có dữ liệu vận hành thương mại thực tế, và không đề cập tới việc phục vụ song song hai luồng bán lẻ và bán sỉ.
+% TODO: nhóm có thể bổ sung thêm các bài báo đã đọc trong quá trình làm; mỗi công trình nêu đủ ba phần: phương pháp, kết quả, và hạn chế so với hướng đi của Farmery.
+Bốn công trình dưới đây được chọn vì mỗi công trình soi vào một khía cạnh khác nhau của bài toán mà Farmery đặt ra: hiệu quả thực tế của nền tảng số với nông hộ nhỏ, chuẩn định danh cho truy xuất nguồn gốc, năng lực thực sự của học máy trong dự báo giá nông sản, và một đề xuất tích hợp gần với Farmery nhất.
+
+\subsubsection*{Hiệu quả của nền tảng thương mại điện tử đối với nông hộ nhỏ}
+
+Morepje và cộng sự (2024) tổng quan tài liệu, báo cáo và nghiên cứu tình huống giai đoạn 2010--2024 về tác động của nền tảng thương mại điện tử lên nông hộ nhỏ tại châu Phi hạ Sahara \parencite{morepje2024ecommerce}. Kết quả cho thấy các nền tảng này cải thiện rõ khả năng tiếp cận thị trường, nhờ đó nông dân bán được giá tốt hơn và giảm tổn thất sau thu hoạch. Tuy nhiên nhóm tác giả nhấn mạnh hai rào cản dai dẳng: hạ tầng số thiếu và trình độ số của nông dân còn thấp.
+
+\textbf{Liên hệ với Farmery:} hai rào cản này trùng khớp với khó khăn của nhóm nhà cung cấp đã phân tích tại mục~\ref{sec:doituongnguoidung}, và là căn cứ cho các yêu cầu về giao diện tối giản (NFR6). Điểm khác biệt là các nền tảng trong nghiên cứu đều thuần trung gian, nên nông dân vẫn phải tự xử lý khâu đóng gói và giao từng đơn nhỏ --- đúng chỗ mà luồng bán lẻ 1P của Farmery nhắm tới.
+
+\subsubsection*{Chuẩn định danh cho truy xuất nguồn gốc thực phẩm}
+
+Keogh và cộng sự (2020) tổng quan khả năng kết hợp chuẩn GS1 với blockchain trong chuỗi thực phẩm \parencite{keogh2020blockchain}. Kết luận đáng chú ý nhất của công trình là: việc áp dụng chuẩn định danh, dù cần thiết, \emph{không tự nó giải quyết được} vấn đề bất cân xứng thông tin giữa người sản xuất và người tiêu dùng --- vì chuẩn chỉ quy định cách định danh và trao đổi dữ liệu, không bảo đảm dữ liệu đưa vào là đúng.
+
+\textbf{Liên hệ với Farmery:} đây là lập luận nền cho quyết định dùng nguyên lý định danh GS1 trên cơ sở dữ liệu tập trung thay vì blockchain (mục~\ref{subsec:gs1blockchain}), và cho việc đặt khâu kiểm duyệt chứng nhận của con người làm lớp bảo đảm chất lượng dữ liệu đầu vào.
+
+\subsubsection*{Học máy trong dự báo giá nông sản}
+
+Tran và cộng sự (2023) tổng quan các nghiên cứu dự báo giá nông sản bằng học máy \parencite{tran2023pricepredict}. Nhóm tác giả ghi nhận tiềm năng của hướng này nhưng đồng thời chỉ ra các hạn chế chưa được giải quyết, đặc biệt là phụ thuộc vào chất lượng và độ dài chuỗi dữ liệu lịch sử.
+
+\textbf{Liên hệ với Farmery:} nhận định trên là căn cứ trực tiếp cho lựa chọn tại mục~\ref{sec:giaiphapcongnghe} --- ưu tiên mô hình time series có thành phần mùa vụ thay vì mô hình học sâu, và đánh giá offline trên dữ liệu giá công khai thay vì chờ dữ liệu giao dịch của nền tảng.
+
+\subsubsection*{Đề xuất tích hợp gần nhất}
+
+\textbf{Farm2Market} (2025) kết hợp blockchain với ký quỹ qua smart contract, AI dự báo giá đạt khoảng 82\% độ chính xác và mã QR truy xuất nguồn gốc \parencite{farm2market_2025}. Đây là công trình gần nhất về ý tưởng với Farmery.
+
+\textbf{Liên hệ với Farmery:} hạn chế của công trình là mới dừng ở mức đề xuất, chưa có dữ liệu vận hành thương mại, và không đề cập tới việc phục vụ song song hai luồng bán lẻ và bán sỉ. Con số 82\% cũng chính là mốc để Farmery đặt ngưỡng dự báo giá thấp hơn một chút (Phụ lục L).
 
 \section{Các hệ thống và nền tảng liên quan}
 \label{sec:hethonglienquan}
