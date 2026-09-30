@@ -690,3 +690,18 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 - Thân báo cáo giữ lưu đồ thu mua, bán lẻ phần đặt hàng, bán sỉ phần tới giao kết hợp đồng; sơ đồ use case tổng quan; đặc tả UC-B4, UC-C4, UC-D4.
 - Nối thêm P–S ở cuối thay vì đánh lại chữ cái A–O, để không làm lệch các tham chiếu "Phụ lục K", "Phụ lục M" đã có trong báo cáo và tài liệu dự án.
 - Kết quả: thân báo cáo 102 trang (Chương 4: 41, Chương 5: 21).
+
+### Kiến trúc theo mô hình C4, sơ đồ ngữ cảnh và sitemap — 2026-10-01
+**Bối cảnh:** hạng mục 16 (sơ đồ ngữ cảnh, kiến trúc, sitemap). Các mục này trước đây để TODO cho nhóm vẽ. User yêu cầu tham khảo cách trình bày bên ngoài trước khi vẽ.
+
+**Quyết định**
+- Trình bày kiến trúc theo mô hình C4 (Simon Brown): mức 1 ngữ cảnh (Chương 4), mức 2 container và mức 3 mô-đun (Chương 5, hai hình riêng). Mức 4 (mã nguồn) không vẽ tay. Căn cứ: C4 đặt modular monolith là một container ở mức 2, các mô-đun hiện ra ở mức 3; mỗi sơ đồ mức 3 nên có 5–15 thành phần; dự án mẫu Modular Monolith with DDD (Kamil Grzybek) cũng tách hình tổng thể và hình mô-đun.
+- Mức 3 vẽ đủ 12 mô-đun, gom theo 5 khối chức năng của Chương 4, mỗi mô-đun ghi tên schema; đánh dấu điểm khóa dòng tồn mà thu mua, bán lẻ, bán sỉ cùng đi qua.
+- Sáu hệ thống bên ngoài: cổng thanh toán, 3PL, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS/Email, đăng nhập Google/Facebook.
+- Sitemap: năm khu vực cấp 1 (công khai, khách lẻ, khách sỉ, nhà cung cấp, nội bộ). Cửa hàng chung cho hai luồng, danh mục chuyển chế độ Mua lẻ/Mua sỉ. Khu nội bộ là một trang làm việc chung, menu theo vai trò. Thân báo cáo vẽ cấp 1–2; cấp 3 kèm mã FR ở Phụ lục T (bảng, không vẽ hình để tiết kiệm trang).
+- Sitemap không phụ thuộc framework; khi hiện thực bằng Next.js mỗi khu vực là một nhóm route.
+- Hình sinh bằng mã (`tools/diagrams/*.py` → `tools/design/*.html` → `npm run shot`), chữ tối thiểu 22px trên khổ 1420px (khoảng 7pt khi in).
+
+**Kết quả:** thân báo cáo 108 trang (thêm 4 hình, Chương 5: 26 trang).
+
+**Cập nhật mục "Còn mở" của phiên 30/9–1/10:** phân loại bảng và hình đã được user duyệt và áp dụng (mục ngay trên). Còn mở: ba sơ đồ use case cũ chưa vẽ lại (user để sau), sơ đồ tuần tự và sơ đồ lớp còn trống.

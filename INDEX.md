@@ -1,6 +1,6 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-01 (đợt 8: quy ước bảng thống nhất, chuyển hình/bảng tra cứu xuống Phụ lục P–S, thân báo cáo còn 102 trang). Đợt 7 cùng ngày: 7 vai trò nội bộ, dòng tồn và FR13, TraceViet, AI search, PWA, ToS 17 điều, Phụ lục B mới, MVP.md). Trước đó: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
+Cập nhật lần cuối: 2026-10-01 (đợt 9: sơ đồ C4 mức 1–3, sitemap tổng quan và Phụ lục T; thân báo cáo 108 trang). Đợt 8 cùng ngày: quy ước bảng thống nhất, chuyển hình/bảng tra cứu xuống Phụ lục P–S, thân báo cáo còn 102 trang). Đợt 7 cùng ngày: 7 vai trò nội bộ, dòng tồn và FR13, TraceViet, AI search, PWA, ToS 17 điều, Phụ lục B mới, MVP.md). Trước đó: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
 kiểm chứng; ghép đặc tả use case vào Chương 5; phóng cỡ chữ 5 sơ đồ use case lên
 ngưỡng 7pt và chuyển sang trang float riêng).
 
@@ -11,7 +11,7 @@ ngưỡng 7pt và chuyển sang trang float riêng).
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL (dbdiagram); nguồn của ERD và Phụ lục K |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 187 trang (thân báo cáo Chương 1–8 chiếm 102 trang) |
+| `main.pdf` | Bản build gần nhất, 198 trang (thân báo cáo Chương 1–8 chiếm 108 trang) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `MVP.md` | Phạm vi MVP: FR/NFR nào hiện thực ở bản nộp cuối kỳ, nào để sau — tách khỏi báo cáo theo yêu cầu |
 | `NOTES.md` | Việc đang mở, chưa chốt |
@@ -52,7 +52,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI, mỗi căn cứ dẫn từ một nhu cầu người dùng cụ thể |
 | `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
 | `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với yêu cầu thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho mô-đun AI |
-| `phuluc-chitiet.tex` | Hình và bảng tra cứu chuyển từ thân báo cáo: **P** số liệu OCOP · **Q** bản đồ hành trình khách hàng và nguồn giao dịch kho · **R** 7 lưu đồ chi tiết · **S** 4 sơ đồ use case chi tiết và 3 bảng đặc tả use case |
+| `phuluc-chitiet.tex` | Hình và bảng tra cứu chuyển từ thân báo cáo: **P** số liệu OCOP · **Q** bản đồ hành trình khách hàng và nguồn giao dịch kho · **R** 7 lưu đồ chi tiết · **S** 4 sơ đồ use case chi tiết và 3 bảng đặc tả use case · **T** sitemap chi tiết cấp 3 kèm mã FR |
 | `kehoach.tex` | Kế hoạch thực hiện theo hai giai đoạn, có mốc ngày thật: giai đoạn 1 tới 15/10/2026 (nộp giữa kỳ), giai đoạn 2 tới 31/12/2026 (nộp cuối kỳ); kèm phân tích rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
@@ -75,6 +75,8 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | `design/ocop-2024-2025.html` | Hình tăng trưởng OCOP (Ch.2) |
 | `design/bmc-cum1.html`, `bmc-cum2.html`, `bmc-cum3.html` | **3 cụm BMC dùng trong thân báo cáo** (thay ảnh ngang cũ khó đọc) |
 | `design/usecase-overview.html` + 4 file `usecase-*.html` | **5 sơ đồ use case** (Ch.5) --- tổng quan và chi tiết theo từng tác nhân |
+| `design/c4-ngu-canh.html`, `c4-container.html`, `c4-module.html`, `sitemap-tong-quan.html` | Sơ đồ C4 mức 1 (Ch.4), mức 2 và 3 (Ch.5), sitemap tổng quan (Ch.5). **Không sửa tay**: sinh từ `tools/diagrams/` |
+| `diagrams/svgkit.py`, `gen_c4.py`, `gen_sitemap.py` | Bộ sinh HTML cho 4 hình trên. Sửa nội dung ở đây, chạy `python tools/diagrams/gen_c4.py` và `gen_sitemap.py`, rồi `npm run shot` |
 
 **Các nội dung so sánh nay dùng bảng LaTeX, không dùng ảnh** — `tools/design/` chỉ còn các infographic thật sự cần đồ họa.
 
@@ -115,11 +117,11 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 `subsec:danhgianghiepvu`, `sec:motahethong`, `sec:luongvanhanh`,
 `sec:doituongnguoidung`, `sec:luongtiepcan`, `sec:yeucau`,
 `sec:yeucauchucnang`, `sec:yeucauphichucnang`; `sec:giaiphapcongnghe`,
-`sec:kientruc`, `sec:csdl`, `subsec:dacta-csdl`, `subsec:erd`,
+`sec:kientruc`, **`sec:sitemap`**, `sec:csdl`, `subsec:dacta-csdl`, `subsec:erd`,
 `sec:thietkeAI`; **`sec:muctieuphuongphap`**, `sec:danhgiaux`,
 `sec:danhgiahieunang`, `sec:danhgiaAI`.
 
-**Hình (22; từ đợt 8, `fig:ocop`, 7 lưu đồ và 4 sơ đồ use case chi tiết nằm ở Phụ lục P, R, S):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
+**Hình (26; thêm `fig:c4-ngucanh` ở Ch.4, `fig:c4-container`, `fig:c4-module`, `fig:sitemap` ở Ch.5; từ đợt 8, `fig:ocop`, 7 lưu đồ và 4 sơ đồ use case chi tiết nằm ở Phụ lục P, R, S):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
 `fig:chu-thich-flowchart`, `fig:erd` (chưa có ảnh), 10 lưu đồ `fig:flow-*`
 gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
@@ -129,7 +131,7 @@ gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 
 **Bảng trong thân báo cáo (6, cộng 3 bảng đặc tả use case `tab:uc-b4`, `tab:uc-c4`, `tab:uc-d4`):** `tab:hailuong` (đối chiếu hai luồng),
 `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap`,
-`tab:nhomnguoidung`, `tab:vaitro-noibo`. `tab:customer-journey` và `tab:nguon-giaodich` ở Phụ lục Q; `tab:uc-b2`, `tab:uc-d7`, `tab:uc-c7` ở Phụ lục S.
+`tab:nhomnguoidung`, `tab:vaitro-noibo`. `tab:customer-journey` và `tab:nguon-giaodich` ở Phụ lục Q; `tab:uc-b2`, `tab:uc-d7`, `tab:uc-c7` ở Phụ lục S; `tab:sitemap-chitiet` ở Phụ lục T.
 
 **Quy ước bảng:** macro `\tblsetup` (cỡ `\small`, giãn dòng 1,25, khoảng cách cột 5pt) và `\tblzebra` (tô xen kẽ tự động) định nghĩa trong `main.tex`; không tô tay `\rowcolor{tblaltbg}` nữa.
 

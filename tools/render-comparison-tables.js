@@ -20,6 +20,11 @@ const pages = [
   'usecase-nguoi-mua-le.html',
   'usecase-nguoi-mua-si.html',
   'usecase-quan-tri-vien.html',
+  // Sơ đồ C4 (ngữ cảnh, container, mô-đun) và sitemap; HTML sinh từ tools/diagrams/*.py
+  'c4-ngu-canh.html',
+  'c4-container.html',
+  'c4-module.html',
+  'sitemap-tong-quan.html',
 ];
 
 (async () => {

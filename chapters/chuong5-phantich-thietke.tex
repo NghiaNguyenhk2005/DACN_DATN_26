@@ -262,9 +262,22 @@ Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ
 \subsection{Thiết kế kiến trúc hệ thống}
 \label{sec:kientruc}
 
-% TODO: nhóm vẽ sơ đồ kiến trúc tổng thể minh họa mô tả dưới đây và chèn bằng \includegraphics.
+Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước. Kiến trúc được trình bày theo mô hình C4~\cite{brown_c4model}, mỗi mức phóng to một khối của mức trước:
+\begin{itemize}
+    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và sáu hệ thống bên ngoài.
+    \item \textbf{Mức 2 --- container} (Hình~\ref{fig:c4-container}): các thành phần chạy độc lập và công nghệ của từng thành phần.
+    \item \textbf{Mức 3 --- mô-đun} (Hình~\ref{fig:c4-module}): 12 mô-đun bên trong ứng dụng lõi và quan hệ giữa chúng.
+\end{itemize}
+Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này nên được sinh tự động từ mã nguồn để không bị lệch khi mã thay đổi.
 
-Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước.
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/c4-container.png}
+\end{adjustbox}
+\caption{Kiến trúc tổng thể của Farmery: các container (C4 mức 2)}
+\label{fig:c4-container}
+\end{figure}
 
 \subsubsection*{Kiểu kiến trúc: modular monolith}
 
@@ -286,16 +299,27 @@ Chọn khối đơn không có nghĩa là đóng cửa khả năng tách về sa
 
 Biện pháp bảo đảm ba ràng buộc trên với chi phí thấp nhất là cấp cho \textbf{mỗi mô-đun một schema riêng trong cùng một cơ sở dữ liệu}. Hệ thống vẫn chạy trên một cơ sở dữ liệu duy nhất nên giao dịch vẫn hoạt động bình thường, nhưng đường biên dữ liệu hiện ra rõ ràng và mọi vi phạm ràng buộc RB3 đều lộ ra ngay khi đọc mã.
 
+Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 12 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/c4-module.png}
+\end{adjustbox}
+\caption{Các mô-đun của ứng dụng lõi (C4 mức 3)}
+\label{fig:c4-module}
+\end{figure}
+
 \subsubsection*{Các lớp và thành phần}
 
 Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 \begin{itemize}
     \item \textbf{Lớp giao diện} --- Next.js, dựng dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3); phục vụ ba loại giao diện: trang mua hàng, trang quản lý của nhà cung cấp, và trang làm việc của nhân sự nội bộ.
     \item \textbf{Lớp ứng dụng} --- NestJS, tiếp nhận yêu cầu, kiểm tra quyền truy cập theo vai trò, điều phối giữa các mô-đun nghiệp vụ.
-    \item \textbf{Lớp mô-đun nghiệp vụ} --- các mô-đun chia theo miền như mô tả ở mục~\ref{sec:luongvanhanh}, mỗi mô-đun một schema dữ liệu riêng.
+    \item \textbf{Lớp mô-đun nghiệp vụ} --- 12 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
     \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho cache và hàng đợi, object storage cho ảnh và tệp chứng nhận.
     \item \textbf{Dịch vụ AI} --- tách riêng, viết bằng Python, nhận dữ liệu qua event queue và trả kết quả qua API nội bộ.
-    \item \textbf{Lớp tích hợp bên ngoài} --- cổng thanh toán và đơn vị vận chuyển, gọi qua API của bên thứ ba.
+    \item \textbf{Lớp tích hợp bên ngoài} --- sáu hệ thống bên ngoài tại Hình~\ref{fig:c4-container}: cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS và email, đăng nhập qua Google hoặc Facebook; mỗi hệ thống chỉ do một mô-đun gọi tới.
 \end{itemize}
 
 \subsubsection*{Các quyết định kiến trúc đáng chú ý}
@@ -309,7 +333,24 @@ Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 
 
 \subsection{Thiết kế sitemap}
-% TODO: sơ đồ các trang/màn hình theo từng nhóm người dùng.
+\label{sec:sitemap}
+
+Sitemap thể hiện tổ chức các trang của ứng dụng web theo cấp bậc: mỗi nút là một trang hoặc một nhóm trang, đường nối cho biết trang nào nằm dưới trang nào~\cite{nngroup_sitemap}. Sitemap bắc cầu giữa mô hình use case tại mục~\ref{sec:sddchitiet} (người dùng làm được gì) và thiết kế giao diện (trang đó trông ra sao). Hình~\ref{fig:sitemap} trình bày hai cấp đầu; cấp 3 của từng khu vực, kèm mã FR tương ứng, liệt kê tại Bảng~\ref{tab:sitemap-chitiet} ở Phụ lục~T. Các quyết định chính:
+\begin{itemize}
+    \item \textbf{Năm khu vực cấp 1:} một khu công khai không cần đăng nhập và bốn khu sau đăng nhập, mỗi khu ứng với một nhóm người dùng. Mọi khu sau đăng nhập có chung ba trang: tài khoản, thông báo và tin nhắn.
+    \item \textbf{Cửa hàng chung cho hai luồng:} khách lẻ và khách sỉ dùng cùng một danh mục sản phẩm và cùng trang truy xuất nguồn gốc. Danh mục có chế độ Mua lẻ (hàng của gian hàng Farmery) và Mua sỉ; khách sỉ đăng nhập thấy thêm giá bậc theo MOQ và nút gửi yêu cầu báo giá.
+    \item \textbf{Một khu làm việc nội bộ, menu theo vai trò:} nhân sự nội bộ vào cùng một khu, mỗi người chỉ thấy các mục của vai trò mình; cách này hợp với việc một tài khoản có thể giữ nhiều vai trò (mục~\ref{sec:doituongnguoidung}).
+    \item \textbf{Độc lập với framework:} sitemap mô tả tổ chức trang theo góc nhìn người dùng, không phụ thuộc công nghệ. Khi hiện thực bằng Next.js, mỗi khu vực ứng với một nhóm route có bố cục và kiểm tra đăng nhập riêng; một số trang có thể thành thẻ hoặc hộp thoại mà không làm đổi cấu trúc cây.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/sitemap-tong-quan.png}
+\end{adjustbox}
+\caption{Sitemap tổng quan của Farmery (cấp 1 và 2)}
+\label{fig:sitemap}
+\end{figure}
 
 \subsection{Thiết kế lược đồ tuần tự}
 % TODO: sequence diagram cho các luồng chính: đặt hàng B2C, RFQ -- hợp đồng -- ký quỹ B2B, đăng và kiểm duyệt sản phẩm, gửi và kiểm duyệt đánh giá.

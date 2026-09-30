@@ -318,7 +318,17 @@ Người dùng tiếp cận nền tảng qua giao diện web đáp ứng nhiều
 
 \subsubsection*{Các tác nhân và luồng tương tác}
 
-% TODO: nhóm vẽ sơ đồ ngữ cảnh (context diagram) minh họa nội dung mô tả dưới đây và chèn bằng \includegraphics.
+Hình~\ref{fig:c4-ngucanh} tóm tắt các tác nhân và hệ thống bên ngoài dưới dạng sơ đồ ngữ cảnh --- mức thứ nhất của mô hình C4~\cite{brown_c4model}, chỉ cho thấy hệ thống như một khối cùng những ai và những hệ thống nào tương tác với nó. Hai mức tiếp theo, đi vào bên trong hệ thống, được trình bày tại mục~\ref{sec:kientruc}.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/c4-ngu-canh.png}
+\end{adjustbox}
+\caption{Sơ đồ ngữ cảnh của hệ thống Farmery (C4 mức 1)}
+\label{fig:c4-ngucanh}
+\end{figure}
+
 Tổng hợp từ các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhnghiepvu}, các tác nhân tương tác với hệ thống như sau:
 
 \begin{itemize}
@@ -326,7 +336,7 @@ Tổng hợp từ các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhngh
     \item \textbf{Khách sỉ} --- doanh nghiệp thu mua: gửi yêu cầu báo giá, thương lượng và giao kết hợp đồng với nhà cung cấp qua kênh do hệ thống trung gian hóa, theo dõi tiến độ giao hàng theo từng đợt.
     \item \textbf{Khách lẻ} --- người tiêu dùng cá nhân: tìm kiếm, tra cứu truy xuất, đặt hàng từ gian hàng của nền tảng, nhận hàng và đánh giá. Khách lẻ giao dịch với Farmery chứ không với nhà cung cấp.
     \item \textbf{Nhân sự nội bộ Farmery} --- bảy vai trò tại Bảng~\ref{tab:vaitro-noibo}: khảo giá và tạo đơn thu mua theo lô, kiểm định và xuất nhập kho, giao hàng chặng ngắn, kiểm duyệt nhà cung cấp và sản phẩm, phân xử khiếu nại, hỗ trợ nhà cung cấp tại vùng trồng, và cấu hình hệ thống.
-    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân; đồng thời gọi API của các dịch vụ bên thứ ba về thanh toán và vận chuyển.
+    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân; đồng thời gọi API của sáu hệ thống bên ngoài: cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS và email, và đăng nhập qua Google hoặc Facebook.
 \end{itemize}
 
 Một nguyên tắc chi phối toàn hệ thống: nền tảng không cho phép bên bán và bên mua giao dịch ngoài tầm kiểm soát của mình. Mọi luồng tiền, dữ liệu chứng nhận và đánh giá đều đi qua hệ thống, vừa để đảm bảo tính minh bạch (liên hệ mục~\ref{subsec:reputation}), vừa để nhân sự nội bộ có đủ dữ liệu giám sát và xử lý vi phạm. Ở luồng bán lẻ, nguyên tắc này thể hiện theo cách mạnh hơn: Farmery không đứng giữa mà là một bên trong giao dịch, trực tiếp chịu trách nhiệm chất lượng hàng bán ra trước người tiêu dùng.
