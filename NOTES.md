@@ -149,6 +149,12 @@ Ba sơ đồ được viện dẫn trong văn bản nhưng chưa có hình, đã
 HTML nháp (`so-do-ngu-canh.html`, `kien-truc.html`) đã tạo rồi xoá hẳn theo yêu
 cầu; script render không còn tham chiếu tới chúng. Các dòng `% TODO` tại mục
 4.2.1, 5.3.1 và 5.3.5 vẫn giữ nguyên làm chỗ đánh dấu.
+
+**Cập nhật 2026-10-01:** user đảo quyết định "nhóm tự vẽ" (hạng mục 16 của
+phiên 30/9). Claude đã vẽ sơ đồ ngữ cảnh (mục 4.2) và kiến trúc theo C4
+(mục 5.3.1, hai hình) bằng bộ sinh `tools/diagrams/`; xem `DECISIONS.md`
+("Kiến trúc theo mô hình C4..."). Còn thiếu: **ERD** (mục 5.3.5), và sơ đồ
+tuần tự, sơ đồ lớp (mục 5.3.3, 5.3.4) — user tạm hoãn.
 Status: open
 
 ### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23
@@ -160,8 +166,35 @@ có bước công nợ). Cần rà lại ít nhất 2 file:
   bán hàng đã thu mua, không phải nhà bán bán trực tiếp cho người tiêu dùng.
 Ngoài ra cần cân nhắc thêm một lưu đồ mới cho quy trình thu mua (1P), hiện mới
 có mô tả bằng chữ.
-Status: open
+**Cập nhật 2026-10-01:** đã xử lý ở mục ngay dưới ("Lưu đồ đã đồng bộ...").
+Status: resolved
 
 ### Lưu đồ đã đồng bộ với mô hình hai luồng — Claude — 2026-09-23
 Đã thêm `flowcharts/08-thu-mua.tex` và sửa 2 lưu đồ bán lẻ. Xem `DECISIONS.md`.
 Status: resolved
+
+### Liên hệ Cục Chuyển đổi số hỏi API tra cứu công khai của TraceViet — Claude — 2026-10-01
+"Chuẩn kết nối TXNG v5.1" chỉ có chiều đẩy dữ liệu lên (đơn vị gửi dữ liệu),
+không có API tra cứu công khai. Vì vậy báo cáo đang xác minh ba tầng và hiện
+thực bằng bản giả lập. Nếu Cục Chuyển đổi số (Bộ NN&MT) cung cấp API tra cứu,
+cần sửa FR4.8, đặc tả UC-B4 và mục TraceViet ở Chương 2. Việc của nhóm, không
+phải của Claude.
+Status: open
+
+### Xin cấp quyền đơn vị gửi dữ liệu (ĐVGP) trên TraceViet — Claude — 2026-10-01
+Muốn kết nối thật (thay bản giả lập) thì Farmery phải được cấp tư cách đơn vị
+gửi dữ liệu và khóa ký RSA theo chuẩn kết nối. Chưa rõ thủ tục và thời gian
+cấp; nếu không kịp trong học kỳ thì giữ bản giả lập như phạm vi đã ghi ở
+Chương 1 và hướng phát triển ở Chương 8.
+Status: open
+
+### Kiểm chứng ba nguồn còn treo của phiên 30/9 — Claude — 2026-10-01
+- `kalbach2020mapping`: bản 2, O'Reilly, phát hành 11/2020 — khớp mục hiện có.
+- Nghị định 38/2026/NĐ-CP: đúng là văn bản về nhập khẩu cây mang bầu đất,
+  quản lý mã số vùng trồng và mã số cơ sở đóng gói. Đã được Nghị quyết
+  36/2026/NQ-CP (31/7/2026) sửa đổi một số điều để đơn giản hóa thủ tục; nếu
+  cần độ chính xác cao thì bổ sung văn bản này ở Phụ lục H và N.
+- SonarQube Cloud bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công
+  khai không giới hạn — đã ghi vào mục 6.1.1.
+Status: resolved
+
