@@ -21,3 +21,9 @@ PHASE*-PLAN.md
 slide-pack/
 *.bcf
 *.run.xml
+
+# Cấu hình Claude Code cục bộ (agent slide-planner...) — dùng cá nhân, không commit
+.claude/
+
+# Kết quả rà soát nội bộ (agent report-auditor) — bản làm việc, không commit
+review/
