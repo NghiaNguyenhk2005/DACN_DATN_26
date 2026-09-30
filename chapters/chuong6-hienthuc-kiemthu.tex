@@ -10,7 +10,7 @@
 
 \subsection{Môi trường và công cụ phát triển}
 \label{sec:moitruong}
-Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm thử đơn vị kèm đo độ phủ, phân tích tĩnh bằng SonarQube Cloud (bản miễn phí) và cổng chất lượng; mã mới không đạt ngưỡng bị chặn trước khi hợp nhất. Kiểm thử tải bằng k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian. Nếu quy mô mã nguồn vượt giới hạn của bản miễn phí, chuyển sang SonarQube Community Build tự chạy mà không phải viết lại cấu hình phân tích.
+Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm thử đơn vị kèm đo độ phủ, phân tích tĩnh bằng SonarQube Cloud (bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công khai không giới hạn) và cổng chất lượng; mã mới không đạt ngưỡng bị chặn trước khi hợp nhất. Kiểm thử tải bằng k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian. Nếu quy mô mã nguồn vượt giới hạn của bản miễn phí, chuyển sang SonarQube Community Build tự chạy mà không phải viết lại cấu hình phân tích.
 
 % TODO: liệt kê phiên bản ngôn ngữ, framework (frontend/backend), cơ sở dữ liệu, dịch vụ bên thứ ba (thanh toán, vận chuyển, object storage), thư viện ML dùng cho các mô-đun tại mục~\ref{sec:thietkeAI}; ngưỡng cổng chất lượng đã đặt.
 
