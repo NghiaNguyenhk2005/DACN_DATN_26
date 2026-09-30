@@ -102,3 +102,99 @@ trong `DECISIONS.md`. Đã lưu thành feedback memory
 (`feedback_bullet_and_visuals.md`, ngoài project) để tự áp dụng cho các
 lần viết nội dung mới tiếp theo, không cần user nhắc lại.
 Status: resolved
+
+### Phiên 2026-09-23: 18 hạng mục chỉnh sửa — Claude — 2026-09-23
+Đã thực hiện xong theo kế hoạch (plan tạm ở `PHASE1-PLAN.md`, gitignore).
+Chi tiết quyết định ở `DECISIONS.md`. Build sạch: 134 trang, không lỗi, không
+tham chiếu treo, không cảnh báo citation.
+Status: resolved
+
+### Nhóm cần xác nhận stack back-end thực tế — Claude — 2026-09-23
+Mục 5.2 "Giải pháp công nghệ" hiện đề xuất Next.js + NestJS + PostgreSQL +
+Redis + MinIO + Python/FastAPI cho dịch vụ AI. Phần PostgreSQL có lập luận
+riêng và nên giữ bất kể. Riêng **framework back-end** cần nhóm xác nhận: nếu
+nhóm đã quen Java/Spring hoặc PHP/Laravel thì nên đổi, vì học framework mới
+trong 15 tuần trong khi phải làm cả luồng 1P lẫn AI là đánh đổi tệ. Khi đổi,
+phải sửa đồng bộ: mục 5.2, bảng đối sánh ở Phụ lục I, và mục 6.1.1 (môi
+trường và công cụ phát triển).
+Status: open
+
+### Các TODO trích dẫn còn thiếu ở nội dung mới — Claude — 2026-09-23
+Hai mục mới ở Chương 2 đang thiếu nguồn trích dẫn, đã đánh dấu `% TODO` tại
+chỗ:
+1. Mục 2.1.1 (phạm vi khái niệm nông sản) — cần thêm 3 văn bản pháp lý vào
+   `references.bib`: Luật An toàn thực phẩm 55/2010/QH12, Nghị định
+   15/2018/NĐ-CP, Luật Trồng trọt 31/2018/QH14.
+2. Mục 2.1.3 (chứng nhận farm-to-market) — cần nguồn cho danh sách chứng nhận
+   quốc tế: trang chính thức GlobalG.A.P., GFSI, quy định hữu cơ EU
+   2018/848 và USDA, chuẩn kiểm dịch thực vật quốc tế, hướng dẫn mã số vùng
+   trồng của cơ quan quản lý trong nước.
+Mục 3.3 (vì sao các sàn khác chưa làm) hiện dựa vào số liệu đã trích dẫn ở
+Ch.1 và Ch.3, không phát sinh nguồn mới, nhưng nếu hội đồng hỏi sâu thì nên
+bổ sung nguồn cho lập luận N1 và N2.
+Status: open
+
+### Sơ đồ còn thiếu sau khi tái cấu trúc — Claude — 2026-09-23
+Ba sơ đồ được viện dẫn trong văn bản nhưng chưa có hình, đã đánh dấu `% TODO`:
+1. **Sơ đồ ngữ cảnh** (mục 4.2.1) — Farmery ở trung tâm, 5 nhóm tác nhân mới
+   và các hệ thống ngoài (cổng thanh toán, đơn vị vận chuyển). Nên vẽ bằng
+   TikZ để nhất quán với các lưu đồ sẵn có trong `flowcharts/`.
+2. **Sơ đồ kiến trúc tổng thể** (mục 5.3.1) — các lớp và công nghệ từng lớp,
+   theo đúng mô tả đã viết.
+3. **Sơ đồ ERD** (mục 5.3.5) — vẽ theo Phụ lục K (từ điển dữ liệu), lưu ý bản
+   hiện hành đã bỏ 2 thực thể BusinessMember và DebtLedger, và Phụ lục K chỉ
+   còn đặc tả chi tiết 4 nhóm cốt lõi.
+
+**Cập nhật 2026-09-23:** user chốt **nhóm tự vẽ**, Claude không vẽ. Hai file
+HTML nháp (`so-do-ngu-canh.html`, `kien-truc.html`) đã tạo rồi xoá hẳn theo yêu
+cầu; script render không còn tham chiếu tới chúng. Các dòng `% TODO` tại mục
+4.2.1, 5.3.1 và 5.3.5 vẫn giữ nguyên làm chỗ đánh dấu.
+
+**Cập nhật 2026-10-01:** user đảo quyết định "nhóm tự vẽ" (hạng mục 16 của
+phiên 30/9). Claude đã vẽ sơ đồ ngữ cảnh (mục 4.2) và kiến trúc theo C4
+(mục 5.3.1, hai hình) bằng bộ sinh `tools/diagrams/`; xem `DECISIONS.md`
+("Kiến trúc theo mô hình C4..."). Còn thiếu: **ERD** (mục 5.3.5), và sơ đồ
+tuần tự, sơ đồ lớp (mục 5.3.3, 5.3.4) — user tạm hoãn.
+Status: open
+
+### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23
+Các lưu đồ TikZ hiện có vẫn vẽ theo mô hình cũ (nhà bán tự bán ở cả hai kênh,
+có bước công nợ). Cần rà lại ít nhất 2 file:
+- `04b-ban-si-giao-hang.tex` — có bước liên quan công nợ, nay đã đổi thành
+  thanh toán theo từng đợt giao.
+- `03-ban-le.tex` và `03b-ban-le-giao-nhan.tex` — luồng bán lẻ nay là Farmery
+  bán hàng đã thu mua, không phải nhà bán bán trực tiếp cho người tiêu dùng.
+Ngoài ra cần cân nhắc thêm một lưu đồ mới cho quy trình thu mua (1P), hiện mới
+có mô tả bằng chữ.
+**Cập nhật 2026-10-01:** đã xử lý ở mục ngay dưới ("Lưu đồ đã đồng bộ...").
+Status: resolved
+
+### Lưu đồ đã đồng bộ với mô hình hai luồng — Claude — 2026-09-23
+Đã thêm `flowcharts/08-thu-mua.tex` và sửa 2 lưu đồ bán lẻ. Xem `DECISIONS.md`.
+Status: resolved
+
+### Liên hệ Cục Chuyển đổi số hỏi API tra cứu công khai của TraceViet — Claude — 2026-10-01
+"Chuẩn kết nối TXNG v5.1" chỉ có chiều đẩy dữ liệu lên (đơn vị gửi dữ liệu),
+không có API tra cứu công khai. Vì vậy báo cáo đang xác minh ba tầng và hiện
+thực bằng bản giả lập. Nếu Cục Chuyển đổi số (Bộ NN&MT) cung cấp API tra cứu,
+cần sửa FR4.8, đặc tả UC-B4 và mục TraceViet ở Chương 2. Việc của nhóm, không
+phải của Claude.
+Status: open
+
+### Xin cấp quyền đơn vị gửi dữ liệu (ĐVGP) trên TraceViet — Claude — 2026-10-01
+Muốn kết nối thật (thay bản giả lập) thì Farmery phải được cấp tư cách đơn vị
+gửi dữ liệu và khóa ký RSA theo chuẩn kết nối. Chưa rõ thủ tục và thời gian
+cấp; nếu không kịp trong học kỳ thì giữ bản giả lập như phạm vi đã ghi ở
+Chương 1 và hướng phát triển ở Chương 8.
+Status: open
+
+### Kiểm chứng ba nguồn còn treo của phiên 30/9 — Claude — 2026-10-01
+- `kalbach2020mapping`: bản 2, O'Reilly, phát hành 11/2020 — khớp mục hiện có.
+- Nghị định 38/2026/NĐ-CP: đúng là văn bản về nhập khẩu cây mang bầu đất,
+  quản lý mã số vùng trồng và mã số cơ sở đóng gói. Đã được Nghị quyết
+  36/2026/NQ-CP (31/7/2026) sửa đổi một số điều để đơn giản hóa thủ tục; nếu
+  cần độ chính xác cao thì bổ sung văn bản này ở Phụ lục H và N.
+- SonarQube Cloud bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công
+  khai không giới hạn — đã ghi vào mục 6.1.1.
+Status: resolved
+

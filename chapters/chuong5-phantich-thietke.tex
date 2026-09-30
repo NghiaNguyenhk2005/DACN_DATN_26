@@ -9,19 +9,18 @@ Chương này mô hình hóa các quy trình và tương tác của hệ thống
 \subsection{Mô hình hóa quy trình nghiệp vụ}
 \label{subsec:mohinhquytrinh}
 
-Tám quy trình nghiệp vụ mô tả tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng lưu đồ. Các ký hiệu dùng chung cho toàn bộ lưu đồ được giải thích tại Hình~\ref{fig:chu-thich-flowchart}.
+Tám quy trình nghiệp vụ mô tả tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng lưu đồ; ký hiệu dùng chung được giải thích tại Hình~\ref{fig:chu-thich-flowchart}. Mục này giữ lưu đồ của ba luồng làm nên khác biệt của Farmery: thu mua, đặt hàng bán lẻ và bán sỉ tới khi giao kết hợp đồng. Các lưu đồ còn lại đặt tại Phụ lục~R:
+\begin{itemize}
+    \item đăng ký, xác thực nhà cung cấp và kiểm duyệt chứng nhận (Hình~\ref{fig:flow-dang-ky});
+    \item đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất (Hình~\ref{fig:flow-san-pham});
+    \item giao hàng, nhận hàng và hoàn tất đơn bán lẻ (Hình~\ref{fig:flow-ban-le-b});
+    \item đánh giá sản phẩm và nhà cung cấp (Hình~\ref{fig:flow-danh-gia});
+    \item tạm giữ tiền, giao hàng và thanh toán theo từng đợt của đơn sỉ (Hình~\ref{fig:flow-ban-si-b});
+    \item vận chuyển hàng dễ hư hỏng và xử lý khiếu nại (Hình~\ref{fig:flow-van-chuyen});
+    \item giám sát, xử lý vi phạm phân cấp và báo cáo của nhân sự nội bộ (Hình~\ref{fig:flow-quan-tri}).
+\end{itemize}
 
 \input{flowcharts/00-chu-thich}
-
-\clearpage
-\subsubsection*{Đăng ký và xác thực nhà cung cấp, kiểm duyệt chứng nhận}
-Hình~\ref{fig:flow-dang-ky} minh họa quy trình trên dưới dạng lưu đồ, gồm các điểm kiểm tra OTP, eKYC và kiểm duyệt chứng nhận.
-\input{flowcharts/01-dang-ky}
-
-\clearpage
-\subsubsection*{Đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất}
-Hình~\ref{fig:flow-san-pham} minh họa quy trình đăng và kiểm duyệt sản phẩm, bao gồm nhánh hậu kiểm nhanh dành cho nhà cung cấp có uy tín cao.
-\input{flowcharts/02-san-pham}
 
 \clearpage
 \subsubsection*{Thu mua vào kho của nền tảng}
@@ -30,30 +29,13 @@ Hình~\ref{fig:flow-thu-mua} minh họa quy trình thu mua --- bước đứng t
 
 \clearpage
 \subsubsection*{Quy trình bán lẻ}
-Quy trình bán lẻ được minh họa qua hai lưu đồ nối tiếp: Hình~\ref{fig:flow-ban-le-a} (đặt hàng, thanh toán và xác nhận đơn) và Hình~\ref{fig:flow-ban-le-b} (giao hàng, nhận hàng và hoàn tất đơn).
+Hình~\ref{fig:flow-ban-le-a} minh họa phần đặt hàng, thanh toán và xác nhận đơn; phần giao hàng, nhận hàng và hoàn tất đơn ở Hình~\ref{fig:flow-ban-le-b} (Phụ lục~R).
 \input{flowcharts/03-ban-le}
-\input{flowcharts/03b-ban-le-giao-nhan}
-
-\clearpage
-\subsubsection*{Đánh giá sản phẩm và nhà cung cấp}
-Hình~\ref{fig:flow-danh-gia} minh họa quy trình đánh giá, từ kiểm duyệt đánh giá tới cập nhật điểm uy tín và quyền lợi của nhà cung cấp.
-\input{flowcharts/07-danh-gia}
 
 \clearpage
 \subsubsection*{Quy trình bán sỉ (B2B)}
-Quy trình bán sỉ được minh họa qua hai lưu đồ nối tiếp: Hình~\ref{fig:flow-ban-si-a} (từ công bố bảng giá tới ký hợp đồng) và Hình~\ref{fig:flow-ban-si-b} (tạm giữ tiền, giao hàng và thanh toán theo từng đợt).
+Hình~\ref{fig:flow-ban-si-a} minh họa phần từ công bố bảng giá tới giao kết hợp đồng; phần tạm giữ tiền, giao hàng và thanh toán theo từng đợt ở Hình~\ref{fig:flow-ban-si-b} (Phụ lục~R).
 \input{flowcharts/04-ban-si}
-\input{flowcharts/04b-ban-si-giao-hang}
-
-\clearpage
-\subsubsection*{Quản lý tồn kho, vận chuyển hàng dễ hư hỏng và xử lý khiếu nại}
-Hình~\ref{fig:flow-van-chuyen} minh họa quy trình vận chuyển hàng dễ hư hỏng và xử lý khiếu nại.
-\input{flowcharts/05-van-chuyen}
-
-\clearpage
-\subsubsection*{Quản trị hệ thống}
-Hình~\ref{fig:flow-quan-tri} minh họa quy trình giám sát, xử lý vi phạm phân cấp và báo cáo của quản trị viên.
-\input{flowcharts/06-quan-tri}
 
 \clearpage
 \subsection{Mô hình hóa tương tác}
@@ -66,9 +48,8 @@ Mục này trình bày sơ đồ use case tổng quát và theo từng tác nhâ
 Bảng~\ref{tab:actor-usecase} liệt kê các tác nhân, khớp với vai trò RBAC đã xác lập tại mục~\ref{sec:doituongnguoidung}.
 
 \begingroup
-\small
-\renewcommand{\arraystretch}{1.25}
-\begin{longtable}{L{4.0cm} L{3.0cm} L{6.5cm}}
+\tblsetup\tblzebra
+\begin{longtable}{L{4.10cm} L{3.75cm} L{7.05cm}}
 \caption{Danh sách tác nhân trong sơ đồ use case}
 \label{tab:actor-usecase} \\
 \toprule
@@ -84,28 +65,28 @@ Bảng~\ref{tab:actor-usecase} liệt kê các tác nhân, khớp với vai trò
 \bottomrule
 \endfoot
 Nhà cung cấp (nông dân/HTX) & \texttt{seller} & Tham gia cả hai luồng bán sỉ và bán lẻ (cung cấp hàng cho thu mua) \\
-\rowcolor{tblaltbg}
 Khách lẻ & \texttt{buyer\_retail} & Chỉ tham gia luồng bán lẻ (1P) \\
 Khách sỉ (doanh nghiệp thu mua) & \texttt{buyer\_wholesale} & Chỉ tham gia luồng bán sỉ (3P) \\
-\rowcolor{tblaltbg}
-Bộ phận thu mua & \texttt{ops\_sourcing} & Vận hành nội bộ, riêng cho luồng bán lẻ (1P) --- ra quyết định thu mua theo lô \\
-Quản trị viên kiểm duyệt & \texttt{admin\_moderator} & Kiểm duyệt hồ sơ, sản phẩm, chứng nhận \\
-\rowcolor{tblaltbg}
-Quản trị viên vận hành & \texttt{admin\_ops} & Xử lý vi phạm, khiếu nại, báo cáo thống kê, giám sát tồn kho/vận chuyển \\
-Quản trị viên cấp cao & \texttt{admin} & Gộp toàn bộ quyền của \texttt{admin\_moderator} và \texttt{admin\_ops} (mục~\ref{sec:doituongnguoidung}, mục e3) \\
-\rowcolor{tblaltbg}
-Hệ thống AI \textit{(actor phụ)} & --- & Hỗ trợ gợi ý sản phẩm (FR12.1), dự báo (FR12.2), luật ngưỡng giám sát bất thường \\
+Nhân viên thu mua & \texttt{staff\_sourcing} & Nội bộ, riêng cho luồng bán lẻ (1P) --- ra quyết định thu mua theo lô, định giá bán lẻ \\
+Nhân viên kho & \texttt{staff\_warehouse} & Nội bộ --- kiểm định hàng nhập, xuất nhập kho, sơ chế, đóng gói, kiểm kê \\
+Nhân viên giao hàng & \texttt{staff\_delivery} & Nội bộ --- giao chặng ngắn quanh kho; chỉ thiết kế, chưa hiện thực trong đồ án \\
+Nhân viên hỗ trợ vùng & \texttt{staff\_support} & Nội bộ --- hướng dẫn và nhập liệu hộ nhà cung cấp được phân công \\
+Kiểm duyệt viên & \texttt{staff\_moderation} & Nội bộ --- kiểm duyệt hồ sơ, sản phẩm, chứng nhận; xử lý vi phạm về nội dung \\
+Nhân viên vận hành & \texttt{staff\_operations} & Nội bộ --- phân xử khiếu nại và tranh chấp đơn hàng, báo cáo thống kê, giám sát tồn kho và vận chuyển \\
+Quản trị viên hệ thống & \texttt{platform\_owner} & Nội bộ --- cấu hình danh mục, ngưỡng, biểu phí; quản lý tài khoản nội bộ \\
+Hệ thống AI \textit{(actor phụ)} & --- & Hỗ trợ tìm kiếm ngữ nghĩa (FR12.3), gợi ý sản phẩm (FR12.1), dự báo (FR12.2), luật ngưỡng giám sát bất thường \\
 Cổng thanh toán trung gian \textit{(actor phụ)} & --- & Bên ngoài hệ thống, xử lý thanh toán và ký quỹ (FR7) \\
-\rowcolor{tblaltbg}
 Đơn vị vận chuyển 3PL \textit{(actor phụ)} & --- & Bên ngoài hệ thống (FR8.1) \\
 \end{longtable}
 \endgroup
 
-\noindent\textbf{Quan hệ generalization:} \texttt{admin} kế thừa toàn bộ use case của \texttt{admin\_moderator} và \texttt{admin\_ops} theo nguyên tắc đặc quyền tối thiểu đã xác lập tại mục~\ref{sec:doituongnguoidung} (NFR3.1).
+\noindent\textbf{Quan hệ giữa các vai trò nội bộ:} bảy vai trò là các tập quyền độc lập, không vai trò nào kế thừa vai trò khác; một tài khoản có thể được gán nhiều vai trò khi đội vận hành còn nhỏ, theo nguyên tắc đặc quyền tối thiểu đã xác lập tại mục~\ref{sec:doituongnguoidung} (NFR3.1).
+
+\noindent\textbf{Nguyên tắc xác định use case:} một use case phải do tác nhân bên ngoài hệ thống khởi xướng để đạt mục tiêu của chính tác nhân đó. Các xử lý mà hệ thống tự thực hiện --- sinh mã QR khi lô được duyệt, sinh hợp đồng khi báo giá được chốt --- vẫn là yêu cầu chức năng, nhưng trong mô hình use case chúng là bước hoặc hậu điều kiện của use case do người dùng khởi xướng, không phải use case độc lập.
 
 \subsubsection*{Sơ đồ use case tổng quan}
 
-Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói chức năng ứng với các nhóm FR đã xác lập tại mục~\ref{sec:yeucauchucnang}.
+Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối chức năng tại mục~\ref{sec:luongvanhanh} và các nhóm FR tại mục~\ref{sec:yeucauchucnang}. Trong mỗi gói, cột trái là use case của người dùng bên ngoài, cột phải là use case của nhân sự nội bộ. Mã UC chỉ ghi cho các use case có bảng đặc tả; actor phụ (hệ thống AI, cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số) được vẽ ở các sơ đồ chi tiết để sơ đồ tổng quan không rối.
 
 \begin{figure}[p]
 \centering
@@ -118,109 +99,52 @@ Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo n
 
 \subsubsection*{Sơ đồ use case chi tiết theo tác nhân}
 
-Hình~\ref{fig:usecase-nhaban} minh họa chi tiết các use case của Nhà cung cấp quanh nhóm sản phẩm và truy xuất nguồn gốc (FR4), gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML.
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nha-ban.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Nhà cung cấp}
-\label{fig:usecase-nhaban}
-\end{figure}
-
-Hình~\ref{fig:usecase-khachle} minh họa hành trình mua hàng bán lẻ đầy đủ của Khách lẻ (FR5).
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nguoi-mua-le.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách lẻ}
-\label{fig:usecase-khachle}
-\end{figure}
-
-Hình~\ref{fig:usecase-khachsi} minh họa luồng yêu cầu báo giá, hợp đồng điện tử, ký quỹ và giao hàng theo đợt của Khách sỉ (FR6, FR7).
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nguoi-mua-si.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách sỉ}
-\label{fig:usecase-khachsi}
-\end{figure}
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-quan-tri-vien.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Quản trị viên}
-\label{fig:usecase-quantri}
-\end{figure}
+Sơ đồ chi tiết của từng nhóm tác nhân đặt tại Phụ lục~S, gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML:
+\begin{itemize}
+    \item Nhà cung cấp, gồm nguồn cung FR2--FR4 và các việc ở luồng bán sỉ, thu mua (Hình~\ref{fig:usecase-nhaban});
+    \item Khách lẻ, hành trình mua hàng bán lẻ FR5 (Hình~\ref{fig:usecase-khachle});
+    \item Khách sỉ, từ yêu cầu báo giá, giao kết hợp đồng, ký quỹ tới giao hàng theo đợt FR6, FR7 (Hình~\ref{fig:usecase-khachsi});
+    \item nhân sự nội bộ (Hình~\ref{fig:usecase-quantri}).
+\end{itemize}
 
 \subsubsection*{Bảng đặc tả các use case chính}
 
-Các use case dưới đây được chọn đại diện cho mọi loại actor và loại luồng: thao tác đơn giản (UC-B2), luồng có sinh dữ liệu tự động (UC-B3), luồng có actor phụ bên ngoài (UC-C4, UC-D7), luồng nhiều bước có điều kiện rẽ nhánh (UC-D4), và luồng có AI hỗ trợ (UC-C7).
+Các use case dưới đây được chọn đại diện cho mọi loại actor và loại luồng: thao tác đơn giản (UC-B2), luồng của nhân sự nội bộ có hệ thống ngoài tham gia (UC-B4), luồng có actor phụ bên ngoài (UC-C4, UC-D7), luồng hai bên cùng thao tác có điều kiện rẽ nhánh (UC-D4), và luồng có AI hỗ trợ (UC-C7). Ba bảng UC-B4, UC-C4 và UC-D4 đặt tại đây; bảng UC-B2, UC-D7 và UC-C7 ở Phụ lục~S.
 
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
-\caption{Đặc tả use case UC-B2 --- Ghi nhật ký canh tác theo lô}
-\label{tab:uc-b2} \\
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-B4 --- Duyệt sản phẩm và lô hàng}
+\label{tab:uc-b4} \\
 \toprule
 \rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-B2: Ghi nhật ký canh tác theo lô}} \\
+\multicolumn{2}{l}{\textbf{UC-B4: Duyệt sản phẩm và lô hàng}} \\
 \midrule
 \endfirsthead
 \bottomrule
 \endfoot
-\textbf{Actor chính} & Nhà cung cấp (\texttt{seller}) \\
-\rowcolor{tblaltbg}
-\textbf{Tiền điều kiện} & Nhà cung cấp đã xác thực (trạng thái ``Đã xác thực''); đã tạo sản phẩm/lô hàng tương ứng (UC-B1) \\
+\textbf{Actor chính} & Kiểm duyệt viên (\texttt{staff\_moderation}) \\
+\textbf{Actor phụ} & Hệ thống truy xuất nguồn gốc nông sản của Bộ Nông nghiệp và Môi trường (TraceViet) \\
+\textbf{Tiền điều kiện} & Sản phẩm và lô đã qua kiểm tra tự động sơ bộ; lô có tối thiểu một bản ghi nhật ký canh tác và ảnh sản phẩm thật \\
 \textbf{Luồng chính} &
-1. Nhà cung cấp chọn lô hàng cần ghi nhật ký.\newline
-2. Nhập giai đoạn canh tác (gieo trồng/chăm sóc/thu hoạch), ngày tháng, mô tả hoạt động.\newline
-3. Tải ảnh minh chứng (nếu có).\newline
-4. Hệ thống lưu bản ghi, gắn với lô tương ứng, đánh dấu thời điểm tạo (bất biến, không cho sửa trực tiếp --- NFR9.1).\newline
-5. Nếu đủ điều kiện tối thiểu ($\geq$1 bản ghi + ảnh sản phẩm thật), chuyển sản phẩm sang trạng thái đủ điều kiện xét duyệt công khai (UC-B4). \\
-\rowcolor{tblaltbg}
+1. Kiểm duyệt viên mở hàng đợi duyệt, xem thông tin sản phẩm, nhật ký canh tác và chứng nhận liên quan.\newline
+2. Đối chiếu mã số vùng trồng với cổng công bố công khai của Bộ và ghi kết quả đối chiếu.\newline
+3. Phê duyệt sản phẩm và lô.\newline
+4. Hệ thống sinh mã định danh lô theo nguyên lý GS1 (GTIN kèm số lô) và mã QR dẫn tới trang truy xuất công khai.\newline
+5. Hệ thống đưa dữ liệu truy xuất của lô vào hàng đợi đồng bộ lên TraceViet; lô được mở bán ngay, không chờ kết quả đồng bộ. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-4a. Cần đính chính bản ghi cũ: hệ thống không cho sửa trực tiếp, chỉ tạo bản ghi mới kèm ghi chú đính chính (NFR9.1). \\
-\textbf{Hậu điều kiện} & Bản ghi được lưu vĩnh viễn (append-only), sẵn sàng hiển thị trên trang truy xuất công khai sau khi sản phẩm được duyệt. \\
+3a. Không đạt: từ chối kèm lý do, nhà cung cấp nhận thông báo và hướng dẫn bổ sung.\newline
+4a. Lô đã có mã QR từ trước (đính chính sau khi duyệt): không sinh mã mới, chỉ cập nhật trang truy xuất.\newline
+5a. TraceViet từ chối bản đồng bộ: ghi lý do, báo kiểm duyệt viên; lô vẫn bán được với mã QR của Farmery.\newline
+5b. TraceViet phê duyệt: lưu mã truy xuất do Bộ cấp và hiển thị kèm liên kết trên trang truy xuất. \\
+\textbf{Hậu điều kiện} & Sản phẩm hiển thị công khai; lô có mã QR quét được; trạng thái đồng bộ TraceViet được ghi nhận. \\
 \end{longtable}
-\end{center}
+\endgroup
 
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
-\caption{Đặc tả use case UC-B3 --- Hệ thống sinh mã QR truy xuất nguồn gốc}
-\label{tab:uc-b3} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-B3: Hệ thống sinh mã QR truy xuất nguồn gốc}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Hệ thống (tự động, kích hoạt bởi UC-B4 khi quản trị viên kiểm duyệt duyệt sản phẩm) \\
-\rowcolor{tblaltbg}
-\textbf{Tiền điều kiện} & Sản phẩm/lô hàng đã qua kiểm duyệt và đạt điều kiện tối thiểu \\
-\textbf{Luồng chính} &
-1. Sinh mã định danh duy nhất theo nguyên lý GS1 (GTIN + batch/lot).\newline
-2. Sinh mã QR liên kết tới trang truy xuất công khai.\newline
-3. Trang truy xuất tổng hợp hồ sơ nhà cung cấp, chứng nhận đã duyệt, nhật ký canh tác, các mốc vận chuyển liên quan.\newline
-4. Gắn mã QR vào trang sản phẩm, có thể in lên bao bì. \\
-\rowcolor{tblaltbg}
-\textbf{Luồng thay thế/ngoại lệ} & 1a. Lô đã có mã QR từ trước (do đính chính): không sinh mã mới, chỉ cập nhật nội dung trang truy xuất. \\
-\textbf{Hậu điều kiện} & Mã QR khả dụng, quét được, dẫn tới trang truy xuất công khai đầy đủ và cập nhật. \\
-\end{longtable}
-\end{center}
-
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
 \caption{Đặc tả use case UC-C4 --- Thanh toán đơn hàng bán lẻ}
 \label{tab:uc-c4} \\
 \toprule
@@ -231,112 +155,51 @@ Các use case dưới đây được chọn đại diện cho mọi loại actor
 \bottomrule
 \endfoot
 \textbf{Actor chính} & Khách lẻ (\texttt{buyer\_retail}) \\
-\rowcolor{tblaltbg}
 \textbf{Actor phụ} & Cổng thanh toán trung gian \\
 \textbf{Tiền điều kiện} & Đơn hàng đã được tạo, đang chờ thanh toán \\
-\rowcolor{tblaltbg}
 \textbf{Luồng chính} &
 1. Chọn phương thức thanh toán (COD/chuyển khoản-VietQR/ví điện tử).\newline
 2. Nếu trực tuyến: hệ thống chuyển yêu cầu tới cổng thanh toán trung gian.\newline
 3. Cổng thanh toán xử lý, trả kết quả.\newline
-4. Hệ thống xác nhận đơn, tạm trừ tồn kho.\newline
-5. Thông báo cho bộ phận đóng gói chuẩn bị hàng. \\
+4. Hệ thống xác nhận đơn, giữ chỗ trên dòng tồn của Farmery.\newline
+5. Thông báo cho nhân viên kho chuẩn bị hàng. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-3a. Thanh toán thất bại: đơn giữ trạng thái chờ tối đa 15 phút rồi tự hủy, giải phóng tồn kho.\newline
+3a. Thanh toán thất bại: đơn giữ trạng thái chờ tối đa 15 phút rồi tự hủy, nhả phần tồn đã giữ chỗ.\newline
 1a. Chọn COD: bỏ qua bước 2--3, xác nhận ngay.\newline
 4a. Nhiều đơn vượt tồn kho còn lại: ưu tiên đơn xác nhận thanh toán trước. \\
-\rowcolor{tblaltbg}
 \textbf{Hậu điều kiện} & Đơn chuyển trạng thái đã xác nhận (hoặc hủy nếu thất bại), tồn kho cập nhật đúng kết quả giao dịch. \\
 \end{longtable}
-\end{center}
+\endgroup
 
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
-\caption{Đặc tả use case UC-D4 --- Sinh hợp đồng điện tử từ RFQ đã thống nhất}
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-D4 --- Chốt báo giá và giao kết hợp đồng bán sỉ}
 \label{tab:uc-d4} \\
 \toprule
 \rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-D4: Sinh hợp đồng điện tử từ RFQ đã thống nhất}} \\
+\multicolumn{2}{l}{\textbf{UC-D4: Chốt báo giá và giao kết hợp đồng bán sỉ}} \\
 \midrule
 \endfirsthead
 \bottomrule
 \endfoot
-\textbf{Actor chính} & Hệ thống (tự động, sau khi Nhà cung cấp và Khách sỉ hoàn tất đàm phán) \\
-\rowcolor{tblaltbg}
-\textbf{Tiền điều kiện} & RFQ đã được nhà cung cấp xác nhận/điều chỉnh, hai bên thống nhất số lượng, đơn giá, lịch giao qua kênh nhắn tin nội bộ \\
+\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) và Nhà cung cấp (\texttt{seller}) \\
+\textbf{Actor phụ} & Tổ chức cung cấp dịch vụ chứng thực chữ ký số công cộng (chỉ khi ký số) \\
+\textbf{Tiền điều kiện} & Hai bên đã thống nhất số lượng, đơn giá và lịch giao qua kênh nhắn tin nội bộ \\
 \textbf{Luồng chính} &
-1. Lấy thông tin đã thống nhất (sản phẩm, số lượng, đơn giá theo bậc, lịch giao, điều kiện thanh toán).\newline
-2. Điền vào mẫu hợp đồng chuẩn, gồm điều khoản phạt vi phạm và thanh toán/công nợ.\newline
-3. Gửi hợp đồng nháp cho cả hai bên xem trước khi ký (UC-D5). \\
-\rowcolor{tblaltbg}
-\textbf{Luồng thay thế/ngoại lệ} & 1a. Giá trị hợp đồng vượt ngưỡng quy định: đánh dấu thuộc diện áp dụng ký quỹ trung gian (FR7.3). \\
-\textbf{Hậu điều kiện} & Hợp đồng điện tử ở trạng thái ``chờ ký'', lưu lịch sử phiên bản. \\
-\end{longtable}
-\end{center}
-
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
-\caption{Đặc tả use case UC-D7 --- Xác nhận nhận hàng và thanh toán theo đợt}
-\label{tab:uc-d7} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-D7: Xác nhận nhận hàng và thanh toán theo đợt}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) \\
-\rowcolor{tblaltbg}
-\textbf{Actor phụ} & Cổng thanh toán trung gian \\
-\textbf{Tiền điều kiện} & Nhà cung cấp đã giao hàng đợt tương ứng theo hợp đồng đã ký; hệ thống đã sinh hóa đơn cho đợt giao đó \\
-\rowcolor{tblaltbg}
-\textbf{Luồng chính} &
-1. Kiểm tra và xác nhận đã nhận đủ hàng đúng cam kết của đợt giao.\newline
-2. Thanh toán theo kỳ hạn công nợ đã thỏa thuận.\newline
-3. Nếu hợp đồng có ký quỹ: hệ thống ra lệnh cho cổng thanh toán giải ngân cho nhà cung cấp ngay tại bước xác nhận này.\newline
-4. Nhà cung cấp theo dõi doanh thu/lịch sử bán sỉ cập nhật. \\
+1. Một bên bấm chốt báo giá; bên kia đồng ý.\newline
+2. Hệ thống sinh hợp đồng nháp từ mẫu chuẩn với các điều khoản đã thống nhất, gồm điều khoản phạt vi phạm và thanh toán theo từng đợt.\newline
+3. Hai bên xem bản nháp.\newline
+4. Mỗi bên xác nhận giao kết bằng mã xác nhận dùng một lần gửi tới số điện thoại đã xác thực.\newline
+5. Khi cả hai bên đã xác nhận, hệ thống lưu mã băm của phiên bản đã xác nhận, chuyển hợp đồng sang trạng thái ``đã giao kết'' và lập lịch các đợt giao. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-1a. Không giao đủ số lượng/đúng lịch: áp dụng điều khoản phạt, ghi vào lịch sử uy tín.\newline
-2a. Chậm thanh toán quá hạn: nhắc tự động, có thể tạm khóa quyền đặt RFQ mới.\newline
-3a. Phát sinh tranh chấp về đợt giao đã ký quỹ: khoản ký quỹ giữ nguyên tại cổng thanh toán cho đến khi khiếu nại xử lý xong. \\
-\rowcolor{tblaltbg}
-\textbf{Hậu điều kiện} & Đợt giao chuyển trạng thái hoàn tất, công nợ cập nhật, tiền giải ngân cho nhà cung cấp (nếu có ký quỹ). \\
+3a. Một bên yêu cầu sửa: hệ thống tạo phiên bản mới, mọi xác nhận trước đó mất hiệu lực.\newline
+4a. Quá thời hạn mà một bên chưa xác nhận: hợp đồng tự hủy, báo giá quay về trạng thái đàm phán.\newline
+5a. Giá trị hợp đồng vượt ngưỡng: hệ thống đánh dấu thuộc diện ký quỹ trung gian (FR7.3) và đề nghị ký số (FR6.6); nếu hai bên chọn ký số, hệ thống gửi văn bản sang dịch vụ ký, nhận lại bản đã ký và chuyển sang trạng thái ``đã ký số''. \\
+\textbf{Hậu điều kiện} & Hợp đồng ở trạng thái ``đã giao kết'' hoặc ``đã ký số'', có lịch sử phiên bản và mã băm; các đợt giao được lập lịch. \\
 \end{longtable}
-\end{center}
+\endgroup
 
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{longtable}{L{2.6cm} L{11.5cm}}
-\caption{Đặc tả use case UC-C7 --- Kiểm duyệt đánh giá nghi vấn}
-\label{tab:uc-c7} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-C7: Kiểm duyệt đánh giá nghi vấn}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Quản trị viên vận hành (\texttt{admin\_ops}) \\
-\rowcolor{tblaltbg}
-\textbf{Actor phụ} & Hệ thống (luật ngưỡng giám sát bất thường, Chương~\ref{chap:coso}) \\
-\textbf{Tiền điều kiện} & Người mua đã gửi đánh giá sau khi xác nhận nhận hàng \\
-\rowcolor{tblaltbg}
-\textbf{Luồng chính} &
-1. Kiểm duyệt tự động sơ bộ (từ khóa cấm, liên kết đáng ngờ).\newline
-2. Áp dụng luật ngưỡng để tìm dấu hiệu giả mạo/spam/thao túng uy tín.\newline
-3. Không nghi ngờ: công khai ngay.\newline
-4. Bị nghi ngờ: chuyển quản trị viên xem xét thủ công.\newline
-5. Quyết định công khai hoặc ẩn.\newline
-6. Cập nhật điểm uy tín tổng hợp (không tính đánh giá bị ẩn). \\
-\textbf{Luồng thay thế/ngoại lệ} &
-5a. Xác nhận đánh giá giả/vi phạm: ẩn, thông báo lý do, không tính điểm uy tín.\newline
-5b. Phát hiện nhà cung cấp thao túng đánh giá: chuyển quy trình xử lý vi phạm (mục~\ref{sec:quytrinhnghiepvu}, Quản trị hệ thống). \\
-\rowcolor{tblaltbg}
-\textbf{Hậu điều kiện} & Đánh giá ở trạng thái công khai hoặc ẩn dứt điểm; điểm uy tín cập nhật chính xác. \\
-\end{longtable}
-\end{center}
 
 
 \section{Giải pháp công nghệ}
@@ -365,11 +228,12 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 \noindent\textbf{Framework --- phương án chọn: NestJS trên nền Node.js và TypeScript.} Các ứng viên gồm NestJS, Spring Boot, Django hoặc FastAPI, và Laravel. NestJS được chọn vì dùng chung ngôn ngữ TypeScript với phần giao diện, nhờ đó giảm một lần học và cho phép chia sẻ định nghĩa kiểu dữ liệu giữa hai phía; cấu trúc chia theo mô-đun cùng cơ chế guard kiểm soát quyền truy cập có sẵn cũng phù hợp trực tiếp với mô hình phân quyền nhiều vai trò của Farmery (mục~\ref{sec:doituongnguoidung}).
 
-\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được ba nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
+\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được bốn nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
 \begin{itemize}
-    \item \textbf{Transaction có row-level locking} --- cần thiết để chống bán vượt tồn kho khi cùng một lô hàng được giao dịch song song ở hai luồng (NFR4.1). Đây là ràng buộc kỹ thuật khó nhất của hệ thống, và cơ sở dữ liệu hướng tài liệu như MongoDB xử lý kém hơn hẳn.
+    \item \textbf{Transaction có row-level locking} --- cần thiết để chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn: nhiều đơn bán lẻ đặt cùng lúc, hoặc hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một nhà cung cấp (NFR4.1). Đây là ràng buộc kỹ thuật khó nhất của hệ thống, và cơ sở dữ liệu hướng tài liệu như MongoDB xử lý kém hơn hẳn.
     \item \textbf{Dữ liệu không gian (PostGIS)} --- phục vụ quản lý vùng trồng và tính bán kính giao hàng, khớp trực tiếp với phạm vi không gian đã xác định tại mục~\ref{sec:phamvi}.
     \item \textbf{Kiểu dữ liệu JSON có đánh chỉ mục} --- phù hợp với nhật ký canh tác, vốn có tập trường khác nhau giữa từng loại cây trồng.
+    \item \textbf{Lưu và truy vấn vector (tiện ích pgvector)} --- phục vụ tìm kiếm theo ngữ nghĩa (FR12.3) và phần gợi ý ``sản phẩm tương tự'' ngay trong cơ sở dữ liệu chính, không phải dựng thêm một cơ sở dữ liệu vector riêng rồi đồng bộ dữ liệu sản phẩm sang đó.
 \end{itemize}
 
 \noindent\textbf{Tìm kiếm và lọc nâng cao --- phương án chọn: full-text search sẵn có của PostgreSQL kèm đánh chỉ mục.} Ứng viên thay thế là Elasticsearch hoặc Meilisearch. Ở quy mô mục tiêu 100 người dùng đồng thời (NFR1.2), năng lực tìm kiếm sẵn có của cơ sở dữ liệu đã đủ đáp ứng yêu cầu lọc theo khoảng giá, vùng miền, loại chứng nhận và tình trạng còn hàng (FR4.5). Dựng thêm một search engine riêng sẽ phát sinh bài toán đồng bộ dữ liệu giữa hai nơi --- chi phí không tương xứng với lợi ích ở giai đoạn này. Ngưỡng cần chuyển đổi là khi thời gian truy vấn tìm kiếm vượt ngưỡng đặt ra tại NFR1.1.
@@ -382,13 +246,15 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 \subsection{Thuật toán, công nghệ và mô hình AI}
 
-Hai mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ riêng viết bằng Python với khung FastAPI, do toàn bộ thư viện học máy cần dùng đều thuộc hệ sinh thái Python. Việc lựa chọn mô hình cho từng mô-đun bám theo ngưỡng chất lượng đã đặt tại Bảng~\ref{tab:nguongAI}; bảng đối sánh chi tiết các hướng tiếp cận nằm tại Phụ lục I.
+Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ riêng viết bằng Python với khung FastAPI, do toàn bộ thư viện học máy cần dùng đều thuộc hệ sinh thái Python. Việc lựa chọn mô hình cho từng mô-đun bám theo ngưỡng chất lượng đã đặt tại Bảng~\ref{tab:nguongAI}; bảng đối sánh chi tiết các hướng tiếp cận nằm tại Phụ lục I.
 
-\noindent\textbf{Gợi ý sản phẩm --- phương án chọn: mô hình hybrid giữa content-based filtering và collaborative filtering.} Các hướng được cân nhắc gồm collaborative filtering thuần túy, content-based filtering thuần túy, mô hình hybrid, và các mô hình mạng nơ-ron. Vấn đề quyết định là hiện tượng cold start đã nêu tại NC4: một nền tảng mới chưa có lịch sử tương tác, nên collaborative filtering thuần túy không hoạt động được ở giai đoạn đầu. Mô hình hybrid cho phép dựa vào đặc trưng sẵn có của nông sản --- mùa vụ, vùng trồng, loại chứng nhận, danh mục --- ngay từ khi chưa có dữ liệu hành vi, rồi tăng dần trọng số của thành phần collaborative filtering khi dữ liệu tích lũy.
+\noindent\textbf{Tìm kiếm theo ngữ nghĩa --- phương án chọn: tìm kiếm lai giữa full-text search của PostgreSQL và tìm theo vector, hợp nhất bằng reciprocal rank fusion.} Các hướng được cân nhắc gồm tìm theo vector thuần túy, dùng mô hình ngôn ngữ lớn để chuyển câu hỏi tự nhiên thành bộ lọc, và tìm kiếm dạng hội thoại. Tìm kiếm lai được chọn vì ba lý do: không phát sinh chi phí gọi API trả phí, do mô hình nhúng mã nguồn mở chạy ngay trong dịch vụ AI; giữ được điểm mạnh của tìm theo từ khóa với tên riêng và tên vùng trồng; và có sẵn đường cơ sở để so sánh là chính tìm kiếm từ khóa hiện có (FR4.5). Tìm kiếm dạng hội thoại bị loại vì thực chất là mô-đun trợ lý ảo đã bỏ khỏi phạm vi. Vector của sản phẩm được tính một lần khi sản phẩm được duyệt hoặc sửa mô tả, và được dùng chung cho mô-đun gợi ý.
+
+\noindent\textbf{Gợi ý sản phẩm --- phương án chọn: mô hình hybrid giữa content-based filtering và collaborative filtering, triển khai theo hai giai đoạn.} Giai đoạn đầu chỉ có phần ``sản phẩm tương tự'', tính từ chính các vector sản phẩm của mô-đun tìm kiếm; phần dựa trên hành vi người dùng được bật khi dữ liệu tương tác đủ lớn, sau phiên bản đầu. Các hướng được cân nhắc gồm collaborative filtering thuần túy, content-based filtering thuần túy, mô hình hybrid, và các mô hình mạng nơ-ron. Vấn đề quyết định là hiện tượng cold start đã nêu tại NC4: một nền tảng mới chưa có lịch sử tương tác, nên collaborative filtering thuần túy không hoạt động được ở giai đoạn đầu. Mô hình hybrid cho phép dựa vào đặc trưng sẵn có của nông sản --- mùa vụ, vùng trồng, loại chứng nhận, danh mục --- ngay từ khi chưa có dữ liệu hành vi, rồi tăng dần trọng số của thành phần collaborative filtering khi dữ liệu tích lũy.
 
 \noindent\textbf{Dự báo giá --- phương án chọn: mô hình time series có thành phần mùa vụ (ARIMA, SARIMA, Prophet), đối chứng với mô hình gradient boosting.} Các hướng được cân nhắc gồm mô hình thống kê cổ điển (ARIMA, SARIMA), mô hình gradient boosting trên đặc trưng thời gian, và mạng nơ-ron hồi quy (RNN, LSTM). Các mô hình học sâu bị loại ở giai đoạn này vì chúng đòi hỏi lượng dữ liệu lớn hơn nhiều so với những gì có thể thu thập được; với chuỗi time series ngắn nhưng có tính mùa vụ rõ --- đúng đặc điểm giá nông sản --- mô hình thống kê thường cho kết quả tốt hơn mà lại dễ giải thích. Đây là một đánh đổi có ý thức: chọn mô hình đơn giản hơn nhưng kiểm chứng được, thay vì mô hình phức tạp hơn nhưng không đủ dữ liệu để đánh giá.
 
-\noindent\textbf{Giám sát bất thường} không dùng mô hình học máy trong phạm vi đồ án mà hiện thực bằng các luật ngưỡng do quản trị viên cấu hình, với lý do đã phân tích tại Chương~\ref{chap:coso}.
+\noindent\textbf{Giám sát bất thường} không dùng mô hình học máy trong phạm vi đồ án mà hiện thực bằng các luật ngưỡng do quản trị viên hệ thống cấu hình, với lý do đã phân tích tại Chương~\ref{chap:coso}.
 
 \section{Thiết kế}
 \label{sec:thietke}
@@ -396,9 +262,22 @@ Hai mô-đun AI trong phạm vi đồ án được tách thành một dịch v�
 \subsection{Thiết kế kiến trúc hệ thống}
 \label{sec:kientruc}
 
-% TODO: nhóm vẽ sơ đồ kiến trúc tổng thể minh họa mô tả dưới đây và chèn bằng \includegraphics.
+Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước. Kiến trúc được trình bày theo mô hình C4~\cite{brown_c4model}, mỗi mức phóng to một khối của mức trước:
+\begin{itemize}
+    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và sáu hệ thống bên ngoài.
+    \item \textbf{Mức 2 --- container} (Hình~\ref{fig:c4-container}): các thành phần chạy độc lập và công nghệ của từng thành phần.
+    \item \textbf{Mức 3 --- mô-đun} (Hình~\ref{fig:c4-module}): 12 mô-đun bên trong ứng dụng lõi và quan hệ giữa chúng.
+\end{itemize}
+Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này nên được sinh tự động từ mã nguồn để không bị lệch khi mã thay đổi.
 
-Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước.
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/c4-container.png}
+\end{adjustbox}
+\caption{Kiến trúc tổng thể của Farmery: các container (C4 mức 2)}
+\label{fig:c4-container}
+\end{figure}
 
 \subsubsection*{Kiểu kiến trúc: modular monolith}
 
@@ -420,16 +299,27 @@ Chọn khối đơn không có nghĩa là đóng cửa khả năng tách về sa
 
 Biện pháp bảo đảm ba ràng buộc trên với chi phí thấp nhất là cấp cho \textbf{mỗi mô-đun một schema riêng trong cùng một cơ sở dữ liệu}. Hệ thống vẫn chạy trên một cơ sở dữ liệu duy nhất nên giao dịch vẫn hoạt động bình thường, nhưng đường biên dữ liệu hiện ra rõ ràng và mọi vi phạm ràng buộc RB3 đều lộ ra ngay khi đọc mã.
 
+Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 12 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/c4-module.png}
+\end{adjustbox}
+\caption{Các mô-đun của ứng dụng lõi (C4 mức 3)}
+\label{fig:c4-module}
+\end{figure}
+
 \subsubsection*{Các lớp và thành phần}
 
 Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 \begin{itemize}
-    \item \textbf{Lớp giao diện} --- Next.js, phục vụ ba loại giao diện: trang mua hàng, trang quản lý của nhà cung cấp, và trang quản trị nội bộ.
+    \item \textbf{Lớp giao diện} --- Next.js, dựng dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3); phục vụ ba loại giao diện: trang mua hàng, trang quản lý của nhà cung cấp, và trang làm việc của nhân sự nội bộ.
     \item \textbf{Lớp ứng dụng} --- NestJS, tiếp nhận yêu cầu, kiểm tra quyền truy cập theo vai trò, điều phối giữa các mô-đun nghiệp vụ.
-    \item \textbf{Lớp mô-đun nghiệp vụ} --- các mô-đun chia theo miền như mô tả ở mục~\ref{sec:luongvanhanh}, mỗi mô-đun một schema dữ liệu riêng.
+    \item \textbf{Lớp mô-đun nghiệp vụ} --- 12 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
     \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho cache và hàng đợi, object storage cho ảnh và tệp chứng nhận.
     \item \textbf{Dịch vụ AI} --- tách riêng, viết bằng Python, nhận dữ liệu qua event queue và trả kết quả qua API nội bộ.
-    \item \textbf{Lớp tích hợp bên ngoài} --- cổng thanh toán và đơn vị vận chuyển, gọi qua API của bên thứ ba.
+    \item \textbf{Lớp tích hợp bên ngoài} --- sáu hệ thống bên ngoài tại Hình~\ref{fig:c4-container}: cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS và email, đăng nhập qua Google hoặc Facebook; mỗi hệ thống chỉ do một mô-đun gọi tới.
 \end{itemize}
 
 \subsubsection*{Các quyết định kiến trúc đáng chú ý}
@@ -443,7 +333,24 @@ Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 
 
 \subsection{Thiết kế sitemap}
-% TODO: sơ đồ các trang/màn hình theo từng nhóm người dùng.
+\label{sec:sitemap}
+
+Sitemap thể hiện tổ chức các trang của ứng dụng web theo cấp bậc: mỗi nút là một trang hoặc một nhóm trang, đường nối cho biết trang nào nằm dưới trang nào~\cite{nngroup_sitemap}. Sitemap bắc cầu giữa mô hình use case tại mục~\ref{sec:sddchitiet} (người dùng làm được gì) và thiết kế giao diện (trang đó trông ra sao). Hình~\ref{fig:sitemap} trình bày hai cấp đầu; cấp 3 của từng khu vực, kèm mã FR tương ứng, liệt kê tại Bảng~\ref{tab:sitemap-chitiet} ở Phụ lục~T. Các quyết định chính:
+\begin{itemize}
+    \item \textbf{Năm khu vực cấp 1:} một khu công khai không cần đăng nhập và bốn khu sau đăng nhập, mỗi khu ứng với một nhóm người dùng. Mọi khu sau đăng nhập có chung ba trang: tài khoản, thông báo và tin nhắn.
+    \item \textbf{Cửa hàng chung cho hai luồng:} khách lẻ và khách sỉ dùng cùng một danh mục sản phẩm và cùng trang truy xuất nguồn gốc. Danh mục có chế độ Mua lẻ (hàng của gian hàng Farmery) và Mua sỉ; khách sỉ đăng nhập thấy thêm giá bậc theo MOQ và nút gửi yêu cầu báo giá.
+    \item \textbf{Một khu làm việc nội bộ, menu theo vai trò:} nhân sự nội bộ vào cùng một khu, mỗi người chỉ thấy các mục của vai trò mình; cách này hợp với việc một tài khoản có thể giữ nhiều vai trò (mục~\ref{sec:doituongnguoidung}).
+    \item \textbf{Độc lập với framework:} sitemap mô tả tổ chức trang theo góc nhìn người dùng, không phụ thuộc công nghệ. Khi hiện thực bằng Next.js, mỗi khu vực ứng với một nhóm route có bố cục và kiểm tra đăng nhập riêng; một số trang có thể thành thẻ hoặc hộp thoại mà không làm đổi cấu trúc cây.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/sitemap-tong-quan.png}
+\end{adjustbox}
+\caption{Sitemap tổng quan của Farmery (cấp 1 và 2)}
+\label{fig:sitemap}
+\end{figure}
 
 \subsection{Thiết kế lược đồ tuần tự}
 % TODO: sequence diagram cho các luồng chính: đặt hàng B2C, RFQ -- hợp đồng -- ký quỹ B2B, đăng và kiểm duyệt sản phẩm, gửi và kiểm duyệt đánh giá.
@@ -458,7 +365,7 @@ Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 \label{subsec:dacta-csdl}
 
 Cơ sở dữ liệu được tổ chức theo tám nhóm thực thể tương ứng với các nhóm chức
-năng FR1--FR12 tại mục~\ref{sec:yeucauchucnang}, đồng thời chính là các mô-đun
+năng FR1--FR13 tại mục~\ref{sec:yeucauchucnang}, đồng thời chính là các mô-đun
 nghiệp vụ đã nêu tại mục~\ref{sec:kientruc} --- mỗi nhóm sở hữu một schema
 riêng theo ràng buộc RB3:
 
@@ -501,25 +408,26 @@ tính năng AI, cùng nhóm bảng quản trị/lưu vết vi phạm.
 \subsubsection*{Luồng dữ liệu tổng thể}
 
 % TODO: nhóm bổ sung sơ đồ kiến trúc cụ thể (\includegraphics) minh họa luồng mô tả dưới đây, và chốt công nghệ/mô hình dùng cho từng bước khi hiện thực (mục~\ref{sec:hienthucAI}).
-Cả hai mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng dữ liệu chung gồm 5 bước:
+Cả ba mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng dữ liệu chung gồm 5 bước:
 \begin{enumerate}
     \item \textbf{Thu thập}: ghi nhận sự kiện từ các quy trình nghiệp vụ (lượt xem/mua sản phẩm, đơn hàng, đánh giá, hành vi hủy đơn) vào kho dữ liệu.
     \item \textbf{Tiền xử lý}: làm sạch, chuẩn hóa và trích xuất đặc trưng (feature engineering) theo từng bài toán.
-    \item \textbf{Huấn luyện và suy luận}: huấn luyện định kỳ theo lô (batch, ví dụ mỗi tuần) cho cả hai mô-đun; riêng phần gợi ý có thêm bước suy luận trực tuyến (online inference) để phản hồi ngay theo phiên duyệt của người dùng.
+    \item \textbf{Huấn luyện và suy luận}: huấn luyện hoặc tính lại định kỳ theo lô (batch, ví dụ mỗi tuần) cho các mô-đun; riêng phần gợi ý có thêm bước suy luận trực tuyến (online inference) để phản hồi ngay theo phiên duyệt của người dùng.
     \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang chủ, trang quản trị).
-    \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (có nhấp vào gợi ý không, đánh giá đúng/sai của quản trị viên với cảnh báo gian lận) để làm dữ liệu huấn luyện lại, cải thiện mô hình theo thời gian.
+    \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (có nhấp vào gợi ý không, phán quyết đúng/sai của kiểm duyệt viên và nhân viên vận hành với các cảnh báo) để làm dữ liệu huấn luyện lại, cải thiện mô hình theo thời gian.
 \end{enumerate}
 
 Danh sách dưới đây tóm tắt đầu vào/đầu ra riêng của từng mô-đun trong luồng chung này:
 \begin{itemize}
+    \item \textbf{Tìm kiếm theo ngữ nghĩa}: đầu vào là câu truy vấn của người dùng cùng tên, mô tả, danh mục, vùng trồng của sản phẩm và hồ sơ nhà cung cấp; đầu ra là danh sách sản phẩm (hoặc nhà cung cấp) xếp theo điểm hợp nhất giữa tìm theo từ khóa và tìm theo vector.
     \item \textbf{Gợi ý sản phẩm}: đầu vào là lịch sử tương tác/mua hàng của người dùng và đặc trưng sản phẩm (danh mục, vùng trồng, mùa vụ); đầu ra là danh sách sản phẩm được xếp hạng theo mức độ phù hợp, hiển thị tại trang chủ và trang sản phẩm liên quan.
-    \item \textbf{Dự báo nhu cầu/giá}: đầu vào là dữ liệu lịch sử đơn hàng, sản lượng theo mùa vụ và vùng trồng; đầu ra là ước lượng nhu cầu/giá cho giai đoạn tới, hiển thị cho nhà cung cấp như gợi ý kế hoạch sản xuất và cho quản trị viên như dữ liệu cảnh báo dư cung/khan hiếm.
+    \item \textbf{Dự báo nhu cầu/giá}: đầu vào là dữ liệu lịch sử đơn hàng, sản lượng theo mùa vụ và vùng trồng; đầu ra là ước lượng nhu cầu/giá cho giai đoạn tới, hiển thị cho nhà cung cấp như gợi ý kế hoạch sản xuất và cho nhân viên thu mua, nhân viên vận hành như dữ liệu cảnh báo dư cung/khan hiếm.
 \end{itemize}
 
 \subsubsection*{Ngưỡng chất lượng mục tiêu}
 \label{subsec:nguongAI}
 
-Vì cả hai mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: mức tăng click-through rate (CTR) so với danh sách baseline cho gợi ý sản phẩm, và MAPE cho dự báo giá. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
+Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: nDCG@10 và Recall@10 so với tìm kiếm từ khóa cho tìm kiếm theo ngữ nghĩa, mức tăng click-through rate (CTR) so với danh sách baseline cho gợi ý sản phẩm, và MAPE cho dự báo giá. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
 
 
 \subsection{Thiết kế API}

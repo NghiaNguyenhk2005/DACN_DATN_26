@@ -16,5 +16,17 @@ node_modules/
 
 # Phase plans (tạm thời, không commit theo quy ước)
 PHASE*-PLAN.md
+
+# Bộ tài liệu gửi kèm khi nhờ dựng slide — sinh lại được từ báo cáo, không commit
+slide-pack/
 *.bcf
 *.run.xml
+
+# Cấu hình Claude Code cục bộ (agent slide-planner...) — dùng cá nhân, không commit
+.claude/
+
+# Kết quả rà soát nội bộ (agent report-auditor) — bản làm việc, không commit
+review/
+
+# Cache Python sinh ra khi chạy tools/diagrams/
+__pycache__/

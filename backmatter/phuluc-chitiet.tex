@@ -1,0 +1,320 @@
+% Hình và bảng tra cứu chuyển từ thân báo cáo xuống; thân báo cáo trỏ tới bằng \ref.
+
+\section*{Phụ lục P. Số liệu chương trình OCOP}
+\label{apdx:ocop}
+\addcontentsline{toc}{section}{Phụ lục P. Số liệu chương trình OCOP}
+
+Hình~\ref{fig:ocop} bổ trợ cho mục~\ref{sec:boicanhchinhsach}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/ocop-2024-2025.png}
+\caption{Tăng trưởng của chương trình OCOP giai đoạn 2024--2025}
+\label{fig:ocop}
+\end{figure}
+
+\clearpage
+\section*{Phụ lục Q. Bản đồ hành trình khách hàng và nguồn giao dịch kho}
+\label{apdx:hanhtrinh-kho}
+\addcontentsline{toc}{section}{Phụ lục Q. Bản đồ hành trình khách hàng và nguồn giao dịch kho}
+
+Hai bảng bổ trợ cho Chương~\ref{chap:hethong}: Bảng~\ref{tab:customer-journey} cho mục~\ref{subsec:customer-journey}, Bảng~\ref{tab:nguon-giaodich} cho phần lô, dòng tồn và sổ nhập xuất tại mục~\ref{sec:quytrinhnghiepvu}.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{2.15cm} L{3.77cm} L{3.77cm} L{4.85cm}}
+\caption{Bản đồ hành trình khách hàng trên hệ thống Farmery}
+\label{tab:customer-journey} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{1. Khám phá} &
+Tìm nông sản sạch theo danh mục, khu vực hoặc gợi ý cá nhân hóa trên trang chủ. &
+Tìm nhà cung ứng có sản lượng lớn, tra cứu hồ sơ năng lực và chứng chỉ VietGAP/GlobalGAP. &
+Web trên điện thoại, Trang chủ, Tìm kiếm theo ngữ nghĩa, Bộ lọc đa tiêu chí, Gợi ý sản phẩm tương tự.\\
+\textbf{2. Cân nhắc} &
+Xem chi tiết sản phẩm, quét mã QR xem nhật ký canh tác của lô hàng, đọc đánh giá của người mua trước. &
+So sánh bảng giá bậc/MOQ, gửi yêu cầu báo giá (RFQ) riêng biệt. &
+Trang chi tiết SP, Modal nhật ký GS1/QR, Trình đàm phán RFQ trực tuyến.\\
+\textbf{3. Giao dịch} &
+Chọn khung giờ giao phù hợp hàng tươi, thanh toán qua VietQR hoặc khi nhận hàng, áp dụng mã giảm giá. &
+Thống nhất điều khoản RFQ, xác nhận giao kết hợp đồng, tiền thanh toán đợt 1 được nền tảng giữ trung gian. &
+Trang thanh toán, Cổng thanh toán, Ví trung gian giữ tiền -- escrow.\\
+\textbf{4. Giao nhận} &
+Theo dõi tiến độ vận đơn 3PL theo thời gian thực; kiểm tra độ tươi ngon khi nhận hàng; nếu không đạt thì Farmery chịu trách nhiệm đổi trả trực tiếp. &
+Theo dõi nhiều đợt giao trên hợp đồng; kiểm định số lượng/chất lượng tại kho và xác nhận biên bản. &
+Webhook tracking 3PL, Quản lý đợt giao, Giải ngân tiền giữ trung gian sau khi xác nhận hoàn tất hoặc hết hạn khiếu nại.\\
+\textbf{5. Đánh giá \& Gắn kết} &
+Để lại điểm số, hình ảnh đánh giá sản phẩm; nhận gợi ý mua lại khi đến chu kỳ tiêu thụ. &
+Đánh giá mức độ tuân thủ hợp đồng của nhà cung cấp; tái ký hợp đồng cho mùa vụ mới. &
+Phân hệ đánh giá và uy tín, thông báo chu kỳ mua lại.\\
+\end{longtable}
+\endgroup
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{1.18cm} L{5.76cm} L{3.64cm} L{3.96cm}}
+\caption{Các nguồn giao dịch làm thay đổi tồn kho}
+\label{tab:nguon-giaodich} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Chiều} & \textbf{Nguồn giao dịch} & \textbf{Hàng của ai} & \textbf{Người thực hiện} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Chiều} & \textbf{Nguồn giao dịch} & \textbf{Hàng của ai} & \textbf{Người thực hiện} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Nhập & Thu mua trực tiếp từ chào hàng của nhà cung cấp & Farmery & Nhân viên kho \\
+Nhập & Thu mua lại lô bán sỉ cận hạn với giá chiết khấu & Farmery & Nhân viên thu mua, nhân viên kho \\
+Nhập & Nhà cung cấp gửi hàng bán sỉ vào kho theo dịch vụ thuê kho & Nhà cung cấp & Nhân viên kho \\
+Nhập & Hàng bán lẻ hoàn về do khách từ chối nhận hoặc giao thất bại & Farmery & Nhân viên kho \\
+Nhập & Hàng đổi trả sau khiếu nại chất lượng & Farmery & Nhân viên kho \\
+Xuất & Đơn bán lẻ & Farmery & Hệ thống giữ chỗ, nhân viên kho xuất \\
+Xuất & Đợt giao của hợp đồng bán sỉ, lấy từ hàng gửi kho & Nhà cung cấp & Nhân viên kho \\
+Xuất & Chào sỉ hàng tồn dư hoặc cận hạn của Farmery & Farmery & Nhân viên thu mua, nhân viên kho \\
+Xuất & Hủy hàng do hỏng, hết hạn hoặc hao hụt & Cả hai & Nhân viên kho \\
+Xuất & Trả lại nhà cung cấp: bị từ chối khi kiểm định, hoặc rút hàng gửi kho & Nhà cung cấp & Nhân viên kho \\
+Giữ & Giữ chỗ khi đơn chờ thanh toán, nhả khi đơn bị hủy hoặc quá hạn & Farmery & Hệ thống \\
+Đổi & Sơ chế, phân loại, đóng gói --- đổi số lượng và đơn vị bán ngay trong kho & Cả hai & Nhân viên kho \\
+Đổi & Đổi chủ tại chỗ --- hàng gửi kho được Farmery thu mua lại & Nhà cung cấp sang Farmery & Nhân viên thu mua \\
+Khóa & Thu hồi lô --- khóa mọi dòng tồn của lô ở cả hai luồng & Cả hai & Kiểm duyệt viên \\
+Chỉnh & Kiểm kê, điều chỉnh khi lệch số thực tế & Cả hai & Nhân viên kho \\
+\end{longtable}
+\endgroup
+
+\clearpage
+\section*{Phụ lục R. Lưu đồ quy trình nghiệp vụ chi tiết}
+\label{apdx:luudo}
+\addcontentsline{toc}{section}{Phụ lục R. Lưu đồ quy trình nghiệp vụ chi tiết}
+
+Bảy lưu đồ dưới đây bổ trợ mục~\ref{subsec:mohinhquytrinh}, dùng ký hiệu tại Hình~\ref{fig:chu-thich-flowchart}.
+
+\input{flowcharts/01-dang-ky}
+\clearpage
+\input{flowcharts/02-san-pham}
+\clearpage
+\input{flowcharts/03b-ban-le-giao-nhan}
+\clearpage
+\input{flowcharts/07-danh-gia}
+\clearpage
+\input{flowcharts/04b-ban-si-giao-hang}
+\clearpage
+\input{flowcharts/05-van-chuyen}
+\clearpage
+\input{flowcharts/06-quan-tri}
+
+\clearpage
+\section*{Phụ lục S. Sơ đồ và đặc tả use case chi tiết}
+\label{apdx:usecase}
+\addcontentsline{toc}{section}{Phụ lục S. Sơ đồ và đặc tả use case chi tiết}
+
+Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sddchitiet}.
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics{image/comparison/usecase-nha-ban.png}
+\end{adjustbox}
+\caption{Sơ đồ Use Case chi tiết --- tác nhân Nhà cung cấp}
+\label{fig:usecase-nhaban}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics{image/comparison/usecase-nguoi-mua-le.png}
+\end{adjustbox}
+\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách lẻ}
+\label{fig:usecase-khachle}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics{image/comparison/usecase-nguoi-mua-si.png}
+\end{adjustbox}
+\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách sỉ}
+\label{fig:usecase-khachsi}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics{image/comparison/usecase-quan-tri-vien.png}
+\end{adjustbox}
+\caption{Sơ đồ Use Case chi tiết --- nhân sự nội bộ (kiểm duyệt viên, nhân viên vận hành, quản trị viên hệ thống)}
+\label{fig:usecase-quantri}
+\end{figure}
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-B2 --- Ghi nhật ký canh tác theo lô}
+\label{tab:uc-b2} \\
+\toprule
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{UC-B2: Ghi nhật ký canh tác theo lô}} \\
+\midrule
+\endfirsthead
+\bottomrule
+\endfoot
+\textbf{Actor chính} & Nhà cung cấp (\texttt{seller}) \\
+\textbf{Tiền điều kiện} & Nhà cung cấp đã xác thực (trạng thái ``Đã xác thực''); đã tạo sản phẩm/lô hàng tương ứng (UC-B1) \\
+\textbf{Luồng chính} &
+1. Nhà cung cấp chọn lô hàng cần ghi nhật ký.\newline
+2. Nhập giai đoạn canh tác (gieo trồng/chăm sóc/thu hoạch), ngày tháng, mô tả hoạt động.\newline
+3. Tải ảnh minh chứng (nếu có).\newline
+4. Hệ thống lưu bản ghi, gắn với lô tương ứng, đánh dấu thời điểm tạo (bất biến, không cho sửa trực tiếp --- NFR9.1).\newline
+5. Nếu đủ điều kiện tối thiểu ($\geq$1 bản ghi + ảnh sản phẩm thật), chuyển sản phẩm sang trạng thái đủ điều kiện xét duyệt công khai (UC-B4). \\
+\textbf{Luồng thay thế/ngoại lệ} &
+4a. Cần đính chính bản ghi cũ: hệ thống không cho sửa trực tiếp, chỉ tạo bản ghi mới kèm ghi chú đính chính (NFR9.1). \\
+\textbf{Hậu điều kiện} & Bản ghi được lưu vĩnh viễn (append-only), sẵn sàng hiển thị trên trang truy xuất công khai sau khi sản phẩm được duyệt. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-D7 --- Xác nhận nhận hàng và thanh toán theo đợt}
+\label{tab:uc-d7} \\
+\toprule
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{UC-D7: Xác nhận nhận hàng và thanh toán theo đợt}} \\
+\midrule
+\endfirsthead
+\bottomrule
+\endfoot
+\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) \\
+\textbf{Actor phụ} & Cổng thanh toán trung gian \\
+\textbf{Tiền điều kiện} & Nhà cung cấp đã giao hàng đợt tương ứng theo hợp đồng đã giao kết; hệ thống đã sinh hóa đơn cho đợt giao đó \\
+\textbf{Luồng chính} &
+1. Kiểm tra và xác nhận đã nhận đủ hàng đúng cam kết của đợt giao.\newline
+2. Thanh toán theo kỳ hạn công nợ đã thỏa thuận.\newline
+3. Nếu hợp đồng có ký quỹ: hệ thống ra lệnh cho cổng thanh toán giải ngân cho nhà cung cấp ngay tại bước xác nhận này.\newline
+4. Nhà cung cấp theo dõi doanh thu/lịch sử bán sỉ cập nhật. \\
+\textbf{Luồng thay thế/ngoại lệ} &
+1a. Không giao đủ số lượng/đúng lịch: áp dụng điều khoản phạt, ghi vào lịch sử uy tín.\newline
+2a. Chậm thanh toán quá hạn: nhắc tự động, có thể tạm khóa quyền đặt RFQ mới.\newline
+3a. Phát sinh tranh chấp về đợt giao đã ký quỹ: khoản ký quỹ giữ nguyên tại cổng thanh toán cho đến khi khiếu nại xử lý xong. \\
+\textbf{Hậu điều kiện} & Đợt giao chuyển trạng thái hoàn tất, công nợ cập nhật, tiền giải ngân cho nhà cung cấp (nếu có ký quỹ). \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-C7 --- Kiểm duyệt đánh giá nghi vấn}
+\label{tab:uc-c7} \\
+\toprule
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{UC-C7: Kiểm duyệt đánh giá nghi vấn}} \\
+\midrule
+\endfirsthead
+\bottomrule
+\endfoot
+\textbf{Actor chính} & Kiểm duyệt viên (\texttt{staff\_moderation}) \\
+\textbf{Actor phụ} & Hệ thống (luật ngưỡng giám sát bất thường, Chương~\ref{chap:coso}) \\
+\textbf{Tiền điều kiện} & Người mua đã gửi đánh giá sau khi xác nhận nhận hàng \\
+\textbf{Luồng chính} &
+1. Kiểm duyệt tự động sơ bộ (từ khóa cấm, liên kết đáng ngờ).\newline
+2. Áp dụng luật ngưỡng để tìm dấu hiệu giả mạo/spam/thao túng uy tín.\newline
+3. Không nghi ngờ: công khai ngay.\newline
+4. Bị nghi ngờ: chuyển kiểm duyệt viên xem xét thủ công.\newline
+5. Quyết định công khai hoặc ẩn.\newline
+6. Cập nhật điểm uy tín tổng hợp (không tính đánh giá bị ẩn). \\
+\textbf{Luồng thay thế/ngoại lệ} &
+5a. Xác nhận đánh giá giả/vi phạm: ẩn, thông báo lý do, không tính điểm uy tín.\newline
+5b. Phát hiện nhà cung cấp thao túng đánh giá: chuyển quy trình xử lý vi phạm (mục~\ref{sec:quytrinhnghiepvu}, Quản trị hệ thống). \\
+\textbf{Hậu điều kiện} & Đánh giá ở trạng thái công khai hoặc ẩn dứt điểm; điểm uy tín cập nhật chính xác. \\
+\end{longtable}
+\endgroup
+
+\clearpage
+\section*{Phụ lục T. Sitemap chi tiết theo khu vực}
+\label{apdx:sitemap}
+\addcontentsline{toc}{section}{Phụ lục T. Sitemap chi tiết theo khu vực}
+
+Bảng~\ref{tab:sitemap-chitiet} mở rộng sitemap tổng quan tại Hình~\ref{fig:sitemap} xuống cấp 3 và gắn mỗi trang với các yêu cầu chức năng mà nó phục vụ, làm đầu vào cho thiết kế giao diện và danh sách API.
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.30cm} L{8.34cm} L{3.25cm}}
+\caption{Sitemap chi tiết theo khu vực}
+\label{tab:sitemap-chitiet} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Trang cấp 2} & \textbf{Trang cấp 3 và thao tác chính} & \textbf{FR} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Trang cấp 2} & \textbf{Trang cấp 3 và thao tác chính} & \textbf{FR} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Công khai (không cần đăng nhập)}}} \\
+Trang chủ & Sản phẩm gợi ý, sản phẩm theo mùa vụ, danh mục nổi bật & FR12.1, FR4.4 \\
+Tìm kiếm & Ô tìm kiếm bằng ngôn ngữ tự nhiên; kết quả kèm bộ lọc giá, vùng miền, chứng nhận & FR12.3, FR4.5 \\
+Danh mục sản phẩm & Cây danh mục đa cấp; chế độ Mua lẻ (gian hàng Farmery) và Mua sỉ (giá bậc theo MOQ, chào sỉ tồn dư của Farmery) & FR4.4, FR6.4, FR13.7 \\
+Chi tiết sản phẩm & Ảnh, mô tả, lô đang bán, chứng nhận, đánh giá, sản phẩm tương tự; nút thêm vào giỏ (lẻ) hoặc gửi yêu cầu báo giá (sỉ) & FR4.1, FR5.5, FR12.1, FR6.1 \\
+Gian hàng nhà cung cấp & Hồ sơ, chứng nhận, điểm uy tín, danh sách sản phẩm; theo dõi gian hàng & FR2.1, FR9.2 \\
+Trang truy xuất QR & Thông tin lô, nhật ký canh tác theo thời gian, chứng nhận, mã truy xuất TraceViet khi đã có & FR4.2, FR4.8 \\
+Đăng ký, đăng nhập & Chọn vai trò; đăng ký bằng số điện thoại hoặc email kèm OTP, hoặc qua Google, Facebook; khôi phục mật khẩu; đăng ký doanh nghiệp & FR1.1--FR1.3 \\
+Điều khoản, chính sách & Điều khoản dịch vụ (Phụ lục~D), chính sách đổi trả, chính sách bảo mật & --- \\
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Khách lẻ}}} \\
+Giỏ hàng & Sản phẩm, số lượng, mã giảm giá, thời hạn giữ chỗ & FR5.1--FR5.3 \\
+Thanh toán & Chọn địa chỉ, phương thức giao và phương thức thanh toán; xác nhận đơn & FR7.1, FR8.2, FR1.5 \\
+Đơn hàng của tôi & Danh sách và chi tiết đơn, theo dõi vận chuyển, xác nhận đã nhận, hủy đơn, hóa đơn & FR5.4, FR8.1, FR7.2 \\
+Khiếu nại, đổi trả & Tạo khiếu nại kèm ảnh, theo dõi kết quả xử lý & FR8.3 \\
+Đánh giá của tôi & Đơn chờ đánh giá, đánh giá đã gửi & FR5.5 \\
+Yêu thích, theo dõi & Sản phẩm yêu thích, gian hàng đang theo dõi & FR9.2 \\
+Sổ địa chỉ & Thêm, sửa, đặt địa chỉ mặc định & FR1.5 \\
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Khách sỉ}}} \\
+Hồ sơ doanh nghiệp & Thông tin công ty, mã số thuế, giấy phép kinh doanh, trạng thái xác minh & FR1.3 \\
+Yêu cầu báo giá & Tạo yêu cầu, danh sách yêu cầu, phiên thương lượng với từng nhà cung cấp & FR6.1, FR6.2 \\
+Hợp đồng & Hợp đồng sinh từ báo giá đã chốt; xác nhận giao kết bằng OTP; ký số tùy chọn; tải bản PDF & FR6.3, FR6.6 \\
+Đơn sỉ và đợt giao & Lịch giao theo đợt, xác nhận nhận hàng từng đợt & FR6.5 \\
+Ký quỹ, thanh toán & Nộp ký quỹ, giải ngân theo đợt, lịch sử giao dịch & FR7.3 \\
+Khiếu nại & Khiếu nại theo từng đợt giao & FR8.3 \\
+Nhà cung cấp theo dõi & Gian hàng đang theo dõi, cảnh báo nguồn cung khan hiếm & FR9.2, FR11.3 \\
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Nhà cung cấp}}} \\
+Tổng quan & Doanh thu, đơn mới, lô cận hạn, việc cần làm & FR2.2, FR2.3 \\
+Hồ sơ gian hàng, xác minh & Thông tin gian hàng, xác minh danh tính (eKYC), mã số vùng trồng & FR2.1, FR1.4 \\
+Chứng nhận & Tải lên, trạng thái duyệt, hạn hiệu lực & FR3.1, FR3.3 \\
+Sản phẩm và lô & Tạo sản phẩm, khai báo lô, khung giá sỉ theo MOQ, trạng thái duyệt, mã QR của lô & FR4.1, FR4.6, FR6.4 \\
+Nhật ký canh tác & Ghi theo lô kèm ảnh minh chứng, bản ghi đính chính; dùng được khi mất sóng & FR4.2 \\
+Tồn kho & Dòng tồn của mình tại nông trại và tại kho Farmery, sổ nhập xuất & FR2.3, FR13.3 \\
+Báo giá và hợp đồng sỉ & Yêu cầu báo giá nhận được, phản hồi báo giá, hợp đồng chờ giao kết & FR6.2, FR6.3 \\
+Đơn sỉ và đợt giao & Chuẩn bị hàng, bàn giao từng đợt, trạng thái thanh toán & FR6.5, FR8.1 \\
+Chào bán cho Farmery & Gửi chào hàng, đơn thu mua chờ xác nhận, kết quả nghiệm thu & FR13.1, FR13.2 \\
+Dịch vụ kho, đóng gói & Đăng ký thuê kho, gửi hàng vào kho, phí dịch vụ & FR13.5 \\
+Doanh thu, đối soát & Doanh thu theo kỳ, phí nền tảng, khoản đã giải ngân & FR2.2, FR7.3 \\
+Đánh giá, uy tín & Đánh giá nhận được, điểm uy tín & FR5.5 \\
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Nội bộ (mỗi mục chỉ hiện với vai trò tương ứng)}}} \\
+Kiểm duyệt \newline\texttt{staff\_moderation} & Hàng đợi duyệt hồ sơ, chứng nhận, sản phẩm và lô; đánh giá nghi vấn; báo cáo vi phạm & FR10.1, FR3.2, FR4.6, FR4.7, FR10.2 \\
+Vận hành \newline\texttt{staff\_operations} & Khiếu nại và tranh chấp; bảng giám sát tồn kho và vận chuyển; báo cáo thống kê & FR10.3--FR10.5 \\
+Thu mua \newline\texttt{staff\_sourcing} & Chào hàng của nhà cung cấp, đơn thu mua, định giá bán lẻ, dự báo giá, chào sỉ tồn dư & FR13.1, FR12.2, FR13.7 \\
+Kho \newline\texttt{staff\_warehouse} & Nghiệm thu nhập kho, xuất kho, sơ chế và đóng gói, kiểm kê, thu hồi lô & FR13.2--FR13.6 \\
+Giao hàng \newline\texttt{staff\_delivery} & Chuyến giao trong ngày, xác nhận giao, thu tiền COD (chỉ thiết kế) & FR8.1 \\
+Hỗ trợ vùng \newline\texttt{staff\_support} & Nhà cung cấp được phân công, nhập liệu hộ có ghi người nhập & FR4.2 \\
+Quản trị hệ thống \newline\texttt{platform\_owner} & Cây danh mục, ngưỡng, biểu phí; tài khoản và vai trò nội bộ; nhật ký thao tác & FR10.6, FR10.7 \\
+\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Chung cho mọi khu sau đăng nhập}}} \\
+Tài khoản & Thông tin cá nhân, đổi mật khẩu, liên kết Google hoặc Facebook & FR1.1 \\
+Thông báo & Danh sách thông báo, cài đặt kênh nhận & FR11.1 \\
+Tin nhắn & Trao đổi giữa người mua và nhà cung cấp & FR9.1 \\
+\end{longtable}
+\endgroup

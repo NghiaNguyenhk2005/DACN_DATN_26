@@ -1,7 +1,7 @@
 \chapter{Đánh giá hệ thống}
 \label{chap:danhgia}
 
-Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery theo năm trụ cột: kiểm thử chức năng, hiệu năng và khả năng chịu tải phía máy chủ, an toàn bảo mật, trải nghiệm giao diện người dùng, và độ chính xác của các mô-đun AI. Kết quả là cơ sở kết luận mức độ hoàn thiện so với các mục tiêu đặt ra tại mục~\ref{sec:muctieudanhgia}.
+Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery theo sáu trụ cột: kiểm thử chức năng, chất lượng mã nguồn, hiệu năng và khả năng chịu tải phía máy chủ, an toàn bảo mật, khả dụng của giao diện người dùng, và chất lượng của các mô-đun AI. Kết quả là cơ sở kết luận mức độ hoàn thiện so với các mục tiêu đặt ra tại mục~\ref{sec:muctieudanhgia}.
 
 \section{Mục tiêu và phương pháp đánh giá}
 \label{sec:muctieuphuongphap}
@@ -9,10 +9,11 @@ Chương này trình bày phương pháp và kết quả đánh giá hệ thốn
 Nguyên tắc chi phối toàn chương: mọi ngưỡng đối chiếu đều được xác định \emph{trước} khi hiện thực --- tại Bảng~\ref{tab:nguongNFR} cho yêu cầu phi chức năng và Bảng~\ref{tab:nguongAI} cho các mô-đun AI --- nhằm tránh việc chọn chỉ số sau khi đã biết kết quả.
 
 \begin{itemize}
-    \item \textbf{Đánh giá chức năng (functional testing):} kiểm thử hộp đen (black-box) cho toàn bộ 12 nhóm yêu cầu chức năng, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là kịch bản một lô hàng được giao dịch đồng thời ở cả kênh bán sỉ lẫn kênh bán lẻ, và luồng thu mua vào kho của nền tảng.
-    \item \textbf{Đánh giá hiệu năng và chống bán vượt (performance testing):} dùng công cụ load testing chuyên dụng (k6 hoặc Apache JMeter) đo thời gian phản hồi ở p95, thông lượng xử lý, và giả lập nhiều yêu cầu đồng thời tranh mua một lô có tồn kho giới hạn.
+    \item \textbf{Đánh giá chất lượng mã nguồn:} phân tích tĩnh bằng SonarQube --- độ phức tạp, tỷ lệ trùng lặp, nợ kỹ thuật quy ra thời gian sửa --- và đo độ phủ kiểm thử của phần nghiệp vụ lõi. Cả hai chạy tự động mỗi lần đẩy mã lên kho GitHub qua GitHub Actions, với cổng chất lượng chặn mã mới không đạt ngưỡng (mục~\ref{sec:moitruong}).
+    \item \textbf{Đánh giá chức năng (functional testing):} kiểm thử hộp đen (black-box) cho toàn bộ 13 nhóm yêu cầu chức năng, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là kịch bản hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một lô, và luồng thu mua vào kho của nền tảng.
+    \item \textbf{Đánh giá hiệu năng và chống bán vượt (performance testing):} dùng k6 --- công cụ kiểm thử tải viết kịch bản bằng JavaScript, tốn ít tài nguyên hơn Apache JMeter và gắn được vào quy trình tích hợp liên tục --- đo thời gian phản hồi ở p95, thông lượng xử lý, và giả lập nhiều yêu cầu đồng thời tranh mua một lô có tồn kho giới hạn.
     \item \textbf{Đánh giá bảo mật và kiểm soát truy cập (security audit):} kiểm thử tự động ma trận phân quyền RBAC trên toàn bộ endpoint nghiệp vụ; rà soát an toàn dữ liệu cá nhân theo Nghị định 13/2023/NĐ-CP.
-    \item \textbf{Đánh giá khả dụng phía giao diện (usability test):} kiểm tra giao diện đáp ứng trên ba kích thước màn hình chuẩn; khảo sát trải nghiệm theo thang đo SUS (System Usability Scale) với nhóm nhà cung cấp --- đây là phép thử khó nhất do hạn chế về kỹ năng số.
+    \item \textbf{Đánh giá khả dụng phía giao diện:} kiểm tra giao diện đáp ứng trên ba kích thước màn hình chuẩn; đo ba chỉ số Core Web Vitals bằng Lighthouse; buổi thử tác vụ với nhóm nhà cung cấp đo bốn chỉ số hành vi --- tỷ lệ tự hoàn thành, thời gian hoàn thành, số lần nhờ giúp, số lỗi phải làm lại; kiểm tra khả năng tiếp cận tự động bằng axe-core; và kiểm tra ứng dụng web cài đặt được theo danh sách trên điện thoại thật.
     \item \textbf{Đánh giá mô-đun AI:} đánh giá offline từng mô-đun bằng chỉ số phù hợp với bài toán của nó; riêng mô-đun dự báo giá đánh giá trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng.
 \end{itemize}
 
@@ -32,17 +33,19 @@ Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức n�
 
 Kịch bản tải giả lập tăng dần số người dùng đồng thời thực hiện chuỗi hành vi: tìm kiếm nông sản, xem chi tiết và nhật ký canh tác, thêm giỏ hàng, tạo đơn hàng. Hai chỉ số cần báo cáo là thời gian phản hồi ở p95 (đối chiếu NFR1.1) và tỷ lệ lỗi HTTP 5xx ở mức tải mục tiêu (đối chiếu NFR2.2).
 
-% TODO: điền số đo thực tế cho từng mức tải, kèm kết luận đạt/không đạt so với NFR1.1 và NFR2.2.
+Song song với kiểm thử tải, bật thống kê truy vấn sẵn có của PostgreSQL (\texttt{pg\_stat\_statements}) để tìm truy vấn chậm nhất và truy vấn bị gọi lặp nhiều lần --- nguyên nhân phổ biến nhất khiến thời gian phản hồi vượt ngưỡng.
+
+% TODO: điền số đo thực tế cho từng mức tải, kèm kết luận đạt/không đạt so với NFR1.1 và NFR2.2; liệt kê năm truy vấn tốn thời gian nhất.
 
 \subsection{Kiểm thử ràng buộc chống bán vượt tồn kho}
 
-Để kiểm chứng NFR1.2 và NFR4.1, kịch bản kiểm thử tranh chấp (race condition test) khởi tạo một lô hàng có tồn kho khả dụng giới hạn, rồi kích hoạt đồng thời nhiều luồng đặt mua vượt quá số lượng đó. Điểm cần chứng minh là cơ chế khóa bi quan (\texttt{SELECT ... FOR UPDATE}) trong transaction cơ sở dữ liệu chặn được mọi trường hợp bán vượt, kể cả khi hai luồng thương mại cùng thao tác trên một lô.
+Để kiểm chứng NFR1.2 và NFR4.1, kịch bản kiểm thử tranh chấp (race condition test) khởi tạo một dòng tồn có số lượng khả dụng giới hạn, rồi kích hoạt đồng thời nhiều yêu cầu vượt quá số lượng đó. Có hai kịch bản: nhiều đơn bán lẻ cùng đặt trên dòng tồn của Farmery; và một hợp đồng bán sỉ cùng một đơn thu mua cùng giành dòng tồn của nhà cung cấp. Điểm cần chứng minh là cơ chế khóa bi quan (\texttt{SELECT ... FOR UPDATE}) trong transaction cơ sở dữ liệu chặn được mọi trường hợp bán vượt ở cả hai kịch bản.
 
-% TODO: điền số luồng đồng thời, tồn kho ban đầu, số đơn được chấp nhận và bị từ chối, tỷ lệ bán vượt thực đo.
+% TODO: điền số yêu cầu đồng thời, số lượng ban đầu của dòng tồn, số yêu cầu được chấp nhận và bị từ chối cho từng kịch bản, tỷ lệ bán vượt thực đo.
 
 \subsection{Phân quyền và bảo mật}
 
-Kiểm thử tự động bằng script gọi các endpoint nghiệp vụ với token của vai trò không đủ quyền --- ví dụ dùng token \texttt{buyer\_retail} gọi endpoint đăng bán của \texttt{seller} hoặc endpoint duyệt chứng nhận của quản trị viên --- và xác nhận toàn bộ đều bị chặn ở lớp middleware với mã 403 (đối chiếu NFR3.1). Song song, rà soát cơ sở dữ liệu để xác nhận dữ liệu định danh được mã hóa và mật khẩu được băm đúng chuẩn (NFR3.2, NFR3.3).
+Kiểm thử tự động bằng script gọi các endpoint nghiệp vụ với token của vai trò không đủ quyền --- ví dụ dùng token \texttt{buyer\_retail} gọi endpoint đăng bán của \texttt{seller} hoặc endpoint duyệt chứng nhận của \texttt{staff\_moderation}, và dùng token của một vai trò nội bộ gọi endpoint thuộc vai trò nội bộ khác --- và xác nhận toàn bộ đều bị chặn ở lớp middleware với mã 403 (đối chiếu NFR3.1). Song song, rà soát cơ sở dữ liệu để xác nhận dữ liệu định danh được mã hóa và mật khẩu được băm đúng chuẩn (NFR3.2, NFR3.3).
 
 % TODO: điền số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa dữ liệu.
 
@@ -51,23 +54,24 @@ Kiểm thử tự động bằng script gọi các endpoint nghiệp vụ với 
 
 \subsection{Tính đáp ứng của giao diện}
 
-Kiểm thử trên ba nhóm thiết bị đại diện --- điện thoại, máy tính bảng, máy tính để bàn --- trên hai trình duyệt phổ biến tại Việt Nam, với các màn hình chính: trang chủ, chi tiết sản phẩm, tra cứu QR, giỏ hàng và trang quản lý của nhà cung cấp. Tiêu chí là không tràn khung ngang và không che khuất nút thao tác (đối chiếu NFR7.2). Bổ sung điểm Google Lighthouse cho hiệu năng và khả năng tiếp cận.
+Kiểm thử trên ba nhóm thiết bị đại diện --- điện thoại, máy tính bảng, máy tính để bàn --- trên hai trình duyệt phổ biến tại Việt Nam, với các màn hình chính: trang chủ, chi tiết sản phẩm, tra cứu QR, giỏ hàng và trang quản lý của nhà cung cấp. Tiêu chí là không tràn khung ngang và không che khuất nút thao tác (đối chiếu NFR7.2). Hiệu năng phía trình duyệt đo bằng Google Lighthouse theo ba chỉ số Core Web Vitals với ngưỡng ``tốt'' của Google: thời gian hiển thị khối nội dung lớn nhất (LCP) không quá 2,5 giây, độ trễ tương tác (INP) không quá 200 ms, độ dịch chuyển bố cục (CLS) không quá 0,1 \parencite{webdev_vitals}. Riêng tính năng ứng dụng web cài đặt được không đo bằng Lighthouse, vì công cụ này đã bỏ hạng mục PWA từ phiên bản 12; thay vào đó kiểm tra theo danh sách tại Phụ lục B, mục B.6 (đối chiếu NFR7.3).
 
-% TODO: điền kết quả trên từng nhóm thiết bị và điểm Lighthouse.
+% TODO: điền kết quả trên từng nhóm thiết bị, ba chỉ số Core Web Vitals và kết quả danh sách kiểm tra PWA.
 
-\subsection{Khảo sát độ khả dụng với nhóm nhà cung cấp}
+\subsection{Đánh giá khả dụng với nhóm nhà cung cấp}
 
-Thử nghiệm với nhóm đại diện gồm nông dân và thành viên ban điều hành hợp tác xã. Tác vụ đánh giá là đăng một sản phẩm mới kèm ảnh và ghi nhật ký canh tác cho một lô hàng --- tác vụ khó nhất đối với nhóm này. Hai chỉ số: tỷ lệ hoàn thành tác vụ không cần hỗ trợ trực tiếp (đối chiếu NFR6.1--NFR6.3) và điểm SUS theo bộ câu hỏi chuẩn hóa 10 câu.
+Thử nghiệm với nhóm đại diện gồm nông dân và thành viên ban điều hành hợp tác xã. Ba tác vụ đánh giá là đăng một lô hàng mới kèm ảnh, ghi nhật ký canh tác cho lô đó, và tìm rồi mở mã QR của lô --- những việc nhóm này phải làm thường xuyên nhất và cũng khó nhất với họ. Bốn chỉ số hành vi: tỷ lệ hoàn thành tác vụ không cần hỗ trợ (đối chiếu ngưỡng NFR6.1--NFR6.3), thời gian hoàn thành, số lần phải nhờ giúp, và số lỗi thao tác phải làm lại. Không dùng bảng câu hỏi chuẩn hóa vì điểm tổng về cảm nhận không chỉ ra được người dùng vướng ở đâu. Bổ sung kiểm tra khả năng tiếp cận tự động bằng axe-core theo chuẩn WCAG mức AA, có ghi rõ giới hạn của kiểm tra tự động. Kịch bản, phiếu ghi và cách tính ở Phụ lục B.
 
-% TODO: điền số người tham gia, ngày và địa điểm khảo sát, tỷ lệ hoàn thành tác vụ, điểm SUS trung bình. Biểu mẫu khảo sát đính kèm tại Phụ lục B.
+% TODO: điền số người tham gia, ngày và địa điểm, bốn chỉ số cho từng tác vụ, danh sách chỗ vướng, số lỗi axe-core trước và sau khi sửa.
 
 \section{Đánh giá mô-đun AI}
 \label{sec:danhgiaAI}
 
-Nghiệm thu hai mô-đun AI theo đúng chỉ số đã định nghĩa tại Bảng~\ref{tab:nguongAI}:
+Nghiệm thu ba mô-đun AI theo đúng chỉ số đã định nghĩa tại Bảng~\ref{tab:nguongAI}:
 
 \begin{itemize}
-    \item \textbf{Gợi ý sản phẩm:} đo mức tăng CTR của danh sách gợi ý cá nhân hóa so với danh sách baseline không cá nhân hóa, qua thử nghiệm A/B trên tập dữ liệu tương tác mô phỏng.
+    \item \textbf{Tìm kiếm theo ngữ nghĩa:} đo nDCG@10 và Recall@10 trên bộ truy vấn do nhóm gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở; đo thêm thời gian phản hồi ở p95.
+    \item \textbf{Gợi ý sản phẩm:} ở phiên bản đầu chỉ có phần ``sản phẩm tương tự'', đánh giá offline bằng tỷ lệ gợi ý cùng nhóm nhu cầu trên bộ nhãn tay; phần gợi ý theo hành vi, khi được bật, đo mức tăng CTR so với danh sách baseline không cá nhân hóa qua thử nghiệm A/B.
     \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai.
 \end{itemize}
 

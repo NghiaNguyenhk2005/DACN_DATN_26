@@ -243,6 +243,7 @@ xác minh B2B) vào Phụ lục D vì chưa có số liệu vận hành thật �
 TODO thay vì bịa số. Build lại sạch, 52 trang, không "Float too large"
 (đã render riêng flowchart mới bằng `pdftoppm` để xác nhận không chồng
 lấn), không undefined reference.
+SỬA 2026-09-30: không còn "chỉ điều phối 3PL". Farmery tự vận hành kho sơ chế, kiểm định, đóng gói và cho nhà cung cấp trên sàn thuê lại; giao hàng theo mô hình lai (đội giao riêng chặng ngắn, chỉ thiết kế; 3PL chặng dài). Xem mục phiên 2026-09-30 ở cuối file.
 
 ### Tự động tách bullet cho mọi nội dung mới, không chỉ khi được yêu cầu — 2026-09-15
 **Bối cảnh:** Ngay sau khi xem 4 đoạn văn mới (mô hình doanh thu, kho
@@ -297,6 +298,7 @@ sỉ, khách lẻ, bộ phận thu mua (vai trò `ops_sourcing` mới, phát sin
 (gộp quyền cho đội nhỏ).
 **Đánh đổi:** Mất một phần chi tiết về phân công nội bộ, đổi lại phần mô tả
 người dùng dồn trọng tâm vào các nhóm thực sự tạo ra giá trị của sản phẩm.
+SỬA 2026-09-30: thay bằng 3 nhóm bên ngoài + 7 vai trò nội bộ, bỏ hẳn tiền tố `admin` (`staff_moderation`, `staff_operations`, `staff_sourcing`, `staff_warehouse`, `staff_delivery`, `staff_support`, `platform_owner`); không còn quan hệ kế thừa giữa các vai trò.
 
 ### Cắt phạm vi: bỏ phân quyền nội bộ DN, công nợ B2B, mô-đun AI phát hiện gian lận — 2026-09-23
 **Bối cảnh:** Việc thêm luồng 1P làm tăng đáng kể khối lượng, trong khi đây là
@@ -354,6 +356,7 @@ tiêu), chưa dùng vector database riêng.
 thành phần thêm vào đều kéo theo chi phí cài đặt, giám sát và đồng bộ.
 **Lưu ý:** phần back-end framework (NestJS) là đề xuất, cần nhóm xác nhận lại
 theo ngôn ngữ nhóm thực sự quen; PostgreSQL thì nên giữ bất kể.
+SỬA 2026-09-30: lập luận trở lại bốn nhu cầu — thêm lưu và truy vấn vector (pgvector) cho mô-đun AI search mới.
 
 ### Trình bày: bảng dài xuống phụ lục, BMC tách 3 cụm dọc, bỏ từ MVP — 2026-09-23
 **Bối cảnh:** User phản ánh bảng chiếm chỗ trong báo cáo, một số bảng thừa
@@ -374,6 +377,7 @@ vào trong span nên render ra ký tự kép. Đã bỏ ký tự gõ tay trong l
 viewport cao cố định 800px rồi chụp `fullPage`; khi nội dung thấp hơn, ảnh vẫn
 lấy trọn viewport và sinh nền trắng thừa. Đã sửa ở gốc — script nay đo cả
 chiều cao nội dung thật, áp dụng cho mọi ảnh chứ không riêng ảnh mới.
+GHI CHÚ 2026-10-01: vẫn giữ việc không ghi MVP trong báo cáo; phạm vi MVP được ghi ở file riêng `MVP.md` theo yêu cầu của user.
 
 ### Điều khoản dịch vụ viết để đọc độc lập — 2026-09-23
 **Bối cảnh:** User yêu cầu bỏ việc chèn thuật ngữ kỹ thuật như escrow, lẻ-sĩ
@@ -492,6 +496,7 @@ nặng trong phiên.
   thứ tư cho bộ phận thu mua (luồng 1P) vốn họ chưa có.
 **Cách làm git:** commit toàn bộ việc của phiên trước (3 commit), rồi merge để giữ
 quyền tác giả của họ trong lịch sử, thay vì chép tay.
+SỬA 2026-09-30: bỏ SUS (cùng Phụ lục B cũ). Trụ cột khả dụng đo bằng 4 chỉ số hành vi + axe-core; Phụ lục B viết lại thành bộ công cụ đánh giá khả dụng. k6 thay cho "k6 hoặc JMeter".
 
 ### Bỏ mô-đun trợ lý ảo khỏi phạm vi — 2026-09-23
 **Quyết định:** AI từ 3 mô-đun xuống 2, chỉ còn gợi ý sản phẩm và dự báo giá.
@@ -633,3 +638,81 @@ cộng một vai trò gộp quyền".
 **Ghi chú:** một bản rà soát từ nhánh khác cũng báo `phuluc-matran.tex` FR1 ghi
 "5 nhóm người dùng" là tàn dư --- kiểm lại thì **không phải lỗi**, hệ thống thật
 sự có năm nhóm người dùng. Giữ nguyên.
+
+### Phiên 2026-09-30 — 2026-10-01: 20 hạng mục chỉnh sửa
+**Bối cảnh:** user đưa 16 hạng mục (sau bổ sung thành 20), thảo luận từng điểm rồi chốt.
+Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
+
+**Mô hình kinh doanh và vận hành**
+- "Mua đứt/bán đứt" đổi thành "thu mua theo lô"/"bán cả lô"; chỉ đổi chữ, mô hình 1P giữ nguyên.
+- Farmery mở kho sơ chế, đóng gói, kiểm định cho nhà cung cấp trên sàn thuê lại; mở cho ngoài sàn là hướng phát triển.
+- Giao hàng mô hình lai, là dịch vụ tùy chọn; có doanh thu (cước, phí xử lý đơn, phí thuê kho…) và cấu trúc chi phí cố định/biến đổi.
+- Khách sỉ chỉ mua được hàng của Farmery khi là tồn dư hoặc cận hạn, giá công bố, không qua RFQ.
+
+**Kho**
+- Tồn kho ghi trên *dòng tồn* (lô × chủ sở hữu × nơi chứa), mọi thay đổi qua *sổ nhập xuất*. Thu mua là chuyển lượng giữa hai dòng tồn.
+- Hệ quả: "chống bán vượt giữa hai kênh trên cùng một lô" viết lại thành tranh chấp trên từng dòng tồn; NC5 chỉ chỉnh chữ.
+- 15 nguồn giao dịch; giữ chỗ/nhả tồn, sơ chế–đóng gói, đổi chủ tại chỗ, thu hồi lô đưa vào thiết kế; cam kết hợp đồng sỉ, chênh sản lượng, hàng sỉ bị từ chối chỉ là quy tắc nghiệp vụ.
+- Thêm nhóm FR13 (thu mua và kho) — luồng 1P trước đó không có nhóm FR nào.
+
+**Hợp đồng, QR, TraceViet**
+- Ký hai mức: xác nhận giao kết trong hệ thống (không gọi là ký điện tử) + ký số tùy chọn qua tổ chức chứng thực. Căn cứ: Luật Giao dịch điện tử 2023, Điều 22–23 (đã đọc bản Công báo).
+- Thêm bước nhà cung cấp xác nhận đơn thu mua.
+- Hành vi tự động của hệ thống là FR, không là use case: bỏ UC-B3 (thay bằng UC-B4 duyệt sản phẩm), UC-D4 thành "chốt báo giá và giao kết hợp đồng" (gộp UC-D5).
+- Tích hợp TraceViet (Bộ NN&MT) theo "Chuẩn kết nối TXNG v5.1", hiện thực bằng bản giả lập; mở bán không phụ thuộc TraceViet. Xác minh ba tầng vì không có API tra cứu công khai.
+
+**AI**
+- Thêm AI search (FR12.3): tìm kiếm lai từ khóa + vector, hợp nhất bằng reciprocal rank fusion, mô hình nhúng mã nguồn mở. Gợi ý bản đầu chỉ là "sản phẩm tương tự" dùng chung vector.
+
+**Nền tảng và đánh giá**
+- Web responsive + PWA, PWA là NFR bắt buộc (NFR7.3); không đo PWA bằng Lighthouse (đã bỏ hạng mục PWA từ v12).
+- Đánh giá 6 trụ cột, thêm chất lượng mã nguồn (SonarQube). CI: GitHub Actions + SonarQube Cloud bản miễn phí. Ngưỡng LCP chính thức vẫn 2,5 giây (đã kiểm web.dev).
+
+**Tài liệu và trình bày**
+- Persona và bản đồ hành trình không ghi mã FR/NFR; thêm nguồn Cooper (2014), Gibbons (2018), Kalbach (2020).
+- ToS 17 điều: thêm Điều 7 (cạnh tranh và công bằng), Điều 8 (thỏa thuận và quy trình với các bên), thu hồi lô, chia sẻ dữ liệu cho TraceViet có đồng ý, nhập liệu hộ.
+- MVP ghi ở file riêng `MVP.md`, không thành mục trong báo cáo. Thêm FR11.3 (cảnh báo khan hiếm cho khách sỉ, sau MVP).
+
+**Còn mở:** kiểm lại năm/lần xuất bản sách Kalbach, Nghị định 38/2026/NĐ-CP, giới hạn bản miễn phí SonarQube Cloud; ba sơ đồ use case cũ chưa vẽ lại; phân loại bảng và hình đang chờ user duyệt.
+
+### Quy ước bảng thống nhất và rút thân báo cáo về 102 trang — 2026-10-01
+**Bối cảnh:** 36 bảng dùng 5 mức giãn dòng, 4 mức khoảng cách cột và tô màu xen kẽ viết tay (đã lệch ở vài bảng). Thân báo cáo 119 trang, mục tiêu lâu dài khoảng 100 trang.
+
+**Quy ước bảng**
+- Mọi bảng: `\small`, giãn dòng 1,25, khoảng cách cột 5pt (macro `\tblsetup`), tổng độ rộng cột bằng khổ chữ, tiêu đề cột tô nền đậm, kẻ kiểu booktabs, chú thích đặt trên bảng.
+- Tô xen kẽ tự động (`\tblzebra`, dựa trên `\rowcolors`) cho bảng đối sánh, danh mục, ma trận. Không tô cho bảng đặc tả, từ điển dữ liệu, biểu mẫu, và bảng danh mục có dòng tiêu đề nhóm (chứng nhận).
+- Bảng đặc tả: cột nhãn 3cm in đậm. Biểu mẫu quan sát giữ giãn dòng 1,6.
+- Bảng ngắn (dưới 8 dòng, ít chữ) dùng bảng không ngắt trang; còn lại dùng `longtable`.
+- Giữ tiêu đề tiếng Anh ở Phụ lục M (Priority, Feasibility, Testability), theo quyết định 23/9 về thuật ngữ.
+
+**Hình và bảng xuống phụ lục** (tiêu chí: giữ ở thân nếu thiếu nó thì không theo được lập luận)
+- Thêm Phụ lục P (hình OCOP), Q (bản đồ hành trình khách hàng, bảng nguồn giao dịch kho), R (7 lưu đồ), S (4 sơ đồ use case chi tiết, bảng đặc tả UC-B2, UC-D7, UC-C7).
+- Thân báo cáo giữ lưu đồ thu mua, bán lẻ phần đặt hàng, bán sỉ phần tới giao kết hợp đồng; sơ đồ use case tổng quan; đặc tả UC-B4, UC-C4, UC-D4.
+- Nối thêm P–S ở cuối thay vì đánh lại chữ cái A–O, để không làm lệch các tham chiếu "Phụ lục K", "Phụ lục M" đã có trong báo cáo và tài liệu dự án.
+- Kết quả: thân báo cáo 102 trang (Chương 4: 41, Chương 5: 21).
+
+### Kiến trúc theo mô hình C4, sơ đồ ngữ cảnh và sitemap — 2026-10-01
+**Bối cảnh:** hạng mục 16 (sơ đồ ngữ cảnh, kiến trúc, sitemap). Các mục này trước đây để TODO cho nhóm vẽ. User yêu cầu tham khảo cách trình bày bên ngoài trước khi vẽ.
+
+**Quyết định**
+- Trình bày kiến trúc theo mô hình C4 (Simon Brown): mức 1 ngữ cảnh (Chương 4), mức 2 container và mức 3 mô-đun (Chương 5, hai hình riêng). Mức 4 (mã nguồn) không vẽ tay. Căn cứ: C4 đặt modular monolith là một container ở mức 2, các mô-đun hiện ra ở mức 3; mỗi sơ đồ mức 3 nên có 5–15 thành phần; dự án mẫu Modular Monolith with DDD (Kamil Grzybek) cũng tách hình tổng thể và hình mô-đun.
+- Mức 3 vẽ đủ 12 mô-đun, gom theo 5 khối chức năng của Chương 4, mỗi mô-đun ghi tên schema; đánh dấu điểm khóa dòng tồn mà thu mua, bán lẻ, bán sỉ cùng đi qua.
+- Sáu hệ thống bên ngoài: cổng thanh toán, 3PL, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS/Email, đăng nhập Google/Facebook.
+- Sitemap: năm khu vực cấp 1 (công khai, khách lẻ, khách sỉ, nhà cung cấp, nội bộ). Cửa hàng chung cho hai luồng, danh mục chuyển chế độ Mua lẻ/Mua sỉ. Khu nội bộ là một trang làm việc chung, menu theo vai trò. Thân báo cáo vẽ cấp 1–2; cấp 3 kèm mã FR ở Phụ lục T (bảng, không vẽ hình để tiết kiệm trang).
+- Sitemap không phụ thuộc framework; khi hiện thực bằng Next.js mỗi khu vực là một nhóm route.
+- Hình sinh bằng mã (`tools/diagrams/*.py` → `tools/design/*.html` → `npm run shot`), chữ tối thiểu 22px trên khổ 1420px (khoảng 7pt khi in).
+
+**Kết quả:** thân báo cáo 108 trang (thêm 4 hình, Chương 5: 26 trang).
+
+**Cập nhật mục "Còn mở" của phiên 30/9–1/10:** phân loại bảng và hình đã được user duyệt và áp dụng (mục ngay trên). Còn mở: ba sơ đồ use case cũ chưa vẽ lại (user để sau), sơ đồ tuần tự và sơ đồ lớp còn trống.
+
+### Vẽ lại ba sơ đồ use case theo phạm vi mới — 2026-10-01
+**Bối cảnh:** sơ đồ tổng quan, nhà cung cấp và khách sỉ còn use case "Sinh mã QR", "Sinh hợp đồng", "Ký xác nhận" (hành vi tự động hoặc tên cũ), thiếu FR12.3, FR13 và bảy vai trò nội bộ.
+
+**Quyết định**
+- Tổng quan: năm gói theo năm khối chức năng (khớp Chương 4 và sơ đồ mô-đun C4); mỗi gói chia cột trái (người dùng bên ngoài) và cột phải (nhân sự nội bộ), mỗi vai trò nội bộ là một actor riêng. Actor phụ không vẽ ở tổng quan, chỉ vẽ ở sơ đồ chi tiết.
+- Mã UC chỉ ghi cho use case đã có bảng đặc tả (B1, B2, B4, C4, C7, D4, D7); không đặt thêm mã mới.
+- Nhà cung cấp: nhân viên hỗ trợ vùng là actor chính thứ hai của UC-B2 (nhập liệu hộ); UC-B4 do kiểm duyệt viên thực hiện, TraceViet là actor phụ; mã QR là hậu điều kiện của UC-B4, không vẽ thành use case.
+- Khách sỉ: nhà cung cấp là actor chính thứ hai của thương lượng và UC-D4; UC-D4 «include» xác nhận giao kết bằng OTP, «extend» ký số (tổ chức chứng thực là actor phụ); UC-D7 «extend» khiếu nại đợt giao.
+- Ba hình sinh từ `tools/diagrams/gen_usecase.py`; hai sơ đồ khách lẻ và nhân sự nội bộ giữ bản vẽ tay.
+- Sơ đồ tuần tự và sơ đồ lớp: user tạm hoãn.
