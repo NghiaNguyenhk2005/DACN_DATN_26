@@ -705,3 +705,14 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 **Kết quả:** thân báo cáo 108 trang (thêm 4 hình, Chương 5: 26 trang).
 
 **Cập nhật mục "Còn mở" của phiên 30/9–1/10:** phân loại bảng và hình đã được user duyệt và áp dụng (mục ngay trên). Còn mở: ba sơ đồ use case cũ chưa vẽ lại (user để sau), sơ đồ tuần tự và sơ đồ lớp còn trống.
+
+### Vẽ lại ba sơ đồ use case theo phạm vi mới — 2026-10-01
+**Bối cảnh:** sơ đồ tổng quan, nhà cung cấp và khách sỉ còn use case "Sinh mã QR", "Sinh hợp đồng", "Ký xác nhận" (hành vi tự động hoặc tên cũ), thiếu FR12.3, FR13 và bảy vai trò nội bộ.
+
+**Quyết định**
+- Tổng quan: năm gói theo năm khối chức năng (khớp Chương 4 và sơ đồ mô-đun C4); mỗi gói chia cột trái (người dùng bên ngoài) và cột phải (nhân sự nội bộ), mỗi vai trò nội bộ là một actor riêng. Actor phụ không vẽ ở tổng quan, chỉ vẽ ở sơ đồ chi tiết.
+- Mã UC chỉ ghi cho use case đã có bảng đặc tả (B1, B2, B4, C4, C7, D4, D7); không đặt thêm mã mới.
+- Nhà cung cấp: nhân viên hỗ trợ vùng là actor chính thứ hai của UC-B2 (nhập liệu hộ); UC-B4 do kiểm duyệt viên thực hiện, TraceViet là actor phụ; mã QR là hậu điều kiện của UC-B4, không vẽ thành use case.
+- Khách sỉ: nhà cung cấp là actor chính thứ hai của thương lượng và UC-D4; UC-D4 «include» xác nhận giao kết bằng OTP, «extend» ký số (tổ chức chứng thực là actor phụ); UC-D7 «extend» khiếu nại đợt giao.
+- Ba hình sinh từ `tools/diagrams/gen_usecase.py`; hai sơ đồ khách lẻ và nhân sự nội bộ giữ bản vẽ tay.
+- Sơ đồ tuần tự và sơ đồ lớp: user tạm hoãn.

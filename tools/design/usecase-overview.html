@@ -2,214 +2,179 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<!-- Sinh tự động; cỡ chữ in ra (pt) = px x 16 / 1420 x 28,45 -> chữ 22px ~ 7pt. -->
 <style>
-  /* Cỡ chữ in ra (pt) = font_px x 16 / body_width_px x 28,45.
-     Body 1420px + chữ use case 22px => ~7,05pt, đạt ngưỡng tối thiểu của dự án. */
-  :root{
-    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63; --wire:#8b9892;
-    --pkg-a:#eaf7ef; --pkg-a-b:#1f8a4c;
-    --pkg-b:#eef4fb; --pkg-b-b:#1a5fa8;
-    --pkg-c:#fdf1dc; --pkg-c-b:#c98a1a;
-    --pkg-d:#fbe9e9; --pkg-d-b:#c23b3b;
-    --pkg-e:#f1eef8; --pkg-e-b:#6b4fa0;
-  }
   *{box-sizing:border-box;}
-  body{
-    margin:0; padding:30px 40px; width:1420px;
-    background:var(--bg);
-    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
-    color:var(--ink);
-  }
+  body{margin:0; padding:30px 40px; width:1420px; background:#f4f6f5;
+       font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
   h1{font-size:34px; margin:0 0 6px; font-weight:800;}
-  .sub{color:var(--sub); font-size:19px; margin:0 0 20px; line-height:1.35;}
-  .stage{
-    position:relative; width:1340px; height:1420px;
-    background:#fff; border:1px solid #c7d1cb; border-radius:18px;
-    box-shadow:0 2px 10px rgba(20,40,30,.06);
-  }
-  .actor{
-    position:absolute; width:128px; text-align:center;
-    font-size:19px; font-weight:700; color:var(--ink); line-height:1.2;
-  }
-  .actor svg{display:block; margin:0 auto 6px;}
-  .pkg{position:absolute; border-radius:16px; border:2px dashed;}
-  .pkg .pkg-title{
-    position:absolute; top:-16px; left:22px; background:#fff;
-    padding:0 10px; font-size:21px; font-weight:800; white-space:nowrap;
-  }
-  .uc{
-    position:absolute; height:70px; width:460px; left:15px;
-    border:2px solid; border-radius:35px;
-    display:flex; align-items:center; justify-content:center;
-    font-size:22px; font-weight:600; text-align:center;
-    padding:0 16px; line-height:1.18; background:#fff;
-  }
-  .legend{display:flex; gap:14px; margin-top:20px; font-size:18px; color:var(--sub); flex-wrap:wrap; align-items:center;}
-  .legend span{display:inline-flex; align-items:center; gap:9px; white-space:nowrap; margin-right:10px;}
-  .swatch{width:19px; height:19px; border-radius:5px; display:inline-block; border:3px solid; background:#fff; flex:none;}
-  footer{margin-top:16px; font-size:16px; color:#9aa6a0;}
+  .sub{color:#4d5c55; font-size:22px; margin:0 0 18px; line-height:1.35;}
+  .stage{background:#fff; border:1px solid #c7d1cb; border-radius:18px; padding:20px 0;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:16px; font-size:22px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:10px;}
+  .sw{width:34px; height:24px; border-radius:6px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:46px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:10px; font-size:22px; color:#4d5c55;}
 </style>
 </head>
 <body>
-  <h1>Sơ đồ Use Case tổng quan — hệ thống Farmery</h1>
-  <p class="sub">Nhóm theo năm gói chức năng, bám theo FR1–FR12. Mỗi tác nhân có một trục dọc riêng; đường association rẽ ngang vào đúng use case. Sơ đồ chi tiết theo từng tác nhân ở các hình kế tiếp.</p>
-
-  <div class="stage">
-
-    <!-- ============ ACTORS TRÁI ============ -->
-    <div class="actor" style="left:0px; top:250px;">
-      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Nhà cung cấp
-    </div>
-    <div class="actor" style="left:0px; top:750px;">
-      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Khách lẻ<br>(B2C)
-    </div>
-    <div class="actor" style="left:0px; top:1030px;">
-      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Khách sỉ<br>(B2B)
-    </div>
-    <div class="actor" style="left:0px; top:1268px;">
-      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Nhân viên<br>thu mua (1P)
-    </div>
-
-    <!-- ============ ACTORS PHẢI ============ -->
-    <div class="actor" style="left:1212px; top:250px;">
-      <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Nhân sự<br>nội bộ
-    </div>
-    <div class="actor" style="left:1212px; top:768px;">
-      <svg width="40" height="40" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.7" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#5b6b63" font-weight="700">AI</text></svg>
-      Hệ thống AI
-    </div>
-    <div class="actor" style="left:1212px; top:1020px;">
-      <svg width="40" height="40" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.7" stroke-dasharray="3 2"/><text x="15" y="14" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">Cổng</text><text x="15" y="23" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">TT</text></svg>
-      Cổng thanh toán<br>/ 3PL
-    </div>
-
-    <!-- ============ CỘT TRÁI: PACKAGE A, B, C ============ -->
-    <div class="pkg" style="left:165px; top:30px; width:490px; height:290px; border-color:var(--pkg-a-b); background:var(--pkg-a);">
-      <span class="pkg-title" style="color:var(--pkg-a-b);">A. Đăng ký &amp; xác thực (FR1–FR3)</span>
-      <div class="uc" style="top:40px;  border-color:var(--pkg-a-b);">Đăng ký &amp; xác thực nhà cung cấp (eKYC)</div>
-      <div class="uc" style="top:120px; border-color:var(--pkg-a-b);">Tải &amp; theo dõi chứng nhận chất lượng</div>
-      <div class="uc" style="top:200px; border-color:var(--pkg-a-b);">Kiểm duyệt hồ sơ &amp; chứng nhận</div>
-    </div>
-
-    <div class="pkg" style="left:165px; top:350px; width:490px; height:370px; border-color:var(--pkg-b-b); background:var(--pkg-b);">
-      <span class="pkg-title" style="color:var(--pkg-b-b);">B. Sản phẩm &amp; truy xuất nguồn gốc (FR4)</span>
-      <div class="uc" style="top:40px;  border-color:var(--pkg-b-b);">Đăng bán sản phẩm &amp; quản lý tồn kho</div>
-      <div class="uc" style="top:120px; border-color:var(--pkg-b-b); font-weight:800;">Ghi nhật ký canh tác theo lô</div>
-      <div class="uc" style="top:200px; border-color:var(--pkg-b-b);">Sinh mã QR truy xuất nguồn gốc</div>
-      <div class="uc" style="top:280px; border-color:var(--pkg-b-b);">Tìm kiếm &amp; tra cứu truy xuất nguồn gốc</div>
-    </div>
-
-    <div class="pkg" style="left:165px; top:750px; width:490px; height:610px; border-color:var(--pkg-c-b); background:var(--pkg-c);">
-      <span class="pkg-title" style="color:var(--pkg-c-b);">C. Giao dịch, thu mua &amp; thanh toán (FR5–FR7)</span>
-      <div class="uc" style="top:40px;  border-color:var(--pkg-c-b);">Đặt hàng &amp; thanh toán bán lẻ (B2C)</div>
-      <div class="uc" style="top:120px; border-color:var(--pkg-c-b);">Đàm phán RFQ &amp; ký hợp đồng bán sỉ (B2B)</div>
-      <div class="uc" style="top:200px; border-color:var(--pkg-c-b);">Ký quỹ trung gian &amp; giải ngân</div>
-      <div class="uc" style="top:280px; border-color:var(--pkg-c-b);">Đánh giá sản phẩm &amp; nhà cung cấp</div>
-      <div class="uc" style="top:360px; border-color:var(--pkg-c-b);">Nhắn tin &amp; theo dõi gian hàng</div>
-      <div class="uc" style="top:440px; border-color:var(--pkg-c-b); font-weight:800;">Quyết định &amp; tạo đơn thu mua theo lô (1P)</div>
-      <div class="uc" style="top:520px; border-color:var(--pkg-c-b); font-weight:800;">Nhập kho theo lô &amp; định giá bán lẻ</div>
-    </div>
-
-    <!-- ============ CỘT PHẢI: PACKAGE D, E ============ -->
-    <div class="pkg" style="left:695px; top:30px; width:490px; height:610px; border-color:var(--pkg-d-b); background:var(--pkg-d);">
-      <span class="pkg-title" style="color:var(--pkg-d-b);">D. Vận chuyển, khiếu nại &amp; quản trị (FR8, FR10, FR11)</span>
-      <div class="uc" style="top:40px;  border-color:var(--pkg-d-b);">Vận chuyển &amp; giám sát tồn kho (FEFO)</div>
-      <div class="uc" style="top:120px; border-color:var(--pkg-d-b);">Gửi &amp; xử lý khiếu nại</div>
-      <div class="uc" style="top:200px; border-color:var(--pkg-d-b);">Kiểm duyệt sản phẩm &amp; giám sát vi phạm</div>
-      <div class="uc" style="top:280px; border-color:var(--pkg-d-b);">Xử lý vi phạm theo phân cấp</div>
-      <div class="uc" style="top:360px; border-color:var(--pkg-d-b);">Phân xử tranh chấp</div>
-      <div class="uc" style="top:440px; border-color:var(--pkg-d-b);">Xem báo cáo thống kê vận hành</div>
-      <div class="uc" style="top:520px; border-color:var(--pkg-d-b); font-weight:800;">Giám sát bất thường theo luật ngưỡng</div>
-    </div>
-
-    <div class="pkg" style="left:695px; top:690px; width:490px; height:210px; border-color:var(--pkg-e-b); background:var(--pkg-e);">
-      <span class="pkg-title" style="color:var(--pkg-e-b);">E. Hỗ trợ AI (FR12)</span>
-      <div class="uc" style="top:40px;  border-color:var(--pkg-e-b);">Gợi ý sản phẩm cá nhân hóa (FR12.1)</div>
-      <div class="uc" style="top:120px; border-color:var(--pkg-e-b);">Dự báo nhu cầu &amp; giá theo mùa vụ (FR12.2)</div>
-    </div>
-
-    <!-- Ghi chú hai luồng — lấp khoảng trống cột phải bằng nội dung thật -->
-    <div style="position:absolute; left:695px; top:950px; width:490px; height:420px;
-                border:2px dashed #b7c2bc; border-radius:16px; background:#fafbfa;
-                padding:24px 26px; font-size:21px; line-height:1.45; color:var(--ink);">
-      <div style="font-weight:800; margin-bottom:12px; font-size:22px;">Hai luồng giao dịch dùng chung nguồn cung</div>
-      <div style="margin-bottom:12px;"><b>Luồng 3P (bán sỉ):</b> nhà cung cấp giữ quyền sở hữu hàng, nền tảng chỉ làm trung gian giữa nhà cung cấp và khách sỉ.</div>
-      <div style="margin-bottom:12px;"><b>Luồng 1P (bán lẻ):</b> nền tảng thu mua theo lô rồi bán lại cho khách lẻ. Nhân viên thu mua là tác nhân nội bộ, chỉ xuất hiện ở luồng này.</div>
-      <div style="color:var(--sub);">Hàng của một lô tách thành các dòng tồn theo chủ sở hữu; hợp đồng bán sỉ và đơn thu mua cùng giành một dòng tồn — ràng buộc chống bán vượt (NFR1.2, NFR4.1).</div>
-    </div>
-
-    <!-- ================== ĐƯỜNG NỐI ================== -->
-    <svg width="1340" height="1420" style="position:absolute; left:0; top:0; pointer-events:none;">
-
-      <!-- NHÀ CUNG CẤP -> A (3 UC) + B (nhật ký, QR, đăng bán) -->
-      <line x1="64"  y1="308" x2="132" y2="308" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="105" x2="132" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="105" x2="165" y2="105" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="185" x2="165" y2="185" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="425" x2="165" y2="425" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="505" x2="165" y2="505" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="585" x2="165" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- KHÁCH LẺ -> B (tra cứu) + C (đặt hàng, đánh giá) -->
-      <line x1="64"  y1="808" x2="144" y2="808" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="144" y1="665" x2="144" y2="1065" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="144" y1="665" x2="165" y2="665" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="144" y1="825" x2="165" y2="825" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="144" y1="1065" x2="165" y2="1065" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- KHÁCH SỈ -> C (RFQ, ký quỹ) -->
-      <line x1="64"  y1="1088" x2="156" y2="1088" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="156" y1="905" x2="156" y2="1088" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="156" y1="905" x2="165" y2="905" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="156" y1="985" x2="165" y2="985" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- BỘ PHẬN THU MUA -> C (2 use case thu mua 1P) -->
-      <line x1="64"  y1="1326" x2="132" y2="1326" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="1225" x2="132" y2="1326" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="1225" x2="165" y2="1225" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="132" y1="1305" x2="165" y2="1305" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- QUẢN TRỊ VIÊN -> D (5 UC) + A (kiểm duyệt, vòng trên đỉnh) -->
-      <line x1="1212" y1="308" x2="1200" y2="308" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1200" y1="12"  x2="1200" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="655"  y1="12"  x2="1200" y2="12"  stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="655"  y1="12"  x2="655"  y2="265" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="185" x2="1200" y2="185" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="265" x2="1200" y2="265" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="345" x2="1200" y2="345" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="425" x2="1200" y2="425" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="505" x2="1200" y2="505" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1185" y1="585" x2="1200" y2="585" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- HỆ THỐNG AI -> E (2 mô-đun) -->
-      <line x1="1212" y1="800" x2="1196" y2="800" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1196" y1="765" x2="1196" y2="845" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1196" y1="765" x2="1185" y2="765" stroke="var(--wire)" stroke-width="1.8"/>
-      <line x1="1196" y1="845" x2="1185" y2="845" stroke="var(--wire)" stroke-width="1.8"/>
-
-      <!-- CỔNG THANH TOÁN / 3PL -> D (vận chuyển) + C (ký quỹ, vòng dưới đáy) -->
-      <line x1="1212" y1="1058" x2="1224" y2="1058" stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="1224" y1="105"  x2="1224" y2="1058" stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="1224" y1="105"  x2="1185" y2="105"  stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="1224" y1="1058" x2="1224" y2="1395" stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="160"  y1="1395" x2="1224" y2="1395" stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="160"  y1="1395" x2="160"  y2="985"  stroke="var(--wire)" stroke-width="1.5"/>
-      <line x1="160"  y1="985"  x2="165"  y2="985"  stroke="var(--wire)" stroke-width="1.5"/>
-    </svg>
-  </div>
-
-  <div class="legend">
-    <span><span class="swatch" style="border-color:var(--pkg-a-b);"></span>A. Đăng ký &amp; xác thực</span>
-    <span><span class="swatch" style="border-color:var(--pkg-b-b);"></span>B. Sản phẩm &amp; truy xuất</span>
-    <span><span class="swatch" style="border-color:var(--pkg-c-b);"></span>C. Giao dịch, thu mua &amp; thanh toán</span>
-    <span><span class="swatch" style="border-color:var(--pkg-d-b);"></span>D. Vận chuyển, khiếu nại &amp; quản trị</span>
-    <span><span class="swatch" style="border-color:var(--pkg-e-b);"></span>E. Hỗ trợ AI</span>
-  </div>
-  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case tổng quan</footer>
+  
+  <div class="stage"><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="1340" height="1600" viewBox="0 0 1340 1600"><defs><marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M1,1 L11,6 L1,11" fill="none" stroke="#44524b" stroke-width="1.8"/></marker></defs><rect x="218" y="20" width="902" height="120" rx="16" fill="#eaf7ef" stroke="#1f8a4c" stroke-width="2.2" stroke-dasharray="10 7"/>
+<text x="236" y="54" font-size="24" font-weight="800" fill="#1f8a4c" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">A. Nền tảng chung (FR1, FR11)</text>
+<rect x="238" y="64" width="421" height="60" rx="30" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="448.5" y="102.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đăng ký và xác thực tài khoản</text>
+<rect x="679" y="64" width="421" height="60" rx="30" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="889.5" y="102.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Quản lý tài khoản, vai trò nội bộ</text>
+<rect x="218" y="154" width="902" height="330" rx="16" fill="#eef4fb" stroke="#1a5fa8" stroke-width="2.2" stroke-dasharray="10 7"/>
+<text x="236" y="188" font-size="24" font-weight="800" fill="#1a5fa8" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">B. Nguồn cung (FR2–FR4)</text>
+<rect x="238" y="198" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="448.5" y="236.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Tải và theo dõi chứng nhận</text>
+<rect x="238" y="268" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="448.5" y="306.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-B1 Đăng sản phẩm, khai báo lô</text>
+<rect x="238" y="338" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="448.5" y="376.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-B2 Ghi nhật ký canh tác</text>
+<rect x="238" y="408" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="448.5" y="446.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Tìm kiếm, tra cứu truy xuất</text>
+<rect x="679" y="198" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="889.5" y="236.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Duyệt hồ sơ và chứng nhận</text>
+<rect x="679" y="268" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="889.5" y="306.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-B4 Duyệt sản phẩm và lô hàng</text>
+<rect x="679" y="338" width="421" height="60" rx="30" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="889.5" y="376.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Hỗ trợ, nhập liệu hộ nhà cung cấp</text>
+<rect x="218" y="498" width="902" height="470" rx="16" fill="#fdf1dc" stroke="#c98a1a" stroke-width="2.2" stroke-dasharray="10 7"/>
+<text x="236" y="532" font-size="24" font-weight="800" fill="#c98a1a" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">C. Giao dịch (FR5–FR7, FR13)</text>
+<rect x="238" y="542" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="568" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-C4 Đặt hàng, thanh toán bán</text>
+<text x="448.5" y="593.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">lẻ</text>
+<rect x="238" y="612" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="650.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Gửi yêu cầu báo giá, thương lượng</text>
+<rect x="238" y="682" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="720.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-D4 Giao kết hợp đồng bán sỉ</text>
+<rect x="238" y="752" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="790.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-D7 Nhận hàng, thanh toán đợt</text>
+<rect x="238" y="822" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="860.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Mua chào sỉ tồn dư của Farmery</text>
+<rect x="238" y="892" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="448.5" y="930.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Xác nhận đơn thu mua</text>
+<rect x="679" y="542" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="889.5" y="580.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Lập đơn thu mua, định giá bán lẻ</text>
+<rect x="679" y="612" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="889.5" y="650.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nghiệm thu, nhập xuất kho, đóng gói</text>
+<rect x="679" y="682" width="421" height="60" rx="30" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="889.5" y="720.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Thu hồi lô</text>
+<rect x="218" y="982" width="902" height="330" rx="16" fill="#fbe9e9" stroke="#c23b3b" stroke-width="2.2" stroke-dasharray="10 7"/>
+<text x="236" y="1016" font-size="24" font-weight="800" fill="#c23b3b" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">D. Sau bán (FR8, FR9)</text>
+<rect x="238" y="1026" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="448.5" y="1064.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Theo dõi đơn và vận chuyển</text>
+<rect x="238" y="1096" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="448.5" y="1134.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Gửi khiếu nại</text>
+<rect x="238" y="1166" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="448.5" y="1204.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đánh giá sản phẩm, nhà cung cấp</text>
+<rect x="238" y="1236" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="448.5" y="1274.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhắn tin, theo dõi gian hàng</text>
+<rect x="679" y="1026" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="889.5" y="1064.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Giao hàng chặng ngắn</text>
+<rect x="679" y="1096" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="889.5" y="1134.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Phân xử khiếu nại, tranh chấp</text>
+<rect x="679" y="1166" width="421" height="60" rx="30" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="889.5" y="1192" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-C7 Kiểm duyệt đánh giá nghi</text>
+<text x="889.5" y="1217.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">vấn</text>
+<rect x="218" y="1326" width="902" height="260" rx="16" fill="#f1eef8" stroke="#6b4fa0" stroke-width="2.2" stroke-dasharray="10 7"/>
+<text x="236" y="1360" font-size="24" font-weight="800" fill="#6b4fa0" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">E. Vận hành và hỗ trợ ra quyết định (FR10, FR12)</text>
+<rect x="238" y="1370" width="421" height="60" rx="30" fill="#ffffff" stroke="#6b4fa0" stroke-width="2.2"/>
+<text x="448.5" y="1408.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Xem báo cáo bán hàng, đối soát</text>
+<rect x="679" y="1370" width="421" height="60" rx="30" fill="#ffffff" stroke="#6b4fa0" stroke-width="2.2"/>
+<text x="889.5" y="1408.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Xử lý vi phạm theo phân cấp</text>
+<rect x="679" y="1440" width="421" height="60" rx="30" fill="#ffffff" stroke="#6b4fa0" stroke-width="2.2"/>
+<text x="889.5" y="1478.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Giám sát tồn kho, vận chuyển</text>
+<rect x="679" y="1510" width="421" height="60" rx="30" fill="#ffffff" stroke="#6b4fa0" stroke-width="2.2"/>
+<text x="889.5" y="1548.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Cấu hình danh mục, ngưỡng, biểu phí</text>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="80" cy="259" r="11"/><line x1="80" y1="270" x2="80" y2="294"/><line x1="63" y1="278" x2="97" y2="278"/><line x1="80" y1="294" x2="66" y2="312"/><line x1="80" y1="294" x2="94" y2="312"/></g>
+<text x="80" y="341.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhà cung cấp</text>
+<polyline points="170,94 170,1400" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="100,288 170,288" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,94 238,94" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,228 238,228" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,298 238,298" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,368 238,368" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,642 238,642" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,712 238,712" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,922 238,922" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,1266 238,1266" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="170,1400 238,1400" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="80" cy="739" r="11"/><line x1="80" y1="750" x2="80" y2="774"/><line x1="63" y1="758" x2="97" y2="758"/><line x1="80" y1="774" x2="66" y2="792"/><line x1="80" y1="774" x2="94" y2="792"/></g>
+<text x="80" y="821.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Khách lẻ</text>
+<polyline points="186,94 186,1266" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="100,768 186,768" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,94 238,94" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,438 238,438" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,572 238,572" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,1056 238,1056" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,1126 238,1126" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,1196 238,1196" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="186,1266 238,1266" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="80" cy="1187" r="11"/><line x1="80" y1="1198" x2="80" y2="1222"/><line x1="63" y1="1206" x2="97" y2="1206"/><line x1="80" y1="1222" x2="66" y2="1240"/><line x1="80" y1="1222" x2="94" y2="1240"/></g>
+<text x="80" y="1269.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Khách sỉ</text>
+<polyline points="202,94 202,1266" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="100,1216 202,1216" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,94 238,94" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,438 238,438" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,642 238,642" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,712 238,712" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,782 238,782" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,852 238,852" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,1056 238,1056" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,1126 238,1126" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,1196 238,1196" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="202,1266 238,1266" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="41" r="11"/><line x1="1264" y1="52" x2="1264" y2="76"/><line x1="1247" y1="60" x2="1281" y2="60"/><line x1="1264" y1="76" x2="1250" y2="94"/><line x1="1264" y1="76" x2="1278" y2="94"/></g>
+<text x="1264" y="123.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Kiểm duyệt</text>
+<text x="1264" y="149.92" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">viên</text>
+<polyline points="1132,70 1132,1400" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1132,70 1242,70" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,228 1132,228" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,298 1132,298" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1196 1132,1196" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1400 1132,1400" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="252.429" r="11"/><line x1="1264" y1="263.429" x2="1264" y2="287.429"/><line x1="1247" y1="271.429" x2="1281" y2="271.429"/><line x1="1264" y1="287.429" x2="1250" y2="305.429"/><line x1="1264" y1="287.429" x2="1278" y2="305.429"/></g>
+<text x="1264" y="335.389" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên hỗ</text>
+<text x="1264" y="361.349" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">trợ vùng</text>
+<polyline points="1142,281.429 1142,368" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1142,281.429 1242,281.429" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,368 1142,368" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="463.857" r="11"/><line x1="1264" y1="474.857" x2="1264" y2="498.857"/><line x1="1247" y1="482.857" x2="1281" y2="482.857"/><line x1="1264" y1="498.857" x2="1250" y2="516.857"/><line x1="1264" y1="498.857" x2="1278" y2="516.857"/></g>
+<text x="1264" y="546.817" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên thu</text>
+<text x="1264" y="572.777" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">mua</text>
+<polyline points="1152,492.857 1152,572" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1152,492.857 1242,492.857" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,572 1152,572" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="675.286" r="11"/><line x1="1264" y1="686.286" x2="1264" y2="710.286"/><line x1="1247" y1="694.286" x2="1281" y2="694.286"/><line x1="1264" y1="710.286" x2="1250" y2="728.286"/><line x1="1264" y1="710.286" x2="1278" y2="728.286"/></g>
+<text x="1264" y="758.246" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên kho</text>
+<polyline points="1162,642 1162,712" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1162,704.286 1242,704.286" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,642 1162,642" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,712 1162,712" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="886.714" r="11"/><line x1="1264" y1="897.714" x2="1264" y2="921.714"/><line x1="1247" y1="905.714" x2="1281" y2="905.714"/><line x1="1264" y1="921.714" x2="1250" y2="939.714"/><line x1="1264" y1="921.714" x2="1278" y2="939.714"/></g>
+<text x="1264" y="969.674" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên</text>
+<text x="1264" y="995.634" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">giao hàng</text>
+<polyline points="1172,915.714 1172,1056" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1172,915.714 1242,915.714" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1056 1172,1056" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="1098.14" r="11"/><line x1="1264" y1="1109.14" x2="1264" y2="1133.14"/><line x1="1247" y1="1117.14" x2="1281" y2="1117.14"/><line x1="1264" y1="1133.14" x2="1250" y2="1151.14"/><line x1="1264" y1="1133.14" x2="1278" y2="1151.14"/></g>
+<text x="1264" y="1181.1" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên vận</text>
+<text x="1264" y="1207.06" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">hành</text>
+<polyline points="1182,1126 1182,1470" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1182,1127.14 1242,1127.14" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1126 1182,1126" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1470 1182,1470" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1264" cy="1309.57" r="11"/><line x1="1264" y1="1320.57" x2="1264" y2="1344.57"/><line x1="1247" y1="1328.57" x2="1281" y2="1328.57"/><line x1="1264" y1="1344.57" x2="1250" y2="1362.57"/><line x1="1264" y1="1344.57" x2="1278" y2="1362.57"/></g>
+<text x="1264" y="1392.53" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Quản trị viên</text>
+<text x="1264" y="1418.49" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">hệ thống</text>
+<polyline points="1192,94 1192,1540" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1192,1338.57 1242,1338.57" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,94 1192,94" fill="none" stroke="#6f7c76" stroke-width="2"/>
+<polyline points="1100,1540 1192,1540" fill="none" stroke="#6f7c76" stroke-width="2"/></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-style:dashed"></i>Nền tảng chung</span><span><i class="sw" style="background:#eef4fb;border-color:#1a5fa8;border-style:dashed"></i>Nguồn cung</span><span><i class="sw" style="background:#fdf1dc;border-color:#c98a1a;border-style:dashed"></i>Giao dịch</span><span><i class="sw" style="background:#fbe9e9;border-color:#c23b3b;border-style:dashed"></i>Sau bán</span><span><i class="sw" style="background:#f1eef8;border-color:#6b4fa0;border-style:dashed"></i>Vận hành, hỗ trợ ra quyết định</span></div>
+  
 </body>
 </html>

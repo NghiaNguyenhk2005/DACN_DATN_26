@@ -86,7 +86,7 @@ Cổng thanh toán trung gian \textit{(actor phụ)} & --- & Bên ngoài hệ th
 
 \subsubsection*{Sơ đồ use case tổng quan}
 
-Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói chức năng ứng với các nhóm FR đã xác lập tại mục~\ref{sec:yeucauchucnang}.
+Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối chức năng tại mục~\ref{sec:luongvanhanh} và các nhóm FR tại mục~\ref{sec:yeucauchucnang}. Trong mỗi gói, cột trái là use case của người dùng bên ngoài, cột phải là use case của nhân sự nội bộ. Mã UC chỉ ghi cho các use case có bảng đặc tả; actor phụ (hệ thống AI, cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số) được vẽ ở các sơ đồ chi tiết để sơ đồ tổng quan không rối.
 
 \begin{figure}[p]
 \centering
@@ -101,7 +101,7 @@ Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo n
 
 Sơ đồ chi tiết của từng nhóm tác nhân đặt tại Phụ lục~S, gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML:
 \begin{itemize}
-    \item Nhà cung cấp, quanh nhóm sản phẩm và truy xuất nguồn gốc FR4 (Hình~\ref{fig:usecase-nhaban});
+    \item Nhà cung cấp, gồm nguồn cung FR2--FR4 và các việc ở luồng bán sỉ, thu mua (Hình~\ref{fig:usecase-nhaban});
     \item Khách lẻ, hành trình mua hàng bán lẻ FR5 (Hình~\ref{fig:usecase-khachle});
     \item Khách sỉ, từ yêu cầu báo giá, giao kết hợp đồng, ký quỹ tới giao hàng theo đợt FR6, FR7 (Hình~\ref{fig:usecase-khachsi});
     \item nhân sự nội bộ (Hình~\ref{fig:usecase-quantri}).

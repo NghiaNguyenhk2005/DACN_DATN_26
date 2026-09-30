@@ -76,7 +76,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | `design/bmc-cum1.html`, `bmc-cum2.html`, `bmc-cum3.html` | **3 cụm BMC dùng trong thân báo cáo** (thay ảnh ngang cũ khó đọc) |
 | `design/usecase-overview.html` + 4 file `usecase-*.html` | **5 sơ đồ use case** (Ch.5) --- tổng quan và chi tiết theo từng tác nhân |
 | `design/c4-ngu-canh.html`, `c4-container.html`, `c4-module.html`, `sitemap-tong-quan.html` | Sơ đồ C4 mức 1 (Ch.4), mức 2 và 3 (Ch.5), sitemap tổng quan (Ch.5). **Không sửa tay**: sinh từ `tools/diagrams/` |
-| `diagrams/svgkit.py`, `gen_c4.py`, `gen_sitemap.py` | Bộ sinh HTML cho 4 hình trên. Sửa nội dung ở đây, chạy `python tools/diagrams/gen_c4.py` và `gen_sitemap.py`, rồi `npm run shot` |
+| `diagrams/svgkit.py`, `gen_c4.py`, `gen_sitemap.py`, `gen_usecase.py` | Bộ sinh HTML cho 4 hình trên và 3 sơ đồ use case (`usecase-overview`, `usecase-nha-ban`, `usecase-nguoi-mua-si`; hai sơ đồ use case còn lại vẽ tay). Sửa nội dung ở đây, chạy `python tools/diagrams/gen_c4.py` và `gen_sitemap.py`, rồi `npm run shot` |
 
 **Các nội dung so sánh nay dùng bảng LaTeX, không dùng ảnh** — `tools/design/` chỉ còn các infographic thật sự cần đồ họa.
 
