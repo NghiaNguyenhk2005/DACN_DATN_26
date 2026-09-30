@@ -230,42 +230,8 @@ Quy trình này đứng trước quy trình bán lẻ và là điểm khác bi�
 \subsubsection*{Quản lý tồn kho, vận chuyển hàng dễ hư hỏng và xử lý khiếu nại}
 \noindent\textbf{Lô, dòng tồn và sổ nhập xuất.} Một lô hàng là đơn vị truy xuất nguồn gốc: nó có một mã lô, một nhật ký canh tác và một mã QR. Nhưng hàng của cùng một lô có thể nằm ở nhiều nơi và thuộc về nhiều chủ, nên tồn kho không được ghi trên lô mà ghi trên \emph{dòng tồn}. Mỗi dòng tồn xác định ba điều: thuộc lô nào, ai là chủ sở hữu, và hàng đang nằm ở đâu. Ví dụ, một hợp tác xã có lô 1.000 kg đang rao bán sỉ; khi Farmery thu mua 300 kg thì lô đó có hai dòng tồn --- 700 kg của hợp tác xã, để tại hợp tác xã, chỉ bán được cho khách sỉ; và 300 kg của Farmery, để tại kho sơ chế, chỉ bán được cho khách lẻ. Việc thu mua là một giao dịch chuyển 300 kg từ dòng thứ nhất sang dòng thứ hai.
 
-Mọi thay đổi số lượng trên một dòng tồn đều phải đi qua một bản ghi trong \emph{sổ nhập xuất}, nêu rõ nguồn giao dịch, số lượng, người thực hiện và chứng từ liên quan. Không có thao tác nào được sửa trực tiếp con số tồn. Bảng~\ref{tab:nguon-giaodich} liệt kê toàn bộ nguồn giao dịch được thiết kế.
+Mọi thay đổi số lượng trên một dòng tồn đều phải đi qua một bản ghi trong \emph{sổ nhập xuất}, nêu rõ nguồn giao dịch, số lượng, người thực hiện và chứng từ liên quan. Không có thao tác nào được sửa trực tiếp con số tồn. Bảng~\ref{tab:nguon-giaodich} ở Phụ lục~Q liệt kê toàn bộ nguồn giao dịch được thiết kế.
 
-\begingroup
-\tblsetup\tblzebra
-\begin{longtable}{L{1.18cm} L{5.76cm} L{3.64cm} L{3.96cm}}
-\caption{Các nguồn giao dịch làm thay đổi tồn kho}
-\label{tab:nguon-giaodich} \\
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Chiều} & \textbf{Nguồn giao dịch} & \textbf{Hàng của ai} & \textbf{Người thực hiện} \\
-\midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Chiều} & \textbf{Nguồn giao dịch} & \textbf{Hàng của ai} & \textbf{Người thực hiện} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-Nhập & Thu mua trực tiếp từ chào hàng của nhà cung cấp & Farmery & Nhân viên kho \\
-Nhập & Thu mua lại lô bán sỉ cận hạn với giá chiết khấu & Farmery & Nhân viên thu mua, nhân viên kho \\
-Nhập & Nhà cung cấp gửi hàng bán sỉ vào kho theo dịch vụ thuê kho & Nhà cung cấp & Nhân viên kho \\
-Nhập & Hàng bán lẻ hoàn về do khách từ chối nhận hoặc giao thất bại & Farmery & Nhân viên kho \\
-Nhập & Hàng đổi trả sau khiếu nại chất lượng & Farmery & Nhân viên kho \\
-Xuất & Đơn bán lẻ & Farmery & Hệ thống giữ chỗ, nhân viên kho xuất \\
-Xuất & Đợt giao của hợp đồng bán sỉ, lấy từ hàng gửi kho & Nhà cung cấp & Nhân viên kho \\
-Xuất & Chào sỉ hàng tồn dư hoặc cận hạn của Farmery & Farmery & Nhân viên thu mua, nhân viên kho \\
-Xuất & Hủy hàng do hỏng, hết hạn hoặc hao hụt & Cả hai & Nhân viên kho \\
-Xuất & Trả lại nhà cung cấp: bị từ chối khi kiểm định, hoặc rút hàng gửi kho & Nhà cung cấp & Nhân viên kho \\
-Giữ & Giữ chỗ khi đơn chờ thanh toán, nhả khi đơn bị hủy hoặc quá hạn & Farmery & Hệ thống \\
-Đổi & Sơ chế, phân loại, đóng gói --- đổi số lượng và đơn vị bán ngay trong kho & Cả hai & Nhân viên kho \\
-Đổi & Đổi chủ tại chỗ --- hàng gửi kho được Farmery thu mua lại & Nhà cung cấp sang Farmery & Nhân viên thu mua \\
-Khóa & Thu hồi lô --- khóa mọi dòng tồn của lô ở cả hai luồng & Cả hai & Kiểm duyệt viên \\
-Chỉnh & Kiểm kê, điều chỉnh khi lệch số thực tế & Cả hai & Nhân viên kho \\
-\end{longtable}
-\endgroup
 
 \noindent Riêng thao tác thu hồi lô là lý do trực tiếp để gắn tồn kho với truy xuất nguồn gốc: khi phát hiện chứng nhận giả hoặc vấn đề an toàn thực phẩm ở một lô, hệ thống khóa toàn bộ dòng tồn của lô đó dù chúng thuộc chủ nào và nằm ở đâu, đồng thời truy ngược sổ nhập xuất để lập danh sách các đơn đã bán từ lô này.
 
@@ -505,47 +471,8 @@ Khi hoàn tất thủ tục tham gia ở trên, mọi tài khoản đều chịu
 \subsubsection{Bản đồ hành trình khách hàng (Customer Journey Maps)}
 \label{subsec:customer-journey}
 
-Hành trình trải nghiệm của khách hàng trên Farmery được mô hình hóa qua 5 giai đoạn chính: \textit{Nhận biết/Khám phá $\rightarrow$ Cân nhắc/Thẩm định $\rightarrow$ Giao dịch/Đặt hàng $\rightarrow$ Giao nhận/Nghiệm thu $\rightarrow$ Đánh giá/Tái gắn kết}. Bảng~\ref{tab:customer-journey} mô tả hành vi và điểm chạm cho hai luồng, theo cấu trúc bản đồ hành trình của Gibbons~\cite{gibbons2018journey} và Kalbach~\cite{kalbach2020mapping}: tác nhân, kịch bản, các giai đoạn, và hành động tại từng giai đoạn. Bảng chỉ ghi điều khách hàng làm và nơi họ tiếp xúc với nền tảng; việc đối chiếu sang yêu cầu chức năng nằm ở Phụ lục J. Lưu ý khác biệt căn bản: ở luồng bán lẻ, bên bán là chính Farmery nên khách lẻ chỉ giao dịch với một đầu mối; còn ở luồng bán sỉ, khách sỉ giao dịch trực tiếp với từng nhà cung cấp.
+Hành trình trải nghiệm của khách hàng trên Farmery được mô hình hóa qua 5 giai đoạn chính: \textit{Nhận biết/Khám phá $\rightarrow$ Cân nhắc/Thẩm định $\rightarrow$ Giao dịch/Đặt hàng $\rightarrow$ Giao nhận/Nghiệm thu $\rightarrow$ Đánh giá/Tái gắn kết}. Bảng~\ref{tab:customer-journey} ở Phụ lục~Q mô tả hành vi và điểm chạm cho hai luồng, theo cấu trúc bản đồ hành trình của Gibbons~\cite{gibbons2018journey} và Kalbach~\cite{kalbach2020mapping}: tác nhân, kịch bản, các giai đoạn, và hành động tại từng giai đoạn. Bảng chỉ ghi điều khách hàng làm và nơi họ tiếp xúc với nền tảng; việc đối chiếu sang yêu cầu chức năng nằm ở Phụ lục J. Lưu ý khác biệt căn bản: ở luồng bán lẻ, bên bán là chính Farmery nên khách lẻ chỉ giao dịch với một đầu mối; còn ở luồng bán sỉ, khách sỉ giao dịch trực tiếp với từng nhà cung cấp.
 
-\begingroup
-\tblsetup\tblzebra
-\begin{longtable}{L{2.15cm} L{3.77cm} L{3.77cm} L{4.85cm}}
-\caption{Bản đồ hành trình khách hàng trên hệ thống Farmery}
-\label{tab:customer-journey} \\
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm} \\
-\midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Giai đoạn} & \textbf{Luồng bán lẻ --- 1P} & \textbf{Luồng bán sỉ --- 3P} & \textbf{Điểm chạm} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-\textbf{1. Khám phá} &
-Tìm nông sản sạch theo danh mục, khu vực hoặc gợi ý cá nhân hóa trên trang chủ. &
-Tìm nhà cung ứng có sản lượng lớn, tra cứu hồ sơ năng lực và chứng chỉ VietGAP/GlobalGAP. &
-Web trên điện thoại, Trang chủ, Tìm kiếm theo ngữ nghĩa, Bộ lọc đa tiêu chí, Gợi ý sản phẩm tương tự.\\
-\textbf{2. Cân nhắc} &
-Xem chi tiết sản phẩm, quét mã QR xem nhật ký canh tác của lô hàng, đọc đánh giá của người mua trước. &
-So sánh bảng giá bậc/MOQ, gửi yêu cầu báo giá (RFQ) riêng biệt. &
-Trang chi tiết SP, Modal nhật ký GS1/QR, Trình đàm phán RFQ trực tuyến.\\
-\textbf{3. Giao dịch} &
-Chọn khung giờ giao phù hợp hàng tươi, thanh toán qua VietQR hoặc khi nhận hàng, áp dụng mã giảm giá. &
-Thống nhất điều khoản RFQ, xác nhận giao kết hợp đồng, tiền thanh toán đợt 1 được nền tảng giữ trung gian. &
-Trang thanh toán, Cổng thanh toán, Ví trung gian giữ tiền -- escrow.\\
-\textbf{4. Giao nhận} &
-Theo dõi tiến độ vận đơn 3PL theo thời gian thực; kiểm tra độ tươi ngon khi nhận hàng; nếu không đạt thì Farmery chịu trách nhiệm đổi trả trực tiếp. &
-Theo dõi nhiều đợt giao trên hợp đồng; kiểm định số lượng/chất lượng tại kho và xác nhận biên bản. &
-Webhook tracking 3PL, Quản lý đợt giao, Giải ngân tiền giữ trung gian sau khi xác nhận hoàn tất hoặc hết hạn khiếu nại.\\
-\textbf{5. Đánh giá \& Gắn kết} &
-Để lại điểm số, hình ảnh đánh giá sản phẩm; nhận gợi ý mua lại khi đến chu kỳ tiêu thụ. &
-Đánh giá mức độ tuân thủ hợp đồng của nhà cung cấp; tái ký hợp đồng cho mùa vụ mới. &
-Phân hệ đánh giá và uy tín, thông báo chu kỳ mua lại.\\
-\end{longtable}
-\endgroup
 
 \subsection{Các vấn đề nghiên cứu}
 \label{subsec:vandenghiencuu}
@@ -800,7 +727,7 @@ Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
     giữ nguyên mã lô, nhật ký canh tác và mã QR.
     \item \textbf{FR13.3:} Quản lý tồn kho theo dòng tồn (lô, chủ sở hữu,
     nơi chứa); mọi thay đổi số lượng đi qua sổ nhập xuất theo đúng nguồn giao
-    dịch tại Bảng~\ref{tab:nguon-giaodich}, không sửa trực tiếp con số tồn.
+    dịch tại Bảng~\ref{tab:nguon-giaodich} (Phụ lục~Q), không sửa trực tiếp con số tồn.
     \item \textbf{FR13.4:} Ghi nhận sơ chế, phân loại và đóng gói thành đơn
     vị bán lẻ; kiểm kê định kỳ và điều chỉnh khi lệch.
     \item \textbf{FR13.5:} Dịch vụ thuê kho cho nhà cung cấp luồng bán sỉ:

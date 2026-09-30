@@ -9,19 +9,18 @@ Chương này mô hình hóa các quy trình và tương tác của hệ thống
 \subsection{Mô hình hóa quy trình nghiệp vụ}
 \label{subsec:mohinhquytrinh}
 
-Tám quy trình nghiệp vụ mô tả tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng lưu đồ. Các ký hiệu dùng chung cho toàn bộ lưu đồ được giải thích tại Hình~\ref{fig:chu-thich-flowchart}.
+Tám quy trình nghiệp vụ mô tả tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng lưu đồ; ký hiệu dùng chung được giải thích tại Hình~\ref{fig:chu-thich-flowchart}. Mục này giữ lưu đồ của ba luồng làm nên khác biệt của Farmery: thu mua, đặt hàng bán lẻ và bán sỉ tới khi giao kết hợp đồng. Các lưu đồ còn lại đặt tại Phụ lục~R:
+\begin{itemize}
+    \item đăng ký, xác thực nhà cung cấp và kiểm duyệt chứng nhận (Hình~\ref{fig:flow-dang-ky});
+    \item đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất (Hình~\ref{fig:flow-san-pham});
+    \item giao hàng, nhận hàng và hoàn tất đơn bán lẻ (Hình~\ref{fig:flow-ban-le-b});
+    \item đánh giá sản phẩm và nhà cung cấp (Hình~\ref{fig:flow-danh-gia});
+    \item tạm giữ tiền, giao hàng và thanh toán theo từng đợt của đơn sỉ (Hình~\ref{fig:flow-ban-si-b});
+    \item vận chuyển hàng dễ hư hỏng và xử lý khiếu nại (Hình~\ref{fig:flow-van-chuyen});
+    \item giám sát, xử lý vi phạm phân cấp và báo cáo của nhân sự nội bộ (Hình~\ref{fig:flow-quan-tri}).
+\end{itemize}
 
 \input{flowcharts/00-chu-thich}
-
-\clearpage
-\subsubsection*{Đăng ký và xác thực nhà cung cấp, kiểm duyệt chứng nhận}
-Hình~\ref{fig:flow-dang-ky} minh họa quy trình trên dưới dạng lưu đồ, gồm các điểm kiểm tra OTP, eKYC và kiểm duyệt chứng nhận.
-\input{flowcharts/01-dang-ky}
-
-\clearpage
-\subsubsection*{Đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất}
-Hình~\ref{fig:flow-san-pham} minh họa quy trình đăng và kiểm duyệt sản phẩm, bao gồm nhánh hậu kiểm nhanh dành cho nhà cung cấp có uy tín cao.
-\input{flowcharts/02-san-pham}
 
 \clearpage
 \subsubsection*{Thu mua vào kho của nền tảng}
@@ -30,30 +29,13 @@ Hình~\ref{fig:flow-thu-mua} minh họa quy trình thu mua --- bước đứng t
 
 \clearpage
 \subsubsection*{Quy trình bán lẻ}
-Quy trình bán lẻ được minh họa qua hai lưu đồ nối tiếp: Hình~\ref{fig:flow-ban-le-a} (đặt hàng, thanh toán và xác nhận đơn) và Hình~\ref{fig:flow-ban-le-b} (giao hàng, nhận hàng và hoàn tất đơn).
+Hình~\ref{fig:flow-ban-le-a} minh họa phần đặt hàng, thanh toán và xác nhận đơn; phần giao hàng, nhận hàng và hoàn tất đơn ở Hình~\ref{fig:flow-ban-le-b} (Phụ lục~R).
 \input{flowcharts/03-ban-le}
-\input{flowcharts/03b-ban-le-giao-nhan}
-
-\clearpage
-\subsubsection*{Đánh giá sản phẩm và nhà cung cấp}
-Hình~\ref{fig:flow-danh-gia} minh họa quy trình đánh giá, từ kiểm duyệt đánh giá tới cập nhật điểm uy tín và quyền lợi của nhà cung cấp.
-\input{flowcharts/07-danh-gia}
 
 \clearpage
 \subsubsection*{Quy trình bán sỉ (B2B)}
-Quy trình bán sỉ được minh họa qua hai lưu đồ nối tiếp: Hình~\ref{fig:flow-ban-si-a} (từ công bố bảng giá tới ký hợp đồng) và Hình~\ref{fig:flow-ban-si-b} (tạm giữ tiền, giao hàng và thanh toán theo từng đợt).
+Hình~\ref{fig:flow-ban-si-a} minh họa phần từ công bố bảng giá tới giao kết hợp đồng; phần tạm giữ tiền, giao hàng và thanh toán theo từng đợt ở Hình~\ref{fig:flow-ban-si-b} (Phụ lục~R).
 \input{flowcharts/04-ban-si}
-\input{flowcharts/04b-ban-si-giao-hang}
-
-\clearpage
-\subsubsection*{Quản lý tồn kho, vận chuyển hàng dễ hư hỏng và xử lý khiếu nại}
-Hình~\ref{fig:flow-van-chuyen} minh họa quy trình vận chuyển hàng dễ hư hỏng và xử lý khiếu nại.
-\input{flowcharts/05-van-chuyen}
-
-\clearpage
-\subsubsection*{Quản trị hệ thống}
-Hình~\ref{fig:flow-quan-tri} minh họa quy trình giám sát, xử lý vi phạm phân cấp và báo cáo của nhân sự nội bộ.
-\input{flowcharts/06-quan-tri}
 
 \clearpage
 \subsection{Mô hình hóa tương tác}
@@ -117,77 +99,18 @@ Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo n
 
 \subsubsection*{Sơ đồ use case chi tiết theo tác nhân}
 
-Hình~\ref{fig:usecase-nhaban} minh họa chi tiết các use case của Nhà cung cấp quanh nhóm sản phẩm và truy xuất nguồn gốc (FR4), gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML.
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nha-ban.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Nhà cung cấp}
-\label{fig:usecase-nhaban}
-\end{figure}
-
-Hình~\ref{fig:usecase-khachle} minh họa hành trình mua hàng bán lẻ đầy đủ của Khách lẻ (FR5).
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nguoi-mua-le.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách lẻ}
-\label{fig:usecase-khachle}
-\end{figure}
-
-Hình~\ref{fig:usecase-khachsi} minh họa luồng yêu cầu báo giá, hợp đồng điện tử, ký quỹ và giao hàng theo đợt của Khách sỉ (FR6, FR7).
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-nguoi-mua-si.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách sỉ}
-\label{fig:usecase-khachsi}
-\end{figure}
-
-\begin{figure}[p]
-\centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-quan-tri-vien.png}
-\end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- nhân sự nội bộ (kiểm duyệt viên, nhân viên vận hành, quản trị viên hệ thống)}
-\label{fig:usecase-quantri}
-\end{figure}
+Sơ đồ chi tiết của từng nhóm tác nhân đặt tại Phụ lục~S, gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML:
+\begin{itemize}
+    \item Nhà cung cấp, quanh nhóm sản phẩm và truy xuất nguồn gốc FR4 (Hình~\ref{fig:usecase-nhaban});
+    \item Khách lẻ, hành trình mua hàng bán lẻ FR5 (Hình~\ref{fig:usecase-khachle});
+    \item Khách sỉ, từ yêu cầu báo giá, giao kết hợp đồng, ký quỹ tới giao hàng theo đợt FR6, FR7 (Hình~\ref{fig:usecase-khachsi});
+    \item nhân sự nội bộ (Hình~\ref{fig:usecase-quantri}).
+\end{itemize}
 
 \subsubsection*{Bảng đặc tả các use case chính}
 
-Các use case dưới đây được chọn đại diện cho mọi loại actor và loại luồng: thao tác đơn giản (UC-B2), luồng của nhân sự nội bộ có hệ thống ngoài tham gia (UC-B4), luồng có actor phụ bên ngoài (UC-C4, UC-D7), luồng hai bên cùng thao tác có điều kiện rẽ nhánh (UC-D4), và luồng có AI hỗ trợ (UC-C7).
+Các use case dưới đây được chọn đại diện cho mọi loại actor và loại luồng: thao tác đơn giản (UC-B2), luồng của nhân sự nội bộ có hệ thống ngoài tham gia (UC-B4), luồng có actor phụ bên ngoài (UC-C4, UC-D7), luồng hai bên cùng thao tác có điều kiện rẽ nhánh (UC-D4), và luồng có AI hỗ trợ (UC-C7). Ba bảng UC-B4, UC-C4 và UC-D4 đặt tại đây; bảng UC-B2, UC-D7 và UC-C7 ở Phụ lục~S.
 
-\begingroup
-\tblsetup
-\begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-B2 --- Ghi nhật ký canh tác theo lô}
-\label{tab:uc-b2} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-B2: Ghi nhật ký canh tác theo lô}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Nhà cung cấp (\texttt{seller}) \\
-\textbf{Tiền điều kiện} & Nhà cung cấp đã xác thực (trạng thái ``Đã xác thực''); đã tạo sản phẩm/lô hàng tương ứng (UC-B1) \\
-\textbf{Luồng chính} &
-1. Nhà cung cấp chọn lô hàng cần ghi nhật ký.\newline
-2. Nhập giai đoạn canh tác (gieo trồng/chăm sóc/thu hoạch), ngày tháng, mô tả hoạt động.\newline
-3. Tải ảnh minh chứng (nếu có).\newline
-4. Hệ thống lưu bản ghi, gắn với lô tương ứng, đánh dấu thời điểm tạo (bất biến, không cho sửa trực tiếp --- NFR9.1).\newline
-5. Nếu đủ điều kiện tối thiểu ($\geq$1 bản ghi + ảnh sản phẩm thật), chuyển sản phẩm sang trạng thái đủ điều kiện xét duyệt công khai (UC-B4). \\
-\textbf{Luồng thay thế/ngoại lệ} &
-4a. Cần đính chính bản ghi cũ: hệ thống không cho sửa trực tiếp, chỉ tạo bản ghi mới kèm ghi chú đính chính (NFR9.1). \\
-\textbf{Hậu điều kiện} & Bản ghi được lưu vĩnh viễn (append-only), sẵn sàng hiển thị trên trang truy xuất công khai sau khi sản phẩm được duyệt. \\
-\end{longtable}
-\endgroup
 
 \begingroup
 \tblsetup
@@ -277,62 +200,6 @@ Các use case dưới đây được chọn đại diện cho mọi loại actor
 \end{longtable}
 \endgroup
 
-\begingroup
-\tblsetup
-\begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-D7 --- Xác nhận nhận hàng và thanh toán theo đợt}
-\label{tab:uc-d7} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-D7: Xác nhận nhận hàng và thanh toán theo đợt}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) \\
-\textbf{Actor phụ} & Cổng thanh toán trung gian \\
-\textbf{Tiền điều kiện} & Nhà cung cấp đã giao hàng đợt tương ứng theo hợp đồng đã ký; hệ thống đã sinh hóa đơn cho đợt giao đó \\
-\textbf{Luồng chính} &
-1. Kiểm tra và xác nhận đã nhận đủ hàng đúng cam kết của đợt giao.\newline
-2. Thanh toán theo kỳ hạn công nợ đã thỏa thuận.\newline
-3. Nếu hợp đồng có ký quỹ: hệ thống ra lệnh cho cổng thanh toán giải ngân cho nhà cung cấp ngay tại bước xác nhận này.\newline
-4. Nhà cung cấp theo dõi doanh thu/lịch sử bán sỉ cập nhật. \\
-\textbf{Luồng thay thế/ngoại lệ} &
-1a. Không giao đủ số lượng/đúng lịch: áp dụng điều khoản phạt, ghi vào lịch sử uy tín.\newline
-2a. Chậm thanh toán quá hạn: nhắc tự động, có thể tạm khóa quyền đặt RFQ mới.\newline
-3a. Phát sinh tranh chấp về đợt giao đã ký quỹ: khoản ký quỹ giữ nguyên tại cổng thanh toán cho đến khi khiếu nại xử lý xong. \\
-\textbf{Hậu điều kiện} & Đợt giao chuyển trạng thái hoàn tất, công nợ cập nhật, tiền giải ngân cho nhà cung cấp (nếu có ký quỹ). \\
-\end{longtable}
-\endgroup
-
-\begingroup
-\tblsetup
-\begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-C7 --- Kiểm duyệt đánh giá nghi vấn}
-\label{tab:uc-c7} \\
-\toprule
-\rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-C7: Kiểm duyệt đánh giá nghi vấn}} \\
-\midrule
-\endfirsthead
-\bottomrule
-\endfoot
-\textbf{Actor chính} & Kiểm duyệt viên (\texttt{staff\_moderation}) \\
-\textbf{Actor phụ} & Hệ thống (luật ngưỡng giám sát bất thường, Chương~\ref{chap:coso}) \\
-\textbf{Tiền điều kiện} & Người mua đã gửi đánh giá sau khi xác nhận nhận hàng \\
-\textbf{Luồng chính} &
-1. Kiểm duyệt tự động sơ bộ (từ khóa cấm, liên kết đáng ngờ).\newline
-2. Áp dụng luật ngưỡng để tìm dấu hiệu giả mạo/spam/thao túng uy tín.\newline
-3. Không nghi ngờ: công khai ngay.\newline
-4. Bị nghi ngờ: chuyển kiểm duyệt viên xem xét thủ công.\newline
-5. Quyết định công khai hoặc ẩn.\newline
-6. Cập nhật điểm uy tín tổng hợp (không tính đánh giá bị ẩn). \\
-\textbf{Luồng thay thế/ngoại lệ} &
-5a. Xác nhận đánh giá giả/vi phạm: ẩn, thông báo lý do, không tính điểm uy tín.\newline
-5b. Phát hiện nhà cung cấp thao túng đánh giá: chuyển quy trình xử lý vi phạm (mục~\ref{sec:quytrinhnghiepvu}, Quản trị hệ thống). \\
-\textbf{Hậu điều kiện} & Đánh giá ở trạng thái công khai hoặc ẩn dứt điểm; điểm uy tín cập nhật chính xác. \\
-\end{longtable}
-\endgroup
 
 
 \section{Giải pháp công nghệ}

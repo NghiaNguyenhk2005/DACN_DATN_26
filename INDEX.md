@@ -1,6 +1,6 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-01 (đợt 7: 7 vai trò nội bộ, dòng tồn và FR13, TraceViet, AI search, PWA, ToS 17 điều, Phụ lục B mới, MVP.md). Trước đó: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
+Cập nhật lần cuối: 2026-10-01 (đợt 8: quy ước bảng thống nhất, chuyển hình/bảng tra cứu xuống Phụ lục P–S, thân báo cáo còn 102 trang). Đợt 7 cùng ngày: 7 vai trò nội bộ, dòng tồn và FR13, TraceViet, AI search, PWA, ToS 17 điều, Phụ lục B mới, MVP.md). Trước đó: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
 kiểm chứng; ghép đặc tả use case vào Chương 5; phóng cỡ chữ 5 sơ đồ use case lên
 ngưỡng 7pt và chuyển sang trang float riêng).
 
@@ -11,7 +11,7 @@ ngưỡng 7pt và chuyển sang trang float riêng).
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL (dbdiagram); nguồn của ERD và Phụ lục K |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 187 trang (thân báo cáo Chương 1–8 chiếm 119 trang) |
+| `main.pdf` | Bản build gần nhất, 187 trang (thân báo cáo Chương 1–8 chiếm 102 trang) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `MVP.md` | Phạm vi MVP: FR/NFR nào hiện thực ở bản nộp cuối kỳ, nào để sau — tách khỏi báo cáo theo yêu cầu |
 | `NOTES.md` | Việc đang mở, chưa chốt |
@@ -52,6 +52,7 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | `phuluc-nguong.tex` | **Phụ lục L** — bảng ngưỡng NFR và ngưỡng AI, mỗi căn cứ dẫn từ một nhu cầu người dùng cụ thể |
 | `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
 | `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với yêu cầu thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho mô-đun AI |
+| `phuluc-chitiet.tex` | Hình và bảng tra cứu chuyển từ thân báo cáo: **P** số liệu OCOP · **Q** bản đồ hành trình khách hàng và nguồn giao dịch kho · **R** 7 lưu đồ chi tiết · **S** 4 sơ đồ use case chi tiết và 3 bảng đặc tả use case |
 | `kehoach.tex` | Kế hoạch thực hiện theo hai giai đoạn, có mốc ngày thật: giai đoạn 1 tới 15/10/2026 (nộp giữa kỳ), giai đoạn 2 tới 31/12/2026 (nộp cuối kỳ); kèm phân tích rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
@@ -93,8 +94,10 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 
 ## `flowcharts/`
 
-10 file lưu đồ TikZ + `styles.tex` + `00-chu-thich.tex`, được `\input` từ mục
-5.1 trong `chapters/chuong5-phantich-thietke.tex`.
+10 file lưu đồ TikZ + `styles.tex` + `00-chu-thich.tex`. Mục 5.1 trong
+`chapters/chuong5-phantich-thietke.tex` `\input` chú giải và 3 lưu đồ chính
+(`08-thu-mua`, `03-ban-le`, `04-ban-si`); 7 lưu đồ còn lại được `\input` từ
+`backmatter/phuluc-chitiet.tex` (Phụ lục R).
 
 ## Nhãn (`\label`) quan trọng
 
@@ -116,7 +119,7 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 `sec:thietkeAI`; **`sec:muctieuphuongphap`**, `sec:danhgiaux`,
 `sec:danhgiahieunang`, `sec:danhgiaAI`.
 
-**Hình (22, chưa đổi số lượng):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
+**Hình (22; từ đợt 8, `fig:ocop`, 7 lưu đồ và 4 sơ đồ use case chi tiết nằm ở Phụ lục P, R, S):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
 `fig:chu-thich-flowchart`, `fig:erd` (chưa có ảnh), 10 lưu đồ `fig:flow-*`
 gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
@@ -124,9 +127,11 @@ gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:usecase-overview`, `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-quantri`.
 
-**Bảng trong thân báo cáo (8, chưa kể 6 bảng đặc tả use case):** `tab:hailuong` (đối chiếu hai luồng),
+**Bảng trong thân báo cáo (6, cộng 3 bảng đặc tả use case `tab:uc-b4`, `tab:uc-c4`, `tab:uc-d4`):** `tab:hailuong` (đối chiếu hai luồng),
 `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap`,
-`tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:nguon-giaodich`, `tab:customer-journey`.
+`tab:nhomnguoidung`, `tab:vaitro-noibo`. `tab:customer-journey` và `tab:nguon-giaodich` ở Phụ lục Q; `tab:uc-b2`, `tab:uc-d7`, `tab:uc-c7` ở Phụ lục S.
+
+**Quy ước bảng:** macro `\tblsetup` (cỡ `\small`, giãn dòng 1,25, khoảng cách cột 5pt) và `\tblzebra` (tô xen kẽ tự động) định nghĩa trong `main.tex`; không tô tay `\rowcolor{tblaltbg}` nữa.
 
 **Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` và
 `tab:cauhoi-sus` (B), `tab:bmc-full` (E), `tab:vande-muctieu` (F),

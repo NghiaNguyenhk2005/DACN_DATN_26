@@ -674,3 +674,19 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 - MVP ghi ở file riêng `MVP.md`, không thành mục trong báo cáo. Thêm FR11.3 (cảnh báo khan hiếm cho khách sỉ, sau MVP).
 
 **Còn mở:** kiểm lại năm/lần xuất bản sách Kalbach, Nghị định 38/2026/NĐ-CP, giới hạn bản miễn phí SonarQube Cloud; ba sơ đồ use case cũ chưa vẽ lại; phân loại bảng và hình đang chờ user duyệt.
+
+### Quy ước bảng thống nhất và rút thân báo cáo về 102 trang — 2026-10-01
+**Bối cảnh:** 36 bảng dùng 5 mức giãn dòng, 4 mức khoảng cách cột và tô màu xen kẽ viết tay (đã lệch ở vài bảng). Thân báo cáo 119 trang, mục tiêu lâu dài khoảng 100 trang.
+
+**Quy ước bảng**
+- Mọi bảng: `\small`, giãn dòng 1,25, khoảng cách cột 5pt (macro `\tblsetup`), tổng độ rộng cột bằng khổ chữ, tiêu đề cột tô nền đậm, kẻ kiểu booktabs, chú thích đặt trên bảng.
+- Tô xen kẽ tự động (`\tblzebra`, dựa trên `\rowcolors`) cho bảng đối sánh, danh mục, ma trận. Không tô cho bảng đặc tả, từ điển dữ liệu, biểu mẫu, và bảng danh mục có dòng tiêu đề nhóm (chứng nhận).
+- Bảng đặc tả: cột nhãn 3cm in đậm. Biểu mẫu quan sát giữ giãn dòng 1,6.
+- Bảng ngắn (dưới 8 dòng, ít chữ) dùng bảng không ngắt trang; còn lại dùng `longtable`.
+- Giữ tiêu đề tiếng Anh ở Phụ lục M (Priority, Feasibility, Testability), theo quyết định 23/9 về thuật ngữ.
+
+**Hình và bảng xuống phụ lục** (tiêu chí: giữ ở thân nếu thiếu nó thì không theo được lập luận)
+- Thêm Phụ lục P (hình OCOP), Q (bản đồ hành trình khách hàng, bảng nguồn giao dịch kho), R (7 lưu đồ), S (4 sơ đồ use case chi tiết, bảng đặc tả UC-B2, UC-D7, UC-C7).
+- Thân báo cáo giữ lưu đồ thu mua, bán lẻ phần đặt hàng, bán sỉ phần tới giao kết hợp đồng; sơ đồ use case tổng quan; đặc tả UC-B4, UC-C4, UC-D4.
+- Nối thêm P–S ở cuối thay vì đánh lại chữ cái A–O, để không làm lệch các tham chiếu "Phụ lục K", "Phụ lục M" đã có trong báo cáo và tài liệu dự án.
+- Kết quả: thân báo cáo 102 trang (Chương 4: 41, Chương 5: 21).
