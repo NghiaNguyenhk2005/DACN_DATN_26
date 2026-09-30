@@ -1,3 +1,5 @@
+% xcolor cần tùy chọn table (cho \rowcolors) trước khi tikz nạp nó.
+\PassOptionsToPackage{table}{xcolor}
 \documentclass[a4paper, 12pt]{report}
 \usepackage{amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
 \usepackage{vntex}
@@ -51,6 +53,10 @@
 \definecolor{tblheadbg}{gray}{0.82}
 \definecolor{tblaltbg}{gray}{0.95}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+% Quy ước bảng: \tblsetup đặt cỡ chữ, giãn dòng, khoảng cách cột; \tblzebra tô xen kẽ
+% dòng dữ liệu cho bảng đối sánh, danh mục, ma trận. Gọi bên trong \begingroup.
+\newcommand{\tblsetup}{\small\renewcommand{\arraystretch}{1.25}\setlength{\tabcolsep}{5pt}}
+\newcommand{\tblzebra}{\rowcolors{2}{}{tblaltbg}}
 \hypersetup{urlcolor=blue,linkcolor=black,citecolor=black,colorlinks=true}
 
 \newtheorem{definition}{{\bf Định nghĩa}}
@@ -98,6 +104,9 @@
                                      {\normalfont\normalsize\bfseries}}
 \newcommand*\l@subsubsubsection{\@dottedtocline{3}{10.0em}{4.1em}}
 \newcommand*{\subsubsubsectionmark}[1]{}
+% Nới ô số trong danh mục hình/bảng cho vừa số hiệu phụ lục dạng "PL.12".
+\renewcommand*\l@figure{\@dottedtocline{1}{1.5em}{3.2em}}
+\renewcommand*\l@table{\@dottedtocline{1}{1.5em}{3.2em}}
 \makeatother
 
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}

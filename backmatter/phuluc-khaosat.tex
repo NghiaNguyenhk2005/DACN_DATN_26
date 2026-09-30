@@ -46,29 +46,23 @@ Ba tác vụ dưới đây bao phủ các thao tác mà nhà cung cấp phải l
 nhất. Người quan sát đọc to phần bối cảnh, không đọc phần tiêu chí hoàn thành.
 
 \begingroup
+\tblsetup\tblzebra
+\begin{table}[H]
+\centering
 \small
-\renewcommand{\arraystretch}{1.3}
-\setlength{\tabcolsep}{5pt}
-\begin{longtable}{L{1.1cm} L{6.4cm} L{6.6cm}}
 \caption{Kịch bản tác vụ dùng trong đánh giá khả dụng}
-\label{tab:kichban-khaosat} \\
+\label{tab:kichban-khaosat}
+\begin{tabular}{L{1.16cm} L{6.76cm} L{6.98cm}}
 \toprule
 \rowcolor{tblheadbg}
 \textbf{Mã} & \textbf{Bối cảnh đọc cho người tham gia} & \textbf{Tiêu chí hoàn thành} \\
 \midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Mã} & \textbf{Bối cảnh đọc cho người tham gia} & \textbf{Tiêu chí hoàn thành} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
 \textbf{T1} & ``Anh/chị vừa thu hoạch một lô rau và muốn đưa lên bán. Hãy đăng lô rau này lên hệ thống, có kèm ảnh.'' & Sản phẩm được tạo, gắn đúng danh mục lá, có ít nhất một ảnh, nhập đủ đơn vị tính và ngày thu hoạch, và chuyển sang trạng thái chờ duyệt. \\
-\rowcolor{tblaltbg}
 \textbf{T2} & ``Hôm nay anh/chị vừa bón phân cho lô rau vừa đăng. Hãy ghi lại việc đó vào hệ thống.'' & Tạo được một bản ghi nhật ký canh tác gắn đúng lô, có ngày và nội dung hoạt động. \\
 \textbf{T3} & ``Có người hỏi lô rau này trồng ở đâu. Hãy tìm mã QR của lô để đưa cho họ tra cứu.'' & Tìm tới được mã QR của đúng lô và mở được trang truy xuất tương ứng. \\
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
 \endgroup
 
 \noindent\textbf{Tác vụ bổ sung (tùy chọn).} Nếu còn thời gian và người tham
@@ -80,29 +74,23 @@ gia chưa mệt, thử thêm tác vụ xem đơn thu mua của Farmery và xác 
 Mỗi người tham gia dùng một phiếu.
 
 \begingroup
+\tblsetup\renewcommand{\arraystretch}{1.6}
+\begin{table}[H]
+\centering
 \small
-\renewcommand{\arraystretch}{1.6}
-\setlength{\tabcolsep}{5pt}
-\begin{longtable}{L{1.1cm} L{2.2cm} L{1.9cm} L{2.0cm} L{2.0cm} L{4.3cm}}
 \caption{Phiếu ghi kết quả quan sát theo từng tác vụ}
-\label{tab:phieu-quansat} \\
+\label{tab:phieu-quansat}
+\begin{tabular}{L{1.13cm} L{2.26cm} L{1.95cm} L{2.05cm} L{2.05cm} L{4.40cm}}
 \toprule
 \rowcolor{tblheadbg}
 \textbf{Tác vụ} & \textbf{Tự hoàn thành?} & \textbf{Thời gian} & \textbf{Số lần nhờ giúp} & \textbf{Số lỗi làm lại} & \textbf{Chỗ vướng, nguyên văn câu than phiền} \\
 \midrule
-\endfirsthead
-\toprule
-\rowcolor{tblheadbg}
-\textbf{Tác vụ} & \textbf{Tự hoàn thành?} & \textbf{Thời gian} & \textbf{Số lần nhờ giúp} & \textbf{Số lỗi làm lại} & \textbf{Chỗ vướng, nguyên văn câu than phiền} \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
 T1 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
-\rowcolor{tblaltbg}
 T2 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
 T3 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
-\end{longtable}
+\bottomrule
+\end{tabular}
+\end{table}
 \endgroup
 
 \noindent Thông tin nền cần ghi cho mỗi người tham gia: độ tuổi, vai trò (nông

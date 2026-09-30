@@ -15,10 +15,8 @@ mục~\ref{sec:yeucauphichucnang}.
 Để phục vụ quản lý dự án phần mềm và làm căn cứ lập kế hoạch kiểm thử ở Chương~\ref{chap:hienthuc}, toàn bộ 13 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính cốt lõi: Mức độ ưu tiên (MoSCoW: Must/Should/Could), Tính khả thi kỹ thuật (High/Medium/Challenging) và Phương pháp kiểm thử (Testability) tại Bảng~\ref{tab:fr-matrix}.
 
 \begingroup
-\small
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
+\tblsetup\tblzebra
+\begin{longtable}{L{1.52cm} L{4.20cm} >{\centering\arraybackslash}p{1.65cm} >{\centering\arraybackslash}p{2.00cm} L{4.82cm}}
 \caption{Ma trận đánh giá Priority, Feasibility và Testability cho các FR}
 \label{tab:fr-matrix} \\
 \toprule
@@ -34,25 +32,18 @@ mục~\ref{sec:yeucauphichucnang}.
 \bottomrule
 \endfoot
 \textbf{FR1} & Tài khoản \& RBAC (eKYC, OTP) & Must & High & \textit{Integration / Security Test:} Xác thực OTP qua SMS/Email; phân quyền theo 10 vai trò (3 bên ngoài, 7 nội bộ) chặn truy cập trái phép 100\%. \\
-\rowcolor{tblaltbg}
 \textbf{FR2} & Gian hàng \& Tồn kho theo lô & Must & High & \textit{Unit / Integration Test:} Thao tác nhập/xuất kho; tính tồn kho khả dụng chính xác sau mỗi đơn. \\
 \textbf{FR3} & Quản lý chứng nhận chất lượng & Must & High & \textit{Functional E2E Test:} Luồng tải lên ảnh chứng chỉ $\rightarrow$ Kiểm duyệt viên duyệt $\rightarrow$ Hiển thị badge xác minh trên gian hàng. \\
-\rowcolor{tblaltbg}
 \textbf{FR4} & Sản phẩm \& Truy xuất nguồn gốc QR & Must & Medium & \textit{Integration Test:} Lô được duyệt có mã QR theo định danh GS1; quét QR đọc đúng nhật ký canh tác; bản đồng bộ lên TraceViet đúng chuẩn kết nối (kiểm trên bản giả lập). \\
 \textbf{FR5} & Giao dịch bán lẻ (gian hàng 1P) & Must & Medium & \textit{E2E Test:} Đặt hàng từ gian hàng của nền tảng $\rightarrow$ trừ tồn kho đúng lô $\rightarrow$ sinh đơn kèm phí vận chuyển. \\
-\rowcolor{tblaltbg}
 \textbf{FR6} & Bán sỉ B2B (RFQ, Hợp đồng, Đợt giao) & Must & Medium & \textit{Integration / State Test:} Quy trình RFQ chuyển trạng thái hợp lệ; sinh hợp đồng, xác nhận giao kết lưu đúng mã băm văn bản; theo dõi đợt giao. \\
 \textbf{FR7} & Thanh toán đa kênh \& Ký quỹ Escrow & Must & Medium & \textit{Integration Test (Sandbox):} Tạo mã VietQR tự động; webhook cập nhật trạng thái thanh toán và khóa tiền escrow. \\
-\rowcolor{tblaltbg}
 \textbf{FR8} & Vận chuyển (3PL và đội giao Farmery) \& Xử lý khiếu nại & Should & Medium & \textit{API Integration Test:} Tính cước tự động theo tọa độ/khối lượng; webhook cập nhật hành trình vận đơn. \\
 \textbf{FR9} & Chat nội bộ \& Wishlist & Could & High & \textit{E2E / WebSocket Test:} Tin nhắn tức thời giữa Người mua và Shop có độ trễ $< 500$ms. \\
-\rowcolor{tblaltbg}
 \textbf{FR10} & Vận hành và quản trị nền tảng & Must & High & \textit{Functional / Security Test:} Kiểm duyệt viên duyệt và khóa tài khoản vi phạm; nhân viên vận hành phân xử khiếu nại; quản trị viên hệ thống đổi cấu hình và mọi thao tác đều có trong nhật ký; dashboard thống kê doanh thu toàn sàn. \\
 \textbf{FR11} & Thông báo đa kênh (web, thông báo đẩy, Email, SMS) & Should & High & \textit{Integration Test:} Bắn notification khi đơn hàng đổi trạng thái; gửi email cảnh báo hết hạn chứng nhận. \\
-\rowcolor{tblaltbg}
 \textbf{FR12.1} & AI Gợi ý sản phẩm cá nhân hóa & Should & Challenging & \textit{Data Test / A/B Test:} Đo lường CTR uplift danh sách gợi ý so với sản phẩm mới nhất ($> 20\%$). \\
 \textbf{FR12.2} & AI Dự báo giá \& Nhu cầu mùa vụ & Could & Challenging & \textit{Model Evaluation:} Đo lường sai số dự báo trên dữ liệu chuỗi thời gian kiểm thử (MAPE $< 20\%$). \\
-\rowcolor{tblaltbg}
 \textbf{FR12.3} & AI Tìm kiếm theo ngữ nghĩa & Should & Medium & \textit{Offline Evaluation:} nDCG@10 và Recall@10 trên bộ truy vấn gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở. \\
 \textbf{FR13} & Thu mua \& quản lý kho (1P) & Must & Medium & \textit{Integration / Concurrency Test:} Đơn thu mua chỉ hiệu lực sau xác nhận của nhà cung cấp; mọi thay đổi tồn đều có dòng sổ nhập xuất; thu hồi lô khóa đủ các dòng tồn. \\
 \end{longtable}
@@ -63,10 +54,8 @@ mục~\ref{sec:yeucauphichucnang}.
 Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi và cơ chế kiểm thử cho 9 nhóm yêu cầu phi chức năng:
 
 \begingroup
-\small
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{L{1.5cm} L{4.5cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} L{5.0cm}}
+\tblsetup\tblzebra
+\begin{longtable}{L{1.52cm} L{4.20cm} >{\centering\arraybackslash}p{1.65cm} >{\centering\arraybackslash}p{2.00cm} L{4.82cm}}
 \caption{Ma trận Priority, Feasibility và Testability cho NFR}
 \label{tab:nfr-matrix} \\
 \toprule
@@ -82,18 +71,13 @@ Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi v
 \bottomrule
 \endfoot
 \textbf{NFR1.1} & Thời gian đáp ứng p95 $< 2$ giây & Must & High & \textit{Load Testing:} Công cụ k6/JMeter mô phỏng truy vấn duyệt web thông thường. \\
-\rowcolor{tblaltbg}
 \textbf{NFR1.2} & Tỷ lệ bán vượt tồn kho (Oversell) = 0\% & Must & Medium & \textit{Concurrency Testing:} 50 luồng đồng thời tranh mua 10 sản phẩm cuối cùng; kiểm tra khóa bi quan (Pessimistic lock). \\
 \textbf{NFR2.1} & Kiến trúc mở rộng vai trò không lỗi & Should & High & \textit{Regression Testing:} Chạy lại bộ kiểm thử tự động đạt 100\% PASS khi gắn thêm module mới. \\
-\rowcolor{tblaltbg}
 \textbf{NFR2.2} & Chịu tải 100 người dùng đồng thời & Must & Medium & \textit{Stress Testing:} Kịch bản k6 tạo 100 CCU đặt hàng; tỷ lệ lỗi HTTP $< 1\%$; \texttt{pg\_stat\_statements} chỉ ra truy vấn chậm. \\
 \textbf{NFR3.1} & Phân quyền RBAC tuyệt đối 100\% & Must & High & \textit{Security Audit Test:} Script gọi tự động 100\% endpoint nhạy cảm bằng tài khoản không có quyền $\rightarrow$ Trả về lỗi 403. \\
-\rowcolor{tblaltbg}
 \textbf{NFR3.2} & Mã hóa dữ liệu định danh (PII) & Must & High & \textit{Database Inspection:} Rà soát bảng dữ liệu đảm bảo không lưu số CCCD/MST dưới dạng plaintext. \\
 \textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
-\rowcolor{tblaltbg}
 \textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Buổi thử ba tác vụ với nhóm nông dân, đo bốn chỉ số hành vi (Phụ lục B); kiểm tra tiếp cận bằng axe-core. \\
-\rowcolor{tblaltbg}
 \textbf{NFR7.3} & Ứng dụng web cài đặt được (PWA) & Must & Medium & \textit{Manual Checklist:} Trên hai điện thoại thật: cài lên màn hình chính, nhận thông báo đẩy, ghi dữ liệu khi mất mạng và đồng bộ đúng khi có mạng lại. \\
 \textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\
 \end{longtable}
