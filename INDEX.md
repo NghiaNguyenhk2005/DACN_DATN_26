@@ -1,6 +1,6 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
+Cập nhật lần cuối: 2026-10-01 (đợt 7: 7 vai trò nội bộ, dòng tồn và FR13, TraceViet, AI search, PWA, ToS 17 điều, Phụ lục B mới, MVP.md). Trước đó: 2026-09-24 (đợt 6: viết lại lập luận blockchain theo nguồn đã
 kiểm chứng; ghép đặc tả use case vào Chương 5; phóng cỡ chữ 5 sơ đồ use case lên
 ngưỡng 7pt và chuyển sang trang float riêng).
 
@@ -9,9 +9,11 @@ ngưỡng 7pt và chuyển sang trang float riêng).
 | File | Vai trò |
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
+| `schema.dbml` | Lược đồ CSDL (dbdiagram); nguồn của ERD và Phụ lục K |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 171 trang (159 trang đánh số Ả Rập + 12 trang đầu đánh số La Mã) |
+| `main.pdf` | Bản build gần nhất, 187 trang (thân báo cáo Chương 1–8 chiếm 119 trang) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
+| `MVP.md` | Phạm vi MVP: FR/NFR nào hiện thực ở bản nộp cuối kỳ, nào để sau — tách khỏi báo cáo theo yêu cầu |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
 | `package.json` | Tooling Node/Playwright để render infographic HTML → PNG (`npm run shot`) |
@@ -26,12 +28,12 @@ dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 | File | Nội dung | Trạng thái |
 |---|---|---|
 | `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, đặc thù nông sản, 4 vấn đề V1–V4) · 1.2 Mục tiêu (tổng quát, MT1–MT7, **mục tiêu đánh giá**) · 1.3 Phạm vi (**không gian, thời gian, nội dung, giới hạn kỹ thuật**) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong |
-| `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản** (định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market) · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền (**2.3.1 hai trục phân loại: B2B/B2C/B2B2C và 1P/3P**) · 2.4 Ứng dụng AI (**2 bài toán**: gợi ý, dự báo giá) | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
+| `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản** (định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market) · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền (**2.3.1 hai trục phân loại: B2B/B2C/B2B2C và 1P/3P**) · 2.4 Ứng dụng AI (**3 bài toán**: tìm kiếm theo ngữ nghĩa, gợi ý, dự báo giá; có đoạn TraceViet ở 2.3) | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · **3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này (mới)** · 3.4 Kết chương (research gap) | Xong; còn TODO bổ sung nghiên cứu ở 3.1 |
-| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập, 5 nhóm người dùng, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR12, NFR, yêu cầu dữ liệu 9 miền; 2 ma trận Priority/Feasibility/Testability ở Phụ lục M) | Xong |
-| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **2 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | **5.1.2 đặc tả use case + 5 sơ đồ xong**; 5.2, 5.3.1, 5.3.5, 5.3.6 xong; sitemap/sequence/class/API/UI/test case còn TODO |
+| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm, **dòng tồn và 15 nguồn giao dịch kho**, dịch vụ mở cho nhà cung cấp, giao hàng mô hình lai) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập (PWA), 3 nhóm người dùng bên ngoài + **7 vai trò nội bộ**, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR13, NFR, yêu cầu dữ liệu 9 miền; 2 ma trận Priority/Feasibility/Testability ở Phụ lục M) | Xong |
+| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **3 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | **5.1.2 đặc tả use case + 5 sơ đồ xong**; 5.2, 5.3.1, 5.3.5, 5.3.6 xong; sitemap/sequence/class/API/UI/test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | Toàn bộ TODO |
-| `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (5 trụ cột: chức năng, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (k6, SUS, Lighthouse); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
+| `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột: chức năng, chất lượng mã nguồn, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (SonarQube, k6, Lighthouse, 4 chỉ số hành vi, axe-core); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
 | `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
 
 ## `backmatter/` — Phụ lục A–O
@@ -41,8 +43,8 @@ Phụ lục dài được tách thành file riêng để thân báo cáo không 
 | File | Nội dung |
 |---|---|
 | `phuluc.tex` | Khung phụ lục A, C (còn TODO) và E (Business Model Canvas dạng bảng); `\input` các file bên dưới |
-| `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ khảo sát SUS: thiết kế khảo sát, 3 kịch bản tác vụ, phiếu quan sát, 10 câu hỏi, công thức tính điểm |
-| `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 15 điều, viết để đọc độc lập (không dùng mã vai trò, mã FR hay tham chiếu chéo vào thân báo cáo) |
+| `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ đánh giá khả dụng: thiết kế buổi thử, 3 kịch bản tác vụ, phiếu quan sát 4 chỉ số hành vi, cách tính, kiểm tra axe-core, danh sách kiểm tra PWA (đã bỏ SUS) |
+| `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 17 điều, viết để đọc độc lập (không dùng mã vai trò, mã FR hay tham chiếu chéo vào thân báo cáo) |
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản thế giới |
 | `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh giải pháp công nghệ và mô hình AI |
 | `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, và bảng FR theo nhóm người dùng |
@@ -114,7 +116,7 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 `sec:thietkeAI`; **`sec:muctieuphuongphap`**, `sec:danhgiaux`,
 `sec:danhgiahieunang`, `sec:danhgiaAI`.
 
-**Hình (22):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
+**Hình (22, chưa đổi số lượng):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
 `fig:chu-thich-flowchart`, `fig:erd` (chưa có ảnh), 10 lưu đồ `fig:flow-*`
 gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
@@ -122,9 +124,9 @@ gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:usecase-overview`, `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-quantri`.
 
-**Bảng trong thân báo cáo (6):** `tab:hailuong` (đối chiếu hai luồng),
+**Bảng trong thân báo cáo (8, chưa kể 6 bảng đặc tả use case):** `tab:hailuong` (đối chiếu hai luồng),
 `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap`,
-`tab:nhomnguoidung`, `tab:customer-journey`.
+`tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:nguon-giaodich`, `tab:customer-journey`.
 
 **Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` và
 `tab:cauhoi-sus` (B), `tab:bmc-full` (E), `tab:vande-muctieu` (F),
