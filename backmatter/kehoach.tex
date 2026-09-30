@@ -33,24 +33,24 @@ Bảng~\ref{tab:kehoach} trình bày kế hoạch chi tiết. Cột \emph{Kết 
 \multicolumn{4}{@{}l}{\cellcolor{tblheadbg}\textbf{Giai đoạn 2 --- tới mốc nộp cuối kỳ 31/12/2026}} \\
 \rowcolor{tblaltbg}
 4--5 & 16--29/10 & Hiện thực module sản phẩm, lô hàng và nhật ký canh tác; sinh mã QR và trang truy xuất công khai; module quản lý chứng nhận & Mục 6.1.3 \\
-6--7 & 30/10--12/11 & Hiện thực module thu mua và tồn kho theo lô; module bán lẻ, trong đó có cơ chế chống bán vượt tồn kho khi hai luồng giao dịch đồng thời & Mục 6.1.3 \\
+6--7 & 30/10--12/11 & Hiện thực module thu mua và tồn kho theo lô; module bán lẻ, trong đó có dòng tồn, sổ nhập xuất và cơ chế chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn & Mục 6.1.3 \\
 \rowcolor{tblaltbg}
 8--9 & 13--26/11 & Hiện thực module bán sỉ (báo giá, hợp đồng, giao theo đợt) và module thanh toán kèm cơ chế tạm giữ tiền & Mục 6.1.3 \\
 10 & 27/11--3/12 & Hiện thực module vận chuyển và khiếu nại, đánh giá và uy tín, quản trị & Mục 6.1.3 \\
 \rowcolor{tblaltbg}
-11 & 4--10/12 & Hiện thực và huấn luyện hai mô-đun AI: gợi ý sản phẩm và dự báo giá & Mục 6.1.3, 6.1.4 \\
+11 & 4--10/12 & Hiện thực ba mô-đun AI: tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm tương tự (dùng chung vector với tìm kiếm) và dự báo giá & Mục 6.1.3, 6.1.4 \\
 12 & 11--17/12 & Thực thi bộ test case; kiểm thử tải và kiểm thử tranh chấp tồn kho; rà soát phân quyền; sửa lỗi & Mục 6.2 \\
 \rowcolor{tblaltbg}
-13 & 18--24/12 & Khảo sát độ khả dụng với nhà cung cấp theo bộ công cụ tại Phụ lục B; đo hiệu năng, bảo mật và chất lượng mô-đun AI; điền kết quả đánh giá & Chương 7 \\
+13 & 18--24/12 & Buổi thử khả dụng với nhà cung cấp theo bộ công cụ tại Phụ lục B, kiểm tra PWA trên điện thoại thật; đo hiệu năng, bảo mật và chất lượng mô-đun AI; điền kết quả đánh giá & Chương 7 \\
 14 & 25--31/12 & Viết phần kết quả đạt được; rà soát toàn bộ báo cáo; chuẩn bị slide và bản demo & Chương 8; slide, demo \\
 \end{longtable}
 \endgroup
 
-\noindent\textbf{Rủi ro tiến độ và phương án dự phòng.} Giai đoạn 2 phải hiện thực tám module nghiệp vụ và hai mô-đun AI trong mười một tuần --- đây là phần rủi ro nhất của kế hoạch. Hai biện pháp được chuẩn bị sẵn:
+\noindent\textbf{Rủi ro tiến độ và phương án dự phòng.} Giai đoạn 2 phải hiện thực tám module nghiệp vụ và ba mô-đun AI trong mười một tuần --- đây là phần rủi ro nhất của kế hoạch. Hai biện pháp được chuẩn bị sẵn:
 
 \begin{itemize}
     \item \textbf{Thứ tự hiện thực bám theo mức độ ưu tiên đã xác định} (Phụ lục M): tám nhóm yêu cầu ở mức Must được làm trước, ba nhóm Should và hai nhóm Could xếp sau. Nếu thiếu thời gian, phần cắt sẽ rơi vào nhóm Could --- cụ thể là tương tác người dùng và mô-đun dự báo giá --- chứ không ảnh hưởng tới các luồng nghiệp vụ cốt lõi.
-    \item \textbf{Module khó nhất được xếp sớm.} Cơ chế chống bán vượt tồn kho khi một lô được giao dịch đồng thời ở hai luồng là ràng buộc kỹ thuật khó nhất (NFR1.2, NFR4.1) và được xếp vào tuần 6--7 thay vì cuối kỳ, để nếu phát sinh vướng mắc thì vẫn còn thời gian xử lý.
+    \item \textbf{Module khó nhất được xếp sớm.} Cơ chế chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn là ràng buộc kỹ thuật khó nhất (NFR1.2, NFR4.1) và được xếp vào tuần 6--7 thay vì cuối kỳ, để nếu phát sinh vướng mắc thì vẫn còn thời gian xử lý.
 \end{itemize}
 
 \noindent Tuần 14 không có phần dự phòng riêng, nên mọi chậm trễ ở giai đoạn 2 phải được xử lý ngay trong tuần phát sinh bằng cách cắt hạng mục ưu tiên thấp, không dồn về cuối.

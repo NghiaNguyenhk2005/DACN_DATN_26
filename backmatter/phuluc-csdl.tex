@@ -6,7 +6,7 @@
 
 
 Cơ sở dữ liệu được tổ chức theo tám nhóm thực thể tương ứng với các nhóm chức
-năng FR1--FR12 tại mục~\ref{sec:yeucauchucnang}, mỗi nhóm một schema riêng theo
+năng FR1--FR13 tại mục~\ref{sec:yeucauchucnang}, mỗi nhóm một schema riêng theo
 ràng buộc RB3 tại mục~\ref{sec:kientruc}. Quy ước: \textbf{PK} = khóa chính,
 \textit{FK} = khóa ngoại.
 
@@ -48,7 +48,7 @@ phần hiện thực tại Chương~\ref{chap:hienthuc}.
 \texttt{password\_hash} & nullable & Băm bằng Bcrypt/Argon2 (NFR3.3); rỗng khi tài khoản chỉ đăng nhập qua mạng xã hội. \\
 \texttt{oauth\_provider} & nullable & Nhà cung cấp OAuth (Google, Facebook...) --- FR1.1. \\
 \texttt{oauth\_id} & nullable & Định danh tài khoản mạng xã hội tương ứng --- FR1.1. \\
-\texttt{role} & enum & \emph{seller, buyer\_retail, buyer\_wholesale, ops\_sourcing, admin\_moderator, admin\_ops, admin} --- trùng đúng tên vai trò RBAC tại mục~\ref{sec:doituongnguoidung}. \\
+\texttt{role} & enum & \emph{seller, buyer\_retail, buyer\_wholesale, staff\_sourcing, staff\_warehouse, staff\_delivery, staff\_support, staff\_moderation, staff\_operations, platform\_owner} --- trùng đúng tên vai trò RBAC tại mục~\ref{sec:doituongnguoidung}. \\
 \texttt{status} & enum & Hoạt động / khóa. \\
 \texttt{created\_at} & datetime & Thời điểm tạo tài khoản. \\
 \midrule
@@ -113,7 +113,7 @@ gắn với một \emph{User} đại diện.
 \texttt{evidence\_file} & & Tệp bản scan chứng nhận. \\
 \texttt{issued\_date} / \texttt{expiry\_date} & date & Theo dõi hiệu lực, nhắc gia hạn (FR3.3). \\
 \texttt{approval\_status} & enum & Chờ / đã duyệt / từ chối (FR3.2). \\
-\texttt{reviewer\_id} & FK $\to$ User.id, nullable & Quản trị viên kiểm duyệt. \\
+\texttt{reviewer\_id} & FK $\to$ User.id, nullable & Kiểm duyệt viên đã duyệt. \\
 \midrule
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{Category} (Danh mục) --- phân loại đa cấp, FR4.4} \\
 \texttt{id} & PK & \\
@@ -140,7 +140,8 @@ gắn với một \emph{User} đại diện.
 \texttt{product\_id} & FK $\to$ Product.id & \\
 \texttt{batch\_code} & unique & Mã lô hàng. \\
 \texttt{harvest\_date} / \texttt{expiry\_date} & date & Cơ sở áp dụng nguyên tắc FEFO (mục~\ref{subsec:khobai}). \\
-\texttt{stock\_quantity} & & Tồn kho hiện tại của lô. \\
+\texttt{total\_quantity} & & Sản lượng của lô. Tồn khả dụng không ghi ở đây mà ở các dòng tồn (StockHolding) của lô. \\
+\texttt{is\_recalled} & boolean & Lô đang bị thu hồi; khi bật, mọi dòng tồn của lô bị khóa. \\
 \texttt{qr\_code} & unique & Mã QR truy xuất gắn với lô. \\
 \midrule
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{FarmingLog} (Nhật ký canh tác) --- FR4.2} \\
@@ -294,7 +295,9 @@ kèm theo một dòng OrderItem khi đánh giá sản phẩm --- để đảm b�
 \texttt{rfq\_id} & FK $\to$ RFQ.id & Một RFQ đã chốt sinh đúng một hợp đồng. \\
 \texttt{agreed\_price} / \texttt{total\_quantity} & & Điều khoản thương mại đã thống nhất. \\
 \texttt{contract\_file} & & Bản hợp đồng điện tử đã sinh. \\
-\texttt{signing\_status} / \texttt{signed\_at} & & Chờ ký / đã ký / hủy. \\
+\texttt{signing\_status} & enum & Nháp / chờ xác nhận / đã giao kết / đã ký số / hủy. \\
+\texttt{version} / \texttt{document\_hash} & & Phiên bản hiện hành và mã băm của phiên bản đã xác nhận. \\
+\texttt{buyer\_confirmed\_at} / \texttt{seller\_confirmed\_at} & timestamp & Thời điểm từng bên xác nhận giao kết. \\
 \midrule
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{DeliveryInstallment} (Đợt giao hàng) --- FR6.5} \\
 \texttt{id} & PK & \\

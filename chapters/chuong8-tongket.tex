@@ -9,7 +9,7 @@
 Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, một số hạng mục được chủ động đưa ra khỏi phạm vi đồ án vì không thể kiểm chứng được bằng số đo trong điều kiện hiện có --- đúng theo nguyên tắc đặt ra tại mục~\ref{sec:muctieudanhgia}. Việc nêu rõ chúng ở đây nhằm tránh hiểu nhầm rằng hệ thống đã bao phủ toàn bộ nghiệp vụ của một nền tảng thương mại hoàn chỉnh:
 
 \begin{itemize}
-    \item \textbf{Phát hiện bất thường bằng học máy.} Hệ thống hiện chỉ dùng luật ngưỡng do quản trị viên cấu hình. Mô hình học máy đòi hỏi lưu lượng giao dịch thật đủ lớn để học được thế nào là bình thường, và một tập nhãn các trường hợp gian lận đã xác nhận để đo chất lượng --- cả hai đều chưa có.
+    \item \textbf{Phát hiện bất thường bằng học máy.} Hệ thống hiện chỉ dùng luật ngưỡng do quản trị viên hệ thống cấu hình. Mô hình học máy đòi hỏi lưu lượng giao dịch thật đủ lớn để học được thế nào là bình thường, và một tập nhãn các trường hợp gian lận đã xác nhận để đo chất lượng --- cả hai đều chưa có.
     \item \textbf{Phân quyền nội bộ trong tài khoản doanh nghiệp.} Mỗi tài khoản doanh nghiệp hiện do một người đại diện sử dụng. Việc phân tách vai trò nội bộ như người đặt hàng, kế toán và người duyệt chi là nhu cầu thật của doanh nghiệp quy mô lớn, nhưng không mang đặc thù nông sản nên được để lại.
     \item \textbf{Mua trả sau và hạn mức tín dụng cho khách sỉ.} Hệ thống hiện yêu cầu thanh toán theo từng đợt giao. Cơ chế cho nợ theo kỳ hạn kéo theo bài toán thẩm định tín dụng và thu hồi nợ, vượt khỏi phạm vi một đồ án phần mềm.
     \item \textbf{Ứng dụng di động riêng và kênh hỗ trợ qua mạng xã hội} cho nhóm nhà cung cấp ít rành công nghệ.
@@ -21,10 +21,12 @@ Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, m�
 
 Các hạn chế nêu trên đều là hướng phát triển trực tiếp khi nền tảng đi vào vận hành thật. Thứ tự ưu tiên nên dựa vào điều kiện kích hoạt của từng hạng mục:
 \begin{itemize}
-    \item Khi đã tích lũy đủ lưu lượng giao dịch và tập nhãn từ chính phán quyết của quản trị viên, thay lớp luật ngưỡng bằng mô hình unsupervised learning, rồi chuyển dần sang supervised learning.
-    \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng.
+    \item Khi đã tích lũy đủ lưu lượng giao dịch và tập nhãn từ chính phán quyết của kiểm duyệt viên và nhân viên vận hành, thay lớp luật ngưỡng bằng mô hình unsupervised learning, rồi chuyển dần sang supervised learning.
+    \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng; hiện thực đội giao hàng riêng, vốn mới được thiết kế, khi mật độ đơn trong vùng phục vụ đủ để có lãi.
+    \item Khi năng lực kho, đóng gói và kiểm định đã ổn định với nhà cung cấp trên sàn, mở các dịch vụ này cho doanh nghiệp ngoài sàn --- con đường mà các sàn lớn đã đi khi biến hạ tầng kho vận thành một nguồn doanh thu độc lập.
+    \item Khi nhu cầu làm việc ngoại tuyến của nhân sự hiện trường vượt quá khả năng của ứng dụng web cài đặt được, phát triển ứng dụng di động gốc cho nhân viên giao hàng và nhân viên kho.
     \item Khi có nhu cầu xuất khẩu, bổ sung quản lý các giấy tờ đi theo lô hàng đã khảo sát tại mục~\ref{subsec:chungnhan}. Theo phân tích khoảng cách tại mục~\ref{subsec:nhatkycanhtac-xuatkhau}, ba việc cần làm theo thứ tự: thay trường vùng trồng tự do bằng tham chiếu tới mã số vùng trồng chính thức để xác thực chéo được với hệ thống truy xuất quốc gia; đặt thời hạn lưu trữ nhật ký canh tác theo yêu cầu của thị trường đích; và mở rộng mô hình tác nhân truy xuất để bao gồm cơ sở đóng gói và đơn vị kiểm dịch thực vật, thay vì chỉ hai lớp nhà cung cấp và nền tảng như hiện tại.
-    \item Khi có kênh kết nối dữ liệu với cơ quan cấp chứng nhận, thay việc xác minh thủ công bằng đối chiếu tự động.
+    \item Khi được cấp quyền kết nối chính thức với hệ thống truy xuất nguồn gốc của Bộ Nông nghiệp và Môi trường, và khi có giao diện tra cứu mã số vùng trồng, chứng nhận cho bên ngoài, thay bản giả lập và việc đối chiếu thủ công bằng kết nối thật.
 \end{itemize}
 
 \subsection{Mở rộng về kiến trúc}
@@ -37,6 +39,6 @@ Kiến trúc modular monolith (mục~\ref{sec:kientruc}) được thiết kế �
     \item \textbf{Tìm kiếm} --- khi thời gian truy vấn vượt ngưỡng đặt ra tại NFR1.1, chuyển sang search engine chuyên dụng.
 \end{enumerate}
 
-Ngược lại, \textbf{tồn kho và đơn hàng nên giữ chung} càng lâu càng tốt, vì việc chống bán vượt tồn kho khi một lô được giao dịch đồng thời ở hai luồng đang dựa vào transaction có row-level locking trong một cơ sở dữ liệu duy nhất; tách ra sẽ phải thay bằng cơ chế giữ chỗ và compensating transaction, phức tạp hơn nhiều mà lợi ích không tương xứng.
+Ngược lại, \textbf{tồn kho và đơn hàng nên giữ chung} càng lâu càng tốt, vì việc chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn đang dựa vào transaction có row-level locking trong một cơ sở dữ liệu duy nhất; tách ra sẽ phải thay bằng cơ chế giữ chỗ và compensating transaction, phức tạp hơn nhiều mà lợi ích không tương xứng.
 
 Cần nói thẳng rằng với quy mô mà Farmery hướng tới, nhiều khả năng việc tách sẽ không bao giờ cần thiết. Kiến trúc microservices trả giá bằng độ phức tạp vận hành và chỉ thực sự đáng khi có nhiều đội phát triển làm việc song song trên cùng hệ thống, chứ không phải khi cần hệ thống chạy nhanh hơn.

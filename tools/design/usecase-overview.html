@@ -71,13 +71,13 @@
     </div>
     <div class="actor" style="left:0px; top:1268px;">
       <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Bộ phận<br>thu mua (1P)
+      Nhân viên<br>thu mua (1P)
     </div>
 
     <!-- ============ ACTORS PHẢI ============ -->
     <div class="actor" style="left:1212px; top:250px;">
       <svg width="42" height="58" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.7"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.7"/></svg>
-      Quản trị viên<br>(3 vai trò)
+      Nhân sự<br>nội bộ
     </div>
     <div class="actor" style="left:1212px; top:768px;">
       <svg width="40" height="40" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.7" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#5b6b63" font-weight="700">AI</text></svg>
@@ -137,10 +137,10 @@
     <div style="position:absolute; left:695px; top:950px; width:490px; height:420px;
                 border:2px dashed #b7c2bc; border-radius:16px; background:#fafbfa;
                 padding:24px 26px; font-size:21px; line-height:1.45; color:var(--ink);">
-      <div style="font-weight:800; margin-bottom:12px; font-size:22px;">Hai luồng giao dịch dùng chung kho lô hàng</div>
+      <div style="font-weight:800; margin-bottom:12px; font-size:22px;">Hai luồng giao dịch dùng chung nguồn cung</div>
       <div style="margin-bottom:12px;"><b>Luồng 3P (bán sỉ):</b> nhà cung cấp giữ quyền sở hữu hàng, nền tảng chỉ làm trung gian giữa nhà cung cấp và khách sỉ.</div>
-      <div style="margin-bottom:12px;"><b>Luồng 1P (bán lẻ):</b> nền tảng mua đứt lô hàng rồi bán lại cho khách lẻ. Bộ phận thu mua là tác nhân nội bộ, chỉ xuất hiện ở luồng này.</div>
-      <div style="color:var(--sub);">Một lô có thể được giao dịch đồng thời ở cả hai luồng — ràng buộc chống bán vượt tồn kho (NFR1.2, NFR4.1).</div>
+      <div style="margin-bottom:12px;"><b>Luồng 1P (bán lẻ):</b> nền tảng thu mua theo lô rồi bán lại cho khách lẻ. Nhân viên thu mua là tác nhân nội bộ, chỉ xuất hiện ở luồng này.</div>
+      <div style="color:var(--sub);">Hàng của một lô tách thành các dòng tồn theo chủ sở hữu; hợp đồng bán sỉ và đơn thu mua cùng giành một dòng tồn — ràng buộc chống bán vượt (NFR1.2, NFR4.1).</div>
     </div>
 
     <!-- ================== ĐƯỜNG NỐI ================== -->

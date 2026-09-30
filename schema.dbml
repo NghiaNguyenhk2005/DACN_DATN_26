@@ -2,10 +2,13 @@ Enum user_role {
   seller
   buyer_retail
   buyer_wholesale
-  ops_sourcing
-  admin_moderator
-  admin_ops
-  admin
+  staff_sourcing
+  staff_warehouse
+  staff_delivery
+  staff_support
+  staff_moderation
+  staff_operations
+  platform_owner
 }
 
 Enum account_status {
@@ -100,8 +103,10 @@ Enum rfq_status {
 }
 
 Enum contract_status {
-  pending_signature
-  signed
+  draft
+  awaiting_confirmation
+  concluded
+  digitally_signed
   cancelled
 }
 
@@ -172,10 +177,46 @@ Enum alert_type {
   unusual_cancellation_rate
 }
 
+Enum traceviet_sync_status {
+  not_synced
+  queued
+  submitted
+  approved
+  rejected
+}
+
+Enum holding_owner {
+  supplier
+  farmery
+}
+
+Enum holding_location {
+  supplier_site
+  farmery_warehouse
+}
+
+Enum stock_movement_type {
+  purchase_in
+  buyback_in
+  consignment_in
+  return_in
+  retail_out
+  wholesale_out
+  clearance_out
+  write_off
+  return_to_supplier
+  reserve
+  release
+  processing
+  ownership_transfer
+  recall_lock
+  adjustment
+}
+
 Enum procurement_status {
   draft
   submitted
-  accepted
+  supplier_confirmed
   receiving
   completed
   cancelled
@@ -238,6 +279,8 @@ Table businesses {
 
 Table shops {
   id bigint [pk, increment]
+  growing_area_code varchar [note: 'Mã số vùng trồng do cơ quan có thẩm quyền cấp; kiểm định dạng khi nhập']
+  growing_area_checked_by bigint [ref: > users.id, note: 'Kiểm duyệt viên đã đối chiếu với cổng công bố của Bộ']
   user_id bigint [not null, unique, ref: > users.id, note: 'Ràng buộc role = seller']
   shop_name varchar [not null]
   description text
@@ -259,7 +302,7 @@ Table certifications {
   issued_date date [not null]
   expiry_date date [not null, note: 'Theo dõi hạn hiệu lực (FR3.3)']
   approval_status approval_status [not null, default: 'pending']
-  reviewer_id bigint [ref: > users.id, note: 'Admin/moderator kiểm duyệt (FR3.2)']
+  reviewer_id bigint [ref: > users.id, note: 'Kiểm duyệt viên (staff_moderation) duyệt (FR3.2)']
 
   note: 'Chứng nhận chất lượng nông sản của gian hàng (Append-only khi duyệt - NFR9.1)'
 }
@@ -294,6 +337,7 @@ Table products {
   description text
   image_urls json [note: 'Danh sách ảnh sản phẩm']
   unit varchar [not null, note: 'kg, tấn, thùng... (FR4.1)']
+  hs_code varchar [note: 'Mã HS của sản phẩm, dùng làm mã giao dịch khi đồng bộ TraceViet']
   seasonality varchar [note: 'Mùa vụ hoặc khoảng tháng thu hoạch; đặc trưng cho gợi ý AI']
   retail_price decimal(14,2) [not null, note: 'Giá bán lẻ B2C']
   status product_status [not null, default: 'pending']
@@ -316,10 +360,46 @@ Table batches {
   batch_code varchar [unique, not null, note: 'Mã định danh lô hàng (FR2.3)']
   harvest_date date [not null]
   expiry_date date [not null, note: 'Phục vụ nguyên tắc xuất kho FEFO']
-  stock_quantity decimal(12,2) [not null, note: 'Tồn kho hiện tại của lô, khóa dòng chống oversell (NFR1.2)']
+  total_quantity decimal(12,2) [not null, note: 'Sản lượng của lô; tồn khả dụng nằm ở stock_holdings']
+  is_recalled boolean [not null, default: false, note: 'Lô đang bị thu hồi: khóa mọi dòng tồn của lô']
+  traceviet_status traceviet_sync_status [not null, default: 'not_synced', note: 'Trạng thái đồng bộ lên hệ thống truy xuất của Bộ (FR4.8)']
+  traceviet_code varchar [note: 'Mã truy xuất do hệ thống của Bộ cấp sau phê duyệt']
+  traceviet_synced_at timestamp
   qr_code varchar [unique, not null, note: 'Mã QR truy xuất nguồn gốc (FR4.2)']
 
   note: 'Lô hàng - Đơn vị cốt lõi quản lý tồn kho và truy xuất'
+}
+
+Table stock_holdings {
+  id bigint [pk, increment]
+  batch_id bigint [not null, ref: > batches.id]
+  owner_type holding_owner [not null, note: 'supplier hoặc farmery']
+  owner_shop_id bigint [ref: > shops.id, note: 'Bắt buộc khi owner_type = supplier']
+  location_type holding_location [not null, note: 'supplier_site hoặc farmery_warehouse']
+  warehouse_code varchar [note: 'Mã kho sơ chế khi hàng nằm ở kho Farmery']
+  grade varchar [note: 'Phân loại sau sơ chế (loại 1, loại 2...)']
+  sale_unit varchar [not null, note: 'Đơn vị bán của dòng tồn: kg, gói 500g...']
+  quantity_on_hand decimal(12,2) [not null, default: 0, note: 'Khóa dòng khi giữ chỗ/trừ tồn, chống oversell (NFR1.2)']
+  quantity_reserved decimal(12,2) [not null, default: 0, note: 'Đang giữ chỗ cho đơn chờ thanh toán hoặc đơn thu mua đã xác nhận']
+  is_locked boolean [not null, default: false, note: 'Bị khóa do thu hồi lô']
+  updated_at timestamp [default: `now()`]
+
+  note: 'Dòng tồn: hàng của một lô, theo chủ sở hữu và nơi chứa'
+}
+
+Table stock_movements {
+  id bigint [pk, increment]
+  holding_id bigint [not null, ref: > stock_holdings.id]
+  movement_type stock_movement_type [not null]
+  quantity decimal(12,2) [not null, note: 'Dương là tăng, âm là giảm']
+  counterpart_holding_id bigint [ref: > stock_holdings.id, note: 'Dòng tồn đối ứng khi chuyển, sơ chế hoặc đổi chủ']
+  ref_type varchar [note: 'procurement_order, sub_order, delivery_installment, dispute...']
+  ref_id bigint
+  reason text
+  performed_by bigint [ref: > users.id, note: 'Trống khi hệ thống tự thực hiện']
+  created_at timestamp [default: `now()`]
+
+  note: 'Sổ nhập xuất: mọi thay đổi số lượng của dòng tồn, chỉ thêm, không sửa'
 }
 
 Table farming_logs {
@@ -330,6 +410,7 @@ Table farming_logs {
   description text
   images json [note: 'Mảng đường dẫn ảnh minh chứng']
   is_published boolean [default: false, note: 'Công khai lên trang QR; true -> không sửa trực tiếp (NFR9.1)']
+  entered_by bigint [ref: > users.id, note: 'Người nhập; khác chủ gian hàng khi nhân viên hỗ trợ vùng nhập hộ (FR10.7)']
 
   note: 'Nhật ký canh tác theo từng lô sản phẩm'
 }
@@ -454,7 +535,7 @@ Table supplier_offers {
 
 Table procurement_orders {
   id bigint [pk, increment]
-  sourcing_user_id bigint [not null, ref: > users.id, note: 'Nhân sự ops_sourcing lập đơn thu mua']
+  sourcing_user_id bigint [not null, ref: > users.id, note: 'Nhân viên thu mua (staff_sourcing) lập đơn thu mua']
   supplier_shop_id bigint [not null, ref: > shops.id]
   status procurement_status [not null, default: 'draft']
   total_amount decimal(14,2) [not null, default: 0]
@@ -513,8 +594,13 @@ Table contracts {
   agreed_price decimal(14,2) [not null]
   total_quantity decimal(12,2) [not null]
   contract_file varchar [not null, note: 'Bản hợp đồng điện tử PDF']
-  signing_status contract_status [not null, default: 'pending_signature']
-  signed_at timestamp
+  signing_status contract_status [not null, default: 'draft']
+  version int [not null, default: 1, note: 'Mỗi lần sửa bản nháp tăng phiên bản']
+  document_hash varchar [note: 'Mã băm SHA-256 của phiên bản đã xác nhận']
+  buyer_confirmed_at timestamp
+  seller_confirmed_at timestamp
+  concluded_at timestamp [note: 'Thời điểm cả hai bên đã xác nhận giao kết']
+  signed_file varchar [note: 'Bản đã ký số trả về từ dịch vụ ký (FR6.6)']
 
   note: 'Hợp đồng thương mại điện tử bán sỉ'
 }
@@ -569,7 +655,7 @@ Table disputes {
   evidence_files json [note: 'Hình ảnh, video bóc hàng minh chứng']
   status dispute_status [not null, default: 'pending_review']
   resolution_note text [note: 'Phán quyết xử lý tranh chấp']
-  resolved_by bigint [ref: > users.id, note: 'Admin/moderator phân xử (FR10.3)']
+  resolved_by bigint [ref: > users.id, note: 'Nhân viên vận hành (staff_operations) phân xử (FR10.3)']
   created_at timestamp [default: `now()`]
   resolved_at timestamp
 
@@ -650,6 +736,22 @@ Table user_behavior_events {
   note: 'Thu thập sự kiện hành vi phục vụ pipeline huấn luyện AI (FR12.1)'
 }
 
+Table product_embeddings {
+  product_id bigint [pk, ref: - products.id]
+  embedding vector [not null, note: 'Vector ngữ nghĩa của tên, mô tả, danh mục, vùng trồng (pgvector); dùng chung cho tìm kiếm FR12.3 và sản phẩm tương tự FR12.1']
+  model_version varchar [not null]
+  updated_at timestamp [default: `now()`]
+
+  note: 'Vector sản phẩm cho tìm kiếm theo ngữ nghĩa'
+}
+
+Table supplier_embeddings {
+  shop_id bigint [pk, ref: - shops.id]
+  embedding vector [not null, note: 'Vector hồ sơ nhà cung cấp cho tìm kiếm FR12.3']
+  model_version varchar [not null]
+  updated_at timestamp [default: `now()`]
+}
+
 Table recommendation_results {
   id bigint [pk, increment]
   user_id bigint [not null, ref: > users.id]
@@ -688,7 +790,7 @@ Table violation_records {
   severity severity_level [not null, default: 'medium']
   status dispute_status [not null, default: 'pending_review']
   penalty_applied varchar [note: 'Hình thức xử phạt (cảnh cáo, hạ sản phẩm, khóa shop...)']
-  handled_by bigint [ref: > users.id, note: 'Admin/moderator xử lý (FR10.2)']
+  handled_by bigint [ref: > users.id, note: 'Kiểm duyệt viên hoặc nhân viên vận hành xử lý (FR10.2)']
   created_at timestamp [default: `now()`]
 
   note: 'Hồ sơ giám sát vi phạm gian lận và thông tin sản phẩm (FR10.2)'
@@ -708,9 +810,9 @@ Table threshold_alerts {
   note: 'Cảnh báo tự động sinh ra bởi các luật ngưỡng bất thường (mục 5.3.6 & Phụ lục L)'
 }
 
-Table admin_audit_logs {
+Table staff_audit_logs {
   id bigint [pk, increment]
-  admin_user_id bigint [not null, ref: > users.id]
+  staff_user_id bigint [not null, ref: > users.id]
   action varchar [not null, note: 'APPROVE_EKYC, BAN_USER, EDIT_THRESHOLD...']
   target_table varchar [not null]
   target_id varchar [not null]
@@ -749,6 +851,8 @@ TableGroup Nhom2_GianHang_TruyXuat_SanPham {
   categories
   products
   batches
+  stock_holdings
+  stock_movements
   farming_logs
 }
 
@@ -789,6 +893,8 @@ TableGroup Nhom6_TuongTac_ThongBao {
 
 TableGroup Nhom7_HoTro_AI {
   user_behavior_events
+  product_embeddings
+  supplier_embeddings
   recommendation_results
   market_forecast_results
 }
@@ -796,5 +902,5 @@ TableGroup Nhom7_HoTro_AI {
 TableGroup Nhom8_QuanTri_LuuVet {
   violation_records
   threshold_alerts
-  admin_audit_logs
+  staff_audit_logs
 }
