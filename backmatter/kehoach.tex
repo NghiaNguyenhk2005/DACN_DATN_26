@@ -4,7 +4,7 @@
 
 Đồ án được thực hiện theo hai giai đoạn ứng với hai mốc nộp bài. \textbf{Giai đoạn 1} kéo dài ba tuần, kết thúc ở mốc nộp giữa kỳ ngày 15/10/2026, tập trung hoàn tất phần thiết kế còn dang dở và dựng nền hệ thống. \textbf{Giai đoạn 2} kéo dài mười một tuần, kết thúc ở mốc nộp cuối kỳ ngày 31/12/2026, dành cho hiện thực, kiểm thử và đánh giá.
 
-Bảng~\ref{tab:kehoach} trình bày kế hoạch chi tiết. Cột \emph{Kết quả} ghi rõ mục nào trong báo cáo sẽ được hoàn thiện, để tiến độ luôn truy được về nội dung cụ thể thay vì chỉ là mô tả công việc.
+Bảng~\ref{tab:kehoach} trình bày kế hoạch chi tiết, cập nhật ngày 01/10/2026 (đầu tuần 2). Cột \emph{Kết quả} ghi rõ mục nào trong báo cáo sẽ được hoàn thiện, để tiến độ luôn truy được về nội dung cụ thể thay vì chỉ là mô tả công việc.
 
 \begingroup
 \tblsetup
@@ -24,11 +24,11 @@ Bảng~\ref{tab:kehoach} trình bày kế hoạch chi tiết. Cột \emph{Kết 
 \bottomrule
 \endfoot
 \multicolumn{4}{@{}l}{\cellcolor{tblheadbg}\textbf{Giai đoạn 1 --- tới mốc nộp giữa kỳ 15/10/2026}} \\
-1 & 23--29/9 & Thiết kế API theo từng nhóm yêu cầu chức năng; thiết kế bộ test case bám các bảng ngưỡng & Mục 5.3.7, 5.3.9 \\
-2 & 30/9--6/10 & Use case tổng quát và theo tác nhân; sitemap; lược đồ tuần tự và lược đồ lớp & Mục 5.1.2, 5.3.2--5.3.4 \\
-3 & 7--15/10 & Vẽ ba sơ đồ còn thiếu (ngữ cảnh, kiến trúc tổng thể, ERD); dựng khung dự án và môi trường phát triển; hiện thực module tài khoản, phân quyền và eKYC; hoàn thiện tóm tắt và lời cảm ơn & Mục 4.2.1, 5.3.1, 5.3.5, 6.1.1--6.1.3; phần mở đầu \\
+1 & 23--29/9 & Hoàn thiện đặc tả use case và kế hoạch hai giai đoạn. Thiết kế API và bộ test case chưa xong, dời sang tuần 2--3 & Mục 5.1.2 \\
+2 & 30/9--6/10 & Chỉnh nội dung theo góp ý (mô hình vận hành, bảy vai trò nội bộ, dòng tồn và thu mua, TraceViet, tìm kiếm theo ngữ nghĩa, PWA; phân định phạm vi hiện thực); thống nhất trình bày bảng; vẽ sơ đồ ngữ cảnh, kiến trúc C4, sitemap và vẽ lại sơ đồ use case (đã xong); thiết kế API theo từng nhóm yêu cầu chức năng & Chương 1--5, 7; mục 4.2, 5.1.2, 5.3.1, 5.3.2, 5.3.7; Phụ lục P--T \\
+3 & 7--15/10 & Thiết kế bộ test case bám các bảng ngưỡng; vẽ ERD; lược đồ tuần tự và lược đồ lớp; dựng khung dự án, khung PWA và CI (GitHub Actions, SonarQube Cloud); hiện thực module tài khoản, phân quyền và eKYC; hoàn thiện tóm tắt và lời cảm ơn & Mục 5.3.3--5.3.5, 5.3.9, 6.1.1--6.1.3; phần mở đầu \\
 \multicolumn{4}{@{}l}{\cellcolor{tblheadbg}\textbf{Giai đoạn 2 --- tới mốc nộp cuối kỳ 31/12/2026}} \\
-4--5 & 16--29/10 & Hiện thực module sản phẩm, lô hàng và nhật ký canh tác; sinh mã QR và trang truy xuất công khai; module quản lý chứng nhận & Mục 6.1.3 \\
+4--5 & 16--29/10 & Hiện thực module sản phẩm, lô hàng và nhật ký canh tác (ghi được khi mất sóng); sinh mã QR và trang truy xuất công khai; đồng bộ lô đã duyệt lên TraceViet qua bản giả lập; module quản lý chứng nhận & Mục 6.1.3 \\
 6--7 & 30/10--12/11 & Hiện thực module thu mua và tồn kho theo lô; module bán lẻ, trong đó có dòng tồn, sổ nhập xuất và cơ chế chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn & Mục 6.1.3 \\
 8--9 & 13--26/11 & Hiện thực module bán sỉ (báo giá, hợp đồng, giao theo đợt) và module thanh toán kèm cơ chế tạm giữ tiền & Mục 6.1.3 \\
 10 & 27/11--3/12 & Hiện thực module vận chuyển và khiếu nại, đánh giá và uy tín, quản trị & Mục 6.1.3 \\
@@ -42,7 +42,7 @@ Bảng~\ref{tab:kehoach} trình bày kế hoạch chi tiết. Cột \emph{Kết 
 \noindent\textbf{Rủi ro tiến độ và phương án dự phòng.} Giai đoạn 2 phải hiện thực tám module nghiệp vụ và ba mô-đun AI trong mười một tuần --- đây là phần rủi ro nhất của kế hoạch. Hai biện pháp được chuẩn bị sẵn:
 
 \begin{itemize}
-    \item \textbf{Thứ tự hiện thực bám theo mức độ ưu tiên đã xác định} (Phụ lục M): tám nhóm yêu cầu ở mức Must được làm trước, ba nhóm Should và hai nhóm Could xếp sau. Nếu thiếu thời gian, phần cắt sẽ rơi vào nhóm Could --- cụ thể là tương tác người dùng và mô-đun dự báo giá --- chứ không ảnh hưởng tới các luồng nghiệp vụ cốt lõi.
+    \item \textbf{Thứ tự hiện thực bám theo mức độ ưu tiên đã xác định} (Phụ lục M): chín nhóm yêu cầu ở mức Must được làm trước, ba nhóm Should và hai nhóm Could xếp sau. Nếu thiếu thời gian, phần cắt sẽ rơi vào nhóm Could --- cụ thể là tương tác người dùng và mô-đun dự báo giá --- chứ không ảnh hưởng tới các luồng nghiệp vụ cốt lõi.
     \item \textbf{Module khó nhất được xếp sớm.} Cơ chế chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn là ràng buộc kỹ thuật khó nhất (NFR1.2, NFR4.1) và được xếp vào tuần 6--7 thay vì cuối kỳ, để nếu phát sinh vướng mắc thì vẫn còn thời gian xử lý.
 \end{itemize}
 
