@@ -27,3 +27,6 @@ slide-pack/
 
 # Kết quả rà soát nội bộ (agent report-auditor) — bản làm việc, không commit
 review/
+
+# Cache Python sinh ra khi chạy tools/diagrams/
+__pycache__/
