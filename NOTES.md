@@ -155,6 +155,10 @@ phiên 30/9). Claude đã vẽ sơ đồ ngữ cảnh (mục 4.2) và kiến tr�
 (mục 5.3.1, hai hình) bằng bộ sinh `tools/diagrams/`; xem `DECISIONS.md`
 ("Kiến trúc theo mô hình C4..."). Còn thiếu: **ERD** (mục 5.3.5), và sơ đồ
 tuần tự, sơ đồ lớp (mục 5.3.3, 5.3.4) — user tạm hoãn.
+**Đính chính 2026-10-01:** ERD không "còn thiếu" — commit `fab9c92` (30/9, thành
+viên khác) đã chèn `image/ERD.png` vào mục 5.3.5. Nhưng hình vẽ theo
+`schema.dbml` cũ (chưa có `stock_holdings`, `stock_movements`), trong khi
+`schema.dbml` và Phụ lục K đã cập nhật → cần xuất lại ERD từ dbdiagram.
 Status: open
 
 ### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23
