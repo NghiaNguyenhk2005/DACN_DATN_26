@@ -71,21 +71,23 @@ class Svg:
         self.add('<polyline points="%s" fill="none" stroke="%s" stroke-width="%g"%s%s/>' % (p, color, sw, d, m))
         self._markers = getattr(self, '_markers', set()) | {color}
 
-    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff', pos='on'):
-        lines = wrap(text, width - 12, size)
+    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff', pos='on', weight=400, italic=True):
+        lines = wrap(text, width - 12, size, weight=weight)
         h = len(lines) * size * 1.2 + 10
         # pos='above'/'below': đặt nhãn sát trên/dưới đường mũi tên để thân mũi tên không bị che
         if pos == 'above':
             cy -= h / 2 + 4
         elif pos == 'below':
             cy += h / 2 + 4
+        elif pos == 'top':
+            cy += h / 2
         self.later.append('<rect x="%g" y="%g" width="%g" height="%g" rx="6" fill="%s" opacity="0.94"/>'
                  % (cx - width / 2, cy - h / 2, width, h, bg))
         y = cy - h / 2 + 5
         for ln in lines:
             y += size * 1.2
             n0 = len(self.parts)
-            self.text(cx, y - size * 0.25, ln, size, 400, color, 'middle', False, True)
+            self.text(cx, y - size * 0.25, ln, size, weight, color, 'middle', False, italic)
             self.later.append(self.parts.pop())
 
     def svg(self):

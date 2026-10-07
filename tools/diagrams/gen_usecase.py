@@ -1,257 +1,326 @@
 # -*- coding: utf-8 -*-
-# Sinh 3 sơ đồ use case (tổng quan, nhà cung cấp, khách sỉ) vào tools/design/.
+# Sinh sơ đồ use case tổng quan và 5 sơ đồ chi tiết vào tools/design/.
 import io, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from svgkit import Svg, page
+from svgkit import Svg, page, wrap
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'design')
 W = 1340
 INK = '#16241e'
-WIRE = '#6f7c76'
+WIRE = '#55635c'
+GREY = '#8a948f'
 PK = {'A': ('#eaf7ef', '#1f8a4c'), 'B': ('#eef4fb', '#1a5fa8'), 'C': ('#fdf1dc', '#c98a1a'),
       'D': ('#fbe9e9', '#c23b3b'), 'E': ('#f1eef8', '#6b4fa0')}
-UCH, PITCH = 60, 70
+UCH, PITCH = 62, 72
+MARKERS = ('<marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">'
+           '<path d="M1,1 L11,6 L1,11" fill="none" stroke="#44524b" stroke-width="1.8"/></marker>'
+           '<marker id="tri" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="13" markerHeight="13" orient="auto">'
+           '<path d="M1,1 L13,7 L1,13 z" fill="#ffffff" stroke="#44524b" stroke-width="1.6"/></marker>')
 
 
-def person(s, cx, y, name, color='#12351f'):
+def actor(s, cx, y, name, color='#12351f'):
+    """Người que, đỉnh đầu tại y; trả về điểm nối trái/phải ngang tay và đáy nhãn."""
     s.add('<g stroke="%s" stroke-width="2.4" fill="none">'
           '<circle cx="%g" cy="%g" r="11"/><line x1="%g" y1="%g" x2="%g" y2="%g"/>'
           '<line x1="%g" y1="%g" x2="%g" y2="%g"/><line x1="%g" y1="%g" x2="%g" y2="%g"/>'
           '<line x1="%g" y1="%g" x2="%g" y2="%g"/></g>'
           % (color, cx, y + 11, cx, y + 22, cx, y + 46, cx - 17, y + 30, cx + 17, y + 30,
              cx, y + 46, cx - 14, y + 64, cx, y + 46, cx + 14, y + 64))
-    yy = s.block(cx - 75, y + 68, 150, [(name, 22, 700, INK, False)], pad=0, gap=0)
-    return yy
+    s.label(cx, y + 64, name, 150, size=22, color=INK, bg='#fff', pos='top', weight=700, italic=False)
+    return {'L': (cx - 20, y + 30), 'R': (cx + 20, y + 30), 'T': (cx, y), 'Lb': (cx - 16, y + 54)}
 
 
-def system_actor(s, cx, y, name):
-    s.rect(cx - 30, y, 60, 50, '#ffffff', '#5b6b63', 2.2, 8, '5 4')
-    return s.block(cx - 80, y + 52, 160, [(name, 22, 700, '#33413a', False)], pad=0, gap=0)
+def sysactor(s, cx, y, name, design=False, w=190):
+    """Tác nhân hệ thống: khung có nhãn «hệ thống»; nét đứt xám nếu chỉ thiết kế."""
+    st, col = (GREY, GREY) if design else ('#3d4a43', INK)
+    lines = [('«hệ thống»', 22, 400, col, False), (name, 22, 700, col, False)]
+    if design:
+        lines.append(('chỉ thiết kế', 22, 400, GREY, False))
+    h = 96 if design else 84
+    s.box(cx - w / 2, y, w, h, lines, fill='#f6f7f6' if design else '#e4e7e5', stroke=st, rx=8,
+          dash='7 5' if design else None, pad=6)
+    return {'L': (cx - w / 2, y + h / 2), 'R': (cx + w / 2, y + h / 2), 'T': (cx, y)}
 
 
-def uc(s, x, y, w, text, stroke, bold=False, fill='#ffffff', dash=None):
-    from svgkit import wrap
-    s.rect(x, y, w, UCH, fill, stroke, 2.2, UCH / 2, dash)
-    tw = w - (70 if bold else 30)
-    lines = wrap(text, tw, 22)
+def uc(s, x, y, w, text, stroke, style='n'):
+    """style: n thường, b trục bán lẻ (đậm), d chỉ thiết kế (xám nét đứt)."""
+    if style == 'd':
+        s.rect(x, y, w, UCH, '#f6f7f6', GREY, 2.2, UCH / 2, '8 6')
+        text, color, weight = text + ' (chỉ thiết kế)', GREY, 500
+    else:
+        s.rect(x, y, w, UCH, '#ffffff', stroke, 3.2 if style == 'b' else 2.2, UCH / 2)
+        color, weight = INK, 700 if style == 'b' else 500
+    lines = wrap(text, w - 44, 22, weight=weight)
+    if len(lines) > 2:
+        print('OVERFLOW %s' % ascii(text[:30]))
     top = y + (UCH - len(lines) * 22 * 1.18) / 2 - 4
     for i, ln in enumerate(lines):
-        s.text(x + w / 2, top + (i + 1) * 22 * 1.18, ln, 22, 700 if bold else 500, INK)
+        s.text(x + w / 2, top + (i + 1) * 22 * 1.18, ln, 22, weight, color)
+    return {'L': (x, y + UCH / 2), 'R': (x + w, y + UCH / 2), 'y': y + UCH / 2}
 
 
-def line(s, pts, dash=None, color=WIRE, sw=2):
-    d = ' stroke-dasharray="%s"' % dash if dash else ''
-    s.add('<polyline points="%s" fill="none" stroke="%s" stroke-width="%g"%s/>'
-          % (' '.join('%g,%g' % p for p in pts), color, sw, d))
+def assoc(s, p, q, design=False):
+    s.add('<line x1="%g" y1="%g" x2="%g" y2="%g" stroke="%s" stroke-width="2"%s/>'
+          % (p[0], p[1], q[0], q[1], GREY if design else WIRE, ' stroke-dasharray="7 5"' if design else ''))
+
+
+def poly(s, pts, marker=None, dash=None, color=WIRE):
+    s.add('<polyline points="%s" fill="none" stroke="%s" stroke-width="2"%s%s/>'
+          % (' '.join('%g,%g' % p for p in pts), color, ' stroke-dasharray="%s"' % dash if dash else '',
+             ' marker-end="url(#%s)"' % marker if marker else ''))
 
 
 def dep(s, pts, kind):
-    """«include»/«extend»: nét đứt, đầu mũi tên mở, nhãn ở đoạn đầu."""
-    s.add('<polyline points="%s" fill="none" stroke="#44524b" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#open)"/>'
-          % ' '.join('%g,%g' % p for p in pts))
-    (x0, y0), (x1, y1) = pts[0], pts[1]
-    s.label((x0 + x1) / 2, (y0 + y1) / 2 - 16, '«%s»' % kind, 130, size=22)
-
-
-OPEN = ('<marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">'
-        '<path d="M1,1 L11,6 L1,11" fill="none" stroke="#44524b" stroke-width="1.8"/></marker>')
+    """«include»/«extend»: nét đứt, đầu mũi tên mở, nhãn trên đoạn dài nhất."""
+    poly(s, pts, 'open', '8 6', '#44524b')
+    segs = list(zip(pts, pts[1:]))
+    (x0, y0), (x1, y1) = max(segs, key=lambda q: abs(q[1][0] - q[0][0]) + abs(q[1][1] - q[0][1]))
+    s.label((x0 + x1) / 2, (y0 + y1) / 2, '«%s»' % kind, 120, size=22, pos='above' if y0 == y1 else 'on')
 
 
 def finish(s):
-    svg = s.svg()
-    return svg.replace('<defs>', '<defs>' + OPEN, 1)
+    return s.svg().replace('<defs>', '<defs>' + MARKERS, 1)
+
+
+LEG_UC = ('<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#c98a1a" stroke-width="3.4"/></svg>Trục bán lẻ</span>'
+          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#55635c" stroke-width="2"/></svg>Use case khác</span>'
+          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế</span>'
+          '<span><svg width="60" height="16"><line x1="2" y1="8" x2="44" y2="8" stroke="#44524b" stroke-width="2"/><path d="M44,2 L57,8 L44,14 z" fill="#fff" stroke="#44524b" stroke-width="1.6"/></svg>Tổng quát hóa (con làm được mọi việc của cha)</span>')
+LEG_DEP = ('<span><svg width="60" height="16"><line x1="2" y1="8" x2="54" y2="8" stroke="#44524b" stroke-width="2" stroke-dasharray="7 5"/><path d="M47,2 L57,8 L47,14" fill="none" stroke="#44524b" stroke-width="1.8"/></svg>'
+           '«include»: luôn thực hiện; «extend»: chỉ khi thỏa điều kiện</span>')
 
 
 # ============================== TỔNG QUAN ==============================
 def overview():
-    # (khóa, tiêu đề, [UC cột trái: (id, chữ, đậm)], [UC cột phải])
+    LX, LW, RXc, RW = 262, 370, 712, 380          # cột trái (người dùng ngoài), cột phải (nội bộ)
+    PX0, PX1 = 244, 1110
     packs = [
         ('A', 'A. Nền tảng chung (FR1, FR11)',
-         [('a1', 'Đăng ký và xác thực tài khoản', False)],
-         [('a2', 'Quản lý tài khoản, vai trò nội bộ', False)]),
+         [('A1', 'Đăng ký tài khoản mua hàng', 'n')],
+         [('A2', 'Đăng nhập hai lớp, nhận việc và thông báo', 'n')]),
         ('B', 'B. Nguồn cung (FR2–FR4)',
-         [('b1', 'Tải và theo dõi chứng nhận', False), ('b2', 'UC-B1 Đăng sản phẩm, khai báo lô', False),
-          ('b3', 'UC-B2 Ghi nhật ký canh tác', True), ('b4', 'Tìm kiếm, tra cứu truy xuất', False)],
-         [('b5', 'Duyệt hồ sơ và chứng nhận', False), ('b6', 'UC-B4 Duyệt sản phẩm và lô hàng', True),
-          ('b7', 'Hỗ trợ, nhập liệu hộ nhà cung cấp', False)]),
-        ('C', 'C. Giao dịch (FR5–FR7, FR13)',
-         [('c1', 'UC-C4 Đặt hàng, thanh toán bán lẻ', True), ('c2', 'Gửi yêu cầu báo giá, thương lượng', False),
-          ('c3', 'UC-D4 Giao kết hợp đồng bán sỉ', True), ('c4', 'UC-D7 Nhận hàng, thanh toán đợt', True),
-          ('c5', 'Mua chào sỉ tồn dư của Farmery', False), ('c6', 'Xác nhận đơn thu mua', False)],
-         [('c7', 'Lập đơn thu mua, định giá bán lẻ', False), ('c8', 'Nghiệm thu, nhập xuất kho, đóng gói', False),
-          ('c9', 'Thu hồi lô', False)]),
+         [('B1', 'Tìm kiếm, quét QR xem truy xuất', 'b'), ('B2', 'UC-B2 Đăng sản phẩm, lô, nhật ký', 'n'),
+          ('B3', 'Đăng ký, xác minh, khai báo chứng nhận', 'n')],
+         [('B5', 'Hỗ trợ, nhập liệu hộ nhà cung cấp', 'n')]),
+        ('C', 'C. Giao dịch (FR5–FR7, FR12.2, FR13)',
+         [('C5', 'Gửi chào hàng, xác nhận đơn thu mua', 'n'), ('C3', 'UC-D4 Gửi RFQ, giao kết hợp đồng sỉ', 'n'),
+          ('C8', 'Nộp ký quỹ đơn sỉ', 'd'), ('C1', 'UC-C4 Đặt hàng, thanh toán đơn lẻ', 'b'),
+          ('C2', 'Mua lại, đăng ký báo vào mùa', 'b')],
+         [('C9', 'Định giá bán lẻ, xem dự báo giá', 'n'), ('C6', 'UC-B5 Lập đơn thu mua, nghiệm thu', 'n'),
+          ('C7', 'Đóng gói, in tem, quản lý dòng tồn', 'n')]),
         ('D', 'D. Sau bán (FR8, FR9)',
-         [('d1', 'Theo dõi đơn và vận chuyển', False), ('d2', 'Gửi khiếu nại', False),
-          ('d3', 'Đánh giá sản phẩm, nhà cung cấp', False), ('d4', 'Nhắn tin, theo dõi gian hàng', False)],
-         [('d5', 'Giao hàng chặng ngắn', False), ('d6', 'Phân xử khiếu nại, tranh chấp', False),
-          ('d7', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', True)]),
-        ('E', 'E. Vận hành và hỗ trợ ra quyết định (FR10, FR12)',
-         [('e1', 'Xem báo cáo bán hàng, đối soát', False)],
-         [('e2', 'Xử lý vi phạm theo phân cấp', False), ('e3', 'Giám sát tồn kho, vận chuyển', False),
-          ('e4', 'Cấu hình danh mục, ngưỡng, biểu phí', False)]),
+         [('D2', 'UC-C6 Yêu cầu đổi trả, hoàn tiền', 'b'), ('D1', 'Theo dõi đơn, nhận hóa đơn', 'b'),
+          ('D5', 'Đánh giá sản phẩm', 'b')],
+         [('D3', 'Lập chuyến trung chuyển, vận đơn', 'n'), ('D4', 'Xử lý khiếu nại, đổi trả', 'n')]),
+        ('E', 'E. Vận hành (FR10)',
+         [],
+         [('E1', 'Thu hồi lô', 'n'), ('B4', 'UC-B4 Duyệt hồ sơ, sản phẩm và lô', 'n'),
+          ('D6', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('E2', 'Xử lý vi phạm nội dung', 'n'),
+          ('E3', 'Cấu hình nền tảng, tài khoản nội bộ', 'n')]),
     ]
-    left = [('Nhà cung cấp', ['a1', 'b1', 'b2', 'b3', 'c2', 'c3', 'c6', 'd4', 'e1']),
-            ('Khách lẻ', ['a1', 'b4', 'c1', 'd1', 'd2', 'd3', 'd4']),
-            ('Khách sỉ', ['a1', 'b4', 'c2', 'c3', 'c4', 'c5', 'd1', 'd2', 'd3', 'd4'])]
-    right = [('Kiểm duyệt viên', ['b5', 'b6', 'd7', 'e2']), ('Nhân viên hỗ trợ vùng', ['b7']),
-             ('Nhân viên thu mua', ['c7']), ('Nhân viên kho', ['c8', 'c9']),
-             ('Nhân viên giao hàng', ['d5']), ('Nhân viên vận hành', ['d6', 'e3']),
-             ('Quản trị viên hệ thống', ['a2', 'e4'])]
-    PX, PW = 218, 902           # khung gói
-    LX, RX, UW = PX + 20, PX + PW - 20 - 421, 421
-    pos = {}
-    y = 20
-    s = Svg(W, 2000)
+    s = Svg(W, 1800)
+    U = {}
+    y = 14
     for key, title, lc, rc in packs:
         n = max(len(lc), len(rc))
-        h = 50 + n * PITCH
-        s.rect(PX, y, PW, h, PK[key][0], PK[key][1], 2.2, 16, '10 7')
-        s.text(PX + 18, y + 34, title, 24, 800, PK[key][1], 'start')
-        for col, items, x in ((0, lc, LX), (1, rc, RX)):
-            for i, (k, t, b) in enumerate(items):
-                yy = y + 44 + i * PITCH
-                uc(s, x, yy, UW, t, PK[key][1], b)
-                pos[k] = (x, yy + UCH / 2, x + UW)
-        y += h + 14
-    H = y
-    # actor trái: mỗi actor một trục dọc
-    spines = [170, 186, 202]
-    ay = [H * 0.18, H * 0.48, H * 0.76]
-    for (name, ucs), sx, yy in zip(left, spines, ay):
-        person(s, 80, yy - 40, name)
-        ys = [pos[k][1] for k in ucs]
-        line(s, [(sx, min(ys + [yy])), (sx, max(ys + [yy]))])
-        line(s, [(100, yy), (sx, yy)])
-        for k in ucs:
-            line(s, [(sx, pos[k][1]), (pos[k][0], pos[k][1])])
-    # actor phải
-    rsp = [PX + PW + 12 + i * 10 for i in range(len(right))]
-    step = (H - 120) / len(right)
-    for i, ((name, ucs), sx) in enumerate(zip(right, rsp)):
-        yy = 70 + i * step
-        person(s, 1264, yy - 40, name)
-        ys = [pos[k][1] for k in ucs]
-        line(s, [(sx, min(ys + [yy])), (sx, max(ys + [yy]))])
-        line(s, [(sx, yy), (1242, yy)])
-        for k in ucs:
-            line(s, [(pos[k][2], pos[k][1]), (sx, pos[k][1])])
-    s.h = int(H)
+        h = 52 + n * PITCH
+        x0 = 700 if not lc else PX0               # gói chỉ có use case nội bộ thì thu về cột phải
+        s.rect(x0, y, PX1 - x0, h, PK[key][0], PK[key][1], 2.2, 16, '10 7')
+        s.text(x0 + 16, y + 32, title, 24, 800, PK[key][1], 'start')
+        for items, x, w in ((lc, LX, LW), (rc, RXc, RW)):
+            for i, (k, t, st) in enumerate(items):
+                U[k] = uc(s, x, y + 44 + i * PITCH, w, t, PK[key][1], st)
+        y += h + 12
+    PB = y - 12                                   # đáy gói cuối
+    ymid = lambda *ks: sum(U[k]['y'] for k in ks) / len(ks)
+
+    # Tác nhân trái
+    ax = 100
+    A = {}
+    A['vl'] = actor(s, ax, ymid('A1', 'B1') - 40, 'Khách vãng lai')
+    A['ncc'] = actor(s, ax, ymid('B2', 'C3') - 40, 'Nhà cung cấp')
+    A['si'] = actor(s, ax, ymid('C3', 'C8') + 10, 'Khách sỉ')
+    A['le'] = actor(s, ax, ymid('C2', 'D2') - 10, 'Khách lẻ')
+    for a, ks in [('vl', ['A1', 'B1']), ('ncc', ['B2', 'B3', 'C5', 'C3']), ('si', ['C3', 'C8']),
+                  ('le', ['C1', 'C2', 'D2', 'D1', 'D5'])]:
+        for k in ks:
+            assoc(s, A[a]['R'], U[k]['L'], design=k == 'C8')
+    # Tổng quát hóa: khách lẻ, khách sỉ -> khách vãng lai (mỗi mũi tên một đường riêng)
+    for a, gx, ty in [('si', 26, 20), ('le', 14, 52)]:
+        (x0, y0), (x1, y1) = A[a]['L'], A['vl']['L']
+        poly(s, [(x0, y0), (gx, y0), (gx, y1 - 30 + ty), (x1 + 4, y1 - 30 + ty)], 'tri')
+
+    # Khung nhân sự nội bộ, 6 vai trò; quan hệ chung nối từ biên khung tới A2
+    FX0, FY0 = 1126, U['B5']['y'] - 92
+    rx = 1252
+    roles = [('sup', 'Hỗ trợ vùng', ['B5']), ('src', 'Nhân viên thu mua', ['C9', 'C6']),
+             ('wh', 'Nhân viên kho', ['C6', 'C7', 'D3']), ('ops', 'Nhân viên vận hành', ['D4', 'E1']),
+             ('mod', 'Kiểm duyệt viên', ['B4', 'D6', 'E2']), ('own', 'Quản trị viên', ['E3'])]
+    R = {}
+    for k, name, ks in roles:
+        yy = ymid(*ks) - 40
+        if k == 'sup':
+            yy = U['B5']['y'] - 30
+        if k == 'own':
+            yy = U['E3']['y'] - 50
+        R[k] = actor(s, rx, yy, name)
+        for u in ks:
+            assoc(s, R[k]['L'], U[u]['R'])
+    FY1 = U['E3']['y'] + 90
+    s.rect(FX0, FY0, W - 6 - FX0, FY1 - FY0, 'none', '#12351f', 2.4, 16, '9 6')
+    s.text((FX0 + W - 6) / 2, FY0 + 28, 'Nhân sự nội bộ', 22, 800, '#12351f')
+    assoc(s, (FX0 + 60, FY0), (FX0 + 60, U['A2']['y']))
+    assoc(s, (FX0 + 60, U['A2']['y']), U['A2']['R'])
+
+    # Tác nhân hệ thống ở góc dưới trái; mỗi đường đi riêng trong khe giữa hai cột
+    S = {'hd': sysactor(s, 430, U['E1']['y'] - 42, 'Dịch vụ HĐĐT', w=270),
+         'tt': sysactor(s, 430, U['D6']['y'] - 42, 'Cổng thanh toán', w=270),
+         '3pl': sysactor(s, 430, U['E3']['y'] - 42, 'Đơn vị vận chuyển', w=270)}
+    chan = [('hd', 'D1', 652, 0, 'L'), ('tt', 'D2', 664, -16, 'L'), ('tt', 'C1', 676, 16, 'L'), ('3pl', 'D3', 690, 0, 'R')]
+    for a, k, cxx, dy, side in chan:
+        rx_, ry = S[a]['R']
+        poly(s, [(rx_, ry + dy), (cxx, ry + dy), (cxx, U[k]['y']),
+                 (U[k]['R'][0] if side == 'L' else U[k]['L'][0], U[k]['y'])])
+    s.h = int(max(PB, FY1) + 16)
     leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>%s</span>'
                   % (PK[k][0], PK[k][1], t) for k, t in
-                  [('A', 'Nền tảng chung'), ('B', 'Nguồn cung'), ('C', 'Giao dịch'), ('D', 'Sau bán'), ('E', 'Vận hành, hỗ trợ ra quyết định')])
+                  [('A', 'Nền tảng chung'), ('B', 'Nguồn cung'), ('C', 'Giao dịch'), ('D', 'Sau bán'), ('E', 'Vận hành')]) + LEG_UC + \
+        '<span><svg width="40" height="28"><rect x="2" y="3" width="36" height="22" rx="4" fill="none" stroke="#12351f" stroke-width="2" stroke-dasharray="6 4"/></svg>Nối từ biên khung: áp cho mọi vai trò</span>'
     io.open(os.path.join(OUT, 'usecase-overview.html'), 'w', encoding='utf-8').write(page(
-        '', '',
-        finish(s), leg))
+        '', '', finish(s), leg, 'Mã UC ghi cho các use case có bảng đặc tả.'))
 
 
 # ============================== CHI TIẾT ==============================
-def detail(fname, title, sub, color, mains, sides, deps, left, right, height):
-    """mains/sides: {id: (hàng, chữ, đậm)}; deps: [(từ, tới, kiểu)];
-    left/right: [(tên, [id], là_hệ_thống)]."""
-    s = Svg(W, height)
-    MX, MW = 240, 440
-    SX, SW = 740, 390
-    pos = {}
-    for k, (r, t, b) in mains.items():
-        y = 20 + r * PITCH
-        uc(s, MX, y, MW, t, color, b)
-        pos[k] = (MX, y + UCH / 2, MX + MW)
-    for k, (r, t, b, st) in sides.items():
-        y = 20 + r * PITCH
-        uc(s, SX, y, SW, t, st, b, fill='#fbfcfb', dash=None)
-        pos[k] = (SX, y + UCH / 2, SX + SW)
-    for a, b_, kind in deps:
-        xa, ya, xa2 = pos[a]
-        xb, yb, xb2 = pos[b_]
-        if xa > xb:     # bên phải -> bên trái
-            mid = (xb2 + xa) / 2
-            pts = [(xa, ya), (mid, ya), (mid, yb), (xb2, yb)] if ya != yb else [(xa, ya), (xb2, yb)]
-        else:
-            mid = (xa2 + xb) / 2
-            pts = [(xa2, ya), (mid, ya), (mid, yb), (xb, yb)] if ya != yb else [(xa2, ya), (xb, yb)]
-        dep(s, pts, kind)
-    for i, (name, ucs, sysf, *yo) in enumerate(left):
-        sx = 190 + i * 18
-        ys = [pos[k][1] for k in ucs]
-        yy = 20 + yo[0] * PITCH + UCH / 2 if yo else (min(ys) + max(ys)) / 2
-        (system_actor if sysf else person)(s, 80, yy - 40, name)
-        line(s, [(sx, min(ys + [yy])), (sx, max(ys + [yy]))])
-        line(s, [(104, yy), (sx, yy)])
-        for k in ucs:
-            line(s, [(sx, pos[k][1]), (pos[k][0], pos[k][1])])
-    for i, (name, ucs, sysf, *yo) in enumerate(right):
-        sx = SX + SW + 22 + i * 16
-        ys = [pos[k][1] for k in ucs]
-        yy = 20 + yo[0] * PITCH + UCH / 2 if yo else (min(ys) + max(ys)) / 2
-        (system_actor if sysf else person)(s, 1240, yy - 40, name)
-        line(s, [(sx, min(ys + [yy])), (sx, max(ys + [yy]))])
-        line(s, [(sx, yy), (1214, yy)])
-        for k in ucs:
-            line(s, [(pos[k][2], pos[k][1]), (sx, pos[k][1])])
-    leg = ('<span><i class="sw" style="border-color:%s;border-radius:12px"></i>Use case của actor chính</span>' % color +
-           '<span><i class="sw" style="border-color:#6f7c76;border-radius:12px"></i>Use case liên quan</span>'
-           '<span><i class="ln" style="border-top-style:dashed"></i>«include»: luôn thực hiện · «extend»: chỉ khi thỏa điều kiện</span>'
-           '<span><svg width="34" height="28"><rect x="3" y="3" width="28" height="22" rx="5" fill="none" stroke="#5b6b63" stroke-width="2" stroke-dasharray="5 4"/></svg>Hệ thống bên ngoài (actor phụ)</span>')
-    io.open(os.path.join(OUT, fname), 'w', encoding='utf-8').write(page(title, sub, finish(s), leg))
+def detail(fname, color, mains, sides, deps, left, right, gens=(), note=''):
+    """mains: [(id, chữ, kiểu)] theo hàng; sides: {id: (hàng, chữ, kiểu)};
+    deps: [(từ, tới, loại)]; left/right: [(khóa, tên, [id], hệ thống?, hàng đặt, chỉ thiết kế?)]."""
+    MX, MW, SX, SW = 250, 420, 772, 326
+    s = detail.s
+    U = {}
+    for r, (k, t, st) in enumerate(mains):
+        U[k] = uc(s, MX, 16 + r * PITCH, MW, t, color, st)
+    for k, (r, t, st) in sides.items():
+        U[k] = uc(s, SX, 16 + r * PITCH, SW, t, '#55635c', st)
+    for a, b, kind in deps:
+        (xa, ya), (xb, yb) = (U[a]['R'], U[b]['L']) if U[a]['R'][0] < U[b]['L'][0] else (U[a]['L'], U[b]['R'])
+        mid = (xa + xb) / 2
+        dep(s, [(xa, ya), (xb, yb)] if ya == yb else [(xa, ya), (mid, ya), (mid, yb), (xb, yb)], kind)
+    A = {}
+    for side, lst in (('L', left), ('R', right)):
+        for k, name, ks, sysf, row, des in lst:
+            cx = 116 if side == 'L' else (1222 if sysf else 1236)
+            yy = 16 + row * PITCH
+            A[k] = (sysactor(s, cx, yy, name, des, w=226) if sysf else actor(s, cx, yy, name))
+            for u in ks:
+                p = A[k]['R'] if side == 'L' else A[k]['L']
+                q = U[u]['L'] if side == 'L' else U[u]['R']
+                assoc(s, p, q, design=des)
+    for child, parent, gx in gens:
+        (x0, y0), (x1, y1) = A[child]['L'], A[parent]['Lb']
+        poly(s, [(x0, y0), (gx, y0), (gx, y1), (x1, y1)], 'tri')
+    leg = LEG_UC + LEG_DEP
+    io.open(os.path.join(OUT, fname), 'w', encoding='utf-8').write(page('', '', finish(s), leg, note))
+
+
+def run_detail(fname, rows, *a, **kw):
+    detail.s = Svg(W, 40 + rows * PITCH)
+    detail(fname, *a, **kw)
 
 
 def supplier():
-    G = '#1f8a4c'
-    mains = {
-        'm1': (0, 'Đăng ký, xác minh gian hàng (eKYC)', False),
-        'm2': (1, 'Tải và theo dõi chứng nhận', False),
-        'm3': (2, 'UC-B1 Đăng sản phẩm, khai báo lô', True),
-        'm4': (4, 'UC-B2 Ghi nhật ký canh tác theo lô', True),
-        'm5': (6, 'Công bố khung giá sỉ theo MOQ', False),
-        'm6': (7, 'Theo dõi tồn kho theo lô', False),
-        'm7': (8, 'Xác nhận đơn thu mua của Farmery', False),
-        'm8': (9, 'Thuê kho, dịch vụ đóng gói', False),
-        'm9': (10, 'Xem doanh thu, đối soát', False),
-        'm10': (11, 'Xem dự báo giá theo mùa vụ', False),
-    }
-    sides = {
-        's1': (2, 'Kiểm tra tính hợp lệ sản phẩm', False, '#6f7c76'),
-        's2': (3, 'UC-B4 Duyệt sản phẩm và lô hàng', True, '#1a5fa8'),
-        's3': (5, 'Đính chính bản ghi nhật ký', False, '#6f7c76'),
-    }
-    deps = [('m3', 's1', 'include'), ('s3', 'm4', 'extend')]
-    left = [('Nhà cung cấp', ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10'], False, 2.5),
-            ('Nhân viên hỗ trợ vùng', ['m4'], False, 7.5)]
-    right = [('Kiểm duyệt viên', ['m2', 's2'], False, 0.6), ('TraceViet', ['s2'], True, 5),
-             ('Hệ thống AI', ['m10'], True)]
-    detail('usecase-nha-ban.html', 'Sơ đồ Use Case chi tiết — Nhà cung cấp',
-           'Nhóm nguồn cung (FR2–FR4) và các việc của nhà cung cấp ở luồng bán sỉ và thu mua. Nhân viên hỗ trợ vùng ghi nhật ký thay nhà cung cấp khi cần; kiểm duyệt viên duyệt chứng nhận, sản phẩm và lô; hệ thống tự sinh mã QR khi lô được duyệt (không phải use case riêng).',
-           G, mains, sides, deps, left, right, 60 + 12 * PITCH)
+    mains = [('m0', 'Đăng ký, xác minh danh tính (eKYC)', 'n'), ('m1', 'Tải, theo dõi chứng nhận', 'n'),
+             ('m2', 'Theo dõi tồn kho của mình', 'n'), ('m3', 'Gửi chào hàng cho Farmery', 'n'),
+             ('m4', 'Xác nhận đơn thu mua', 'n'), ('m5', 'Phản hồi RFQ, thương lượng', 'n'),
+             ('m6', 'UC-D4 Xác nhận giao kết hợp đồng sỉ', 'n'), ('m7', 'Xem doanh thu, đối soát', 'n'),
+             ('m8', 'Xem báo cáo thống kê', 'd'), ('m9', 'Đăng sản phẩm, khai báo lô', 'n'),
+             ('m10', 'UC-B2 Ghi nhật ký canh tác theo lô', 'n')]
+    sides = {'s0': (0, 'Khai báo loại người bán cho thuế', 'n'), 's2': (2, 'UC-B4 Duyệt sản phẩm và lô', 'n'),
+             's9': (9, 'Kiểm tra tính hợp lệ sản phẩm', 'n'), 's10': (10, 'Đính chính bản ghi', 'n')}
+    deps = [('m0', 's0', 'include'), ('m9', 's9', 'include'), ('s10', 'm10', 'extend')]
+    left = [('ncc', 'Nhà cung cấp', ['m%d' % i for i in range(11)], False, 4.4, False),
+            ('sup', 'Hỗ trợ vùng', ['m10'], False, 10.6, False)]
+    right = [('mod', 'Kiểm duyệt viên', ['m1', 's2'], False, 0.9, False),
+             ('src', 'Nhân viên thu mua', ['m4'], False, 3.4, False),
+             ('si', 'Khách sỉ', ['m5', 'm6'], False, 5.2, False)]
+    run_detail('usecase-nha-ban.html', 12.6, PK['A'][1], mains, sides, deps, left, right,
+               note='Hỗ trợ vùng ghi nhật ký thay nhà cung cấp khi cần; hệ thống tự sinh mã QR khi lô được duyệt (bước của UC-B4, không phải use case riêng).')
+
+
+def retail():
+    mains = [('m0', 'Tìm kiếm sản phẩm', 'b'), ('m1', 'Quét QR, xem trang truy xuất', 'b'),
+             ('m2', 'Xem chi tiết, sản phẩm tương tự', 'b'), ('m3', 'Đăng ký tài khoản', 'n'),
+             ('m4', 'Quản lý giỏ hàng', 'b'), ('m5', 'UC-C4 Đặt hàng, thanh toán', 'b'),
+             ('m6', 'Theo dõi đơn hàng', 'b'), ('m7', 'UC-C6 Yêu cầu đổi trả, hoàn tiền', 'b'),
+             ('m8', 'Đánh giá sản phẩm', 'b'), ('m9', 'Mua lại đơn cũ', 'b'),
+             ('m10', 'Nhận hóa đơn điện tử', 'n'), ('m11', 'Đăng ký báo vào mùa', 'b'),
+             ('m12', 'Quản lý sổ địa chỉ, quyền dữ liệu', 'n'), ('m13', 'Danh sách yêu thích', 'd'),
+             ('m14', 'Áp mã giảm giá', 'd')]
+    sides = {'s4': (4, 'Trả khi nhận hàng (COD)', 'n'), 's7': (7, 'Trao đổi theo đơn', 'n')}
+    deps = [('s4', 'm5', 'extend'), ('m7', 's7', 'include')]
+    left = [('vl', 'Khách vãng lai', ['m0', 'm1', 'm2', 'm3'], False, 0.9, False),
+            ('le', 'Khách lẻ', ['m%d' % i for i in range(4, 15)], False, 8.4, False)]
+    right = [('tt', 'Cổng thanh toán', ['m5'], True, 4.75, False),
+             ('ops', 'Nhân viên vận hành', ['s7'], False, 6.6, False),
+             ('hd', 'Dịch vụ HĐĐT', ['m10'], True, 9.8, False)]
+    run_detail('usecase-nguoi-mua-le.html', 15.2, PK['C'][1], mains, sides, deps, left, right,
+               gens=[('le', 'vl', 20)],
+               note='COD chỉ khi đơn dưới ngưỡng và tài khoản chưa từng từ chối nhận hàng; hoàn tiền đi qua cổng thanh toán.')
 
 
 def wholesale():
-    B = '#1a5fa8'
-    mains = {
-        'm1': (0, 'Xem giá sỉ theo MOQ', False),
-        'm2': (1, 'Gửi yêu cầu báo giá (RFQ)', False),
-        'm3': (2, 'Thương lượng báo giá', False),
-        'm4': (3, 'UC-D4 Chốt báo giá, giao kết hợp đồng', True),
-        'm5': (5, 'Nộp ký quỹ', False),
-        'm6': (6, 'Theo dõi lịch giao theo đợt', False),
-        'm7': (7, 'UC-D7 Xác nhận nhận hàng, thanh toán theo đợt', True),
-        'm8': (9, 'Đặt mua chào sỉ tồn dư của Farmery', False),
-    }
-    sides = {
-        's1': (1, 'Kiểm tra đạt MOQ', False, '#6f7c76'),
-        's2': (3, 'Xác nhận giao kết bằng OTP', False, '#6f7c76'),
-        's3': (4, 'Ký số hợp đồng', False, '#6f7c76'),
-        's4': (8, 'Khiếu nại đợt giao', False, '#6f7c76'),
-    }
-    deps = [('m2', 's1', 'include'), ('m4', 's2', 'include'), ('s3', 'm4', 'extend'), ('s4', 'm7', 'extend')]
-    left = [('Khách sỉ', ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8'], False, 1.5),
-            ('Nhà cung cấp', ['m3', 'm4'], False, 6.5)]
-    right = [('Tổ chức chứng thực chữ ký số', ['s3'], True), ('Cổng thanh toán', ['m5', 'm7'], True)]
-    detail('usecase-nguoi-mua-si.html', 'Sơ đồ Use Case chi tiết — Khách sỉ',
-           'Luồng bán sỉ (FR6, FR7): yêu cầu báo giá, thương lượng, giao kết hợp đồng (nhà cung cấp cùng là actor chính), ký quỹ, nhận hàng và thanh toán theo đợt. Ký số chỉ khi hợp đồng vượt ngưỡng và hai bên chọn; khiếu nại chỉ khi đợt giao không đạt.',
-           B, mains, sides, deps, left, right, 50 + 10 * PITCH)
+    mains = [('m0', 'Xem giá sỉ theo MOQ', 'n'), ('m1', 'Gửi yêu cầu báo giá (RFQ)', 'n'),
+             ('m2', 'Thương lượng báo giá', 'n'), ('m3', 'UC-D4 Chốt báo giá, giao kết hợp đồng', 'n'),
+             ('m4', 'Theo dõi, nhận đơn sỉ một đợt', 'n'), ('m5', 'Thanh toán đơn sỉ', 'n'),
+             ('m6', 'Nộp ký quỹ', 'd'), ('m7', 'Khiếu nại đơn sỉ', 'n'), ('m8', 'Giao nhận nhiều đợt', 'd')]
+    sides = {'s1': (1, 'Kiểm tra đạt MOQ', 'n'), 's4': (4, 'Xác nhận giao kết bằng OTP', 'n')}
+    deps = [('m1', 's1', 'include'), ('m3', 's4', 'include')]
+    left = [('si', 'Khách sỉ', ['m%d' % i for i in range(9)], False, 3.4, False)]
+    right = [('ncc', 'Nhà cung cấp', ['m2', 'm3'], False, 1.8, False),
+             ('tt', 'Cổng thanh toán', ['m5', 'm6'], True, 5.0, False),
+             ('ops', 'Nhân viên vận hành', ['m7'], False, 7.0, False)]
+    run_detail('usecase-nguoi-mua-si.html', 9.6, PK['B'][1], mains, sides, deps, left, right,
+               note='Luồng bán sỉ 3P tối giản: giao một đợt, thanh toán thường. Nhà cung cấp là actor chính cùng khách sỉ ở bước thương lượng và giao kết.')
+
+
+def internal_supply():
+    mains = [('m0', 'Xem chào hàng của nhà cung cấp', 'n'), ('m1', 'Định giá bán lẻ', 'n'),
+             ('m2', 'UC-B5 Lập đơn thu mua và nghiệm thu', 'n'), ('m3', 'Đóng gói, in tem QR và nhãn', 'n'),
+             ('m4', 'Quản lý dòng tồn, sổ nhập xuất', 'n'), ('m5', 'Lập chuyến trung chuyển', 'n'),
+             ('m6', 'Tạo vận đơn chặng cuối', 'n'), ('m7', 'Sơ chế, phân loại nhiều bước', 'd'),
+             ('m8', 'Kiểm kê định kỳ', 'd'), ('m9', 'Nhập liệu hộ nhà cung cấp', 'n')]
+    sides = {'s1': (1, 'Xem dự báo giá', 'n')}
+    deps = [('m1', 's1', 'include')]
+    left = [('src', 'Nhân viên thu mua', ['m0', 'm1', 'm2'], False, 0.4, False),
+            ('wh', 'Nhân viên kho', ['m2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8'], False, 4.4, False),
+            ('sup', 'Hỗ trợ vùng', ['m9'], False, 8.6, False)]
+    right = [('ncc', 'Nhà cung cấp', ['m2'], False, 1.9, False),
+             ('pl', 'Đơn vị vận chuyển', ['m6'], True, 5.5, False)]
+    run_detail('usecase-noibo-nguonhang.html', 10.6, PK['E'][1], mains, sides, deps, left, right,
+               note='Nhà cung cấp xác nhận đơn thu mua trên ứng dụng mua hàng; dự báo giá chỉ để tham khảo khi định giá.')
+
+
+def internal_ops():
+    mains = [('m0', 'Duyệt hồ sơ, loại thuế, chứng nhận', 'n'), ('m1', 'UC-B4 Duyệt sản phẩm và lô', 'n'),
+             ('m2', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('m3', 'Xử lý vi phạm nội dung', 'n'),
+             ('m4', 'Xử lý khiếu nại, đổi trả', 'n'), ('m5', 'Ra lệnh hoàn tiền', 'n'),
+             ('m6', 'Giám sát đơn và giao hàng', 'n'), ('m7', 'Thu hồi lô', 'n'), ('m8', 'Xem báo cáo thống kê', 'n'),
+             ('m9', 'Quản lý tài khoản nội bộ, vai trò', 'n'), ('m10', 'Cấu hình biểu phí, ngưỡng, thời hạn', 'n'),
+             ('m11', 'Xem nhật ký thao tác', 'n')]
+    sides = {'s3': (3, 'Hạn chế tài khoản người bán', 'n'), 's4': (4, 'Trao đổi theo đơn', 'n')}
+    deps = [('s3', 'm3', 'extend'), ('m4', 's4', 'include')]
+    left = [('mod', 'Kiểm duyệt viên', ['m0', 'm1', 'm2', 'm3'], False, 1.0, False),
+            ('ops', 'Nhân viên vận hành', ['m4', 'm5', 'm6', 'm7', 'm8'], False, 5.5, False),
+            ('own', 'Quản trị viên', ['m9', 'm10', 'm11'], False, 9.6, False)]
+    right = [('le', 'Khách lẻ', ['s4'], False, 2.9, False),
+             ('tt', 'Cổng thanh toán', ['m5'], True, 4.85, False)]
+    run_detail('usecase-noibo-vanhanh.html', 12.6, PK['D'][1], mains, sides, deps, left, right,
+               note='Hạn chế tài khoản người bán có hiệu lực sau 5 ngày báo trước, trừ khi cơ quan nhà nước yêu cầu; cấu hình gồm biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt đơn, khung giờ giao.')
 
 
 overview()
 supplier()
+retail()
 wholesale()
+internal_supply()
+internal_ops()
 print('ok')

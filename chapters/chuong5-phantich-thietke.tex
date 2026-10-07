@@ -45,11 +45,11 @@ Mục này trình bày sơ đồ use case tổng quát và theo từng tác nhâ
 
 \subsubsection*{Danh sách tác nhân (actor)}
 
-Bảng~\ref{tab:actor-usecase} liệt kê các tác nhân, khớp với vai trò RBAC đã xác lập tại mục~\ref{sec:doituongnguoidung}.
+Bảng~\ref{tab:actor-usecase} liệt kê các tác nhân, khớp với vai trò RBAC đã xác lập tại mục~\ref{sec:doituongnguoidung}. Hai tác nhân trừu tượng giúp sơ đồ gọn hơn: \emph{Khách vãng lai} gom những việc ai cũng làm được khi chưa đăng nhập, và \emph{Nhân sự nội bộ} gom những việc chung của sáu vai trò nội bộ. Dịch vụ AI không phải tác nhân: đó là một thành phần bên trong hệ thống (mục~\ref{sec:kientruc}).
 
 \begingroup
 \tblsetup\tblzebra
-\begin{longtable}{L{4.10cm} L{3.75cm} L{7.05cm}}
+\begin{longtable}{L{4.10cm} L{3.75cm} L{6.70cm}}
 \caption{Danh sách tác nhân trong sơ đồ use case}
 \label{tab:actor-usecase} \\
 \toprule
@@ -64,19 +64,20 @@ Bảng~\ref{tab:actor-usecase} liệt kê các tác nhân, khớp với vai trò
 \endhead
 \bottomrule
 \endfoot
-Nhà cung cấp (nông dân/HTX) & \texttt{seller} & Tham gia cả hai luồng bán sỉ và bán lẻ (cung cấp hàng cho thu mua) \\
-Khách lẻ & \texttt{buyer\_retail} & Chỉ tham gia luồng bán lẻ (1P) \\
-Khách sỉ (doanh nghiệp thu mua) & \texttt{buyer\_wholesale} & Chỉ tham gia luồng bán sỉ (3P) \\
-Nhân viên thu mua & \texttt{staff\_sourcing} & Nội bộ, riêng cho luồng bán lẻ (1P) --- ra quyết định thu mua theo lô, định giá bán lẻ \\
-Nhân viên kho & \texttt{staff\_warehouse} & Nội bộ --- kiểm định hàng nhập, xuất nhập kho, sơ chế, đóng gói, kiểm kê \\
-Nhân viên giao hàng & \texttt{staff\_delivery} & Nội bộ --- giao chặng ngắn quanh kho; chỉ thiết kế, chưa hiện thực trong đồ án \\
-Nhân viên hỗ trợ vùng & \texttt{staff\_support} & Nội bộ --- hướng dẫn và nhập liệu hộ nhà cung cấp được phân công \\
-Kiểm duyệt viên & \texttt{staff\_moderation} & Nội bộ --- kiểm duyệt hồ sơ, sản phẩm, chứng nhận; xử lý vi phạm về nội dung \\
-Nhân viên vận hành & \texttt{staff\_operations} & Nội bộ --- phân xử khiếu nại và tranh chấp đơn hàng, báo cáo thống kê, giám sát tồn kho và vận chuyển \\
-Quản trị viên hệ thống & \texttt{platform\_owner} & Nội bộ --- cấu hình danh mục, ngưỡng, biểu phí; quản lý tài khoản nội bộ \\
-Hệ thống AI \textit{(actor phụ)} & --- & Hỗ trợ tìm kiếm ngữ nghĩa (FR12.3), gợi ý sản phẩm (FR12.1), dự báo (FR12.2), luật ngưỡng giám sát bất thường \\
-Cổng thanh toán trung gian \textit{(actor phụ)} & --- & Bên ngoài hệ thống, xử lý thanh toán và ký quỹ (FR7) \\
-Đơn vị vận chuyển 3PL \textit{(actor phụ)} & --- & Bên ngoài hệ thống (FR8.1) \\
+Khách vãng lai & --- (chưa đăng nhập) & Tìm kiếm, quét QR xem truy xuất, xem sản phẩm, đăng ký tài khoản \\
+Khách lẻ & \texttt{buyer\_retail} & Tổng quát hóa từ khách vãng lai; chỉ tham gia luồng bán lẻ (1P) \\
+Khách sỉ (doanh nghiệp thu mua) & \texttt{buyer\_wholesale} & Tổng quát hóa từ khách vãng lai; chỉ tham gia luồng bán sỉ (3P) \\
+Nhà cung cấp (nông dân, hợp tác xã) & \texttt{seller} & Bán sỉ cho khách sỉ và bán cả lô cho Farmery qua đơn thu mua \\
+Nhân sự nội bộ \textit{(trừu tượng)} & --- & Đăng nhập hai lớp, nhận việc và thông báo; sáu vai trò dưới đây đều làm được \\
+Kiểm duyệt viên & \texttt{staff\_moderation} & Duyệt hồ sơ, sản phẩm, lô, chứng nhận, đánh giá; xử lý vi phạm nội dung \\
+Nhân viên vận hành & \texttt{staff\_operations} & Xử lý khiếu nại, đổi trả và hoàn tiền; giám sát đơn và giao hàng; thu hồi lô \\
+Nhân viên thu mua & \texttt{staff\_sourcing} & Lập đơn thu mua theo lô, định giá bán lẻ có tham khảo dự báo giá \\
+Nhân viên kho & \texttt{staff\_warehouse} & Nghiệm thu, đóng gói và in tem, quản lý dòng tồn, lập chuyến trung chuyển và vận đơn \\
+Nhân viên hỗ trợ vùng & \texttt{staff\_support} & Hướng dẫn và nhập liệu hộ nhà cung cấp được phân công \\
+Quản trị viên hệ thống & \texttt{platform\_owner} & Quản lý tài khoản nội bộ, cấu hình nền tảng, xem nhật ký thao tác \\
+Cổng thanh toán \textit{(hệ thống)} & --- & Bên ngoài; thanh toán và hoàn tiền (FR7.1) \\
+Đơn vị vận chuyển \textit{(hệ thống)} & --- & Bên ngoài; vận đơn chặng cuối, trạng thái giao (FR8.1) \\
+Dịch vụ hóa đơn điện tử \textit{(hệ thống)} & --- & Bên ngoài; bản hiện thực là giả lập (FR7.2) \\
 \end{longtable}
 \endgroup
 
@@ -86,11 +87,17 @@ Cổng thanh toán trung gian \textit{(actor phụ)} & --- & Bên ngoài hệ th
 
 \subsubsection*{Sơ đồ use case tổng quan}
 
-Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối chức năng tại mục~\ref{sec:luongvanhanh} và các nhóm FR tại mục~\ref{sec:yeucauchucnang}. Trong mỗi gói, cột trái là use case của người dùng bên ngoài, cột phải là use case của nhân sự nội bộ. Mã UC chỉ ghi cho các use case có bảng đặc tả; actor phụ (hệ thống AI, cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số) được vẽ ở các sơ đồ chi tiết để sơ đồ tổng quan không rối.
+Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối mô-đun tại Bảng~\ref{tab:module-io}. Cách đọc sơ đồ:
+\begin{itemize}
+    \item \textbf{Cột trái} trong mỗi gói là use case của người dùng bên ngoài, \textbf{cột phải} là use case của nhân sự nội bộ; gói Vận hành chỉ có cột phải.
+    \item \textbf{Use case của trục bán lẻ} (tìm kiếm, đặt hàng và thanh toán, theo dõi đơn, đổi trả, đánh giá, mua lại) viền đậm; \textbf{use case chỉ thiết kế} vẽ xám nét đứt.
+    \item \textbf{Mỗi đường nối là một quan hệ riêng} giữa một tác nhân và một use case; sáu vai trò nội bộ đặt trong khung ``Nhân sự nội bộ'', đường nối từ biên khung áp cho cả sáu vai trò.
+    \item \textbf{Ba tác nhân hệ thống} (cổng thanh toán, dịch vụ hóa đơn điện tử, đơn vị vận chuyển) đặt ở góc dưới; mã UC chỉ ghi cho các use case có bảng đặc tả.
+\end{itemize}
 
 \begin{figure}[p]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
 \includegraphics{image/comparison/usecase-overview.png}
 \end{adjustbox}
 \caption{Sơ đồ Use Case tổng quan hệ thống Farmery}
@@ -99,18 +106,22 @@ Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo n
 
 \subsubsection*{Sơ đồ use case chi tiết theo tác nhân}
 
-Sơ đồ chi tiết của từng nhóm tác nhân đặt tại Phụ lục~S, gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML:
+Năm sơ đồ chi tiết đặt tại Phụ lục~S, gồm đầy đủ quan hệ \texttt{<<include>>} (bắt buộc) và \texttt{<<extend>>} (mở rộng có điều kiện) theo chuẩn UML:
 \begin{itemize}
-    \item Nhà cung cấp, gồm nguồn cung FR2--FR4 và các việc ở luồng bán sỉ, thu mua (Hình~\ref{fig:usecase-nhaban});
-    \item Khách lẻ, hành trình mua hàng bán lẻ FR5 (Hình~\ref{fig:usecase-khachle});
-    \item Khách sỉ, từ yêu cầu báo giá, giao kết hợp đồng, ký quỹ tới giao hàng theo đợt FR6, FR7 (Hình~\ref{fig:usecase-khachsi});
-    \item nhân sự nội bộ (Hình~\ref{fig:usecase-quantri}).
+    \item nhà cung cấp: hồ sơ, chứng nhận, sản phẩm, nhật ký canh tác, chào hàng, bán sỉ (Hình~\ref{fig:usecase-nhaban});
+    \item khách vãng lai và khách lẻ: trục bán lẻ FR5, FR8.3 (Hình~\ref{fig:usecase-khachle});
+    \item khách sỉ: từ yêu cầu báo giá, giao kết hợp đồng tới đơn sỉ giao một đợt FR6, FR7 (Hình~\ref{fig:usecase-khachsi});
+    \item nhân sự nguồn hàng: thu mua, kho, hỗ trợ vùng (Hình~\ref{fig:usecase-noibo-nguonhang});
+    \item nhân sự kiểm duyệt, vận hành và quản trị viên (Hình~\ref{fig:usecase-noibo-vanhanh}).
 \end{itemize}
 
 \subsubsection*{Bảng đặc tả các use case chính}
 
-Các use case dưới đây được chọn đại diện cho mọi loại actor và loại luồng: thao tác đơn giản (UC-B2), luồng của nhân sự nội bộ có hệ thống ngoài tham gia (UC-B4), luồng có actor phụ bên ngoài (UC-C4, UC-D7), luồng hai bên cùng thao tác có điều kiện rẽ nhánh (UC-D4), và luồng có AI hỗ trợ (UC-C7). Ba bảng UC-B4, UC-C4 và UC-D4 đặt tại đây; bảng UC-B2, UC-D7 và UC-C7 ở Phụ lục~S.
-
+Bảy use case được đặc tả, chọn sao cho đủ các loại tác nhân và các loại luồng:
+\begin{itemize}
+    \item \textbf{Tại đây:} UC-B4 (nhân sự nội bộ duyệt, hệ thống tự sinh mã QR), UC-C4 (trục bán lẻ, có hệ thống bên ngoài), UC-C6 (đổi trả, hai bên cùng thao tác và rẽ nhánh theo quyết định).
+    \item \textbf{Tại Phụ lục~S:} UC-B2 (thao tác đơn giản, dữ liệu bất biến), UC-B5 (hai vai trò nội bộ cùng nhà cung cấp), UC-C7 (kiểm duyệt có luật ngưỡng), UC-D4 (giao kết hợp đồng sỉ).
+\end{itemize}
 
 \begingroup
 \tblsetup
@@ -125,81 +136,80 @@ Các use case dưới đây được chọn đại diện cho mọi loại actor
 \bottomrule
 \endfoot
 \textbf{Actor chính} & Kiểm duyệt viên (\texttt{staff\_moderation}) \\
-\textbf{Actor phụ} & Hệ thống truy xuất nguồn gốc nông sản của Bộ Nông nghiệp và Môi trường (TraceViet) \\
-\textbf{Tiền điều kiện} & Sản phẩm và lô đã qua kiểm tra tự động sơ bộ; lô có tối thiểu một bản ghi nhật ký canh tác và ảnh sản phẩm thật \\
+\textbf{Actor phụ} & --- \\
+\textbf{Tiền điều kiện} & Sản phẩm và lô đã qua kiểm tra tự động sơ bộ (danh mục lá, đơn vị tính, trường bắt buộc --- FR4.6); lô có tối thiểu một bản ghi nhật ký canh tác và ảnh sản phẩm thật \\
 \textbf{Luồng chính} &
 1. Kiểm duyệt viên mở hàng đợi duyệt, xem thông tin sản phẩm, nhật ký canh tác và chứng nhận liên quan.\newline
 2. Đối chiếu mã số vùng trồng với cổng công bố công khai của Bộ và ghi kết quả đối chiếu.\newline
 3. Phê duyệt sản phẩm và lô.\newline
 4. Hệ thống sinh mã định danh lô theo nguyên lý GS1 (GTIN kèm số lô) và mã QR dẫn tới trang truy xuất công khai.\newline
-5. Hệ thống đưa dữ liệu truy xuất của lô vào hàng đợi đồng bộ lên TraceViet; lô được mở bán ngay, không chờ kết quả đồng bộ. \\
+5. Hệ thống phát sự kiện \texttt{BatchApproved}: mô-đun tồn kho mở dòng tồn của nhà cung cấp cho lô; nhà cung cấp nhận thông báo. \\
 \textbf{Luồng thay thế/ngoại lệ} &
 3a. Không đạt: từ chối kèm lý do, nhà cung cấp nhận thông báo và hướng dẫn bổ sung.\newline
-4a. Lô đã có mã QR từ trước (đính chính sau khi duyệt): không sinh mã mới, chỉ cập nhật trang truy xuất.\newline
-5a. TraceViet từ chối bản đồng bộ: ghi lý do, báo kiểm duyệt viên; lô vẫn bán được với mã QR của Farmery.\newline
-5b. TraceViet phê duyệt: lưu mã truy xuất do Bộ cấp và hiển thị kèm liên kết trên trang truy xuất. \\
-\textbf{Hậu điều kiện} & Sản phẩm hiển thị công khai; lô có mã QR quét được; trạng thái đồng bộ TraceViet được ghi nhận. \\
+4a. Lô đã có mã QR từ trước (đính chính sau khi duyệt): không sinh mã mới, chỉ cập nhật trang truy xuất. \\
+\textbf{Hậu điều kiện} & Sản phẩm hiển thị công khai; lô có mã QR quét được và dòng tồn sẵn sàng cho giao dịch. Đồng bộ lô lên TraceViet là hướng phát triển (Chương~\ref{chap:ketluan}). \\
 \end{longtable}
 \endgroup
 
 \begingroup
 \tblsetup
 \begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-C4 --- Thanh toán đơn hàng bán lẻ}
+\caption{Đặc tả use case UC-C4 --- Đặt hàng và thanh toán đơn bán lẻ}
 \label{tab:uc-c4} \\
 \toprule
 \rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-C4: Thanh toán đơn hàng bán lẻ}} \\
+\multicolumn{2}{l}{\textbf{UC-C4: Đặt hàng và thanh toán đơn bán lẻ}} \\
 \midrule
 \endfirsthead
 \bottomrule
 \endfoot
 \textbf{Actor chính} & Khách lẻ (\texttt{buyer\_retail}) \\
-\textbf{Actor phụ} & Cổng thanh toán trung gian \\
-\textbf{Tiền điều kiện} & Đơn hàng đã được tạo, đang chờ thanh toán \\
+\textbf{Actor phụ} & Cổng thanh toán \\
+\textbf{Tiền điều kiện} & Giỏ hàng có ít nhất một sản phẩm còn bán; khách đã đăng nhập \\
 \textbf{Luồng chính} &
-1. Chọn phương thức thanh toán (COD/chuyển khoản-VietQR/ví điện tử).\newline
-2. Nếu trực tuyến: hệ thống chuyển yêu cầu tới cổng thanh toán trung gian.\newline
-3. Cổng thanh toán xử lý, trả kết quả.\newline
-4. Hệ thống xác nhận đơn, giữ chỗ trên dòng tồn của Farmery.\newline
-5. Thông báo cho nhân viên kho chuẩn bị hàng. \\
+1. Khách chọn địa chỉ, khung giờ giao và cách thanh toán; hệ thống hiển thị tiền hàng, thuế, cước giao trước khi xác nhận (FR5.2, FR8.2).\newline
+2. Khách xác nhận đặt hàng; hệ thống khóa dòng tồn của Farmery và giữ chỗ trong 15 phút, đơn ở trạng thái ``Đã đặt''.\newline
+3. Hệ thống tạo giao dịch và chuyển khách sang trang của cổng thanh toán.\newline
+4. Cổng thanh toán xử lý, gửi kết quả qua webhook.\newline
+5. Hệ thống chuyển đơn sang ``Đã thanh toán'', đổi phần giữ chỗ thành trừ tồn và đưa đơn vào hàng đóng gói; khách nhận thông báo. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-3a. Thanh toán thất bại: đơn giữ trạng thái chờ tối đa 15 phút rồi tự hủy, nhả phần tồn đã giữ chỗ.\newline
-1a. Chọn COD: bỏ qua bước 2--3, xác nhận ngay.\newline
-4a. Nhiều đơn vượt tồn kho còn lại: ưu tiên đơn xác nhận thanh toán trước. \\
-\textbf{Hậu điều kiện} & Đơn chuyển trạng thái đã xác nhận (hoặc hủy nếu thất bại), tồn kho cập nhật đúng kết quả giao dịch. \\
+1a. Chọn COD: chỉ được khi đơn dưới ngưỡng và tài khoản chưa từng từ chối nhận hàng; bỏ qua bước 3--4, đơn được xác nhận ngay.\newline
+2a. Không đủ tồn cho một sản phẩm: báo khách, cho bỏ sản phẩm đó hoặc giảm số lượng.\newline
+4a. Thanh toán thất bại hoặc quá 15 phút: đơn bị hủy, phần giữ chỗ được nhả.\newline
+5a. Đơn xác nhận sau giờ chốt: xếp vào chuyến trung chuyển của ngày kế tiếp. \\
+\textbf{Hậu điều kiện} & Đơn ở trạng thái ``Đã thanh toán'' (hoặc đã xác nhận COD) và tồn kho đã trừ, hoặc đơn bị hủy và tồn kho trở về như trước khi đặt. \\
 \end{longtable}
 \endgroup
 
 \begingroup
 \tblsetup
 \begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-D4 --- Chốt báo giá và giao kết hợp đồng bán sỉ}
-\label{tab:uc-d4} \\
+\caption{Đặc tả use case UC-C6 --- Yêu cầu đổi trả, hoàn tiền đơn lẻ}
+\label{tab:uc-c6} \\
 \toprule
 \rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-D4: Chốt báo giá và giao kết hợp đồng bán sỉ}} \\
+\multicolumn{2}{l}{\textbf{UC-C6: Yêu cầu đổi trả, hoàn tiền đơn lẻ}} \\
 \midrule
 \endfirsthead
 \bottomrule
 \endfoot
-\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) và Nhà cung cấp (\texttt{seller}) \\
-\textbf{Actor phụ} & Tổ chức cung cấp dịch vụ chứng thực chữ ký số công cộng (chỉ khi ký số) \\
-\textbf{Tiền điều kiện} & Hai bên đã thống nhất số lượng, đơn giá và lịch giao qua kênh nhắn tin nội bộ \\
+\textbf{Actor chính} & Khách lẻ (\texttt{buyer\_retail}); nhân viên vận hành (\texttt{staff\_operations}) ra quyết định \\
+\textbf{Actor phụ} & Cổng thanh toán (hoàn tiền) \\
+\textbf{Tiền điều kiện} & Đơn ở trạng thái ``Đã giao''; còn trong thời hạn khiếu nại của nhóm hàng (rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày --- Phụ lục~U) \\
 \textbf{Luồng chính} &
-1. Một bên bấm chốt báo giá; bên kia đồng ý.\newline
-2. Hệ thống sinh hợp đồng nháp từ mẫu chuẩn với các điều khoản đã thống nhất, gồm điều khoản phạt vi phạm và thanh toán theo từng đợt.\newline
-3. Hai bên xem bản nháp.\newline
-4. Mỗi bên xác nhận giao kết bằng mã xác nhận dùng một lần gửi tới số điện thoại đã xác thực.\newline
-5. Khi cả hai bên đã xác nhận, hệ thống lưu mã băm của phiên bản đã xác nhận, chuyển hợp đồng sang trạng thái ``đã giao kết'' và lập lịch các đợt giao. \\
+1. Khách chọn đơn, chọn sản phẩm và lý do, đính kèm ảnh hoặc video minh chứng.\newline
+2. Hệ thống kiểm tra thời hạn khiếu nại, tạo yêu cầu, đưa vào hàng đợi có hạn xử lý; khách nhận xác nhận đã tiếp nhận trong 24 giờ.\newline
+3. Nhân viên vận hành xem minh chứng, trao đổi với khách ngay trên yêu cầu khi cần thêm thông tin (FR9.1).\newline
+4. Nhân viên vận hành quyết định trong 3 ngày làm việc: hoàn tiền không cần trả hàng, đổi hàng, hoặc từ chối kèm lý do.\newline
+5. Nếu hoàn tiền: hệ thống ra lệnh hoàn qua cổng thanh toán và ghi bút toán hủy vào sổ nhập xuất; tiền về khách trong 7 ngày làm việc. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-3a. Một bên yêu cầu sửa: hệ thống tạo phiên bản mới, mọi xác nhận trước đó mất hiệu lực.\newline
-4a. Quá thời hạn mà một bên chưa xác nhận: hợp đồng tự hủy, báo giá quay về trạng thái đàm phán.\newline
-5a. Giá trị hợp đồng vượt ngưỡng: hệ thống đánh dấu thuộc diện ký quỹ trung gian (FR7.3) và đề nghị ký số (FR6.6); nếu hai bên chọn ký số, hệ thống gửi văn bản sang dịch vụ ký, nhận lại bản đã ký và chuyển sang trạng thái ``đã ký số''. \\
-\textbf{Hậu điều kiện} & Hợp đồng ở trạng thái ``đã giao kết'' hoặc ``đã ký số'', có lịch sử phiên bản và mã băm; các đợt giao được lập lịch. \\
+2a. Quá thời hạn của nhóm hàng, hoặc hàng tươi bị trả vì đổi ý: hệ thống không tạo yêu cầu và nêu chính sách áp dụng.\newline
+4a. Giá trị vượt ngưỡng hoàn tiền không cần trả hàng: yêu cầu khách gửi trả hàng; hàng về kho được ghi nhập vào sổ nhập xuất trước khi hoàn tiền.\newline
+4b. Lỗi do đơn vị vận chuyển: Farmery xử lý với khách trước, ghi nhận để đòi lại đơn vị vận chuyển sau.\newline
+4c. Quá hạn xử lý: yêu cầu tự nâng mức ưu tiên (FR10.3). \\
+\textbf{Hậu điều kiện} & Yêu cầu đóng với một quyết định có lý do; nếu hoàn tiền thì giao dịch hoàn đã ghi nhận ở cả cổng thanh toán và sổ nhập xuất; đơn chuyển sang ``Hoàn tất'' hoặc giữ ``Khiếu nại'' cho tới khi tiền về. \\
 \end{longtable}
 \endgroup
-
 
 
 \section{Giải pháp công nghệ}

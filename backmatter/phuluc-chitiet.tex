@@ -135,7 +135,7 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
 \includegraphics{image/comparison/usecase-nguoi-mua-le.png}
 \end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- tác nhân Khách lẻ}
+\caption{Sơ đồ Use Case chi tiết --- khách vãng lai và khách lẻ}
 \label{fig:usecase-khachle}
 \end{figure}
 
@@ -151,10 +151,19 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \begin{figure}[p]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
-\includegraphics{image/comparison/usecase-quan-tri-vien.png}
+\includegraphics{image/comparison/usecase-noibo-nguonhang.png}
 \end{adjustbox}
-\caption{Sơ đồ Use Case chi tiết --- nhân sự nội bộ (kiểm duyệt viên, nhân viên vận hành, quản trị viên hệ thống)}
-\label{fig:usecase-quantri}
+\caption{Sơ đồ Use Case chi tiết --- nhân sự nguồn hàng (thu mua, kho, hỗ trợ vùng)}
+\label{fig:usecase-noibo-nguonhang}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\includegraphics{image/comparison/usecase-noibo-vanhanh.png}
+\end{adjustbox}
+\caption{Sơ đồ Use Case chi tiết --- nhân sự kiểm duyệt, vận hành và quản trị viên}
+\label{fig:usecase-noibo-vanhanh}
 \end{figure}
 
 \begingroup
@@ -170,7 +179,7 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \bottomrule
 \endfoot
 \textbf{Actor chính} & Nhà cung cấp (\texttt{seller}) \\
-\textbf{Tiền điều kiện} & Nhà cung cấp đã xác thực (trạng thái ``Đã xác thực''); đã tạo sản phẩm/lô hàng tương ứng (UC-B1) \\
+\textbf{Tiền điều kiện} & Nhà cung cấp đã xác thực (trạng thái ``Đã xác thực''); đã đăng sản phẩm và khai báo lô tương ứng \\
 \textbf{Luồng chính} &
 1. Nhà cung cấp chọn lô hàng cần ghi nhật ký.\newline
 2. Nhập giai đoạn canh tác (gieo trồng/chăm sóc/thu hoạch), ngày tháng, mô tả hoạt động.\newline
@@ -186,28 +195,58 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \begingroup
 \tblsetup
 \begin{longtable}{L{3.00cm} L{12.25cm}}
-\caption{Đặc tả use case UC-D7 --- Xác nhận nhận hàng và thanh toán theo đợt}
-\label{tab:uc-d7} \\
+\caption{Đặc tả use case UC-B5 --- Lập đơn thu mua và nghiệm thu}
+\label{tab:uc-b5} \\
 \toprule
 \rowcolor{tblheadbg}
-\multicolumn{2}{l}{\textbf{UC-D7: Xác nhận nhận hàng và thanh toán theo đợt}} \\
+\multicolumn{2}{l}{\textbf{UC-B5: Lập đơn thu mua và nghiệm thu}} \\
 \midrule
 \endfirsthead
 \bottomrule
 \endfoot
-\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) \\
-\textbf{Actor phụ} & Cổng thanh toán trung gian \\
-\textbf{Tiền điều kiện} & Nhà cung cấp đã giao hàng đợt tương ứng theo hợp đồng đã giao kết; hệ thống đã sinh hóa đơn cho đợt giao đó \\
+\textbf{Actor chính} & Nhân viên thu mua (\texttt{staff\_sourcing}) lập đơn; nhân viên kho (\texttt{staff\_warehouse}) nghiệm thu \\
+\textbf{Actor phụ} & Nhà cung cấp (\texttt{seller}) xác nhận đơn \\
+\textbf{Tiền điều kiện} & Nhà cung cấp đã gửi chào hàng cho một lô đã duyệt; dòng tồn của nhà cung cấp còn đủ số lượng \\
 \textbf{Luồng chính} &
-1. Kiểm tra và xác nhận đã nhận đủ hàng đúng cam kết của đợt giao.\newline
-2. Thanh toán theo kỳ hạn công nợ đã thỏa thuận.\newline
-3. Nếu hợp đồng có ký quỹ: hệ thống ra lệnh cho cổng thanh toán giải ngân cho nhà cung cấp ngay tại bước xác nhận này.\newline
-4. Nhà cung cấp theo dõi doanh thu/lịch sử bán sỉ cập nhật. \\
+1. Nhân viên thu mua mở chào hàng, xem giá dự báo cho các tuần tới làm tham khảo (FR12.2).\newline
+2. Lập đơn thu mua: lô, số lượng, đơn giá, ngày nhận tại kho, tiêu chuẩn nghiệm thu.\newline
+3. Nhà cung cấp xác nhận đơn trên ứng dụng mua hàng; hệ thống giữ chỗ phần sản lượng trên dòng tồn của nhà cung cấp.\newline
+4. Hàng về kho; nhân viên kho kiểm tra theo tiêu chuẩn, ghi phần đạt, phần bị từ chối và hao hụt.\newline
+5. Phần đạt chuyển từ dòng tồn của nhà cung cấp sang dòng tồn của Farmery tại kho, giữ nguyên mã lô, nhật ký canh tác và mã QR; hệ thống phát \texttt{ProcurementReceived} để ghi khoản phải trả và báo nhà cung cấp. \\
 \textbf{Luồng thay thế/ngoại lệ} &
-1a. Không giao đủ số lượng/đúng lịch: áp dụng điều khoản phạt, ghi vào lịch sử uy tín.\newline
-2a. Chậm thanh toán quá hạn: nhắc tự động, có thể tạm khóa quyền đặt RFQ mới.\newline
-3a. Phát sinh tranh chấp về đợt giao đã ký quỹ: khoản ký quỹ giữ nguyên tại cổng thanh toán cho đến khi khiếu nại xử lý xong. \\
-\textbf{Hậu điều kiện} & Đợt giao chuyển trạng thái hoàn tất, công nợ cập nhật, tiền giải ngân cho nhà cung cấp (nếu có ký quỹ). \\
+3a. Nhà cung cấp từ chối hoặc không xác nhận trong thời hạn: đơn hủy, không giữ chỗ.\newline
+3b. Hợp đồng sỉ đã giữ chỗ trước phần sản lượng đó: khóa dòng tồn cho thấy không đủ, nhân viên thu mua giảm số lượng hoặc chọn lô khác.\newline
+4a. Phần bị từ chối ở lại dòng tồn của nhà cung cấp; nhà cung cấp nhận biên bản nghiệm thu kèm lý do. \\
+\textbf{Hậu điều kiện} & Sổ nhập xuất có bản ghi nghiệm thu; dòng tồn của Farmery tăng đúng phần đạt, dòng tồn của nhà cung cấp giảm tương ứng. \\
+\end{longtable}
+\endgroup
+
+\begingroup
+\tblsetup
+\begin{longtable}{L{3.00cm} L{12.25cm}}
+\caption{Đặc tả use case UC-D4 --- Chốt báo giá và giao kết hợp đồng bán sỉ}
+\label{tab:uc-d4} \\
+\toprule
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{UC-D4: Chốt báo giá và giao kết hợp đồng bán sỉ}} \\
+\midrule
+\endfirsthead
+\bottomrule
+\endfoot
+\textbf{Actor chính} & Khách sỉ (\texttt{buyer\_wholesale}) và Nhà cung cấp (\texttt{seller}) \\
+\textbf{Actor phụ} & --- \\
+\textbf{Tiền điều kiện} & Hai bên đã thống nhất số lượng, đơn giá và ngày giao trong kênh trao đổi gắn với RFQ (FR6.2) \\
+\textbf{Luồng chính} &
+1. Một bên bấm chốt báo giá; bên kia đồng ý.\newline
+2. Hệ thống sinh hợp đồng nháp từ mẫu chuẩn với các điều khoản đã thống nhất, gồm điều khoản phạt vi phạm và thanh toán khi bên mua xác nhận nhận hàng.\newline
+3. Hai bên xem bản nháp.\newline
+4. Mỗi bên xác nhận giao kết bằng mã xác nhận dùng một lần gửi tới số điện thoại đã xác thực.\newline
+5. Khi cả hai bên đã xác nhận, hệ thống lưu mã băm của phiên bản đã xác nhận, chuyển hợp đồng sang ``đã giao kết'', giữ chỗ phần hàng trên dòng tồn của nhà cung cấp và tạo đơn sỉ giao một đợt. \\
+\textbf{Luồng thay thế/ngoại lệ} &
+3a. Một bên yêu cầu sửa: hệ thống tạo phiên bản mới, mọi xác nhận trước đó mất hiệu lực.\newline
+4a. Quá thời hạn mà một bên chưa xác nhận: hợp đồng tự hủy, báo giá quay về trạng thái đàm phán.\newline
+5a. Dòng tồn của nhà cung cấp không còn đủ: không giao kết được, hai bên được báo để điều chỉnh số lượng. \\
+\textbf{Hậu điều kiện} & Hợp đồng ở trạng thái ``đã giao kết'', có lịch sử phiên bản và mã băm, tải lại được trong ít nhất 3 năm (NFR8.5); đơn sỉ một đợt được tạo. Ký quỹ cho đơn giá trị lớn (FR7.3) và giao nhiều đợt (FR6.5) chỉ thiết kế. \\
 \end{longtable}
 \endgroup
 
@@ -224,7 +263,7 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \bottomrule
 \endfoot
 \textbf{Actor chính} & Kiểm duyệt viên (\texttt{staff\_moderation}) \\
-\textbf{Actor phụ} & Hệ thống (luật ngưỡng giám sát bất thường, Chương~\ref{chap:coso}) \\
+\textbf{Actor phụ} & --- (hệ thống tự chấm theo luật ngưỡng giám sát bất thường, Chương~\ref{chap:coso}) \\
 \textbf{Tiền điều kiện} & Người mua đã gửi đánh giá sau khi xác nhận nhận hàng \\
 \textbf{Luồng chính} &
 1. Kiểm duyệt tự động sơ bộ (từ khóa cấm, liên kết đáng ngờ).\newline

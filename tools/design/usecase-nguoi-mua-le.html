@@ -2,173 +2,102 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<!-- Sinh tự động; cỡ chữ in ra (pt) = px x 16 / 1420 x 28,45 -> chữ 22px ~ 7pt. -->
 <style>
-  :root{
-    --bg:#f4f6f5; --ink:#16241e; --sub:#5b6b63; --wire:#8b9892;
-    --main:#1a5fa8; --ai:#6b4fa0; --ext:#c98a1a; --pay:#c23b3b;
-  }
   *{box-sizing:border-box;}
-  body{
-    margin:0; padding:40px 46px; width:1380px;
-    background:var(--bg);
-    font-family:'Segoe UI','Noto Sans',Arial,sans-serif;
-    color:var(--ink);
-  }
-  h1{font-size:46.02px; margin:0 0 4px; font-weight:800;}
-  .sub{color:var(--sub); font-size:24.78px; margin:0 0 20px; max-width:1200px;}
-  .stage{
-    position:relative;
-    background:#fff; border:1px solid #c7d1cb; border-radius:16px;
-    padding:0; box-shadow:0 2px 10px rgba(20,40,30,.06);
-  }
-  .boundary{ position:absolute; border:1.5px solid #9aa6a0; border-radius:14px; }
-  .boundary .b-title{
-    position:absolute; top:-23.01px; left:18px; background:#fff; padding:0 8px;
-    font-size:23.01px; font-weight:800; color:var(--sub);
-  }
-  .actor{
-    position:absolute; width:104px; text-align:center;
-    font-size:21.24px; font-weight:700; color:#12351f;
-    z-index:3;
-  }
-  .actor svg{display:block; margin:0 auto 4px;}
-  .uc{
-    position:absolute; border:1.5px solid; border-radius:40.26px; background:#fff;
-    display:flex; align-items:center; justify-content:center; text-align:center;
-    font-size:21.24px; font-weight:700; line-height:1.2; padding:4px 12px;
-  }
-  .uc.main{ border-color:var(--main); background:#eef4fb; color:#0d3f70; }
-  .uc.ai{ border-color:var(--ai); background:#f1eef8; color:#4a3878; }
-  .uc.ext{ border-color:var(--ext); background:#fdf1dc; color:#8a5c0f; }
-  .uc.pay{ border-color:var(--pay); background:#fbe9e9; color:#7d2323; }
-  .rel-label{ position:absolute; font-size:17.7px; font-style:italic; color:#6b7670; background:#fff; padding:0 5px; white-space:nowrap; z-index:4; line-height:1; }
-  .legend{display:flex; gap:10px; margin-top:29.28px; font-size:21.24px; color:var(--sub); flex-wrap:wrap; align-items:center;}
-  .legend span{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; margin-right:10px;}
-  .swatch{width:14px; height:25.62px; border-radius:8px; display:inline-block; border:2px solid; flex:none; background:#fff;}
-  footer{margin-top:29.28px; font-size:19.47px; color:#9aa6a0;}
+  body{margin:0; padding:30px 40px; width:1420px; background:#f4f6f5;
+       font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  h1{font-size:34px; margin:0 0 6px; font-weight:800;}
+  .sub{color:#4d5c55; font-size:22px; margin:0 0 18px; line-height:1.35;}
+  .stage{background:#fff; border:1px solid #c7d1cb; border-radius:18px; padding:20px 0;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:16px; font-size:22px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:10px;}
+  .sw{width:34px; height:24px; border-radius:6px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:46px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:10px; font-size:22px; color:#4d5c55;}
 </style>
 </head>
 <body>
-  <h1>Sơ đồ Use Case chi tiết — Actor "Khách lẻ (B2C)"</h1>
-  <p class="sub">Hành trình mua hàng bán lẻ đầy đủ: tìm kiếm &amp; tra cứu truy xuất nguồn gốc (include), đặt hàng, thanh toán (include Cổng thanh toán trung gian), đánh giá sau khi nhận hàng (extend kiểm duyệt AI). Đường nối đi theo trục ngang/dọc.</p>
-
-  <div class="stage" style="width:1300px; height:1281px;">
-    <div class="boundary" style="left:230px; top:43.92px; width:900px; height:1193.16px;">
-      <span class="b-title">Hệ thống Farmery</span>
-    </div>
-
-    <!-- ACTOR chính -->
-    <div class="actor" style="left:20px; top:618.54px;">
-      <svg width="63.72" height="84.96" viewBox="0 0 36 48"><circle cx="18" cy="9" r="8.5" fill="none" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="17.5" x2="18" y2="35" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="5" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="22" x2="31" y2="31" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="6" y2="47" stroke="#12351f" stroke-width="1.7"/><line x1="18" y1="35" x2="30" y2="47" stroke="#12351f" stroke-width="1.7"/></svg>
-      Khách lẻ
-    </div>
-
-    <!-- ACTOR phụ -->
-    <div class="actor" style="left:1180px; top:73.2px;">
-      <svg width="56.64" height="77.88" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      Nhà cung cấp
-    </div>
-    <div class="actor" style="left:1180px; top:512.4px;">
-      <svg width="53.1" height="53.1" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#5b6b63" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="20" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">Cổng</text><text x="15" y="27" font-size="8" text-anchor="middle" fill="#5b6b63" font-weight="700">TT</text></svg>
-      Cổng thanh toán
-    </div>
-    <div class="actor" style="left:1180px; top:860.1px;">
-      <svg width="56.64" height="77.88" viewBox="0 0 32 44"><circle cx="16" cy="8" r="7.5" fill="none" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="15.5" x2="16" y2="31" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="4" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="19" x2="28" y2="27" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="5" y2="43" stroke="#12351f" stroke-width="1.5"/><line x1="16" y1="31" x2="27" y2="43" stroke="#12351f" stroke-width="1.5"/></svg>
-      QTV Giám sát
-    </div>
-    <!-- ĐÃ DỊCH XUỐNG 15px: top 610 -> 625, để tâm icon AI nằm ở y=640 -->
-    <div class="actor" style="left:1180px; top:1143.75px;">
-      <svg width="53.1" height="53.1" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="6" fill="none" stroke="#6b4fa0" stroke-width="1.5" stroke-dasharray="3 2"/><text x="15" y="19" font-size="10" text-anchor="middle" fill="#6b4fa0" font-weight="700">AI</text></svg>
-      Hệ thống AI
-    </div>
-
-    <!-- Cột 1: use case chính -->
-    <div class="uc main" style="left:270px; top:102.48px;  width:210px; height:95.16px;">Tìm kiếm &amp; lọc sản phẩm</div>
-    <div class="uc main" style="left:270px; top:274.5px; width:210px; height:95.16px;">Xem chi tiết sản phẩm</div>
-    <div class="uc main" style="left:270px; top:446.52px; width:210px; height:95.16px;">Thêm vào giỏ hàng</div>
-    <div class="uc main" style="left:270px; top:618.54px; width:210px; height:95.16px;">Đặt hàng &amp; tách đơn theo gian hàng</div>
-    <div class="uc pay"  style="left:270px; top:790.56px; width:210px; height:95.16px;">Thanh toán đơn hàng</div>
-    <div class="uc main" style="left:270px; top:962.58px; width:210px; height:95.16px;">Theo dõi trạng thái đơn hàng</div>
-    <div class="uc main" style="left:270px; top:1134.6px; width:210px; height:95.16px;">Đánh giá sản phẩm &amp; nhà cung cấp</div>
-
-    <!-- Cột 2: include/extend -->
-    <div class="uc main" style="left:600px; top:173.85px;  width:230px; height:109.8px;">Tra cứu trang truy xuất nguồn gốc (quét QR)</div>
-    <div class="uc ext"  style="left:600px; top:446.52px; width:230px; height:95.16px;">Áp mã giảm giá</div>
-    <div class="uc pay"  style="left:600px; top:790.56px; width:230px; height:95.16px;">Xử lý qua Cổng thanh toán trung gian</div>
-    <div class="uc ext"  style="left:600px; top:962.58px; width:230px; height:95.16px;">Hủy / đổi trả / hoàn tiền</div>
-    <div class="uc ai"   style="left:600px; top:1134.6px; width:230px; height:95.16px;">Kiểm duyệt đánh giá nghi vấn</div>
-
-    <!-- Nhãn quan hệ -->
-    <div class="rel-label" style="left:486px; top:309.27px;">&laquo;include&raquo;</div>
-    <div class="rel-label" style="left:560px; top:481.29px; color:#8a5c0f;">&laquo;extend&raquo;</div>
-    <div class="rel-label" style="left:486px; top:825.33px;">&laquo;include&raquo;</div>
-    <div class="rel-label" style="left:486px; top:997.35px; color:#8a5c0f;">&laquo;extend&raquo;</div>
-    <div class="rel-label" style="left:486px; top:1169.37px;">&laquo;include&raquo;</div>
-
-    <!-- ================== ĐƯỜNG NỐI ================== -->
-    <svg width="1300" height="1281" style="position:absolute; left:0; top:0; pointer-events:none;">
-      <defs>
-        <marker id="oh" markerWidth="9" markerHeight="8" refX="7" refY="4" orient="auto">
-          <path d="M0,0 L7,4 L0,8" fill="none" stroke="#5b6b63" stroke-width="1.3"/>
-        </marker>
-      </defs>
-
-      <!-- Association: Khách lẻ -> 7 use case chính -->
-      <line x1="56" y1="662.46" x2="140" y2="662.46" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="150.06"  x2="140" y2="1182.18" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="150.06"  x2="270" y2="150.06"  stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="322.08" x2="270" y2="322.08" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="494.1" x2="270" y2="494.1" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="666.12" x2="270" y2="666.12" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="838.14" x2="270" y2="838.14" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="1010.16" x2="270" y2="1010.16" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="140" y1="1182.18" x2="270" y2="1182.18" stroke="var(--wire)" stroke-width="1.3"/>
-
-      <!-- Include: Xem chi tiết -> Tra cứu truy xuất -->
-      <line x1="480" y1="322.08" x2="545" y2="322.08" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="545" y1="228.75" x2="545" y2="322.08" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <line x1="545" y1="228.75" x2="600" y2="228.75" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
-
-      <!-- Association: Tra cứu truy xuất -> Nhà cung cấp -->
-      <line x1="830" y1="228.75" x2="900" y2="228.75" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="113.46"  x2="900" y2="228.75" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="113.46"  x2="1180" y2="113.46" stroke="var(--wire)" stroke-width="1.3"/>
-
-      <!-- Extend: Áp mã giảm giá -> Đặt hàng -->
-      <line x1="600" y1="494.1" x2="555" y2="494.1" stroke="#c98a1a" stroke-width="1.1" stroke-dasharray="5 4"/>
-      <line x1="555" y1="494.1" x2="555" y2="666.12" stroke="#c98a1a" stroke-width="1.1" stroke-dasharray="5 4"/>
-      <line x1="555" y1="666.12" x2="480" y2="666.12" stroke="#c98a1a" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#oh)"/>
-
-      <!-- Include: Thanh toán -> Xử lý qua Cổng thanh toán -->
-      <line x1="480" y1="838.14" x2="600" y2="838.14" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
-
-      <!-- Association: Xử lý qua Cổng thanh toán -> Cổng thanh toán -->
-      <line x1="830" y1="838.14" x2="900" y2="838.14" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="552.66" x2="900" y2="838.14" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="552.66" x2="1180" y2="552.66" stroke="var(--wire)" stroke-width="1.3"/>
-
-      <!-- Extend: Hủy/đổi trả -> Theo dõi trạng thái -->
-      <line x1="600" y1="1010.16" x2="480" y2="1010.16" stroke="#c98a1a" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#oh)"/>
-
-      <!-- Include: Đánh giá -> Kiểm duyệt đánh giá nghi vấn -->
-      <line x1="480" y1="1182.18" x2="600" y2="1182.18" stroke="#5b6b63" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#oh)"/>
-
-      <!-- Association: Kiểm duyệt đánh giá -> QTV Giám sát -->
-      <line x1="830" y1="1182.18" x2="900" y2="1182.18" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="900.36" x2="900" y2="1182.18" stroke="var(--wire)" stroke-width="1.3"/>
-      <line x1="900" y1="900.36" x2="1180" y2="900.36" stroke="var(--wire)" stroke-width="1.3"/>
-
-      <!-- ===== ĐÃ SỬA: Kiểm duyệt đánh giá -> Hệ thống AI: 1 đường thẳng duy nhất ===== -->
-      <line x1="830" y1="1171.2" x2="1180" y2="1171.2" stroke="#6b4fa0" stroke-width="1.2"/>
-    </svg>
-  </div>
-
-  <div class="legend">
-    <span><span class="swatch" style="border-color:#1a5fa8;"></span>Use case chính (FR5)</span>
-    <span><span class="swatch" style="border-color:#c98a1a;"></span>Use case &lt;&lt;extend&gt;&gt;</span>
-    <span><span class="swatch" style="border-color:#c23b3b;"></span>Liên quan thanh toán</span>
-    <span><span class="swatch" style="border-color:#6b4fa0;"></span>Liên quan AI</span>
-  </div>
-  <footer>Farmery — Đồ án chuyên ngành · Sơ đồ Use Case chi tiết actor Khách lẻ</footer>
+  
+  <div class="stage"><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="1340" height="1134" viewBox="0 0 1340 1134"><defs><marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M1,1 L11,6 L1,11" fill="none" stroke="#44524b" stroke-width="1.8"/></marker><marker id="tri" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="13" markerHeight="13" orient="auto"><path d="M1,1 L13,7 L1,13 z" fill="#ffffff" stroke="#44524b" stroke-width="1.6"/></marker></defs><rect x="250" y="16" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="55.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Tìm kiếm sản phẩm</text>
+<rect x="250" y="88" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="127.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Quét QR, xem trang truy xuất</text>
+<rect x="250" y="160" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="187" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Xem chi tiết, sản phẩm tương</text>
+<text x="460" y="212.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">tự</text>
+<rect x="250" y="232" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="460" y="271.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đăng ký tài khoản</text>
+<rect x="250" y="304" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="343.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Quản lý giỏ hàng</text>
+<rect x="250" y="376" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="415.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-C4 Đặt hàng, thanh toán</text>
+<rect x="250" y="448" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="487.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Theo dõi đơn hàng</text>
+<rect x="250" y="520" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="547" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">UC-C6 Yêu cầu đổi trả, hoàn</text>
+<text x="460" y="572.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">tiền</text>
+<rect x="250" y="592" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="631.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đánh giá sản phẩm</text>
+<rect x="250" y="664" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="703.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Mua lại đơn cũ</text>
+<rect x="250" y="736" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="460" y="775.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhận hóa đơn điện tử</text>
+<rect x="250" y="808" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="3.2"/>
+<text x="460" y="847.98" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đăng ký báo vào mùa</text>
+<rect x="250" y="880" width="420" height="62" rx="31" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="460" y="919.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Quản lý sổ địa chỉ, quyền dữ liệu</text>
+<rect x="250" y="952" width="420" height="62" rx="31" fill="#f6f7f6" stroke="#8a948f" stroke-width="2.2" stroke-dasharray="8 6"/>
+<text x="460" y="991.98" font-size="22" font-weight="500" fill="#8a948f" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Danh sách yêu thích (chỉ thiết kế)</text>
+<rect x="250" y="1024" width="420" height="62" rx="31" fill="#f6f7f6" stroke="#8a948f" stroke-width="2.2" stroke-dasharray="8 6"/>
+<text x="460" y="1063.98" font-size="22" font-weight="500" fill="#8a948f" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Áp mã giảm giá (chỉ thiết kế)</text>
+<rect x="772" y="304" width="326" height="62" rx="31" fill="#ffffff" stroke="#55635c" stroke-width="2.2"/>
+<text x="935" y="343.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Trả khi nhận hàng (COD)</text>
+<rect x="772" y="520" width="326" height="62" rx="31" fill="#ffffff" stroke="#55635c" stroke-width="2.2"/>
+<text x="935" y="559.98" font-size="22" font-weight="500" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Trao đổi theo đơn</text>
+<polyline points="772,335 721,335 721,407 670,407" fill="none" stroke="#44524b" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#open)"/>
+<polyline points="670,551 772,551" fill="none" stroke="#44524b" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#open)"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="116" cy="91.8" r="11"/><line x1="116" y1="102.8" x2="116" y2="126.8"/><line x1="99" y1="110.8" x2="133" y2="110.8"/><line x1="116" y1="126.8" x2="102" y2="144.8"/><line x1="116" y1="126.8" x2="130" y2="144.8"/></g>
+<line x1="136" y1="110.8" x2="250" y2="47" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="110.8" x2="250" y2="119" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="110.8" x2="250" y2="191" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="110.8" x2="250" y2="263" stroke="#55635c" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="116" cy="631.8" r="11"/><line x1="116" y1="642.8" x2="116" y2="666.8"/><line x1="99" y1="650.8" x2="133" y2="650.8"/><line x1="116" y1="666.8" x2="102" y2="684.8"/><line x1="116" y1="666.8" x2="130" y2="684.8"/></g>
+<line x1="136" y1="650.8" x2="250" y2="335" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="407" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="479" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="551" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="623" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="695" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="767" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="839" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="911" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="983" stroke="#55635c" stroke-width="2"/>
+<line x1="136" y1="650.8" x2="250" y2="1055" stroke="#55635c" stroke-width="2"/>
+<rect x="1109" y="358" width="226" height="84" rx="8" fill="#e4e7e5" stroke="#3d4a43" stroke-width="2"/>
+<text x="1222" y="394" font-size="22" font-weight="400" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">«hệ thống»</text>
+<text x="1222" y="425.96" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Cổng thanh toán</text>
+<line x1="1109" y1="400" x2="670" y2="407" stroke="#55635c" stroke-width="2"/>
+<g stroke="#12351f" stroke-width="2.4" fill="none"><circle cx="1236" cy="502.2" r="11"/><line x1="1236" y1="513.2" x2="1236" y2="537.2"/><line x1="1219" y1="521.2" x2="1253" y2="521.2"/><line x1="1236" y1="537.2" x2="1222" y2="555.2"/><line x1="1236" y1="537.2" x2="1250" y2="555.2"/></g>
+<line x1="1216" y1="521.2" x2="1098" y2="551" stroke="#55635c" stroke-width="2"/>
+<rect x="1109" y="721.6" width="226" height="84" rx="8" fill="#e4e7e5" stroke="#3d4a43" stroke-width="2"/>
+<text x="1222" y="757.6" font-size="22" font-weight="400" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">«hệ thống»</text>
+<text x="1222" y="789.56" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Dịch vụ HĐĐT</text>
+<line x1="1109" y1="763.6" x2="670" y2="767" stroke="#55635c" stroke-width="2"/>
+<polyline points="96,650.8 20,650.8 20,134.8 100,134.8" fill="none" stroke="#55635c" stroke-width="2" marker-end="url(#tri)"/>
+<rect x="661" y="352.8" width="120" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="721" y="378.7" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">«extend»</text>
+<rect x="661" y="510.6" width="120" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="721" y="536.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">«include»</text>
+<rect x="41" y="144.8" width="150" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="116" y="170.7" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Khách vãng</text>
+<text x="116" y="197.1" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">lai</text>
+<rect x="41" y="684.8" width="150" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="116" y="710.7" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Khách lẻ</text>
+<rect x="1161" y="555.2" width="150" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="1236" y="581.1" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhân viên</text>
+<text x="1236" y="607.5" font-size="22" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">vận hành</text></svg></div>
+  <div class="legend"><span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#c98a1a" stroke-width="3.4"/></svg>Trục bán lẻ</span><span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#55635c" stroke-width="2"/></svg>Use case khác</span><span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế</span><span><svg width="60" height="16"><line x1="2" y1="8" x2="44" y2="8" stroke="#44524b" stroke-width="2"/><path d="M44,2 L57,8 L44,14 z" fill="#fff" stroke="#44524b" stroke-width="1.6"/></svg>Tổng quát hóa (con làm được mọi việc của cha)</span><span><svg width="60" height="16"><line x1="2" y1="8" x2="54" y2="8" stroke="#44524b" stroke-width="2" stroke-dasharray="7 5"/><path d="M47,2 L57,8 L47,14" fill="none" stroke="#44524b" stroke-width="1.8"/></svg>«include»: luôn thực hiện; «extend»: chỉ khi thỏa điều kiện</span></div>
+  <div class="note">COD chỉ khi đơn dưới ngưỡng và tài khoản chưa từng từ chối nhận hàng; hoàn tiền đi qua cổng thanh toán.</div>
 </body>
 </html>
