@@ -324,7 +324,7 @@ Các sơ đồ và bảng đặc tả dưới đây bổ trợ mục~\ref{sec:sd
 \label{apdx:sitemap}
 \addcontentsline{toc}{section}{Phụ lục T. Sitemap chi tiết theo khu vực}
 
-Bảng~\ref{tab:sitemap-chitiet} mở rộng sitemap tổng quan tại Hình~\ref{fig:sitemap} xuống cấp 3 và gắn mỗi trang với các yêu cầu chức năng mà nó phục vụ, làm đầu vào cho thiết kế giao diện và danh sách API.
+Bảng~\ref{tab:sitemap-chitiet} mở rộng sitemap tổng quan của hai ứng dụng tại Hình~\ref{fig:sitemap} xuống cấp 3 và gắn mỗi trang với các yêu cầu chức năng mà nó phục vụ, làm đầu vào cho thiết kế giao diện và danh sách API.
 
 \begingroup
 \tblsetup
@@ -343,55 +343,52 @@ Bảng~\ref{tab:sitemap-chitiet} mở rộng sitemap tổng quan tại Hình~\re
 \endhead
 \bottomrule
 \endfoot
+\multicolumn{3}{@{}l}{\cellcolor{tblheadbg}\textbf{Ứng dụng mua hàng}} \\
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Công khai (không cần đăng nhập)}}} \\
-Trang chủ & Sản phẩm gợi ý, sản phẩm theo mùa vụ, danh mục nổi bật & FR12.1, FR4.4 \\
-Tìm kiếm & Ô tìm kiếm bằng ngôn ngữ tự nhiên; kết quả kèm bộ lọc giá, vùng miền, chứng nhận & FR12.3, FR4.5 \\
-Danh mục sản phẩm & Cây danh mục đa cấp; chế độ Mua lẻ (gian hàng Farmery) và Mua sỉ (giá bậc theo MOQ, chào sỉ tồn dư của Farmery) & FR4.4, FR6.4, FR13.7 \\
-Chi tiết sản phẩm & Ảnh, mô tả, lô đang bán, chứng nhận, đánh giá, sản phẩm tương tự; nút thêm vào giỏ (lẻ) hoặc gửi yêu cầu báo giá (sỉ) & FR4.1, FR5.5, FR12.1, FR6.1 \\
-Gian hàng nhà cung cấp & Hồ sơ, chứng nhận, điểm uy tín, danh sách sản phẩm; theo dõi gian hàng & FR2.1, FR9.2 \\
-Trang truy xuất QR & Thông tin lô, nhật ký canh tác theo thời gian, chứng nhận, mã truy xuất TraceViet khi đã có & FR4.2, FR4.8 \\
-Đăng ký, đăng nhập & Chọn vai trò; đăng ký bằng số điện thoại hoặc email kèm OTP, hoặc qua Google, Facebook; khôi phục mật khẩu; đăng ký doanh nghiệp & FR1.1--FR1.3 \\
-Điều khoản, chính sách & Điều khoản dịch vụ (Phụ lục~D) và mười chính sách (Phụ lục~U) & --- \\
+Trang chủ theo mùa & Sản phẩm đang vào mùa, danh mục nổi bật & FR4.4 \\
+Tìm kiếm & Ô tìm kiếm bằng câu tự nhiên hoặc từ khóa (gõ không dấu, gõ sai); kết quả kèm bộ lọc giá, vùng trồng, chứng nhận, còn hàng & FR12.3, FR4.5 \\
+Danh mục & Cây danh mục đa cấp; mỗi danh mục lá liệt kê sản phẩm đang bán của Farmery & FR4.4 \\
+Chi tiết sản phẩm & Ảnh, mô tả, nội dung nhãn, lô đang bán, tóm tắt truy xuất, chứng nhận, đánh giá, năm sản phẩm tương tự; thêm vào giỏ; đăng ký báo khi có hàng hoặc vào mùa & FR4.1, FR5.5, FR12.1, FR5.7 \\
+Trang truy xuất QR & Thông tin lô, nhật ký canh tác theo thời gian, chứng nhận, cảnh báo nếu lô bị thu hồi & FR4.2, FR13.6 \\
+Hồ sơ nguồn gốc nhà cung cấp & Vùng trồng, chứng nhận, điểm uy tín, các lô đã cung cấp & FR2.1, FR3.1 \\
+Sàn sỉ & Bảng giá bậc theo MOQ của nhà cung cấp; gửi yêu cầu báo giá (cần đăng nhập khách sỉ) & FR6.4, FR6.1 \\
+Đăng ký, đăng nhập & Chọn loại tài khoản; số điện thoại hoặc email kèm OTP; đồng ý điều khoản và chính sách bảo mật; đăng nhập qua Google, Facebook \emph{(chỉ thiết kế)} & FR1.1--FR1.3, FR1.6 \\
+Chính sách & Điều khoản dịch vụ (Phụ lục~D) và mười chính sách (Phụ lục~U) & --- \\
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Khách lẻ}}} \\
-Giỏ hàng & Sản phẩm, số lượng, mã giảm giá, thời hạn giữ chỗ & FR5.1--FR5.3 \\
-Thanh toán & Chọn địa chỉ, phương thức giao và phương thức thanh toán; xác nhận đơn & FR7.1, FR8.2, FR1.5 \\
-Đơn hàng của tôi & Danh sách và chi tiết đơn, theo dõi vận chuyển, xác nhận đã nhận, hủy đơn, hóa đơn & FR5.4, FR8.1, FR7.2 \\
-Khiếu nại, đổi trả & Tạo khiếu nại kèm ảnh, theo dõi kết quả xử lý & FR8.3 \\
-Đánh giá của tôi & Đơn chờ đánh giá, đánh giá đã gửi & FR5.5 \\
-Yêu thích, theo dõi & Sản phẩm yêu thích, gian hàng đang theo dõi & FR9.2 \\
-Sổ địa chỉ & Thêm, sửa, đặt địa chỉ mặc định & FR1.5 \\
+Giỏ hàng & Sản phẩm, số lượng giới hạn theo dòng tồn & FR5.1 \\
+Thanh toán & Địa chỉ, khung giờ giao, cách thanh toán (COD khi đủ điều kiện); tiền hàng, thuế, cước giao trước khi xác nhận; mã giảm giá \emph{(chỉ thiết kế)} & FR5.2, FR7.1, FR8.2, FR5.3 \\
+Đơn hàng & Dòng thời gian tám trạng thái, hủy trước khi đóng gói, trao đổi theo đơn, hóa đơn điện tử, mua lại & FR5.4, FR9.1, FR7.2, FR5.6 \\
+Đổi trả, khiếu nại & Tạo yêu cầu kèm ảnh hoặc video, trao đổi với nhân viên vận hành, theo dõi quyết định và hoàn tiền & FR8.3, FR9.1 \\
+Đánh giá & Đơn chờ đánh giá, đánh giá đã gửi & FR5.5 \\
+Thông báo, báo vào mùa & Danh sách thông báo, kênh nhận, sản phẩm đã đăng ký báo khi có hàng & FR11.1, FR5.7 \\
+Tài khoản, quyền dữ liệu & Thông tin cá nhân, sổ địa chỉ, tải dữ liệu, yêu cầu xóa & FR1.5, FR1.6 \\
+Yêu thích \emph{(chỉ thiết kế)} & Danh sách sản phẩm yêu thích & FR9.2 \\
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Khách sỉ}}} \\
 Hồ sơ doanh nghiệp & Thông tin công ty, mã số thuế, giấy phép kinh doanh, trạng thái xác minh & FR1.3 \\
-Yêu cầu báo giá & Tạo yêu cầu, danh sách yêu cầu, phiên thương lượng với từng nhà cung cấp & FR6.1, FR6.2 \\
-Hợp đồng & Hợp đồng sinh từ báo giá đã chốt; xác nhận giao kết bằng OTP; ký số tùy chọn; tải bản PDF & FR6.3, FR6.6 \\
-Đơn sỉ và đợt giao & Lịch giao theo đợt, xác nhận nhận hàng từng đợt & FR6.5 \\
-Ký quỹ, thanh toán & Nộp ký quỹ, giải ngân theo đợt, lịch sử giao dịch & FR7.3 \\
-Khiếu nại & Khiếu nại theo từng đợt giao & FR8.3 \\
-Nhà cung cấp theo dõi & Gian hàng đang theo dõi, cảnh báo nguồn cung khan hiếm & FR9.2, FR11.3 \\
+Yêu cầu báo giá & Tạo yêu cầu, danh sách yêu cầu, kênh thương lượng với từng nhà cung cấp & FR6.1, FR6.2 \\
+Hợp đồng & Hợp đồng sinh từ báo giá đã chốt, xác nhận giao kết bằng OTP, lịch sử phiên bản, tải bản PDF & FR6.3 \\
+Đơn sỉ một đợt & Ngày giao, xác nhận nhận hàng & FR6.3 \\
+Thanh toán & Thanh toán qua cổng khi đã nhận hàng, lịch sử giao dịch & FR7.1 \\
+Khiếu nại & Khiếu nại đơn sỉ theo điều khoản hợp đồng & FR8.3 \\
+Ký quỹ \emph{(chỉ thiết kế)} & Nộp ký quỹ, giải ngân khi xác nhận nhận hàng & FR7.3 \\
 \multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Nhà cung cấp}}} \\
-Tổng quan & Doanh thu, đơn mới, lô cận hạn, việc cần làm & FR2.2, FR2.3 \\
-Hồ sơ gian hàng, xác minh & Thông tin gian hàng, xác minh danh tính (eKYC), mã số vùng trồng & FR2.1, FR1.4 \\
+Hồ sơ, xác minh, loại thuế & Hồ sơ nguồn gốc, eKYC, mã số vùng trồng, loại người bán cho thuế & FR2.1, FR1.4, FR2.4 \\
 Chứng nhận & Tải lên, trạng thái duyệt, hạn hiệu lực & FR3.1, FR3.3 \\
 Sản phẩm và lô & Tạo sản phẩm, khai báo lô, khung giá sỉ theo MOQ, trạng thái duyệt, mã QR của lô & FR4.1, FR4.6, FR6.4 \\
-Nhật ký canh tác & Ghi theo lô kèm ảnh minh chứng, bản ghi đính chính; dùng được khi mất sóng & FR4.2 \\
-Tồn kho & Dòng tồn của mình tại nông trại và tại kho Farmery, sổ nhập xuất & FR2.3, FR13.3 \\
-Báo giá và hợp đồng sỉ & Yêu cầu báo giá nhận được, phản hồi báo giá, hợp đồng chờ giao kết & FR6.2, FR6.3 \\
-Đơn sỉ và đợt giao & Chuẩn bị hàng, bàn giao từng đợt, trạng thái thanh toán & FR6.5, FR8.1 \\
-Chào bán cho Farmery & Gửi chào hàng, đơn thu mua chờ xác nhận, kết quả nghiệm thu & FR13.1, FR13.2 \\
-Dịch vụ kho, đóng gói & Đăng ký thuê kho, gửi hàng vào kho, phí dịch vụ & FR13.5 \\
-Doanh thu, đối soát & Doanh thu theo kỳ, phí nền tảng, khoản đã giải ngân & FR2.2, FR7.3 \\
-Đánh giá, uy tín & Đánh giá nhận được, điểm uy tín & FR5.5 \\
-\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Nội bộ (mỗi mục chỉ hiện với vai trò tương ứng)}}} \\
-Kiểm duyệt \newline\texttt{staff\_moderation} & Hàng đợi duyệt hồ sơ, chứng nhận, sản phẩm và lô; đánh giá nghi vấn; báo cáo vi phạm & FR10.1, FR3.2, FR4.6, FR4.7, FR10.2 \\
-Vận hành \newline\texttt{staff\_operations} & Khiếu nại và tranh chấp; bảng giám sát tồn kho và vận chuyển; báo cáo thống kê & FR10.3--FR10.5 \\
-Thu mua \newline\texttt{staff\_sourcing} & Chào hàng của nhà cung cấp, đơn thu mua, định giá bán lẻ, dự báo giá, chào sỉ tồn dư & FR13.1, FR12.2, FR13.7 \\
-Kho \newline\texttt{staff\_warehouse} & Nghiệm thu nhập kho, xuất kho, sơ chế và đóng gói, kiểm kê, thu hồi lô & FR13.2--FR13.6 \\
-Giao hàng \newline\texttt{staff\_delivery} & Chuyến giao trong ngày, xác nhận giao, thu tiền COD (chỉ thiết kế) & FR8.1 \\
-Hỗ trợ vùng \newline\texttt{staff\_support} & Nhà cung cấp được phân công, nhập liệu hộ có ghi người nhập & FR4.2 \\
-Quản trị hệ thống \newline\texttt{platform\_owner} & Cây danh mục, ngưỡng, biểu phí; tài khoản và vai trò nội bộ; nhật ký thao tác & FR10.6, FR10.7 \\
-\multicolumn{3}{@{}l}{\cellcolor{tblaltbg}\textbf{\textit{Chung cho mọi khu sau đăng nhập}}} \\
-Tài khoản & Thông tin cá nhân, đổi mật khẩu, liên kết Google hoặc Facebook & FR1.1 \\
-Thông báo & Danh sách thông báo, cài đặt kênh nhận & FR11.1 \\
-Tin nhắn & Trao đổi giữa người mua và nhà cung cấp & FR9.1 \\
+Nhật ký canh tác & Ghi theo lô kèm ảnh minh chứng, bản ghi đính chính; thao tác được khi sóng yếu & FR4.2, NFR7.3 \\
+Tồn kho của tôi & Dòng tồn của mình theo lô, phần đã giữ chỗ cho hợp đồng và đơn thu mua & FR2.3 \\
+Chào hàng, đơn thu mua & Gửi chào hàng, đơn thu mua chờ xác nhận, kết quả nghiệm thu, khoản phải trả & FR13.1, FR13.2 \\
+Báo giá, hợp đồng sỉ & Yêu cầu báo giá nhận được, phản hồi, hợp đồng chờ giao kết & FR6.2, FR6.3 \\
+Đơn sỉ & Chuẩn bị và giao một đợt, trạng thái thanh toán của bên mua & FR6.3 \\
+Đối soát & Doanh thu sỉ, hoa hồng đã trừ, hóa đơn dịch vụ & FR7.4 \\
+Đánh giá, uy tín & Đánh giá nhận được, phản hồi công khai một lần, điểm uy tín & FR5.5 \\
+Tổng quan thống kê \emph{(chỉ thiết kế)} & Doanh thu, đơn, sản phẩm bán chạy theo kỳ & FR2.2 \\
+\multicolumn{3}{@{}l}{\cellcolor{tblheadbg}\textbf{Ứng dụng nội bộ (đăng nhập 2FA; mỗi mục chỉ hiện với vai trò tương ứng)}} \\
+Kiểm duyệt \newline\texttt{staff\_moderation} & Hàng đợi duyệt hồ sơ, loại thuế, chứng nhận, sản phẩm và lô; đánh giá nghi vấn; báo cáo và xử lý vi phạm nội dung & FR10.1, FR3.2, FR4.7, FR10.2 \\
+Vận hành \newline\texttt{staff\_operations} & Khiếu nại, đổi trả và hoàn tiền; giám sát đơn, chuyến trung chuyển và giao hàng; thu hồi lô; báo cáo thống kê & FR10.3--FR10.5, FR13.6 \\
+Thu mua \newline\texttt{staff\_sourcing} & Chào hàng của nhà cung cấp, đơn thu mua, định giá bán lẻ kèm dự báo giá & FR13.1, FR12.2 \\
+Kho \newline\texttt{staff\_warehouse} & Nghiệm thu nhập kho; đóng gói, in tem QR và nhãn; dòng tồn và sổ nhập xuất; chuyến trung chuyển và vận đơn chặng cuối & FR13.2--FR13.4, FR8.1 \\
+Hỗ trợ vùng \newline\texttt{staff\_support} & Nhà cung cấp được phân công, nhập liệu hộ có ghi người nhập & FR4.2, FR10.7 \\
+Quản trị \newline\texttt{platform\_owner} & Tài khoản nội bộ và vai trò; cây danh mục; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt đơn, khung giờ giao; nhật ký thao tác & FR10.6, FR10.7 \\
 \end{longtable}
 \endgroup
