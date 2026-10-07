@@ -44,7 +44,7 @@ Xuất phát từ đặc thù hành vi mua nông sản: nhu cầu không trải 
 Xuất phát từ nhu cầu của khách sỉ và nhà cung cấp: khách sỉ cần chắc chắn bảng giá riêng và nội dung đàm phán của mình không lọt sang đối thủ, còn nhà cung cấp cần chắc chắn không ai sửa được nhật ký canh tác hay giá bán của họ. Một endpoint bị bỏ sót đã đủ phá vỡ cam kết đó, nên ngưỡng chấp nhận là 100\%, không có mức trung gian. \\
 \textbf{NFR3.2} &
 Rà soát cơ sở dữ liệu xác nhận không có trường dữ liệu định danh nào lưu dạng plaintext. &
-Đây là dữ liệu cá nhân thuộc phạm vi Nghị định 13/2023/NĐ-CP (NFR8.2); rò rỉ dù một bản ghi cũng là vi phạm nên yêu cầu là tuyệt đối, không đặt ngưỡng tỷ lệ. \\
+Đây là dữ liệu cá nhân thuộc phạm vi Luật Bảo vệ dữ liệu cá nhân 2025 (NFR8.2); rò rỉ dù một bản ghi cũng là vi phạm nên yêu cầu là tuyệt đối, không đặt ngưỡng tỷ lệ. \\
 \textbf{NFR3.3} &
 Bcrypt với hệ số chi phí (cost factor) tối thiểu 10, hoặc Argon2id với tham số khuyến nghị tương đương. &
 Cân bằng giữa hai nhu cầu đối lập của cùng một nhóm người dùng: nhà cung cấp đăng nhập trên thiết bị yếu nên không chịu được thời gian băm quá lâu, nhưng cũng chính họ là nhóm dễ đặt mật khẩu đơn giản nhất nên cần chi phí băm đủ lớn để cản trở tấn công dò mật khẩu ngoại tuyến. Cost factor 10 là mức khuyến nghị phổ biến đáp ứng được cả hai. \\

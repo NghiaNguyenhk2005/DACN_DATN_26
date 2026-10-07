@@ -82,6 +82,45 @@ Về tiêu chuẩn chất lượng, VietGAP và GlobalGAP là hai chuẩn thực
 \end{itemize}
 Một cơ sở đạt GlobalGAP đã vượt chuẩn VietGAP nên không cần chứng nhận VietGAP riêng; VietGAP thường là bước đệm năng lực trước khi nông dân/HTX tiến tới GlobalGAP nếu có định hướng xuất khẩu \parencite{vietgap_globalgap}. Đây là căn cứ để Farmery thiết kế quy trình kiểm duyệt chứng nhận theo 2 cấp độ (nội địa/VietGAP và xuất khẩu/GlobalGAP) tương ứng với 2 nhóm khách mua lẻ và mua sỉ B2B.
 
+\noindent\textbf{Khung pháp lý cho một nền tảng thương mại điện tử nông sản.} Ngoài các chính sách định hướng ở trên, Farmery chịu ràng buộc trực tiếp của các văn bản về thương mại điện tử, người tiêu dùng, dữ liệu cá nhân, thuế, hóa đơn, nhãn hàng hóa và an toàn thực phẩm. Một điểm quyết định cách đọc các văn bản này: theo Luật Thương mại điện tử 2025, Farmery đồng thời là \emph{nền tảng kinh doanh trực tiếp} (tự bán lẻ) và \emph{nền tảng trung gian} (cho nhà cung cấp bán sỉ), nên chịu cả hai nhóm nghĩa vụ \parencite{luattmdt2025}. Bảng~\ref{tab:phaply} đối chiếu từng văn bản với nghĩa vụ chính và tác động tới thiết kế; số hiệu, ngày ban hành, hiệu lực và nội dung các điều được dẫn đã được đối chiếu với bản đăng trên Công báo hoặc Cổng thông tin điện tử Chính phủ, trừ các điểm ghi chú riêng dưới bảng.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{3.50cm} L{6.70cm} L{4.70cm}}
+\caption{Văn bản pháp luật, nghĩa vụ và tác động tới thiết kế Farmery}
+\label{tab:phaply} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Văn bản} & \textbf{Nghĩa vụ chính đối với Farmery} & \textbf{Tác động thiết kế} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Văn bản} & \textbf{Nghĩa vụ chính đối với Farmery} & \textbf{Tác động thiết kế} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Luật Thương mại điện tử 122/2025, hiệu lực 1/7/2026 \parencite{luattmdt2025} & Công khai chính sách và để người dùng đồng ý trước khi mở tài khoản (Điều 11); hiển thị đủ tiền hàng, thuế, phí giao trước khi đặt và cho xem lại sau khi đặt (Điều 12); nền tảng bán trực tiếp phải công khai nội dung nhãn bắt buộc (Điều 16 khoản 1); nền tảng trung gian xác thực danh tính người bán trước khi cho bán, kiểm duyệt nội dung trước khi hiển thị, báo người bán ít nhất 5 ngày trước khi hạn chế tài khoản (Điều 17); lưu dữ liệu hợp đồng ít nhất 3 năm (Điều 16 khoản 2, Điều 17 khoản 2) & FR1.4, FR1.6, FR5.2, FR10.1; NFR8.1, NFR8.5; Phụ lục D và U \\
+Nghị định 248/2026, hiệu lực 1/7/2026, thay Nghị định 52/2013 và 85/2021 \parencite{nd248_2026} & Nội dung tối thiểu của từng chính sách: bảo mật (có quy trình xóa dữ liệu), khiếu nại (thời hạn phản hồi ban đầu và thời hạn giải quyết), giá và phí, thanh toán, ưu tiên hiển thị, giao hàng (kể cả kiểm hàng), đổi trả--hoàn tiền (Điều 4--14); xác thực người bán bằng số định danh, áp dụng từ 1/1/2027 (Điều 18, Điều 52) & Bộ chính sách ở Phụ lục U; cam kết thời gian xử lý khiếu nại; tiêu chí xếp hạng tìm kiếm được công khai \\
+Luật Bảo vệ quyền lợi người tiêu dùng 19/2023 \parencite{luatbvqlntd2023} & Giao dịch từ xa: cho người tiêu dùng xem, xác nhận và tải lại hợp đồng; người tiêu dùng chỉ được đơn phương chấm dứt khi người bán cung cấp thông tin sai hoặc thiếu (Điều 38) --- luật không đặt quyền ``đổi ý'' chung; nền tảng trung gian lưu và cho tải chứng từ giao dịch (Điều 39) & FR5.4 (xem lại đơn), FR7.2; chính sách không đổi ý với hàng tươi là hợp lệ khi được công khai trước \\
+Luật Bảo vệ dữ liệu cá nhân 91/2025 và Nghị định 356/2025, hiệu lực 1/1/2026 \parencite{luatbvdlcn2025, nd356_2025} & Xử lý dữ liệu cá nhân có đồng ý, đúng mục đích; bảo đảm quyền xem, sửa, yêu cầu xóa của chủ thể dữ liệu & FR1.6, NFR8.2, NFR3.2 (mã hóa tệp eKYC) \\
+Luật Thuế GTGT 48/2024 và Luật sửa đổi 149/2025 \parencite{luatgtgt2024, luat149_2025} & Nông dân tự sản xuất bán ra: không chịu thuế (Điều 5 khoản 1); nông sản chưa chế biến ở khâu thương mại: 5\% (Điều 9 khoản 2 điểm d) --- áp cho đơn lẻ của Farmery; doanh nghiệp bán cho doanh nghiệp, hợp tác xã khác: không phải kê khai, tính nộp (Luật 149/2025, từ 1/1/2026) & FR2.4 (loại người bán, nhóm thuế sản phẩm); thuế suất in trên hóa đơn đơn lẻ (FR7.2) \\
+Nghị định 117/2025 và Nghị định 68/2026 \parencite{nd117_2025, nd68_2026} & Sàn có chức năng đặt hàng và thanh toán khấu trừ, nộp thuế thay cho người bán là hộ, cá nhân ngay khi giao dịch thành công: hàng hóa 1\% GTGT và 0,5\% TNCN; cấp chứng từ khấu trừ; trả lại phần đã khấu trừ khi đơn bị hủy hoặc trả hàng. Ngưỡng doanh thu không chịu thuế hiện là 1 tỷ đồng/năm \parencite{nd141_2026} & FR7.4, NFR8.4 --- chỉ thiết kế, áp cho sàn sỉ \\
+Nghị định 70/2025 sửa Nghị định 123/2020 về hóa đơn \parencite{nd70_2025} & Lập hóa đơn điện tử đúng nội dung và thời điểm & FR7.2, NFR8.3 (bản hiện thực dùng hóa đơn giả lập) \\
+Nghị định 37/2026, thay Nghị định 43/2017 và 111/2021 về nhãn \parencite{nd37_2026} & Thực phẩm tươi không bao bì bán trực tiếp không phải ghi nhãn; đơn vị đã đóng gói phải có nhãn: tên hàng, đơn vị chịu trách nhiệm, xuất xứ, định lượng, ngày sản xuất, hạn sử dụng, hướng dẫn bảo quản (Điều 35, 42, Phụ lục I); hàng giao tới người tiêu dùng phải có nhãn, nền tảng lưu dữ liệu nhãn và chứng từ ít nhất 5 năm (Điều 41); được dùng nhãn điện tử, sản phẩm bị thu hồi phải hiện cảnh báo (Điều 52) & FR13.4 (tem QR kèm nhãn khi đóng gói), FR13.6 (cảnh báo thu hồi trên trang truy xuất), NFR8.5 \\
+Luật An toàn thực phẩm 55/2010 và Nghị định 15/2018 \parencite{luat_attp_2010, nd15_2018} & Cơ sở sơ chế, đóng gói phải có Giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm, trừ cơ sở nhỏ lẻ hoặc đã có HACCP, ISO 22000 (Điều 11--12); nông hộ sản xuất ban đầu nhỏ lẻ không thuộc diện cấp & Điều kiện vận hành kho sơ chế, không phải yêu cầu phần mềm \\
+Luật Giao dịch điện tử 20/2023 \parencite{luatgddt2023} & Chữ ký số tương đương chữ ký tay; hình thức xác nhận khác theo pháp luật liên quan (Điều 22--23) & FR6.3 gọi là ``xác nhận giao kết''; ký số để ở hướng phát triển \\
+\end{longtable}
+\endgroup
+
+Ba điểm được viết dè dặt vì chưa có hướng dẫn rõ hoặc đang thay đổi:
+\begin{itemize}
+    \item \textbf{Khấu trừ thuế với nông dân tự sản xuất:} Nghị định 117/2025 không có điều riêng cho người bán là nông dân; về nguyên tắc hàng không chịu GTGT thì không có GTGT để khấu trừ, và thu nhập trực tiếp từ sản xuất nông nghiệp được miễn thuế thu nhập cá nhân theo pháp luật thuế thu nhập cá nhân. Vì vậy hệ thống chỉ lưu loại người bán và để nhân sự xác nhận việc có áp khấu trừ hay không, không tự suy ra tỷ lệ.
+    \item \textbf{Hiệu lực của quy định an toàn thực phẩm:} Nghị định 46/2026/NĐ-CP thay Nghị định 15/2018 đã bị tạm ngưng hiệu lực cho tới khi Luật An toàn thực phẩm sửa đổi có hiệu lực \parencite{nq15_2026}; điều kiện của kho sơ chế có thể thay đổi theo văn bản mới.
+    \item \textbf{Ngưỡng doanh thu không chịu thuế} được dẫn qua tin chính thức của Báo Điện tử Chính phủ và tiêu đề văn bản trên Cổng thông tin, chưa đọc toàn văn Nghị định 141/2026; báo cáo không ghi cứng con số này vào thiết kế mà để cấu hình.
+\end{itemize}
+
 \section{Cơ sở lý thuyết nền tảng}
 \label{sec:lythuyet}
 
@@ -167,7 +206,7 @@ Theo Osterwalder và Pigneur, mô hình kinh doanh của một tổ chức đư�
 \begin{itemize}
     \item Phí hoa hồng trên mỗi giao dịch thành công (phổ biến nhất, tỷ lệ \% theo giá trị đơn hàng).
     \item Phí niêm yết/gói nổi bật để sản phẩm hiển thị ưu tiên.
-    \item Phí dịch vụ giá trị gia tăng (xác thực chứng nhận nhanh, hỗ trợ chụp ảnh/marketing cho nhà cung cấp).
+    \item Phí dịch vụ giá trị gia tăng (kho vận, hỗ trợ chụp ảnh/marketing cho nhà cung cấp).
     \item Quảng cáo trong sàn.
 \end{itemize}
 Đa số marketplace giai đoạn đầu ưu tiên phí hoa hồng làm dòng doanh thu chính vì gắn trực tiếp với giá trị giao dịch thực tế phát sinh trên nền tảng, ít tạo rào cản gia nhập cho người bán mới so với phí niêm yết cố định. Mô hình doanh thu cụ thể của Farmery được phân tích chi tiết tại mục~\ref{sec:businessmodelcanvas}.
@@ -177,7 +216,7 @@ Theo Osterwalder và Pigneur, mô hình kinh doanh của một tổ chức đư�
 
 Đối với hàng nông sản dễ hư hỏng, nguyên tắc quản lý tồn kho phổ biến là FEFO (First-Expired-First-Out) --- ưu tiên xuất bán lô hàng có hạn sử dụng/thời gian thu hoạch gần nhất trước, khác với nguyên tắc FIFO (First-In-First-Out) thường dùng cho hàng hóa không có hạn sử dụng rõ ràng. Việc quản lý tồn kho theo lô (batch) kết hợp với cảnh báo sớm khi lô hàng sắp hết hạn hoặc tồn kho xuống thấp giúp giảm tỷ lệ hao hụt --- vấn đề đã được phân tích tại Chương~\ref{chap:gioithieu} (Hình~\ref{fig:thuctrang}), nơi tỷ lệ tổn thất sau thu hoạch tại Việt Nam vẫn ở mức 20--40\% một phần do thiếu công cụ quản lý tồn kho hiệu quả ở khâu bán lẻ/bán sỉ.
 
-Về vận chuyển, nhiều nền tảng thương mại điện tử không tự đầu tư đội xe hay kho bãi mà thuê ngoài đơn vị logistics bên thứ ba (3PL). Cách làm này giúp nền tảng tập trung nguồn lực vào công nghệ thay vì hạ tầng vật lý tốn kém --- đặc biệt là kho lạnh, vốn còn rất thiếu tại Việt Nam (Chương~\ref{chap:gioithieu}) --- nhưng đổi lại phải phụ thuộc vào chất lượng dịch vụ của đối tác. Ở chiều ngược lại, các sàn lớn khi đủ quy mô thường tự xây dựng năng lực kho vận rồi mở dịch vụ đó cho người bán, thậm chí cho doanh nghiệp ngoài sàn --- vừa kiểm soát được chất lượng giao hàng, vừa biến chi phí hạ tầng thành một nguồn doanh thu. Farmery chọn điểm giữa theo \emph{mô hình lai}: đơn vị vận chuyển thứ ba vẫn đảm nhận chặng dài, còn nền tảng tự đảm nhận những khâu mà 3PL phục vụ kém nhất với hàng tươi --- gom hàng từ nông hộ về kho sơ chế, sơ chế và đóng gói, giao chặng ngắn quanh kho --- và cho nhà cung cấp trên sàn thuê lại các khâu này. Ranh giới giữa phần nền tảng tự làm và phần thuê ngoài được nêu tại mục~\ref{sec:phamvi}.
+Về vận chuyển, nhiều nền tảng thương mại điện tử không tự đầu tư đội xe hay kho bãi mà thuê ngoài đơn vị logistics bên thứ ba (3PL). Cách làm này giúp nền tảng tập trung nguồn lực vào công nghệ thay vì hạ tầng vật lý tốn kém --- đặc biệt là kho lạnh, vốn còn rất thiếu tại Việt Nam (Chương~\ref{chap:gioithieu}) --- nhưng đổi lại phải phụ thuộc vào chất lượng dịch vụ của đối tác. Ở chiều ngược lại, các sàn lớn khi đủ quy mô thường tự xây dựng năng lực kho vận rồi mở dịch vụ đó cho người bán, thậm chí cho doanh nghiệp ngoài sàn --- vừa kiểm soát được chất lượng giao hàng, vừa biến chi phí hạ tầng thành một nguồn doanh thu. Farmery chọn cách thuê ngoài toàn bộ phương tiện nhưng tự giữ những khâu mà 3PL phục vụ kém nhất với hàng tươi: nghiệm thu, đóng gói và dán tem tại kho sơ chế, và điều phối chặng trung chuyển dài bằng xe lạnh thuê theo chuyến cố định; chặng cuối trong thành phố giao cho 3PL nội thành. Tự đầu tư đội giao hàng chỉ đáng khi mật độ đơn đủ lớn, nên được để ở hướng phát triển. Ranh giới giữa phần nền tảng tự làm và phần thuê ngoài được nêu tại mục~\ref{sec:phamvi}.
 
 \section{Ứng dụng AI trong phân tích dữ liệu và ra quyết định thương mại điện tử}
 
