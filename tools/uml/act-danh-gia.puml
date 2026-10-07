@@ -1,0 +1,32 @@
+@startuml act-danh-gia
+!include _style.iuml
+|Khách lẻ|
+|Hệ thống|
+|Kiểm duyệt viên|
+|Nhà cung cấp|
+|Khách lẻ|
+start
+:Đánh giá đơn
+đã hoàn tất;
+|Hệ thống|
+:Kiểm tra tự động,
+luật ngưỡng;
+if (Nghi vấn?) then ([có])
+  |Kiểm duyệt viên|
+  :Xem xét thủ công;
+  if (Hợp lệ?) then ([có])
+  else ([không])
+    |Hệ thống|
+    :Ẩn, báo lý do;
+    stop
+  endif
+else ([không])
+endif
+|Hệ thống|
+:Công khai, cập nhật
+điểm uy tín;
+|Nhà cung cấp|
+:Phản hồi công khai
+một lần;
+stop
+@enduml

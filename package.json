@@ -2,9 +2,11 @@
   "name": "farmery-dacn-report",
   "private": true,
   "version": "1.0.0",
-  "description": "Tooling nội bộ để render bảng so sánh dạng HTML sang ảnh cho báo cáo LaTeX",
+  "description": "Tooling nội bộ: render hình HTML sang PNG (npm run shot) và sơ đồ PlantUML (npm run uml)",
   "scripts": {
-    "shot": "node tools/render-comparison-tables.js"
+    "shot": "node tools/render-comparison-tables.js",
+    "uml": "java -jar tools/plantuml/plantuml.jar -tpng -charset UTF-8 -o ../../image/uml tools/uml",
+    "uml:setup": "curl -L --create-dirs -o tools/plantuml/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2026.8/plantuml-1.2026.8.jar"
   },
   "dependencies": {
     "playwright": "^1.63.0"

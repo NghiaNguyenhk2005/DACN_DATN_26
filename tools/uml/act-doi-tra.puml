@@ -1,0 +1,39 @@
+@startuml act-doi-tra
+!include _style.iuml
+|Khách lẻ|
+|Hệ thống|
+|NV vận hành|
+|Cổng thanh toán|
+|Khách lẻ|
+start
+:Gửi yêu cầu kèm
+ảnh hoặc video;
+|Hệ thống|
+if (Trong thời hạn?) then ([có])
+else ([quá hạn, đổi ý\nhàng tươi])
+  stop
+endif
+:Tiếp nhận trong 24 giờ;
+|NV vận hành|
+:Xem minh chứng,
+trao đổi với khách;
+:Quyết định trong
+3 ngày làm việc;
+if (Quyết định?) then ([hoàn tiền])
+  |Hệ thống|
+  if (Dưới ngưỡng?) then ([có])
+    :Ghi bút toán hủy;
+  else ([không])
+    :Nhận hàng trả về,
+    nhập kho;
+  endif
+  |Cổng thanh toán|
+  :Hoàn tiền trong
+  7 ngày làm việc;
+else ([từ chối:\nbáo lý do])
+endif
+|Hệ thống|
+:Đóng yêu cầu,
+thông báo;
+stop
+@enduml

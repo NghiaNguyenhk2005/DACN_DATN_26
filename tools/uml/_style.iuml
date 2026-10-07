@@ -1,0 +1,19 @@
+' Kiểu dùng chung cho mọi sơ đồ activity; cỡ chữ in ra (pt) ~ 455 x cỡ chữ / bề rộng sơ đồ.
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 19
+skinparam shadowing false
+skinparam ArrowColor #44524b
+skinparam ArrowFontSize 19
+skinparam ArrowFontStyle italic
+skinparam ActivityBackgroundColor #ffffff
+skinparam ActivityBorderColor #1a5fa8
+skinparam ActivityDiamondBackgroundColor #fdf1dc
+skinparam ActivityDiamondBorderColor #c98a1a
+skinparam SwimlaneTitleFontSize 19
+skinparam SwimlaneTitleFontStyle bold
+skinparam SwimlaneBorderColor #9aa39e
+skinparam NoteBackgroundColor #f6f7f6
+skinparam NoteBorderColor #9aa39e
+skinparam NoteFontSize 19
+skinparam PartitionBorderColor #9aa39e

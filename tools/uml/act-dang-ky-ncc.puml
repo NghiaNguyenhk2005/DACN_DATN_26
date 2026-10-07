@@ -1,0 +1,38 @@
+@startuml act-dang-ky-ncc
+!include _style.iuml
+|Nhà cung cấp|
+|Hệ thống|
+|Kiểm duyệt viên|
+|Nhà cung cấp|
+start
+:Đăng ký, khai báo
+loại người bán;
+|Hệ thống|
+:Gửi OTP;
+|Nhà cung cấp|
+:Nhập OTP;
+|Hệ thống|
+if (OTP đúng?) then ([đúng])
+else ([sai 5 lần:\nkhóa 30 phút])
+  stop
+endif
+|Nhà cung cấp|
+:Tải giấy tờ eKYC,
+chứng nhận;
+|Kiểm duyệt viên|
+:Đối chiếu eKYC,
+mã vùng trồng;
+:Duyệt chứng nhận,
+loại người bán;
+if (Đạt?) then ([đạt])
+  |Hệ thống|
+  :"Đã xác thực",
+  mở quyền đăng bán;
+  :Phát UserVerified;
+else ([không đạt])
+  |Hệ thống|
+  :Báo lý do,
+  hướng dẫn bổ sung;
+endif
+stop
+@enduml

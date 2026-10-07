@@ -30,3 +30,6 @@ review/
 
 # Cache Python sinh ra khi chạy tools/diagrams/
 __pycache__/
+
+# PlantUML jar tải về bằng `npm run uml:setup` — không commit file nhị phân
+tools/plantuml/

@@ -9,35 +9,71 @@ Chương này mô hình hóa các quy trình và tương tác của hệ thống
 \subsection{Mô hình hóa quy trình nghiệp vụ}
 \label{subsec:mohinhquytrinh}
 
-Tám quy trình nghiệp vụ mô tả tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng lưu đồ; ký hiệu dùng chung được giải thích tại Hình~\ref{fig:chu-thich-flowchart}. Mục này giữ lưu đồ của ba luồng làm nên khác biệt của Farmery: thu mua, đặt hàng bán lẻ và bán sỉ tới khi giao kết hợp đồng. Các lưu đồ còn lại đặt tại Phụ lục~R:
+Các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa bằng sơ đồ hoạt động (activity diagram) UML, mỗi cột (swimlane) là một tác nhân hoặc chính hệ thống. Ký hiệu dùng theo chuẩn UML, không cần chú giải riêng:
 \begin{itemize}
-    \item đăng ký, xác thực nhà cung cấp và kiểm duyệt chứng nhận (Hình~\ref{fig:flow-dang-ky});
-    \item đăng và kiểm duyệt sản phẩm, sinh mã QR truy xuất (Hình~\ref{fig:flow-san-pham});
-    \item giao hàng, nhận hàng và hoàn tất đơn bán lẻ (Hình~\ref{fig:flow-ban-le-b});
-    \item đánh giá sản phẩm và nhà cung cấp (Hình~\ref{fig:flow-danh-gia});
-    \item tạm giữ tiền, giao hàng và thanh toán theo từng đợt của đơn sỉ (Hình~\ref{fig:flow-ban-si-b});
-    \item vận chuyển hàng dễ hư hỏng và xử lý khiếu nại (Hình~\ref{fig:flow-van-chuyen});
-    \item giám sát, xử lý vi phạm phân cấp và báo cáo của nhân sự nội bộ (Hình~\ref{fig:flow-quan-tri}).
+    \item \textbf{Điều kiện rẽ nhánh} ghi trong ngoặc vuông trên nhánh ra của nút quyết định; nhánh ngoại lệ chính dừng ngay ở nút kết thúc, ngoại lệ phụ để ở bảng đặc tả use case.
+    \item \textbf{Thanh đậm} là rẽ song song (fork) và hợp song song (join).
+    \item \textbf{Biểu tượng đồng hồ} trước tên hành động là sự kiện thời gian (giờ chốt đơn, hết thời hạn khiếu nại); \textbf{biểu tượng hai mũi tên} là tín hiệu nhận từ hệ thống bên ngoài (webhook).
 \end{itemize}
 
-\input{flowcharts/00-chu-thich}
+Mục này giữ bốn sơ đồ của trục bán lẻ đầu--cuối; sáu sơ đồ còn lại đặt tại Phụ lục~R:
+\begin{itemize}
+    \item đăng ký, xác minh nhà cung cấp (Hình~\ref{fig:act-dang-ky-ncc});
+    \item đăng sản phẩm, duyệt lô và sinh mã QR (Hình~\ref{fig:act-dang-san-pham});
+    \item bán sỉ từ yêu cầu báo giá, hợp đồng tới giao một đợt (Hình~\ref{fig:act-ban-si});
+    \item đánh giá và kiểm duyệt đánh giá (Hình~\ref{fig:act-danh-gia});
+    \item thu hồi lô (Hình~\ref{fig:act-thu-hoi});
+    \item xử lý vi phạm phân cấp (Hình~\ref{fig:act-vi-pham}).
+\end{itemize}
 
-\clearpage
-\subsubsection*{Thu mua vào kho của nền tảng}
-Hình~\ref{fig:flow-thu-mua} minh họa quy trình thu mua --- bước đứng trước kênh bán lẻ và là điểm khác biệt căn bản so với một sàn thuần trung gian.
-\input{flowcharts/08-thu-mua}
+\subsubsection*{Thu mua, nghiệm thu, đóng gói và đặt giá}
+Hình~\ref{fig:act-thu-mua} là bước đứng trước kênh bán lẻ và là điểm khác biệt căn bản so với một sàn thuần trung gian: hàng chỉ thành dòng tồn của Farmery sau khi nhà cung cấp xác nhận đơn và nhân viên kho nghiệm thu.
 
-\clearpage
-\subsubsection*{Quy trình bán lẻ}
-Hình~\ref{fig:flow-ban-le-a} minh họa phần đặt hàng, thanh toán và xác nhận đơn; phần giao hàng, nhận hàng và hoàn tất đơn ở Hình~\ref{fig:flow-ban-le-b} (Phụ lục~R).
-\input{flowcharts/03-ban-le}
+\begin{figure}[tbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-thu-mua.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: thu mua, nghiệm thu, đóng gói và đặt giá bán lẻ}
+\label{fig:act-thu-mua}
+\end{figure}
 
-\clearpage
-\subsubsection*{Quy trình bán sỉ (B2B)}
-Hình~\ref{fig:flow-ban-si-a} minh họa phần từ công bố bảng giá tới giao kết hợp đồng; phần tạm giữ tiền, giao hàng và thanh toán theo từng đợt ở Hình~\ref{fig:flow-ban-si-b} (Phụ lục~R).
-\input{flowcharts/04-ban-si}
+\subsubsection*{Đặt hàng, giữ chỗ và thanh toán}
+Hình~\ref{fig:act-dat-hang} cho thấy tồn kho bị khóa và giữ chỗ trước khi thanh toán, nên hai khách không thể cùng mua phần hàng cuối; chỉ khi thanh toán thành công trong 15 phút (hoặc đơn COD đủ điều kiện) phần giữ chỗ mới thành trừ tồn.
 
-\clearpage
+\begin{figure}[tbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-dat-hang.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: đặt hàng, giữ chỗ tồn kho và thanh toán đơn lẻ}
+\label{fig:act-dat-hang}
+\end{figure}
+
+\subsubsection*{Giao nhận đơn lẻ ba chặng}
+Hình~\ref{fig:act-giao-hang} bắt đầu bằng sự kiện giờ chốt đơn và kết thúc khi hết thời hạn khiếu nại của nhóm hàng. Khách từ chối nhận vì hàng hỏng được hoàn 100\% kể cả cước giao.
+
+\begin{figure}[tbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-giao-hang.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: giao nhận đơn lẻ qua ba chặng}
+\label{fig:act-giao-hang}
+\end{figure}
+
+\subsubsection*{Đổi trả và hoàn tiền}
+Hình~\ref{fig:act-doi-tra} thể hiện ba mốc cam kết (tiếp nhận trong 24 giờ, quyết định trong 3 ngày làm việc, hoàn tiền trong 7 ngày làm việc) và nhánh hoàn tiền không cần trả hàng dưới ngưỡng; đặc tả đầy đủ ở UC-C6 (Bảng~\ref{tab:uc-c6}).
+
+\begin{figure}[tbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-doi-tra.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: đổi trả và hoàn tiền đơn lẻ}
+\label{fig:act-doi-tra}
+\end{figure}
+
 \subsection{Mô hình hóa tương tác}
 \label{sec:sddchitiet}
 
@@ -575,5 +611,5 @@ Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở
 
 \section{Kết chương}
 
-Chương này đã mô hình hóa tám quy trình nghiệp vụ bằng lưu đồ, trình bày kiến trúc theo ba mức C4 với 13 mô-đun và cơ sở dữ liệu 13 schema tương ứng, thiết kế ba mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
+Chương này đã mô hình hóa mười quy trình nghiệp vụ bằng sơ đồ hoạt động UML, đặc tả use case theo sáu vai trò nội bộ và ba nhóm người dùng bên ngoài, trình bày kiến trúc theo ba mức C4 với 13 mô-đun và cơ sở dữ liệu 13 schema tương ứng, thiết kế ba mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
 % TODO: cập nhật kết chương sau khi hoàn thiện use case, giải pháp công nghệ, kiến trúc, sitemap, lược đồ tuần tự/lớp, API, UI/UX và test case.

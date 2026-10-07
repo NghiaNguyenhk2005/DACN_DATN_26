@@ -1,0 +1,36 @@
+@startuml act-vi-pham
+!include _style.iuml
+|Hệ thống|
+|Nhân sự xử lý|
+|Người bán|
+|Hệ thống|
+start
+:Cảnh báo luật ngưỡng
+hoặc báo cáo vi phạm;
+|Nhân sự xử lý|
+if (Loại vi phạm?) then ([nội dung])
+  :Kiểm duyệt viên
+  xem xét;
+else ([đơn hàng])
+  :NV vận hành
+  xem xét;
+endif
+if (Nghiêm trọng?) then ([có])
+  |Hệ thống|
+  :Ẩn ngay tin, lô,
+  rà soát đơn đang xử lý;
+  |Người bán|
+  :Nhận báo trước 5 ngày;
+  |Hệ thống|
+  :<&timer> Hết 5 ngày;
+  :Khóa tài khoản;
+else ([không])
+  |Nhân sự xử lý|
+  :Nhắc nhở, cảnh cáo
+  hoặc tạm khóa;
+endif
+|Hệ thống|
+:Lưu vết lý do,
+quyết định;
+stop
+@enduml

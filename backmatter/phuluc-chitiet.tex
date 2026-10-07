@@ -94,25 +94,65 @@ Chỉnh & Kiểm kê định kỳ, điều chỉnh khi lệch số thực tế \
 \endgroup
 
 \clearpage
-\section*{Phụ lục R. Lưu đồ quy trình nghiệp vụ chi tiết}
+\section*{Phụ lục R. Sơ đồ hoạt động chi tiết}
 \label{apdx:luudo}
-\addcontentsline{toc}{section}{Phụ lục R. Lưu đồ quy trình nghiệp vụ chi tiết}
+\addcontentsline{toc}{section}{Phụ lục R. Sơ đồ hoạt động chi tiết}
 
-Bảy lưu đồ dưới đây bổ trợ mục~\ref{subsec:mohinhquytrinh}, dùng ký hiệu tại Hình~\ref{fig:chu-thich-flowchart}.
+Sáu sơ đồ hoạt động dưới đây bổ trợ mục~\ref{subsec:mohinhquytrinh} và dùng cùng ký hiệu UML.
 
-\input{flowcharts/01-dang-ky}
-\clearpage
-\input{flowcharts/02-san-pham}
-\clearpage
-\input{flowcharts/03b-ban-le-giao-nhan}
-\clearpage
-\input{flowcharts/07-danh-gia}
-\clearpage
-\input{flowcharts/04b-ban-si-giao-hang}
-\clearpage
-\input{flowcharts/05-van-chuyen}
-\clearpage
-\input{flowcharts/06-quan-tri}
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-dang-ky-ncc.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: đăng ký, xác minh nhà cung cấp}
+\label{fig:act-dang-ky-ncc}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-dang-san-pham.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: đăng sản phẩm, duyệt lô và sinh mã QR}
+\label{fig:act-dang-san-pham}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-ban-si.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: bán sỉ từ yêu cầu báo giá, hợp đồng tới giao một đợt}
+\label{fig:act-ban-si}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-danh-gia.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: đánh giá và kiểm duyệt đánh giá}
+\label{fig:act-danh-gia}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-thu-hoi.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: thu hồi lô}
+\label{fig:act-thu-hoi}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/uml/act-vi-pham.png}
+\end{adjustbox}
+\caption{Sơ đồ hoạt động: xử lý vi phạm phân cấp}
+\label{fig:act-vi-pham}
+\end{figure}
 
 \clearpage
 \section*{Phụ lục S. Sơ đồ và đặc tả use case chi tiết}

@@ -1,0 +1,46 @@
+@startuml act-thu-mua
+!include _style.iuml
+|Nhà cung cấp|
+|NV thu mua|
+|NV kho|
+|Hệ thống|
+|Nhà cung cấp|
+start
+:Gửi chào hàng cho lô
+đã duyệt;
+|NV thu mua|
+:Xem chào hàng, tồn kho,
+giá dự báo;
+:Lập đơn thu mua;
+|Nhà cung cấp|
+if (Xác nhận đơn?) then ([đồng ý])
+else ([từ chối,\nquá hạn])
+  stop
+endif
+|Hệ thống|
+:Giữ chỗ trên dòng tồn
+của nhà cung cấp;
+|Nhà cung cấp|
+:Đưa hàng về kho
+(chặng đầu);
+|NV kho|
+:Nghiệm thu theo
+tiêu chuẩn;
+if (Có phần đạt?) then ([có])
+else ([không: biên bản\ntừ chối])
+  stop
+endif
+|Hệ thống|
+:Phần đạt sang dòng
+tồn của Farmery;
+:Ghi khoản phải trả
+(ProcurementReceived);
+|NV kho|
+:Đóng gói một bước,
+in tem QR và nhãn;
+|NV thu mua|
+:Đặt giá bán lẻ;
+|Hệ thống|
+:Mở bán;
+stop
+@enduml

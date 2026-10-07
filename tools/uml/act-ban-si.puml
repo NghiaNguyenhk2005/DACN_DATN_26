@@ -1,0 +1,49 @@
+@startuml act-ban-si
+!include _style.iuml
+|Khách sỉ|
+|Hệ thống|
+|Nhà cung cấp|
+|Khách sỉ|
+start
+:Xem bảng giá,
+gửi RFQ;
+|Hệ thống|
+if (Đạt MOQ?) then ([đạt])
+else ([chưa: gợi ý\ngộp đơn])
+  stop
+endif
+|Nhà cung cấp|
+:Phản hồi báo giá;
+|Khách sỉ|
+:Thương lượng
+trong kênh RFQ;
+|Hệ thống|
+:Sinh hợp đồng nháp;
+fork
+  |Khách sỉ|
+  :Xác nhận
+  bằng OTP;
+fork again
+  |Nhà cung cấp|
+  :Xác nhận
+  bằng OTP;
+end fork
+|Hệ thống|
+:Lưu mã băm, giữ chỗ
+dòng tồn nhà cung cấp;
+|Nhà cung cấp|
+:Giao một đợt,
+xuất hóa đơn;
+|Khách sỉ|
+if (Nhận đủ, đạt?) then ([đạt])
+  :Thanh toán
+  qua cổng;
+  |Hệ thống|
+  :Ghi hoa hồng,
+  đối soát;
+else ([không])
+  :Khiếu nại theo
+  hợp đồng;
+endif
+stop
+@enduml
