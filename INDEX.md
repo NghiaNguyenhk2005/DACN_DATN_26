@@ -31,12 +31,12 @@ dùng `biblatex` với `backend=biber`) → `pdflatex` ×2.
 | `chuong2-kienthuc-nentang.tex` | **2.1 Đặc điểm hàng nông sản** (định nghĩa phạm vi nông sản, so sánh với hàng hóa khác, chứng nhận farm-to-market) · 2.2 Bối cảnh chính sách · 2.3 Lý thuyết nền (**2.3.1 hai trục phân loại: B2B/B2C/B2B2C và 1P/3P**) · 2.4 Ứng dụng AI (**3 bài toán**: tìm kiếm theo ngữ nghĩa, gợi ý, dự báo giá; có đoạn TraceViet ở 2.3) | Xong; còn TODO bổ sung trích dẫn cho mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · **3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này (mới)** · 3.4 Kết chương (research gap) | Xong; còn TODO bổ sung nghiên cứu ở 3.1 |
 | `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (**mô hình 2 luồng 3P/1P**, 8 quy trình, quy tắc chống đăng sai sản phẩm, **dòng tồn và 15 nguồn giao dịch kho**, dịch vụ mở cho nhà cung cấp, giao hàng mô hình lai) · 4.2 Mô tả hệ thống (Farmery là gì, phân hệ, kênh truy cập (PWA), 3 nhóm người dùng bên ngoài + **7 vai trò nội bộ**, **4 persona**, **customer journey**, NC1–NC5, thách thức) · 4.3 Yêu cầu (user story → FR1–FR13, NFR, yêu cầu dữ liệu 9 miền; 2 ma trận Priority/Feasibility/Testability ở Phụ lục M) | Xong |
-| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình, 10 lưu đồ) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **3 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | **5.1.2 đặc tả use case + 5 sơ đồ xong**; 5.2, 5.3.1, 5.3.5, 5.3.6 xong; sitemap/sequence/class/API/UI/test case còn TODO |
+| `chuong5-phantich-thietke.tex` | 5.1 Mô hình hóa quy trình (8 quy trình; chú giải + 3 lưu đồ ở thân, 7 lưu đồ ở Phụ lục R) · 5.2 Giải pháp công nghệ (đối sánh 12 hạng mục + **3 mô-đun AI**) · 5.3 Thiết kế (kiến trúc modular monolith + RB1–RB3, CSDL, AI, API, UI/UX, test case) | **5.1.2 đặc tả use case + 5 sơ đồ xong** (3 bảng đặc tả và 4 sơ đồ chi tiết ở Phụ lục S); 5.2, 5.3.1 (C4 mức 2–3), 5.3.2 sitemap, 5.3.6 xong; 5.3.5 có ERD nhưng vẽ theo `schema.dbml` cũ, cần xuất lại; sequence/class (tạm hoãn), API, UI, test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | Toàn bộ TODO |
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột: chức năng, chất lượng mã nguồn, hiệu năng, bảo mật, khả dụng, AI) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 AI · 7.6 Kết chương | **Phương pháp và công cụ đã chốt (SonarQube, k6, Lighthouse, 4 chỉ số hành vi, axe-core); toàn bộ số liệu chờ đo thật sau khi có Ch.6** |
 | `chuong8-tongket.tex` | Kết quả đạt được · **Hạn chế của phiên bản hiện tại (mới)** · **Hướng phát triển: nghiệp vụ + kiến trúc (mới)** | Phần hạn chế và hướng phát triển xong |
 
-## `backmatter/` — Phụ lục A–O
+## `backmatter/` — Phụ lục A–T
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ.
 
@@ -122,7 +122,7 @@ Khu vực tạm cho nội dung do thành viên khác soạn, **chưa** `input` v
 `sec:danhgiahieunang`, `sec:danhgiaAI`.
 
 **Hình (26; thêm `fig:c4-ngucanh` ở Ch.4, `fig:c4-container`, `fig:c4-module`, `fig:sitemap` ở Ch.5; từ đợt 8, `fig:ocop`, 7 lưu đồ và 4 sơ đồ use case chi tiết nằm ở Phụ lục P, R, S):** `fig:thuctrang`, `fig:ocop`, `fig:bmc-cum1`–`3`,
-`fig:chu-thich-flowchart`, `fig:erd` (chưa có ảnh), 10 lưu đồ `fig:flow-*`
+`fig:chu-thich-flowchart`, `fig:erd` (có ảnh `image/ERD.png` nhưng lệch `schema.dbml` hiện hành), 10 lưu đồ `fig:flow-*`
 gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 `fig:flow-ban-le-a`/`-b`, `fig:flow-danh-gia`, `fig:flow-ban-si-a`/`-b`,
 `fig:flow-van-chuyen`, `fig:flow-quan-tri`; và **5 sơ đồ use case**
@@ -135,8 +135,7 @@ gồm `fig:flow-dang-ky`, `fig:flow-san-pham`, **`fig:flow-thu-mua`**,
 
 **Quy ước bảng:** macro `\tblsetup` (cỡ `\small`, giãn dòng 1,25, khoảng cách cột 5pt) và `\tblzebra` (tô xen kẽ tự động) định nghĩa trong `main.tex`; không tô tay `\rowcolor{tblaltbg}` nữa.
 
-**Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` và
-`tab:cauhoi-sus` (B), `tab:bmc-full` (E), `tab:vande-muctieu` (F),
+**Bảng ở phụ lục:** `tab:kichban-khaosat` và `tab:phieu-quansat` (B), `tab:bmc-full` (E), `tab:vande-muctieu` (F),
 `tab:dacdiem-hanghoa` (G), `tab:chungnhan` (H), `tab:sosanh-congnghe` và
 `tab:sosanh-ai` (I), `tab:truyvet-us` và `tab:fr-nguoidung` (J),
 `tab:db-nhom1`–`4` (K), `tab:nguongNFR` và `tab:nguongAI` (L),
