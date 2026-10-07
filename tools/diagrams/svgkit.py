@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Bộ dựng SVG tối giản cho sơ đồ C4 và sitemap, xuất HTML cùng khuôn với tools/design/.
+# Bộ dựng SVG tối giản cho sơ đồ C4, use case, sitemap; xuất HTML cùng khuôn với tools/design/
 import html
 
 FONT = "'Segoe UI','Noto Sans',Arial,sans-serif"

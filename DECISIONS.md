@@ -244,6 +244,7 @@ TODO thay vì bịa số. Build lại sạch, 52 trang, không "Float too large"
 (đã render riêng flowchart mới bằng `pdftoppm` để xác nhận không chồng
 lấn), không undefined reference.
 SỬA 2026-09-30: không còn "chỉ điều phối 3PL". Farmery tự vận hành kho sơ chế, kiểm định, đóng gói và cho nhà cung cấp trên sàn thuê lại; giao hàng theo mô hình lai (đội giao riêng chặng ngắn, chỉ thiết kế; 3PL chặng dài). Xem mục phiên 2026-09-30 ở cuối file.
+SỬA 2026-10-07: dòng thu chỉ còn hai dòng chính — hoa hồng đơn sỉ 3P và chênh lệch giá mua–bán lẻ 1P; cước giao là bù chi phí. Bỏ phí xử lý đơn và xác thực chứng nhận nhanh; gói hiển thị "Tài trợ" và dịch vụ kho mở (thuê kho, đóng gói, kiểm định) chuyển Chương 8.
 
 ### Tự động tách bullet cho mọi nội dung mới, không chỉ khi được yêu cầu — 2026-09-15
 **Bối cảnh:** Ngay sau khi xem 4 đoạn văn mới (mô hình doanh thu, kho
@@ -299,6 +300,7 @@ sỉ, khách lẻ, bộ phận thu mua (vai trò `ops_sourcing` mới, phát sin
 **Đánh đổi:** Mất một phần chi tiết về phân công nội bộ, đổi lại phần mô tả
 người dùng dồn trọng tâm vào các nhóm thực sự tạo ra giá trị của sản phẩm.
 SỬA 2026-09-30: thay bằng 3 nhóm bên ngoài + 7 vai trò nội bộ, bỏ hẳn tiền tố `admin` (`staff_moderation`, `staff_operations`, `staff_sourcing`, `staff_warehouse`, `staff_delivery`, `staff_support`, `platform_owner`); không còn quan hệ kế thừa giữa các vai trò.
+SỬA 2026-10-07: còn 6 vai trò nội bộ, bỏ `staff_delivery` — đội giao hàng riêng chuyển Chương 8.
 
 ### Cắt phạm vi: bỏ phân quyền nội bộ DN, công nợ B2B, mô-đun AI phát hiện gian lận — 2026-09-23
 **Bối cảnh:** Việc thêm luồng 1P làm tăng đáng kể khối lượng, trong khi đây là
@@ -357,6 +359,7 @@ thành phần thêm vào đều kéo theo chi phí cài đặt, giám sát và �
 **Lưu ý:** phần back-end framework (NestJS) là đề xuất, cần nhóm xác nhận lại
 theo ngôn ngữ nhóm thực sự quen; PostgreSQL thì nên giữ bất kể.
 SỬA 2026-09-30: lập luận trở lại bốn nhu cầu — thêm lưu và truy vấn vector (pgvector) cho mô-đun AI search mới.
+SỬA 2026-10-07: bỏ PostGIS (chặng cuối giao qua 3PL nội thành, không cần bán kính giao); PostgreSQL còn ba nhu cầu: khóa dòng, JSON có chỉ mục, vector. Back-end NestJS đã được nhóm xác nhận, ORM là Prisma.
 
 ### Trình bày: bảng dài xuống phụ lục, BMC tách 3 cụm dọc, bỏ từ MVP — 2026-09-23
 **Bối cảnh:** User phản ánh bảng chiếm chỗ trong báo cáo, một số bảng thừa
@@ -442,6 +445,7 @@ Sửa `03-ban-le.tex` và `03b-ban-le-giao-nhan.tex`: bên bán là Farmery, hà
 kho đã thu mua, bước trừ tồn kho nêu rõ dùng transaction có row-level lock, và
 trách nhiệm đổi trả thuộc về Farmery. Tổng số quy trình nghiệp vụ từ 7 lên 8 —
 đã sửa đồng bộ các chỗ đếm số ở Ch.4 và Ch.5.
+SỬA 2026-10-08: bỏ toàn bộ lưu đồ TikZ, thay bằng 10 sơ đồ hoạt động UML sinh từ PlantUML (mục "Sinh hình kiến trúc, use case, hoạt động, sitemap" ở cuối file).
 
 ### So sánh thể hiện bằng bảng LaTeX thay vì ảnh — 2026-09-23
 **Bối cảnh:** User yêu cầu ưu tiên thể hiện so sánh dưới dạng bảng, và phản ánh
@@ -674,6 +678,13 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 - MVP ghi ở file riêng `MVP.md`, không thành mục trong báo cáo. Thêm FR11.3 (cảnh báo khan hiếm cho khách sỉ, sau MVP).
 
 **Còn mở:** kiểm lại năm/lần xuất bản sách Kalbach, Nghị định 38/2026/NĐ-CP, giới hạn bản miễn phí SonarQube Cloud; ba sơ đồ use case cũ chưa vẽ lại; phân loại bảng và hình đang chờ user duyệt.
+SỬA 2026-10-07 (phiên siết phạm vi, mục cuối file):
+- Giao hàng mô hình lai → giao đơn lẻ ba chặng (nhà cung cấp tự đưa hàng về kho; xe lạnh theo chuyến về TP.HCM; 3PL nội thành theo khung giờ). Đội giao riêng chuyển Chương 8.
+- Kho sơ chế cho nhà cung cấp thuê lại và khách sỉ mua tồn dư của Farmery (FR13.5, FR13.7) rút khỏi bộ FR, chuyển Chương 8; nguồn giao dịch kho còn 13.
+- Ký số (FR6.6), đồng bộ TraceViet (FR4.8), cảnh báo khan hiếm (FR11.3) rút khỏi bộ FR, chuyển Chương 8.
+- Một ứng dụng PWA chung → hai ứng dụng (mua hàng: Next.js PWA; nội bộ: React, Vite, Refine) trên một API.
+- "MVP không ghi vào báo cáo" đảo một phần: báo cáo vẫn thiết kế hai luồng, thêm mục 1.3.4 Phạm vi hiện thực và quy ước "(chỉ thiết kế)" trong FR; bảng chi tiết vẫn ở `MVP.md`.
+- AI search (FR12.3) chỉ tìm sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế.
 
 ### Quy ước bảng thống nhất và rút thân báo cáo về 102 trang — 2026-10-01
 **Bối cảnh:** 36 bảng dùng 5 mức giãn dòng, 4 mức khoảng cách cột và tô màu xen kẽ viết tay (đã lệch ở vài bảng). Thân báo cáo 119 trang, mục tiêu lâu dài khoảng 100 trang.
@@ -705,6 +716,7 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 **Kết quả:** thân báo cáo 108 trang (thêm 4 hình, Chương 5: 26 trang).
 
 **Cập nhật mục "Còn mở" của phiên 30/9–1/10:** phân loại bảng và hình đã được user duyệt và áp dụng (mục ngay trên). Còn mở: ba sơ đồ use case cũ chưa vẽ lại (user để sau), sơ đồ tuần tự và sơ đồ lớp còn trống.
+SỬA 2026-10-08: 13 mô-đun (thêm `media`), 7 container (thêm ứng dụng nội bộ), 10 hệ thống bên ngoài (5 có trong bản hiện thực, 5 chỉ thiết kế, mỗi hệ thống một khung); sitemap thành hai cây theo hai ứng dụng.
 
 ### Vẽ lại ba sơ đồ use case theo phạm vi mới — 2026-10-01
 **Bối cảnh:** sơ đồ tổng quan, nhà cung cấp và khách sỉ còn use case "Sinh mã QR", "Sinh hợp đồng", "Ký xác nhận" (hành vi tự động hoặc tên cũ), thiếu FR12.3, FR13 và bảy vai trò nội bộ.
@@ -716,3 +728,75 @@ Kế hoạch tạm ở `PHASE2-PLAN.md` (gitignore).
 - Khách sỉ: nhà cung cấp là actor chính thứ hai của thương lượng và UC-D4; UC-D4 «include» xác nhận giao kết bằng OTP, «extend» ký số (tổ chức chứng thực là actor phụ); UC-D7 «extend» khiếu nại đợt giao.
 - Ba hình sinh từ `tools/diagrams/gen_usecase.py`; hai sơ đồ khách lẻ và nhân sự nội bộ giữ bản vẽ tay.
 - Sơ đồ tuần tự và sơ đồ lớp: user tạm hoãn.
+SỬA 2026-10-08: cả 6 sơ đồ use case sinh tự động, bỏ bản vẽ tay; tác nhân trừu tượng "Khách vãng lai", "Nhân sự nội bộ"; bỏ "Dịch vụ AI" khỏi tác nhân; UC-D7 bỏ, thêm UC-C6 (đổi trả, hoàn tiền) và UC-B5 (thu mua, nghiệm thu); UC-D4 chuyển xuống Phụ lục S.
+
+### Phiên 2026-10-07 — 2026-10-08: siết phạm vi theo trục thương mại điện tử
+**Bối cảnh:** user yêu cầu "chú trọng TMĐT" và rà 15 hạng mục trước bản nộp giữa kỳ 15/10/2026. Kế hoạch tạm ở
+`PHASE3-PLAN.md` (gitignore). Mọi hạng mục đã vào báo cáo trừ E0/T11 (lược đồ dữ liệu, chờ thành viên).
+
+**Phạm vi (#1)**
+- Trục chính làm sâu: bán lẻ 1P đầu–cuối (tìm kiếm → giỏ → thanh toán → theo dõi đơn → đổi trả → đánh giá)
+  và trang truy xuất QR. Nguồn hàng rút gọn: thu mua có xác nhận, nghiệm thu, đóng gói một bước, thu hồi lô.
+  Sỉ 3P tối giản: RFQ → hợp đồng xác nhận bằng OTP → giao một đợt, thanh toán thường; ký quỹ, nhiều đợt chỉ
+  thiết kế. Báo cáo ghi phạm vi hiện thực ở mục 1.3.4.
+
+**Hai ứng dụng (#15), tech (#7)**
+- Ứng dụng mua hàng (Next.js, PWA, SSR trang truy xuất) và ứng dụng nội bộ (React, Vite, Refine; 2FA, phiên
+  ngắn); một monorepo pnpm + Turborepo; NestJS một khối, tiền tố route và guard riêng cho nội bộ; Prisma, khóa
+  dòng bằng `SELECT … FOR UPDATE` viết thô trong mô-đun tồn kho.
+
+**Pháp lý, thuế (#2)**
+- Bảng "văn bản → nghĩa vụ → tác động thiết kế" ở mục 2.2; NFR8.1–8.5 viết lại; hóa đơn điện tử đơn lẻ ở mức
+  giả lập; khấu trừ thuế thay cho người bán sỉ là hộ, cá nhân chỉ thiết kế.
+- Đính chính nguồn khi kiểm văn bản gốc: xác thực người bán là Luật TMĐT 2025 Điều 17 k1c (không phải Điều 15);
+  lưu dữ liệu hợp đồng ≥ 3 năm (Điều 16 k2b, 17 k2i), dữ liệu nhãn và chứng từ ≥ 5 năm (NĐ 37/2026);
+  nhãn hàng hóa theo NĐ 37/2026 (thay NĐ 43/2017, 111/2021); nội dung bắt buộc của chính sách theo NĐ 248/2026
+  (thay NĐ 52/2013, 85/2021); Điều 27 chỉ áp cho nền tảng nước ngoài; "không phải kê khai nộp GTGT" chỉ đúng
+  khi bán doanh nghiệp cho doanh nghiệp, bán lẻ nông sản chưa chế biến chịu 5%.
+
+**Dòng thu (#3), đổi trả (#13), giao hàng (#11), phụ trợ (#5)**
+- Xem các dòng SỬA 2026-10-07 ở mục 2026-09-15 (dòng thu) và mục phiên 30/9–1/10 (giao hàng).
+- Bộ chính sách 10 mục ở Phụ lục U, toàn văn kiểm hàng, đổi trả–hoàn tiền, bảo mật. Đổi trả hàng tươi: đồng
+  kiểm khi nhận; thời hạn theo nhóm hàng (rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày); không đổi ý với hàng
+  tươi; hoàn tiền không cần trả hàng dưới ngưỡng. Cam kết: tiếp nhận 24 giờ, quyết định 3 ngày làm việc, hoàn
+  tiền 7 ngày làm việc; xác minh hồ sơ nhà cung cấp 5 ngày làm việc.
+- COD có điều kiện; giờ chốt đơn; dòng thời gian 8 trạng thái; bỏ chat tự do, FR9.1 là trao đổi gắn với đơn
+  hoặc khiếu nại; thêm mua lại (FR5.6), báo vào mùa (FR5.7); bỏ theo dõi gian hàng.
+
+**AI (#8), tệp (#12)**
+- FR12.1 đo bằng Precision@5 ≥ 0,6 trên ≥ 50 sản phẩm gán nhãn tay (thay CTR); FR12.2 chỉ dự báo giá, cho
+  nhân viên thu mua, chạy offline; FR12.3 nêu tên BGE-M3, phía từ khóa thêm `unaccent` và trigram.
+- Mô-đun `media` (13 mô-đun), upload qua đường dẫn ký trước thẳng lên MinIO; quét virus chỉ thiết kế.
+
+**User xác nhận ở Bước 0 của phiên 8/10**
+- Giữ NFR7.3 bỏ cả thao tác kho ngoại tuyến (ứng dụng nội bộ không phải PWA) và NFR8.5 tách 3 năm / 5 năm.
+- Giữ ToS Điều 12: vi phạm nghiêm trọng thì ẩn tin, lô ngay; khóa tài khoản người bán có hiệu lực sau 5 ngày
+  báo trước (Luật TMĐT Điều 17 k2g), trừ yêu cầu của cơ quan nhà nước. Giữ các chi tiết tự đề xuất trong
+  Phụ lục U.1, U.3.
+- Giữ ngưỡng Precision@5 ≥ 0,6; Phụ lục I ghi rõ cột nhận xét là nhận định của nhóm, chưa phải số liệu đo.
+
+**Thêm trong lúc triển khai (cần user rà khi đọc lại)**
+- SMS thành chỉ thiết kế ở Chương 4 cho khớp mục 5.2 và `MVP.md`.
+- Dịch vụ AI không đọc cơ sở dữ liệu: nhận `ProductChanged`, trả vector qua sự kiện `ProductEmbedded`.
+- Mã UC mới UC-C6, UC-B5; giữ nguyên các mã cũ còn dùng.
+- MoSCoW: 11 nhóm Must, 2 nhóm Should (FR9, FR12), không còn Could; dự báo giá là hạng mục Challenging duy nhất.
+
+**Kết quả:** 236 trang; thân báo cáo tr. 1–127 (trước phiên: 1–108).
+
+### Sinh hình kiến trúc, use case, hoạt động, sitemap — 2026-10-08
+**Quyết định**
+- Mọi hình sinh từ mã, không sửa PNG: `tools/diagrams/gen_c4.py`, `gen_usecase.py`, `gen_sitemap.py`
+  (svgkit → HTML → `npm run shot`) và `tools/uml/*.puml` (PlantUML → `npm run uml`).
+- Quy ước mũi tên (theo góp ý của user): hai chiều khi bên được gọi trả dữ liệu nghiệp vụ về, nhãn "phần gửi;
+  phần nhận về"; một chiều khi chỉ gửi đi; mũi tên chạm biên một khung áp cho mọi phần tử trong khung, chạm một
+  phần tử là lời gọi của riêng phần tử đó; không gom nhiều nhánh vào một trục; mỗi hệ thống bên ngoài một khung
+  riêng, hệ thống chỉ thiết kế vẽ nét đứt xám.
+- Use case: mỗi quan hệ tác nhân–use case là một đường riêng, sắp thứ tự use case để không cắt nhau.
+- Sơ đồ hoạt động dùng PlantUML 1.2026.8 (jar không commit, tải bằng `npm run uml:setup`). Cỡ chữ 19 trong
+  `_style.iuml` vì lề cố định của lane không co theo cỡ chữ. Bản này không nhận ký hiệu `:...<`/`:...>`, nên sự
+  kiện thời gian dùng biểu tượng `<&timer>`, tín hiệu webhook dùng `<&transfer>`.
+- Hình luồng một đơn lẻ dùng svgkit, không dùng PlantUML: bản PlantUML 7 lane rộng tới mức chữ còn ~5pt.
+- Kiểm cỡ chữ in ra: hình gần trọn trang đặt `[p]` với giới hạn `\textheight−1,6 cm`; chữ nhỏ nhất ≥ 7pt.
+
+**Đánh đổi:** PlantUML tự dàn bố cục nên khó ép chữ lớn; đổi lại nguồn `.puml` ngắn, dễ sửa khi quy trình đổi.
+

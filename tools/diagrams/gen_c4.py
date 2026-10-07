@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Sinh 3 sơ đồ C4 (ngữ cảnh, container, mô-đun) vào tools/design/.
+# Sinh 3 sơ đồ C4 (ngữ cảnh, container, mô-đun) và hình luồng một đơn lẻ vào tools/design/
 import io, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from svgkit import Svg, page

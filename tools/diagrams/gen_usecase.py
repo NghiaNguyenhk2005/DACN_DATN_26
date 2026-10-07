@@ -46,7 +46,7 @@ def uc(s, x, y, w, text, stroke, style='n'):
     """style: n thường, b trục bán lẻ (đậm), d chỉ thiết kế (xám nét đứt)."""
     if style == 'd':
         s.rect(x, y, w, UCH, '#f6f7f6', GREY, 2.2, UCH / 2, '8 6')
-        text, color, weight = text + ' (chỉ thiết kế)', GREY, 500
+        color, weight = GREY, 500
     else:
         s.rect(x, y, w, UCH, '#ffffff', stroke, 3.2 if style == 'b' else 2.2, UCH / 2)
         color, weight = INK, 700 if style == 'b' else 500
@@ -84,7 +84,7 @@ def finish(s):
 
 LEG_UC = ('<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#c98a1a" stroke-width="3.4"/></svg>Trục bán lẻ</span>'
           '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#55635c" stroke-width="2"/></svg>Use case khác</span>'
-          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế</span>'
+          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế hoặc sau phần hiện thực</span>'
           '<span><svg width="60" height="16"><line x1="2" y1="8" x2="44" y2="8" stroke="#44524b" stroke-width="2"/><path d="M44,2 L57,8 L44,14 z" fill="#fff" stroke="#44524b" stroke-width="1.6"/></svg>Tổng quát hóa (con làm được mọi việc của cha)</span>')
 LEG_DEP = ('<span><svg width="60" height="16"><line x1="2" y1="8" x2="54" y2="8" stroke="#44524b" stroke-width="2" stroke-dasharray="7 5"/><path d="M47,2 L57,8 L47,14" fill="none" stroke="#44524b" stroke-width="1.8"/></svg>'
            '«include»: luôn thực hiện; «extend»: chỉ khi thỏa điều kiện</span>')
@@ -303,7 +303,7 @@ def internal_ops():
     mains = [('m0', 'Duyệt hồ sơ, loại thuế, chứng nhận', 'n'), ('m1', 'UC-B4 Duyệt sản phẩm và lô', 'n'),
              ('m2', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('m3', 'Xử lý vi phạm nội dung', 'n'),
              ('m4', 'Xử lý khiếu nại, đổi trả', 'n'), ('m5', 'Ra lệnh hoàn tiền', 'n'),
-             ('m6', 'Giám sát đơn và giao hàng', 'n'), ('m7', 'Thu hồi lô', 'n'), ('m8', 'Xem báo cáo thống kê', 'n'),
+             ('m6', 'Giám sát đơn và giao hàng', 'n'), ('m7', 'Thu hồi lô', 'n'), ('m8', 'Xem báo cáo thống kê', 'd'),
              ('m9', 'Quản lý tài khoản nội bộ, vai trò', 'n'), ('m10', 'Cấu hình biểu phí, ngưỡng, thời hạn', 'n'),
              ('m11', 'Xem nhật ký thao tác', 'n')]
     sides = {'s3': (3, 'Hạn chế tài khoản người bán', 'n'), 's4': (4, 'Trao đổi theo đơn', 'n')}

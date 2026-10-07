@@ -31,21 +31,21 @@ mục~\ref{sec:yeucauphichucnang}.
 \endhead
 \bottomrule
 \endfoot
-\textbf{FR1} & Tài khoản \& RBAC (eKYC, OTP) & Must & High & \textit{Integration / Security Test:} Xác thực OTP qua SMS/Email; phân quyền theo 10 vai trò (3 bên ngoài, 7 nội bộ) chặn truy cập trái phép 100\%. \\
-\textbf{FR2} & Gian hàng \& Tồn kho theo lô & Must & High & \textit{Unit / Integration Test:} Thao tác nhập/xuất kho; tính tồn kho khả dụng chính xác sau mỗi đơn. \\
-\textbf{FR3} & Quản lý chứng nhận chất lượng & Must & High & \textit{Functional E2E Test:} Luồng tải lên ảnh chứng chỉ $\rightarrow$ Kiểm duyệt viên duyệt $\rightarrow$ Hiển thị badge xác minh trên gian hàng. \\
-\textbf{FR4} & Sản phẩm \& Truy xuất nguồn gốc QR & Must & Medium & \textit{Integration Test:} Lô được duyệt có mã QR theo định danh GS1; quét QR đọc đúng nhật ký canh tác; bản đồng bộ lên TraceViet đúng chuẩn kết nối (kiểm trên bản giả lập). \\
-\textbf{FR5} & Giao dịch bán lẻ (gian hàng 1P) & Must & Medium & \textit{E2E Test:} Đặt hàng từ gian hàng của nền tảng $\rightarrow$ trừ tồn kho đúng lô $\rightarrow$ sinh đơn kèm phí vận chuyển. \\
-\textbf{FR6} & Bán sỉ B2B (RFQ, Hợp đồng, Đợt giao) & Must & Medium & \textit{Integration / State Test:} Quy trình RFQ chuyển trạng thái hợp lệ; sinh hợp đồng, xác nhận giao kết lưu đúng mã băm văn bản; theo dõi đợt giao. \\
-\textbf{FR7} & Thanh toán đa kênh \& Ký quỹ Escrow & Must & Medium & \textit{Integration Test (Sandbox):} Tạo mã VietQR tự động; webhook cập nhật trạng thái thanh toán và khóa tiền escrow. \\
-\textbf{FR8} & Vận chuyển (3PL và đội giao Farmery) \& Xử lý khiếu nại & Should & Medium & \textit{API Integration Test:} Tính cước tự động theo tọa độ/khối lượng; webhook cập nhật hành trình vận đơn. \\
-\textbf{FR9} & Chat nội bộ \& Wishlist & Could & High & \textit{E2E / WebSocket Test:} Tin nhắn tức thời giữa Người mua và Shop có độ trễ $< 500$ms. \\
-\textbf{FR10} & Vận hành và quản trị nền tảng & Must & High & \textit{Functional / Security Test:} Kiểm duyệt viên duyệt và khóa tài khoản vi phạm; nhân viên vận hành phân xử khiếu nại; quản trị viên hệ thống đổi cấu hình và mọi thao tác đều có trong nhật ký; dashboard thống kê doanh thu toàn sàn. \\
-\textbf{FR11} & Thông báo đa kênh (web, thông báo đẩy, Email, SMS) & Should & High & \textit{Integration Test:} Bắn notification khi đơn hàng đổi trạng thái; gửi email cảnh báo hết hạn chứng nhận. \\
-\textbf{FR12.1} & AI Gợi ý sản phẩm cá nhân hóa & Should & Challenging & \textit{Data Test / A/B Test:} Đo lường CTR uplift danh sách gợi ý so với sản phẩm mới nhất ($> 20\%$). \\
-\textbf{FR12.2} & AI Dự báo giá \& Nhu cầu mùa vụ & Could & Challenging & \textit{Model Evaluation:} Đo lường sai số dự báo trên dữ liệu chuỗi thời gian kiểm thử (MAPE $< 20\%$). \\
-\textbf{FR12.3} & AI Tìm kiếm theo ngữ nghĩa & Should & Medium & \textit{Offline Evaluation:} nDCG@10 và Recall@10 trên bộ truy vấn gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở. \\
-\textbf{FR13} & Thu mua \& quản lý kho (1P) & Must & Medium & \textit{Integration / Concurrency Test:} Đơn thu mua chỉ hiệu lực sau xác nhận của nhà cung cấp; mọi thay đổi tồn đều có dòng sổ nhập xuất; thu hồi lô khóa đủ các dòng tồn. \\
+\textbf{FR1} & Tài khoản, RBAC, đồng ý dữ liệu & Must & High & \textit{Integration / Security Test:} xác thực OTP qua email; phân quyền theo 9 vai trò (3 bên ngoài, 6 nội bộ) chặn 100\% truy cập trái phép; tài khoản nội bộ bắt buộc 2FA; lần đồng ý được lưu kèm phiên bản chính sách. \\
+\textbf{FR2} & Hồ sơ nhà cung cấp, loại thuế & Must & High & \textit{Unit / Integration Test:} cập nhật hồ sơ, khai báo loại người bán; nhà cung cấp chỉ xem được dòng tồn của mình. \\
+\textbf{FR3} & Quản lý chứng nhận chất lượng & Must & High & \textit{Functional E2E Test:} tải chứng nhận $\rightarrow$ kiểm duyệt viên duyệt $\rightarrow$ nhãn xác minh hiện trên hồ sơ nguồn gốc; hết hạn thì nhãn tự ẩn. \\
+\textbf{FR4} & Sản phẩm \& truy xuất nguồn gốc QR & Must & Medium & \textit{Integration Test:} lô được duyệt có mã QR theo định danh GS1; quét QR đọc đúng nhật ký canh tác; tìm từ khóa chấp nhận gõ không dấu, gõ sai. \\
+\textbf{FR5} & Giao dịch bán lẻ (1P) & Must & Medium & \textit{E2E Test:} đặt hàng $\rightarrow$ giữ chỗ 15 phút $\rightarrow$ thanh toán $\rightarrow$ trừ tồn đúng dòng; quá hạn thì nhả giữ chỗ; mua lại tạo giỏ chỉ gồm sản phẩm còn bán. \\
+\textbf{FR6} & Bán sỉ (RFQ, hợp đồng, giao một đợt) & Must & Medium & \textit{Integration / State Test:} RFQ chuyển trạng thái hợp lệ; xác nhận giao kết lưu đúng mã băm văn bản; giữ chỗ trên dòng tồn của nhà cung cấp. \\
+\textbf{FR7} & Thanh toán, hóa đơn (giả lập) & Must & Medium & \textit{Integration Test (môi trường thử nghiệm):} webhook cập nhật trạng thái, gửi lặp chỉ xử lý một lần; COD chỉ mở khi đủ điều kiện; hóa đơn giả lập sinh khi đơn hoàn tất. \\
+\textbf{FR8} & Giao hàng ba chặng, đổi trả, khiếu nại & Must & Medium & \textit{API Integration / E2E Test:} vận đơn GHN thử nghiệm và webhook trạng thái; chuyến trung chuyển gom đúng đơn trước giờ chốt; yêu cầu quá thời hạn bị chặn; hoàn tiền dưới ngưỡng ghi bút toán hủy. \\
+\textbf{FR9} & Trao đổi theo đơn; yêu thích \textit{(chỉ thiết kế)} & Should & High & \textit{E2E Test:} tin trao đổi gắn đúng đơn hoặc yêu cầu, có ảnh; chỉ khách và nhân viên vận hành xem được. \\
+\textbf{FR10} & Vận hành và quản trị nền tảng & Must & High & \textit{Functional / Security Test:} kiểm duyệt viên duyệt và xử lý vi phạm (hạn chế tài khoản có hiệu lực sau 5 ngày); nhân viên vận hành xử lý khiếu nại, thu hồi lô; quản trị viên đổi cấu hình; mọi thao tác có trong nhật ký. \\
+\textbf{FR11} & Thông báo (web, đẩy, email; SMS \textit{chỉ thiết kế}) & Must & High & \textit{Integration Test:} mỗi lần đơn chuyển trạng thái có thông báo đẩy hoặc email; cảnh báo chứng nhận sắp hết hạn và tồn thấp. \\
+\textbf{FR12.1} & AI sản phẩm tương tự & Should & Medium & \textit{Offline Evaluation:} Precision@5 $\ge 0{,}6$ trên tối thiểu 50 sản phẩm gán nhãn tay. \\
+\textbf{FR12.2} & AI dự báo giá theo mùa vụ & Should & Challenging & \textit{Model Evaluation:} MAPE $< 20\%$ trên tập kiểm tra tách theo thời gian. \\
+\textbf{FR12.3} & AI tìm kiếm theo ngữ nghĩa & Should & Medium & \textit{Offline Evaluation:} nDCG@10 và Recall@10 trên bộ truy vấn gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở. \\
+\textbf{FR13} & Thu mua \& quản lý kho (1P) & Must & Medium & \textit{Integration / Concurrency Test:} đơn thu mua chỉ hiệu lực sau xác nhận của nhà cung cấp; mọi thay đổi tồn đều có dòng sổ nhập xuất; thu hồi lô khóa đủ các dòng tồn. \\
 \end{longtable}
 \endgroup
 \subsubsection*{Ma trận phân loại Priority, Feasibility và Testability cho các NFR}
@@ -78,7 +78,7 @@ Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi v
 \textbf{NFR3.2} & Mã hóa dữ liệu định danh (PII) & Must & High & \textit{Database Inspection:} Rà soát bảng dữ liệu đảm bảo không lưu số CCCD/MST dưới dạng plaintext. \\
 \textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
 \textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Buổi thử ba tác vụ với nhóm nông dân, đo bốn chỉ số hành vi (Phụ lục B); kiểm tra tiếp cận bằng axe-core. \\
-\textbf{NFR7.3} & Ứng dụng web cài đặt được (PWA) & Must & Medium & \textit{Manual Checklist:} Trên hai điện thoại thật: cài lên màn hình chính, nhận thông báo đẩy, ghi dữ liệu khi mất mạng và đồng bộ đúng khi có mạng lại. \\
+\textbf{NFR7.3} & Ứng dụng web cài đặt được (PWA) & Must & Medium & \textit{Manual Checklist:} Trên hai điện thoại thật: cài ứng dụng mua hàng lên màn hình chính, nhận thông báo đẩy, ghi nhật ký canh tác khi mất mạng và đồng bộ đúng khi có mạng lại; ứng dụng nội bộ dùng được trên điện thoại. \\
 \textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\
 \end{longtable}
 \endgroup

@@ -117,7 +117,9 @@ nhóm đã quen Java/Spring hoặc PHP/Laravel thì nên đổi, vì học frame
 trong 15 tuần trong khi phải làm cả luồng 1P lẫn AI là đánh đổi tệ. Khi đổi,
 phải sửa đồng bộ: mục 5.2, bảng đối sánh ở Phụ lục I, và mục 6.1.1 (môi
 trường và công cụ phát triển).
-Status: open
+**Cập nhật 2026-10-08:** user xác nhận giữ NestJS (7/10); đã ghi vào mục 5.2, Phụ lục I, mục 6.1.1 và
+`DECISIONS.md` (dòng SỬA ở mục "Chọn PostgreSQL...").
+Status: resolved
 
 ### Các TODO trích dẫn còn thiếu ở nội dung mới — Claude — 2026-09-23
 Hai mục mới ở Chương 2 đang thiếu nguồn trích dẫn, đã đánh dấu `% TODO` tại
@@ -159,6 +161,12 @@ tuần tự, sơ đồ lớp (mục 5.3.3, 5.3.4) — user tạm hoãn.
 viên khác) đã chèn `image/ERD.png` vào mục 5.3.5. Nhưng hình vẽ theo
 `schema.dbml` cũ (chưa có `stock_holdings`, `stock_movements`), trong khi
 `schema.dbml` và Phụ lục K đã cập nhật → cần xuất lại ERD từ dbdiagram.
+**Cập nhật 2026-10-08:** commit `65936c6` (7/10, thành viên) đưa `schema.dbml` và `image/ERD.png` về mô
+hình cũ (thêm lại `debts`, `business_members`; mất `stock_holdings`, `stock_movements`, `procurement_orders`,
+`shipments`, `disputes`, bảng AI...). Đang chờ thành viên trả lời trước khi sửa. Khi có trả lời, việc còn
+lại: cập nhật `schema.dbml` theo 13 schema của mục 5.3.5 (thêm `media_files`, kênh `push`, 6 vai trò nội
+bộ), Phụ lục K, xuất lại ERD, bỏ dòng `% TODO` ở mục 5.3.5. Sơ đồ tuần tự, sơ đồ lớp vẫn tạm hoãn; hình
+"Luồng một đơn bán lẻ" ở mục 5.3.1 chỉ bù một phần, không thay thế.
 Status: open
 
 ### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23

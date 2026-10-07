@@ -28,7 +28,7 @@ SHOP = [
 ]
 STAFF = [
     ('Kiểm duyệt', 'staff_moderation', ['Hàng đợi duyệt', 'Đánh giá nghi vấn', 'Vi phạm']),
-    ('Vận hành', 'staff_operations', ['Khiếu nại, đổi trả', 'Giám sát đơn, giao hàng', 'Thu hồi lô', 'Báo cáo']),
+    ('Vận hành', 'staff_operations', ['Khiếu nại, đổi trả', 'Giám sát đơn, giao hàng', 'Thu hồi lô', D + 'Báo cáo thống kê']),
     ('Thu mua', 'staff_sourcing', ['Chào hàng', 'Đơn thu mua', 'Định giá, dự báo']),
     ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Đóng gói, in tem', 'Tồn kho, sổ nhập xuất', 'Chuyến trung chuyển']),
     ('Hỗ trợ vùng', 'staff_support', ['Nhà cung cấp phụ trách', 'Nhập liệu hộ']),
