@@ -11,7 +11,7 @@ WIRE = '#55635c'
 GREY = '#8a948f'
 PK = {'A': ('#eaf7ef', '#1f8a4c'), 'B': ('#eef4fb', '#1a5fa8'), 'C': ('#fdf1dc', '#c98a1a'),
       'D': ('#fbe9e9', '#c23b3b'), 'E': ('#f1eef8', '#6b4fa0')}
-UCH, PITCH = 62, 72
+UCH, PITCH = 60, 68
 MARKERS = ('<marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto">'
            '<path d="M1,1 L11,6 L1,11" fill="none" stroke="#44524b" stroke-width="1.8"/></marker>'
            '<marker id="tri" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="13" markerHeight="13" orient="auto">'
@@ -123,15 +123,15 @@ def overview():
     y = 14
     for key, title, lc, rc in packs:
         n = max(len(lc), len(rc))
-        h = 52 + n * PITCH
+        h = 56 + n * PITCH
         x0 = 700 if not lc else PX0               # gói chỉ có use case nội bộ thì thu về cột phải
-        s.rect(x0, y, PX1 - x0, h, PK[key][0], PK[key][1], 2.2, 16, '10 7')
+        s.rect(x0, y, PX1 - x0, h, PK[key][0], PK[key][1], 1.6, 16)
         s.text(x0 + 16, y + 32, title, 24, 800, PK[key][1], 'start')
         for items, x, w in ((lc, LX, LW), (rc, RXc, RW)):
             for i, (k, t, st) in enumerate(items):
-                U[k] = uc(s, x, y + 44 + i * PITCH, w, t, PK[key][1], st)
-        y += h + 12
-    PB = y - 12                                   # đáy gói cuối
+                U[k] = uc(s, x, y + 46 + i * PITCH, w, t, PK[key][1], st)
+        y += h + 18
+    PB = y - 18                                   # đáy gói cuối
     ymid = lambda *ks: sum(U[k]['y'] for k in ks) / len(ks)
 
     # Tác nhân trái
@@ -157,17 +157,19 @@ def overview():
              ('wh', 'Nhân viên kho', ['C6', 'C7', 'D3']), ('ops', 'Nhân viên vận hành', ['D4', 'E1']),
              ('mod', 'Kiểm duyệt viên', ['B4', 'D6', 'E2']), ('own', 'Quản trị viên', ['E3'])]
     R = {}
+    frame_at = len(s.parts)          # khung nền vẽ dưới các tác nhân
     for k, name, ks in roles:
         yy = ymid(*ks) - 40
         if k == 'sup':
             yy = U['B5']['y'] - 30
         if k == 'own':
-            yy = U['E3']['y'] - 50
+            yy = U['E3']['y'] - 28
         R[k] = actor(s, rx, yy, name)
         for u in ks:
             assoc(s, R[k]['L'], U[u]['R'])
-    FY1 = U['E3']['y'] + 90
-    s.rect(FX0, FY0, W - 6 - FX0, FY1 - FY0, 'none', '#12351f', 2.4, 16, '9 6')
+    FY1 = U['E3']['y'] + 112
+    s.rect(FX0, FY0, W - 6 - FX0, FY1 - FY0, '#f3f8f5', '#12351f', 1.6, 16)
+    s.parts.insert(frame_at, s.parts.pop())
     s.text((FX0 + W - 6) / 2, FY0 + 28, 'Nhân sự nội bộ', 22, 800, '#12351f')
     assoc(s, (FX0 + 60, FY0), (FX0 + 60, U['A2']['y']))
     assoc(s, (FX0 + 60, U['A2']['y']), U['A2']['R'])
@@ -182,10 +184,10 @@ def overview():
         poly(s, [(rx_, ry + dy), (cxx, ry + dy), (cxx, U[k]['y']),
                  (U[k]['R'][0] if side == 'L' else U[k]['L'][0], U[k]['y'])])
     s.h = int(max(PB, FY1) + 16)
-    leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>%s</span>'
+    leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-width:1.5px"></i>%s</span>'
                   % (PK[k][0], PK[k][1], t) for k, t in
                   [('A', 'Nền tảng chung'), ('B', 'Nguồn cung'), ('C', 'Giao dịch'), ('D', 'Sau bán'), ('E', 'Vận hành')]) + LEG_UC + \
-        '<span><svg width="40" height="28"><rect x="2" y="3" width="36" height="22" rx="4" fill="none" stroke="#12351f" stroke-width="2" stroke-dasharray="6 4"/></svg>Nối từ biên khung: áp cho mọi vai trò</span>'
+        '<span><svg width="40" height="28"><rect x="2" y="3" width="36" height="22" rx="4" fill="#f3f8f5" stroke="#12351f" stroke-width="1.5"/></svg>Nối từ biên khung: áp cho mọi vai trò</span>'
     io.open(os.path.join(OUT, 'usecase-overview.html'), 'w', encoding='utf-8').write(page(
         '', '', finish(s), leg, 'Mã UC ghi cho các use case có bảng đặc tả.'))
 

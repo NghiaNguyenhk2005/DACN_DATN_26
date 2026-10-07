@@ -799,4 +799,4 @@ SỬA 2026-10-08: cả 6 sơ đồ use case sinh tự động, bỏ bản vẽ t
 - Kiểm cỡ chữ in ra: hình gần trọn trang đặt `[p]` với giới hạn `\textheight−1,6 cm`; chữ nhỏ nhất ≥ 7pt.
 
 **Đánh đổi:** PlantUML tự dàn bố cục nên khó ép chữ lớn; đổi lại nguồn `.puml` ngắn, dễ sửa khi quy trình đổi.
-
+SỬA 2026-10-08 (cùng ngày, sau góp ý của user "activity chưa đẹp, viền gần nhau khó nhìn"): bỏ PlantUML, 10 sơ đồ hoạt động sinh bằng `tools/diagrams/gen_activity.py` (svgkit) — lane tô màu theo loại tác nhân, tiêu đề lane nền đậm, lề rộng quanh hộp, nhãn điều kiện ngắn có nền, chi tiết ngoại lệ chuyển xuống ghi chú dưới hình; ký hiệu UML chuẩn cho sự kiện thời gian (đồng hồ cát) và nhận tín hiệu (hình cờ lõm). Khung lồng nhau ở C4 mức 3 và use case tổng quan bỏ nét đứt, giãn khoảng cách, bỏ khung "13 mô-đun" thừa. Thân báo cáo giữ 2 sơ đồ hoạt động (thu mua, đặt hàng); giao ba chặng và đổi trả chuyển Phụ lục R → thân còn tr. 1–125.

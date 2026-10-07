@@ -27,6 +27,17 @@ const pages = [
   'c4-module.html',
   'luong-don-le.html',
   'sitemap-tong-quan.html',
+  // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
+  'act-thu-mua.html',
+  'act-dat-hang.html',
+  'act-giao-hang.html',
+  'act-doi-tra.html',
+  'act-dang-ky-ncc.html',
+  'act-dang-san-pham.html',
+  'act-ban-si.html',
+  'act-danh-gia.html',
+  'act-thu-hoi.html',
+  'act-vi-pham.html',
 ];
 
 (async () => {

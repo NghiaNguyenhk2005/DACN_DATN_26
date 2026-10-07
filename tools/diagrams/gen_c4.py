@@ -229,7 +229,7 @@ R[2] = R[1] + MH + 140
 R[3] = R[2] + MH + 185
 R[4] = R[3] + MH + 70
 RH = {1: MH, 2: MH, 3: MH, 4: 200}
-MF_BOT = R[4] + RH[4] + 30            # đáy khung 13 mô-đun
+MF_BOT = R[4] + RH[4] + 30            # đáy hàng mô-đun cuối
 CF_BOT = MF_BOT + 16                  # đáy ranh giới ứng dụng lõi
 YB = CF_BOT + 60                      # hàng container phía dưới
 s = Svg(W, YB + 104)
@@ -237,18 +237,13 @@ s = Svg(W, YB + 104)
 s.rect(200, 10, 944, CF_BOT - 10, 'none', HOT, 2.5, 18, '12 8')
 s.text(218, 42, 'Ứng dụng lõi  [Container: NestJS]', 24, 700, HOT, 'start')
 s.box(COLX[0], 54, COLX[3] + CWD - COLX[0], 76,
-      [('Lớp API: /api (ứng dụng mua hàng), /staff (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò', 22, 600, INK, False)],
+      [('Lớp API: /api (ứng dụng mua hàng), /staff (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
       fill=CONT[0], stroke=CONT[1])
-MFX, MFY = 214, 156
-s.rect(MFX, MFY, 916, MF_BOT - MFY, 'none', MUTED, 2, 14, '6 6')
-s.text(MFX + 916 - 16, MF_BOT - 16, '13 mô-đun nghiệp vụ', 22, 700, MUTED, 'end')
-link(s, [(COLX[1] + CWD / 2, 130), (COLX[1] + CWD / 2, MFY)], both=False)
-s.label(COLX[1] + CWD / 2 + 140, 143, 'Định tuyến tới mô-đun', 250)
 
 def frame(c0, c1, row, title, key):
-    x = COLX[c0] - 10; w = COLX[c1] + CWD + 10 - x
-    y = R[row] - 44
-    s.rect(x, y, w, RH[row] + 56, BLK[key][0], BLK[key][1], 2.5, 14, '10 7')
+    x = COLX[c0] - 16; w = COLX[c1] + CWD + 16 - x
+    y = R[row] - 46
+    s.rect(x, y, w, RH[row] + 62, BLK[key][0], BLK[key][1], 1.6, 14)
     s.text(x + 14, y + 30, title, 24, 800, BLK[key][1], 'start')
 
 def mod(c, row, name, schema, fr, resp, key):
@@ -301,7 +296,7 @@ link(s, [(COLX[0], R[2] + 120), (LXc + LWc, R[2] + 120)])                     # 
 link(s, [(COLX[0], R[1] + 150), (LXc + 130, R[1] + 150), (LXc + 130, R[2] - 30)])  # catalog <-> AI
 s.box(LXc, R[3], LWc, MH, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
-link(s, [(LXc + LWc, R[3] + MH / 2), (MFX, R[3] + MH / 2)])                    # chạm biên khung 13 mô-đun
+link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
 link(s, [(LXc + 50, R[2] + 206), (LXc + 50, R[3])])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', '', True, name_size=22)
 ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', '', True, name_size=22)
@@ -329,10 +324,10 @@ s.box(COLX[1] - 20, YB, CWD + 40, 92, [('Kho tệp', 23, 700, INK, False), ('[Co
 link(s, [(cx(1), R[4] + RH[4]), (cx(1), YB)])
 s.label(cx(1) + 125, CF_BOT + 30, 'URL ký trước; tệp', 200)
 s.box(COLX[2] + 40, YB, 2 * CWD + 30, 100, [('Cơ sở dữ liệu', 23, 700, INK, False), ('[Container: PostgreSQL] mỗi mô-đun một schema', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
-link(s, [(cx(3), MF_BOT), (cx(3), YB)])
+link(s, [(cx(3), CF_BOT), (cx(3), YB)])
 s.label(cx(3) + 105, CF_BOT + 30, 'đọc/ghi [SQL]', 160)
 
-leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>%s</span>' % (BLK[k][0], BLK[k][1], t)
+leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-width:1.5px"></i>%s</span>' % (BLK[k][0], BLK[k][1], t)
               for k, t in [('cung', 'Nguồn cung'), ('gd', 'Giao dịch'), ('sau', 'Sau bán'), ('chung', 'Nền tảng chung'), ('vh', 'Vận hành')]) + \
       ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container</span>' % CONT) + \
       ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài</span>' % EXT) + \
@@ -341,7 +336,7 @@ leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-s
       ('<span>%sMột chiều</span><span>%sHai chiều</span>' % (icon(), icon(both=True)))
 io.open(os.path.join(OUT, 'c4-module.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Chữ đơn cách: tên schema. Mũi tên chạm biên khung "13 mô-đun" áp cho mọi mô-đun; phụ thuộc khác đi qua sự kiện.'))
+    'Chữ đơn cách: tên schema. Mũi tên chạm biên ứng dụng lõi áp cho mọi mô-đun; phụ thuộc khác đi qua sự kiện.'))
 
 # ======================= LUỒNG ĐẦU–CUỐI MỘT ĐƠN LẺ =======================
 # (khóa, tên, schema/ghi chú, kiểu): kiểu = person | mod:<khối> | ext
