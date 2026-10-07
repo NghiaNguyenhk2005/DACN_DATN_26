@@ -71,8 +71,8 @@ Nghiệm thu ba mô-đun AI theo đúng chỉ số đã định nghĩa tại B�
 
 \begin{itemize}
     \item \textbf{Tìm kiếm theo ngữ nghĩa:} đo nDCG@10 và Recall@10 trên bộ truy vấn do nhóm gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở; đo thêm thời gian phản hồi ở p95.
-    \item \textbf{Gợi ý sản phẩm:} ở phiên bản đầu chỉ có phần ``sản phẩm tương tự'', đánh giá offline bằng tỷ lệ gợi ý cùng nhóm nhu cầu trên bộ nhãn tay; phần gợi ý theo hành vi, khi được bật, đo mức tăng CTR so với danh sách baseline không cá nhân hóa qua thử nghiệm A/B.
-    \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai.
+    \item \textbf{Sản phẩm tương tự:} đo Precision@5 trên tập sản phẩm gán nhãn tay; mỗi sản phẩm trong tập có danh sách sản phẩm được người gán nhãn coi là phù hợp thay thế hoặc mua kèm. Mức tăng CTR qua thử nghiệm A/B chỉ áp dụng khi bật gợi ý cá nhân hóa, ngoài phần hiện thực.
+    \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai; mô hình chạy offline và kết quả được hiển thị làm tham khảo cho nhân viên thu mua, nên không đánh giá theo thời gian phản hồi.
 \end{itemize}
 
 Riêng phần giám sát bất thường không dùng mô hình học máy trong phạm vi đồ án (lý do tại Chương~\ref{chap:coso}), nên được nghiệm thu bằng cách kiểm tra các luật ngưỡng có kích hoạt đúng trên tập tình huống dựng sẵn, không đo bằng chỉ số mô hình.

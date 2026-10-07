@@ -98,9 +98,9 @@ Mục tiêu là tính bất biến sau khi công khai nên chỉ tiêu đo phả
 \textbf{Tìm kiếm theo ngữ nghĩa} &
 nDCG@10 cao hơn tối thiểu 15\% và Recall@10 không thấp hơn so với tìm kiếm từ khóa, trên bộ tối thiểu 50 truy vấn do nhóm gán nhãn tay; thời gian phản hồi p95 dưới 1 giây. &
 Mục đích của mô-đun là tìm ra sản phẩm mà tìm kiếm từ khóa bỏ sót, nên chỉ số chính phải đo mức cải thiện so với chính tìm kiếm từ khóa; Recall@10 được yêu cầu không giảm để bảo đảm việc thêm tìm theo vector không làm mất các kết quả khớp chính xác. Ngưỡng 15\% được đặt ở mức thận trọng vì bộ truy vấn nhỏ và do chính nhóm gán nhãn; ngưỡng thời gian 1 giây là phần của NFR1.1 dành cho bước tìm kiếm. \\
-\textbf{Gợi ý sản phẩm} &
-Click-through rate (CTR) vào danh sách gợi ý cá nhân hóa cao hơn tối thiểu 20\% so với danh sách baseline không cá nhân hóa (sản phẩm mới nhất/bán chạy chung), đo qua thử nghiệm A/B hoặc so sánh trước--sau khi bật tính năng. &
-Đồ án không có đủ dữ liệu lịch sử lớn để đặt mục tiêu precision/recall tuyệt đối như các hệ thống gợi ý thương mại đã vận hành lâu năm; đo uplift CTR so với một baseline không cá nhân hóa khả thi hơn và vẫn phản ánh đúng giá trị thực tế mà tính năng cần tạo ra. \\
+\textbf{Sản phẩm tương tự} &
+Precision@5 trung bình từ 0,6 trở lên (ít nhất 3 trong 5 sản phẩm gợi ý được người gán nhãn đánh giá là phù hợp thay thế hoặc mua kèm), trên tập tối thiểu 50 sản phẩm gán nhãn tay. Khi bật gợi ý cá nhân hóa (sau phần hiện thực), đo thêm mức tăng click-through rate (CTR) tối thiểu 20\% so với danh sách không cá nhân hóa. &
+Phần hiện thực chỉ có gợi ý sản phẩm tương tự dựa trên vector mô tả, chưa có dữ liệu tương tác nên không đo được CTR; đo trực tiếp chất lượng danh sách gợi ý trên tập gán nhãn tay là cách kiểm chứng được ngay. Chỉ xét 5 vị trí đầu vì trang chi tiết sản phẩm chỉ hiển thị 5 gợi ý; ngưỡng 0,6 cho phép tối đa 2 gợi ý lệch trong mỗi danh sách, mức chấp nhận được khi danh mục còn ít sản phẩm cùng loại. \\
 \textbf{Dự báo giá} &
 MAPE (Mean Absolute Percentage Error) dưới 20\% trên tập kiểm tra tách theo thời gian (time-based split), tương đương độ chính xác từ khoảng 80\% trở lên. Đo trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng. &
 Đặt thấp hơn một chút so với mức khoảng 82\% Farm2Market (2025) công bố cho bài toán dự báo giá nông sản tương tự \parencite{farm2market_2025}, do đây là công trình nghiên cứu học thuật có thể đã tối ưu trên bộ dữ liệu chọn lọc; 80\% là mục tiêu khả thi, kiểm chứng được trong phạm vi đồ án và vẫn đủ hữu ích để hỗ trợ ra quyết định. \\

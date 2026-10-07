@@ -248,9 +248,9 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ riêng viết bằng Python với khung FastAPI, do toàn bộ thư viện học máy cần dùng đều thuộc hệ sinh thái Python. Việc lựa chọn mô hình cho từng mô-đun bám theo ngưỡng chất lượng đã đặt tại Bảng~\ref{tab:nguongAI}; bảng đối sánh chi tiết các hướng tiếp cận nằm tại Phụ lục I.
 
-\noindent\textbf{Tìm kiếm theo ngữ nghĩa --- phương án chọn: tìm kiếm lai giữa full-text search của PostgreSQL và tìm theo vector, hợp nhất bằng reciprocal rank fusion.} Các hướng được cân nhắc gồm tìm theo vector thuần túy, dùng mô hình ngôn ngữ lớn để chuyển câu hỏi tự nhiên thành bộ lọc, và tìm kiếm dạng hội thoại. Tìm kiếm lai được chọn vì ba lý do: không phát sinh chi phí gọi API trả phí, do mô hình nhúng mã nguồn mở chạy ngay trong dịch vụ AI; giữ được điểm mạnh của tìm theo từ khóa với tên riêng và tên vùng trồng; và có sẵn đường cơ sở để so sánh là chính tìm kiếm từ khóa hiện có (FR4.5). Tìm kiếm dạng hội thoại bị loại vì thực chất là mô-đun trợ lý ảo đã bỏ khỏi phạm vi. Vector của sản phẩm được tính một lần khi sản phẩm được duyệt hoặc sửa mô tả, và được dùng chung cho mô-đun gợi ý.
+\noindent\textbf{Tìm kiếm theo ngữ nghĩa --- phương án chọn: tìm kiếm lai giữa full-text search của PostgreSQL và tìm theo vector, hợp nhất bằng reciprocal rank fusion.} Các hướng được cân nhắc gồm tìm theo vector thuần túy, dùng mô hình ngôn ngữ lớn để chuyển câu hỏi tự nhiên thành bộ lọc, và tìm kiếm dạng hội thoại. Tìm kiếm lai được chọn vì ba lý do: không phát sinh chi phí gọi API trả phí, do mô hình nhúng mã nguồn mở BGE-M3 \parencite{chen2024bgem3} chạy ngay trong dịch vụ AI; giữ được điểm mạnh của tìm theo từ khóa với tên riêng và tên vùng trồng; và có sẵn đường cơ sở để so sánh là chính tìm kiếm từ khóa hiện có (FR4.5). Phía từ khóa dùng thêm hai tiện ích của PostgreSQL: 	exttt{unaccent} để người gõ không dấu vẫn tìm được, và trigram (	exttt{pg\_trgm}) để chịu được lỗi gõ sai. Tìm kiếm dạng hội thoại bị loại vì thực chất là mô-đun trợ lý ảo đã bỏ khỏi phạm vi. Vector của sản phẩm được tính một lần khi sản phẩm được duyệt hoặc sửa mô tả, và được dùng chung cho mô-đun gợi ý.
 
-\noindent\textbf{Gợi ý sản phẩm --- phương án chọn: mô hình hybrid giữa content-based filtering và collaborative filtering, triển khai theo hai giai đoạn.} Giai đoạn đầu chỉ có phần ``sản phẩm tương tự'', tính từ chính các vector sản phẩm của mô-đun tìm kiếm; phần dựa trên hành vi người dùng được bật khi dữ liệu tương tác đủ lớn, sau phiên bản đầu. Các hướng được cân nhắc gồm collaborative filtering thuần túy, content-based filtering thuần túy, mô hình hybrid, và các mô hình mạng nơ-ron. Vấn đề quyết định là hiện tượng cold start đã nêu tại NC4: một nền tảng mới chưa có lịch sử tương tác, nên collaborative filtering thuần túy không hoạt động được ở giai đoạn đầu. Mô hình hybrid cho phép dựa vào đặc trưng sẵn có của nông sản --- mùa vụ, vùng trồng, loại chứng nhận, danh mục --- ngay từ khi chưa có dữ liệu hành vi, rồi tăng dần trọng số của thành phần collaborative filtering khi dữ liệu tích lũy.
+\noindent\textbf{Gợi ý sản phẩm --- phương án chọn: mô hình hybrid giữa content-based filtering và collaborative filtering, triển khai theo hai giai đoạn.} Phần hiện thực chỉ có ``sản phẩm tương tự'', tính từ chính các vector sản phẩm của mô-đun tìm kiếm và đo bằng Precision@5; phần dựa trên hành vi người dùng được bật khi dữ liệu tương tác đủ lớn, sau phần hiện thực. Các hướng được cân nhắc gồm collaborative filtering thuần túy, content-based filtering thuần túy, mô hình hybrid, và các mô hình mạng nơ-ron. Vấn đề quyết định là hiện tượng cold start đã nêu tại NC4: một nền tảng mới chưa có lịch sử tương tác, nên collaborative filtering thuần túy không hoạt động được ở giai đoạn đầu. Mô hình hybrid cho phép dựa vào đặc trưng sẵn có của nông sản --- mùa vụ, vùng trồng, loại chứng nhận, danh mục --- ngay từ khi chưa có dữ liệu hành vi, rồi tăng dần trọng số của thành phần collaborative filtering khi dữ liệu tích lũy.
 
 \noindent\textbf{Dự báo giá --- phương án chọn: mô hình time series có thành phần mùa vụ (ARIMA, SARIMA, Prophet), đối chứng với mô hình gradient boosting.} Các hướng được cân nhắc gồm mô hình thống kê cổ điển (ARIMA, SARIMA), mô hình gradient boosting trên đặc trưng thời gian, và mạng nơ-ron hồi quy (RNN, LSTM). Các mô hình học sâu bị loại ở giai đoạn này vì chúng đòi hỏi lượng dữ liệu lớn hơn nhiều so với những gì có thể thu thập được; với chuỗi time series ngắn nhưng có tính mùa vụ rõ --- đúng đặc điểm giá nông sản --- mô hình thống kê thường cho kết quả tốt hơn mà lại dễ giải thích. Đây là một đánh đổi có ý thức: chọn mô hình đơn giản hơn nhưng kiểm chứng được, thay vì mô hình phức tạp hơn nhưng không đủ dữ liệu để đánh giá.
 
@@ -412,22 +412,45 @@ Cả ba mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng d�
 \begin{enumerate}
     \item \textbf{Thu thập}: ghi nhận sự kiện từ các quy trình nghiệp vụ (lượt xem/mua sản phẩm, đơn hàng, đánh giá, hành vi hủy đơn) vào kho dữ liệu.
     \item \textbf{Tiền xử lý}: làm sạch, chuẩn hóa và trích xuất đặc trưng (feature engineering) theo từng bài toán.
-    \item \textbf{Huấn luyện và suy luận}: huấn luyện hoặc tính lại định kỳ theo lô (batch, ví dụ mỗi tuần) cho các mô-đun; riêng phần gợi ý có thêm bước suy luận trực tuyến (online inference) để phản hồi ngay theo phiên duyệt của người dùng.
-    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang chủ, trang quản trị).
-    \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (có nhấp vào gợi ý không, phán quyết đúng/sai của kiểm duyệt viên và nhân viên vận hành với các cảnh báo) để làm dữ liệu huấn luyện lại, cải thiện mô hình theo thời gian.
+    \item \textbf{Huấn luyện và suy luận}: tính lại định kỳ theo lô (batch, ví dụ mỗi tuần) cho dự báo giá; vector sản phẩm được tính khi sản phẩm được duyệt hoặc sửa mô tả; tìm kiếm và sản phẩm tương tự suy luận trực tuyến (online inference) ngay khi có truy vấn.
+    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang kết quả tìm kiếm, trang sản phẩm, màn hình thu mua).
+    \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (truy vấn không có kết quả được nhấp, gợi ý được mở, giá thu mua thực tế so với giá dự báo) để bổ sung tập đánh giá và huấn luyện lại theo thời gian.
 \end{enumerate}
 
-Danh sách dưới đây tóm tắt đầu vào/đầu ra riêng của từng mô-đun trong luồng chung này:
-\begin{itemize}
-    \item \textbf{Tìm kiếm theo ngữ nghĩa}: đầu vào là câu truy vấn của người dùng cùng tên, mô tả, danh mục, vùng trồng của sản phẩm và hồ sơ nhà cung cấp; đầu ra là danh sách sản phẩm (hoặc nhà cung cấp) xếp theo điểm hợp nhất giữa tìm theo từ khóa và tìm theo vector.
-    \item \textbf{Gợi ý sản phẩm}: đầu vào là lịch sử tương tác/mua hàng của người dùng và đặc trưng sản phẩm (danh mục, vùng trồng, mùa vụ); đầu ra là danh sách sản phẩm được xếp hạng theo mức độ phù hợp, hiển thị tại trang chủ và trang sản phẩm liên quan.
-    \item \textbf{Dự báo nhu cầu/giá}: đầu vào là dữ liệu lịch sử đơn hàng, sản lượng theo mùa vụ và vùng trồng; đầu ra là ước lượng nhu cầu/giá cho giai đoạn tới, hiển thị cho nhà cung cấp như gợi ý kế hoạch sản xuất và cho nhân viên thu mua, nhân viên vận hành như dữ liệu cảnh báo dư cung/khan hiếm.
-\end{itemize}
+Bảng~\ref{tab:tinhnangAI} cụ thể hóa luồng chung này cho từng tính năng: ai dùng, ở màn hình nào, dữ liệu vào và ra, mô hình, nguồn dữ liệu, chỉ số nghiệm thu và mức hiện thực.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{2.30cm} L{4.20cm} L{4.20cm} L{4.20cm}}
+\caption{Ba tính năng AI của Farmery}
+\label{tab:tinhnangAI} \\
+\toprule
+\rowcolor{tblheadbg}
+& \textbf{Tìm kiếm theo ngữ nghĩa (FR12.3)} & \textbf{Sản phẩm tương tự (FR12.1)} & \textbf{Dự báo giá (FR12.2)} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+& \textbf{Tìm kiếm theo ngữ nghĩa (FR12.3)} & \textbf{Sản phẩm tương tự (FR12.1)} & \textbf{Dự báo giá (FR12.2)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{Ai dùng} & Khách vãng lai, khách lẻ & Khách vãng lai, khách lẻ & Nhân viên thu mua \\
+\textbf{Màn hình} & Ô tìm kiếm và trang kết quả của ứng dụng mua hàng & Trang chi tiết sản phẩm & Màn hình lập đơn thu mua và đặt giá bán lẻ của ứng dụng nội bộ \\
+\textbf{Đầu vào} & Câu truy vấn tự nhiên hoặc từ khóa (có thể gõ không dấu, gõ sai) & Mã sản phẩm đang xem & Loại nông sản, vùng; chuỗi giá theo tuần \\
+\textbf{Đầu ra} & Danh sách sản phẩm xếp theo điểm hợp nhất & 5 sản phẩm đang bán gần nghĩa nhất, khác sản phẩm đang xem & Giá dự báo cho các tuần tới kèm khoảng tin cậy, hiển thị làm tham khảo \\
+\textbf{Mô hình} & Tìm kiếm lai: full-text của PostgreSQL có \texttt{unaccent} (bỏ dấu) và trigram (chịu gõ sai), cộng tìm theo vector nhúng BGE-M3; hợp nhất bằng reciprocal rank fusion & Láng giềng gần nhất theo độ tương đồng cosine trên chính vector BGE-M3 của sản phẩm, lọc theo tình trạng còn hàng & Mô hình chuỗi thời gian có mùa vụ (SARIMA, Prophet), đối chứng với gradient boosting \\
+\textbf{Dữ liệu} & Tên, mô tả, danh mục, vùng trồng của sản phẩm đã duyệt; vector tính lại khi sản phẩm thay đổi & Vector sản phẩm dùng chung với tìm kiếm & Giá nông sản công khai theo tuần (Phụ lục O); chạy offline theo lô hằng tuần \\
+\textbf{Chỉ số} & nDCG@10, Recall@10 so với tìm từ khóa trên tối thiểu 50 truy vấn gán nhãn tay; p95 dưới 1 giây & Precision@5 trên tập sản phẩm gán nhãn tay & MAPE trên tập kiểm tra tách theo thời gian \\
+\textbf{Mức hiện thực} & Hiện thực cho sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế & Hiện thực; gợi ý cá nhân hóa theo hành vi để sau & Hiện thực ở chế độ offline \\
+\end{longtable}
+\endgroup
 
 \subsubsection*{Ngưỡng chất lượng mục tiêu}
 \label{subsec:nguongAI}
 
-Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: nDCG@10 và Recall@10 so với tìm kiếm từ khóa cho tìm kiếm theo ngữ nghĩa, mức tăng click-through rate (CTR) so với danh sách baseline cho gợi ý sản phẩm, và MAPE cho dự báo giá. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
+Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở thời điểm thiết kế, ngưỡng chất lượng mục tiêu được đặt ra ngay từ bước thiết kế --- thay vì chỉ mô tả định tính --- để làm căn cứ đối chiếu khi đánh giá kết quả thực nghiệm tại Chương~\ref{chap:danhgia}. Mỗi mô-đun được đo bằng chỉ số phù hợp với bài toán của nó: nDCG@10 và Recall@10 so với tìm kiếm từ khóa cho tìm kiếm theo ngữ nghĩa, Precision@5 trên tập gán nhãn tay cho sản phẩm tương tự, và MAPE cho dự báo giá. Mức tăng click-through rate (CTR) chỉ dùng khi bật gợi ý cá nhân hóa, sau phần hiện thực. Bảng~\ref{tab:nguongAI} tại Phụ lục L trình bày đầy đủ từng ngưỡng kèm lý do chọn.
 
 
 \subsection{Thiết kế API}
