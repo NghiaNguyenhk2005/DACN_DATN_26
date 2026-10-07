@@ -24,6 +24,7 @@ const pages = [
   'c4-ngu-canh.html',
   'c4-container.html',
   'c4-module.html',
+  'luong-don-le.html',
   'sitemap-tong-quan.html',
 ];
 

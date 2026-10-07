@@ -7,8 +7,8 @@ MONO = "Consolas,'Courier New',monospace"
 CW = 0.50  # bề rộng trung bình một ký tự / cỡ chữ (ước lượng cho Segoe UI tiếng Việt)
 
 
-def wrap(text, width, size, mono=False):
-    cw = (0.56 if mono else CW) * size
+def wrap(text, width, size, mono=False, weight=400):
+    cw = (0.6 if mono else (0.56 if weight >= 600 else CW)) * size
     maxc = max(4, int(width / cw))
     out, line = [], ''
     for w in text.split(' '):
@@ -45,7 +45,7 @@ class Svg:
         """lines: list of (text, size, weight, color, mono). Trả về y cuối."""
         cy = y
         for (t, size, weight, color, mono) in lines:
-            for ln in wrap(t, w - 2 * pad, size, mono):
+            for ln in wrap(t, w - 2 * pad, size, mono, weight):
                 cy += size * 1.18
                 tx = x + w / 2 if anchor == 'middle' else x + pad
                 self.text(tx, cy, ln, size, weight, color, anchor, mono)
@@ -58,19 +58,27 @@ class Svg:
         tmp = Svg(0, 0)
         endy = tmp.block(x, 0, w, lines, anchor, pad)
         th = endy
+        if th + 6 > h:
+            print('OVERFLOW %s: need %d, have %d' % (ascii(lines[0][0][:30]), th + 6, h))
         top = y + (h - th) / 2 if valign == 'middle' else y + 8
         self.block(x, top, w, lines, anchor, pad)
 
-    def arrow(self, pts, color='#44524b', sw=2.4, dash=None, head=True):
+    def arrow(self, pts, color='#44524b', sw=2.4, dash=None, head=True, both=False):
         d = ' stroke-dasharray="%s"' % dash if dash else ''
         p = ' '.join('%g,%g' % q for q in pts)
         m = ' marker-end="url(#ah-%s)"' % color.strip('#') if head else ''
+        m += ' marker-start="url(#ah-%s)"' % color.strip('#') if both else ''
         self.add('<polyline points="%s" fill="none" stroke="%s" stroke-width="%g"%s%s/>' % (p, color, sw, d, m))
         self._markers = getattr(self, '_markers', set()) | {color}
 
-    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff'):
+    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff', pos='on'):
         lines = wrap(text, width - 12, size)
         h = len(lines) * size * 1.2 + 10
+        # pos='above'/'below': đặt nhãn sát trên/dưới đường mũi tên để thân mũi tên không bị che
+        if pos == 'above':
+            cy -= h / 2 + 4
+        elif pos == 'below':
+            cy += h / 2 + 4
         self.later.append('<rect x="%g" y="%g" width="%g" height="%g" rx="6" fill="%s" opacity="0.94"/>'
                  % (cx - width / 2, cy - h / 2, width, h, bg))
         y = cy - h / 2 + 5

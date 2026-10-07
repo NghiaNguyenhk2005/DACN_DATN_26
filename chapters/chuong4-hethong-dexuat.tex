@@ -302,7 +302,8 @@ Quy trình xử lý một yêu cầu đổi trả hoặc khiếu nại:
     \item Nhân viên vận hành truy xuất báo cáo thống kê định kỳ để hỗ trợ ra quyết định vận hành và báo cáo cho các bên liên quan.
 \end{enumerate}
 
-Ngoại lệ: khi phát hiện vi phạm nghiêm trọng như giả mạo chứng nhận hoặc gian lận, tin đăng và lô liên quan bị ẩn ngay, tài khoản bị khóa mà không qua các bước nhắc nhở trung gian, đồng thời toàn bộ đơn hàng đang xử lý của tài khoản đó được rà soát để bảo vệ quyền lợi của khách hàng đã đặt trước. Quyết định khóa hoặc hạn chế tài khoản người bán được thông báo kèm lý do ít nhất 5 ngày trước khi có hiệu lực, trừ khi cơ quan nhà nước có yêu cầu (mục~ef{sec:boicanhchinhsach}).
+Ngoại lệ: khi phát hiện vi phạm nghiêm trọng như giả mạo chứng nhận hoặc gian lận, tin đăng và lô liên quan bị ẩn ngay, tài khoản bị khóa mà không qua các bước nhắc nhở trung gian, đồng thời toàn bộ đơn hàng đang xử lý của tài khoản đó được rà soát để bảo vệ quyền lợi của khách hàng đã đặt trước. Quyết định khóa hoặc hạn chế tài khoản người bán được thông báo kèm lý do ít nhất 5 ngày trước khi có hiệu lực, trừ khi cơ quan nhà nước có yêu cầu (mục~
+ef{sec:boicanhchinhsach}).
 
 \subsection{Chính sách, pháp lý và đạo đức}
 \label{subsec:chinhsach}
@@ -373,7 +374,7 @@ Tổng hợp từ các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhngh
     \item \textbf{Khách sỉ} --- doanh nghiệp thu mua: gửi yêu cầu báo giá, thương lượng và giao kết hợp đồng với nhà cung cấp qua kênh do hệ thống trung gian hóa, theo dõi đơn sỉ giao một đợt.
     \item \textbf{Khách lẻ} --- người tiêu dùng cá nhân: tìm kiếm, tra cứu truy xuất, đặt hàng từ gian hàng của nền tảng, theo dõi đơn, yêu cầu đổi trả và đánh giá. Khách lẻ giao dịch với Farmery chứ không với nhà cung cấp.
     \item \textbf{Nhân sự nội bộ Farmery} --- sáu vai trò tại Bảng~\ref{tab:vaitro-noibo}: khảo giá và tạo đơn thu mua theo lô, nghiệm thu, đóng gói và điều phối chuyến trung chuyển, kiểm duyệt nhà cung cấp và sản phẩm, xử lý khiếu nại và đổi trả, hỗ trợ nhà cung cấp tại vùng trồng, và cấu hình hệ thống.
-    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân. Bản hiện thực kết nối bốn nhóm hệ thống bên ngoài: cổng thanh toán, đơn vị vận chuyển nội thành, dịch vụ hóa đơn điện tử (giả lập), và các kênh SMS, email, thông báo đẩy. Ba hệ thống chỉ được thiết kế: TraceViet, tổ chức chứng thực chữ ký số, và đăng nhập qua Google hoặc Facebook.
+    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân. Bản hiện thực kết nối năm hệ thống bên ngoài: cổng thanh toán, đơn vị vận chuyển nội thành, dịch vụ hóa đơn điện tử (giả lập), dịch vụ email và dịch vụ đẩy của trình duyệt. Năm hệ thống chỉ được thiết kế: dịch vụ SMS, TraceViet, tổ chức chứng thực chữ ký số, và đăng nhập qua Google hoặc Facebook.
 \end{itemize}
 
 Một nguyên tắc chi phối toàn hệ thống: nền tảng không cho phép bên bán và bên mua giao dịch ngoài tầm kiểm soát của mình. Mọi luồng tiền, dữ liệu chứng nhận và đánh giá đều đi qua hệ thống, vừa để đảm bảo tính minh bạch (liên hệ mục~\ref{subsec:reputation}), vừa để nhân sự nội bộ có đủ dữ liệu giám sát và xử lý vi phạm. Ở luồng bán lẻ, nguyên tắc này thể hiện theo cách mạnh hơn: Farmery không đứng giữa mà là một bên trong giao dịch, trực tiếp chịu trách nhiệm chất lượng hàng bán ra trước người tiêu dùng.
@@ -772,7 +773,7 @@ mọi vai trò nội bộ (Bảng~\ref{tab:vaitro-noibo}).
 \subsubsection*{FR11: Thông báo}
 \begin{itemize}
     \item \textbf{FR11.1:} Thông báo đa kênh (trên giao diện web, thông báo
-    đẩy của ứng dụng web cài đặt được, email, SMS) ở mỗi lần đơn chuyển trạng
+    đẩy của ứng dụng web cài đặt được, email; SMS \emph{(chỉ thiết kế)}) ở mỗi lần đơn chuyển trạng
     thái, khi khiếu nại có phản hồi, khi sản phẩm đã đăng ký có hàng, và về
     tiến độ RFQ, hợp đồng.
     \item \textbf{FR11.2:} Cảnh báo chứng nhận sắp hết hạn (liên hệ FR3.3)

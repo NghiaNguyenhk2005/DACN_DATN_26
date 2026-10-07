@@ -273,20 +273,54 @@ Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ
 
 Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước. Kiến trúc được trình bày theo mô hình C4~\cite{brown_c4model}, mỗi mức phóng to một khối của mức trước:
 \begin{itemize}
-    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và sáu hệ thống bên ngoài.
-    \item \textbf{Mức 2 --- container} (Hình~\ref{fig:c4-container}): các thành phần chạy độc lập và công nghệ của từng thành phần.
-    \item \textbf{Mức 3 --- mô-đun} (Hình~\ref{fig:c4-module}): 12 mô-đun bên trong ứng dụng lõi và quan hệ giữa chúng.
+    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và mười hệ thống bên ngoài --- năm hệ thống có trong bản hiện thực, năm hệ thống chỉ được thiết kế (vẽ nét đứt màu xám).
+    \item \textbf{Mức 2 --- container} (Hình~\ref{fig:c4-container}): bảy thành phần chạy độc lập, công nghệ và dữ liệu vào, ra của từng thành phần.
+    \item \textbf{Mức 3 --- mô-đun} (Hình~\ref{fig:c4-module}): 13 mô-đun bên trong ứng dụng lõi và quan hệ giữa chúng.
 \end{itemize}
-Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này nên được sinh tự động từ mã nguồn để không bị lệch khi mã thay đổi.
+Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này nên được sinh tự động từ mã nguồn để không bị lệch khi mã thay đổi. Cả ba hình dùng chung một quy ước mũi tên:
+\begin{itemize}
+    \item \textbf{Mũi tên hai chiều} khi bên được gọi trả dữ liệu nghiệp vụ về (kết quả thanh toán qua webhook, mã tra cứu hóa đơn); nhãn ghi phần gửi đi trước dấu chấm phẩy, phần nhận về sau.
+    \item \textbf{Mũi tên một chiều} khi chỉ gửi đi (thư, thông báo đẩy).
+    \item \textbf{Mũi tên chạm biên một khung} áp cho mọi phần tử trong khung (mọi mô-đun đọc, ghi cơ sở dữ liệu và phát sự kiện); mũi tên chạm một phần tử là lời gọi của riêng phần tử đó.
+\end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
 \includegraphics[width=\textwidth]{image/comparison/c4-container.png}
 \end{adjustbox}
 \caption{Kiến trúc tổng thể của Farmery: các container (C4 mức 2)}
 \label{fig:c4-container}
 \end{figure}
+
+Bảng~\ref{tab:container-io} ghi dữ liệu vào và ra của từng container. Hai điểm đáng chú ý: tệp đi thẳng từ trình duyệt lên kho tệp qua đường dẫn ký trước, nên ứng dụng lõi không phải trung chuyển ảnh dung lượng lớn; và dịch vụ AI không đọc cơ sở dữ liệu --- nó nhận dữ liệu qua sự kiện hoặc lời gọi, trả lại vector và kết quả dự báo để mô-đun nghiệp vụ tự lưu.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{2.60cm} L{2.30cm} L{4.80cm} L{4.85cm}}
+\caption{Dữ liệu vào, ra của từng container}
+\label{tab:container-io} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Container} & \textbf{Công nghệ} & \textbf{Nhận vào} & \textbf{Trả ra, ghi ra} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Container} & \textbf{Công nghệ} & \textbf{Nhận vào} & \textbf{Trả ra, ghi ra} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Ứng dụng mua hàng & Next.js, PWA & Thao tác của khách vãng lai, khách lẻ, khách sỉ, nhà cung cấp & Lời gọi tới \texttt{/api}; tệp tải thẳng lên kho tệp; trang truy xuất, trang sản phẩm dựng sẵn phía máy chủ \\
+Ứng dụng nội bộ & React, Vite, Refine & Thao tác của sáu vai trò nội bộ sau đăng nhập hai lớp & Lời gọi tới \texttt{/staff}; ảnh nghiệm thu, tệp nhập hộ tải thẳng lên kho tệp \\
+Ứng dụng lõi & NestJS, 13 mô-đun & Yêu cầu REST từ hai ứng dụng; webhook của cổng thanh toán và đơn vị vận chuyển; kết quả của dịch vụ AI & Phản hồi JSON; sự kiện nghiệp vụ vào Redis; lời gọi ra hệ thống bên ngoài; đường dẫn ký trước cho tệp \\
+Cơ sở dữ liệu & PostgreSQL, pgvector & Đọc, ghi của từng mô-đun trên schema riêng; khóa dòng tồn trong một giao dịch & Dữ liệu nghiệp vụ; kết quả tìm kiếm toàn văn và theo vector \\
+Lưu trữ tệp & MinIO, chuẩn S3 & Tệp tải lên qua đường dẫn ký trước & Ảnh công khai dạng WebP nhiều cỡ; tệp riêng tư qua đường dẫn ký trước hạn ngắn \\
+Sự kiện và cache & Redis & Sự kiện do mô-đun phát; tác vụ nền; dữ liệu đọc nhiều & Sự kiện cho các mô-đun và dịch vụ AI đã đăng ký nhận \\
+Dịch vụ AI & Python, FastAPI & Sự kiện \texttt{ProductChanged}; câu truy vấn; chuỗi giá theo tuần & Vector sản phẩm (sự kiện \texttt{ProductEmbedded}); vector truy vấn; giá dự báo kèm khoảng tin cậy \\
+\end{longtable}
+\endgroup
 
 \subsubsection*{Kiểu kiến trúc: modular monolith}
 
@@ -308,27 +342,81 @@ Chọn khối đơn không có nghĩa là đóng cửa khả năng tách về sa
 
 Biện pháp bảo đảm ba ràng buộc trên với chi phí thấp nhất là cấp cho \textbf{mỗi mô-đun một schema riêng trong cùng một cơ sở dữ liệu}. Hệ thống vẫn chạy trên một cơ sở dữ liệu duy nhất nên giao dịch vẫn hoạt động bình thường, nhưng đường biên dữ liệu hiện ra rõ ràng và mọi vi phạm ràng buộc RB3 đều lộ ra ngay khi đọc mã.
 
-Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 12 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch.
+Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 13 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Hình chỉ vẽ các lời gọi trực tiếp; phụ thuộc còn lại đi qua sự kiện.
 
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
 \includegraphics[width=\textwidth]{image/comparison/c4-module.png}
 \end{adjustbox}
 \caption{Các mô-đun của ứng dụng lõi (C4 mức 3)}
 \label{fig:c4-module}
 \end{figure}
 
+Bảng~\ref{tab:module-io} ghi dữ liệu vào, ra, sự kiện phát và lời gọi ra ngoài của từng mô-đun. Danh mục đầy đủ các sự kiện, kèm mô-đun phát và mô-đun nhận, đặt tại Phụ lục~V.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{1.55cm} L{2.40cm} L{5.00cm} L{2.85cm} L{2.40cm}}
+\caption{Dữ liệu vào, ra và sự kiện của 13 mô-đun}
+\label{tab:module-io} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Khối} & \textbf{Mô-đun} & \textbf{Nhận vào $\rightarrow$ trả ra} & \textbf{Sự kiện phát} & \textbf{Gọi tới} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Khối} & \textbf{Mô-đun} & \textbf{Nhận vào $\rightarrow$ trả ra} & \textbf{Sự kiện phát} & \textbf{Gọi tới} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Nền tảng chung & \texttt{identity} (FR1) & Hồ sơ đăng ký, OTP, giấy tờ eKYC, lần đồng ý dữ liệu $\rightarrow$ tài khoản, vai trò, phiên; xác thực hai lớp cho nhân sự & \texttt{UserVerified} & \texttt{notification} (gửi OTP); Google, Facebook \emph{(chỉ thiết kế)} \\
+& \texttt{notification} (FR11) & Sự kiện đã đăng ký, kênh người dùng chọn $\rightarrow$ thông báo web, thông báo đẩy, email & --- & Web Push, email; SMS \emph{(chỉ thiết kế)} \\
+& \texttt{media} & Yêu cầu tải tệp (loại, cỡ, mức truy cập) $\rightarrow$ đường dẫn ký trước; tệp đã kiểm tra kiểu thật, ảnh WebP nhiều cỡ & --- & Lưu trữ tệp \\
+Nguồn cung & \texttt{supplier} (FR2, FR3) & Hồ sơ, chứng nhận, loại người bán cho thuế $\rightarrow$ hồ sơ đã duyệt, hạn hiệu lực chứng nhận & \texttt{CertExpired} & --- \\
+& \texttt{catalog} (FR4) & Sản phẩm, lô, nhật ký canh tác; câu tìm kiếm $\rightarrow$ lô đã duyệt kèm mã QR, trang truy xuất, kết quả tìm kiếm & \texttt{BatchApproved}, \texttt{ProductChanged} & Dịch vụ AI; TraceViet \emph{(chỉ thiết kế)} \\
+& \texttt{inventory} (FR13.2--13.6) & Lệnh giữ chỗ, trừ tồn, nhập tồn, đóng gói, thu hồi $\rightarrow$ dòng tồn, sổ nhập xuất & \texttt{StockLow}, \texttt{BatchRecalled} & --- \\
+Giao dịch & \texttt{procurement} (FR13.1--13.2) & Chào hàng, đơn thu mua, kết quả nghiệm thu $\rightarrow$ đơn thu mua đã xác nhận, phần đạt nhập dòng tồn của Farmery & \texttt{ProcurementReceived} & \texttt{inventory}; dịch vụ AI \\
+& \texttt{retail} (FR5) & Giỏ, đơn lẻ, mua lại, đăng ký báo vào mùa $\rightarrow$ đơn kèm dòng thời gian tám trạng thái & \texttt{OrderPlaced}, \texttt{OrderCancelled} & \texttt{inventory}, \texttt{payment}, \texttt{fulfillment} \\
+& \texttt{wholesale} (FR6) & RFQ, báo giá, xác nhận giao kết $\rightarrow$ hợp đồng kèm mã băm, đơn sỉ giao một đợt & \texttt{ContractConcluded} & \texttt{inventory}, \texttt{payment}; ký số \emph{(chỉ thiết kế)} \\
+& \texttt{payment} (FR7) & Lệnh thanh toán, hoàn tiền; webhook của cổng $\rightarrow$ trạng thái thanh toán, hóa đơn giả lập, đối soát sỉ & \texttt{PaymentSucceeded}, \texttt{Refunded} & Cổng thanh toán, dịch vụ hóa đơn điện tử \\
+Sau bán & \texttt{fulfillment} (FR8, FR9.1) & Đơn đã thanh toán, chuyến trung chuyển, webhook 3PL, yêu cầu đổi trả kèm trao đổi $\rightarrow$ vận đơn, trạng thái giao, quyết định khiếu nại & \texttt{ShipmentStatusChanged}, \texttt{CaseResolved} & Đơn vị vận chuyển \\
+& \texttt{engagement} (FR5.5, FR9.2) & Đánh giá sau đơn hoàn tất, phản hồi $\rightarrow$ điểm đánh giá, điểm uy tín nhà cung cấp & \texttt{ReviewPosted} & --- \\
+Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu hồi lô; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt, khung giờ $\rightarrow$ hàng đợi duyệt, nhật ký thao tác, báo cáo & --- & \texttt{catalog}, \texttt{supplier}, \texttt{inventory} \\
+\end{longtable}
+\endgroup
+
+\subsubsection*{Luồng một đơn bán lẻ qua các thành phần}
+
+Hình~\ref{fig:luong-don-le} theo một đơn bán lẻ từ lúc đặt tới khi hoàn tất, qua các mô-đun và hệ thống bên ngoài, để thấy các bảng trên phối hợp với nhau thế nào. Ba điểm thiết kế hiện ra rõ ở đây:
+\begin{itemize}
+    \item \textbf{Giữ chỗ trước, trừ tồn sau:} bước 2 khóa dòng tồn và giữ chỗ trong 15 phút; chỉ khi có \texttt{PaymentSucceeded} (hoặc đơn COD đủ điều kiện) mới chuyển thành trừ tồn ở bước 10.
+    \item \textbf{Kết quả từ bên ngoài đi vào qua webhook} (bước 7, 15), không hỏi lại định kỳ.
+    \item \textbf{Thông báo không nằm trên đường giao dịch:} mô-đun thông báo chỉ nhận sự kiện, nên dịch vụ đẩy hay email chậm không làm chậm việc đặt hàng.
+\end{itemize}
+Hình không thay thế lược đồ tuần tự chi tiết (mục~\ref{subsec:tuantu}); nó dừng ở mức thành phần và sự kiện.
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/luong-don-le.png}
+\end{adjustbox}
+\caption{Luồng một đơn bán lẻ qua các mô-đun và hệ thống bên ngoài}
+\label{fig:luong-don-le}
+\end{figure}
+
 \subsubsection*{Các lớp và thành phần}
 
-Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
+Tóm tắt theo lớp, mỗi lớp ghi rõ công nghệ đã chọn:
 \begin{itemize}
     \item \textbf{Lớp giao diện} --- hai ứng dụng: ứng dụng mua hàng dựng bằng Next.js dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3), phục vụ trang mua hàng và trang quản lý của nhà cung cấp; ứng dụng nội bộ dựng bằng React, Vite và Refine cho nhân sự nội bộ, đăng nhập hai lớp (NFR3.6).
     \item \textbf{Lớp ứng dụng} --- NestJS, tiếp nhận yêu cầu, kiểm tra quyền truy cập theo vai trò, điều phối giữa các mô-đun nghiệp vụ.
-    \item \textbf{Lớp mô-đun nghiệp vụ} --- 12 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
-    \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho cache và hàng đợi, object storage cho ảnh và tệp chứng nhận.
-    \item \textbf{Dịch vụ AI} --- tách riêng, viết bằng Python, nhận dữ liệu qua event queue và trả kết quả qua API nội bộ.
-    \item \textbf{Lớp tích hợp bên ngoài} --- sáu hệ thống bên ngoài tại Hình~\ref{fig:c4-container}: cổng thanh toán, đơn vị vận chuyển, TraceViet, tổ chức chứng thực chữ ký số, dịch vụ SMS và email, đăng nhập qua Google hoặc Facebook; mỗi hệ thống chỉ do một mô-đun gọi tới.
+    \item \textbf{Lớp mô-đun nghiệp vụ} --- 13 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
+    \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho sự kiện, tác vụ nền và cache, MinIO cho ảnh và tệp.
+    \item \textbf{Dịch vụ AI} --- tách riêng, viết bằng Python, nhận dữ liệu qua sự kiện hoặc lời gọi nội bộ, không đọc trực tiếp cơ sở dữ liệu.
+    \item \textbf{Lớp tích hợp bên ngoài} --- năm hệ thống có trong bản hiện thực (cổng thanh toán, đơn vị vận chuyển nội thành, dịch vụ hóa đơn điện tử ở dạng giả lập, email, dịch vụ đẩy của trình duyệt) và năm hệ thống chỉ thiết kế (SMS, TraceViet, tổ chức chứng thực chữ ký số, Google, Facebook); mỗi hệ thống chỉ do một mô-đun gọi tới.
 \end{itemize}
 
 \subsubsection*{Các quyết định kiến trúc đáng chú ý}
@@ -362,6 +450,7 @@ Sitemap thể hiện tổ chức các trang của ứng dụng web theo cấp b�
 \end{figure}
 
 \subsection{Thiết kế lược đồ tuần tự}
+\label{subsec:tuantu}
 % TODO: sequence diagram cho các luồng chính: đặt hàng B2C, RFQ -- hợp đồng -- ký quỹ B2B, đăng và kiểm duyệt sản phẩm, gửi và kiểm duyệt đánh giá.
 
 \subsection{Thiết kế lược đồ lớp}
@@ -373,35 +462,24 @@ Sitemap thể hiện tổ chức các trang của ứng dụng web theo cấp b�
 \subsubsection*{Đặc tả cơ sở dữ liệu}
 \label{subsec:dacta-csdl}
 
-Cơ sở dữ liệu được tổ chức theo tám nhóm thực thể tương ứng với các nhóm chức
-năng FR1--FR13 tại mục~\ref{sec:yeucauchucnang}, đồng thời chính là các mô-đun
-nghiệp vụ đã nêu tại mục~\ref{sec:kientruc} --- mỗi nhóm sở hữu một schema
-riêng theo ràng buộc RB3:
+Cơ sở dữ liệu được chia thành 13 schema, trùng tên và trùng ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}: mỗi mô-đun sở hữu đúng một schema, tham chiếu sang schema khác bằng định danh, không kết nối bảng xuyên schema (RB3). Các thực thể chính theo năm khối:
+\begin{itemize}
+    \item \textbf{Nền tảng chung} --- \texttt{identity}: tài khoản, vai trò, sổ địa chỉ, hồ sơ doanh nghiệp, giấy tờ eKYC, bản ghi đồng ý dữ liệu và yêu cầu xóa; \texttt{notification}: thông báo, kênh đăng ký, đăng ký nhận thông báo đẩy; \texttt{media}: tệp (chủ sở hữu, khóa đối tượng, kiểu, kích thước, mã băm, mức truy cập, trạng thái, hạn lưu) --- các bảng khác tham chiếu tệp qua định danh thay vì lưu đường dẫn rời.
+    \item \textbf{Nguồn cung} --- \texttt{supplier}: hồ sơ nhà cung cấp, chứng nhận, loại người bán cho thuế; \texttt{catalog}: danh mục, sản phẩm, lô, nhật ký canh tác, mã QR, vector sản phẩm; \texttt{inventory}: dòng tồn, sổ nhập xuất, giữ chỗ, đóng gói, thu hồi lô.
+    \item \textbf{Giao dịch} --- \texttt{procurement}: chào hàng, đơn thu mua, nghiệm thu, kết quả dự báo giá; \texttt{retail}: giỏ, đơn lẻ, mốc trạng thái, đăng ký báo vào mùa; \texttt{wholesale}: bảng giá bậc, RFQ, báo giá và trao đổi, hợp đồng (phiên bản, mã băm), đơn sỉ; \texttt{payment}: giao dịch thanh toán, hoàn tiền, hóa đơn, đối soát hoa hồng và trường khấu trừ thuế \emph{(chỉ thiết kế)}.
+    \item \textbf{Sau bán} --- \texttt{fulfillment}: chuyến trung chuyển, vận đơn, mốc giao, yêu cầu đổi trả, tin trao đổi theo đơn; \texttt{engagement}: đánh giá, phản hồi, điểm uy tín.
+    \item \textbf{Vận hành} --- \texttt{operations}: cấu hình nền tảng, hàng đợi duyệt, hồ sơ vi phạm, cảnh báo do luật ngưỡng, nhật ký thao tác nội bộ.
+\end{itemize}
 
-\begin{enumerate}
-    \item \textbf{Người dùng và phân quyền} (FR1) --- tài khoản, địa chỉ nhận hàng, hồ sơ doanh nghiệp.
-    \item \textbf{Gian hàng, chứng nhận, sản phẩm và truy xuất nguồn gốc} (FR2--FR4) --- gian hàng, chứng nhận, danh mục, sản phẩm, lô hàng, nhật ký canh tác, mã QR truy xuất.
-    \item \textbf{Giao dịch bán lẻ} (FR5) --- giỏ hàng, đơn hàng, dòng hàng, mã giảm giá, thanh toán.
-    \item \textbf{Giao dịch bán sỉ} (FR6) --- bảng giá bậc, yêu cầu báo giá, lịch sử thương lượng, hợp đồng, đợt giao hàng.
-    \item \textbf{Vận chuyển và khiếu nại} (FR8) --- vận đơn, mốc hành trình, khiếu nại và phán quyết.
-    \item \textbf{Tương tác và thông báo} (FR9, FR11) --- đánh giá, phản hồi của nhà cung cấp, tin nhắn, thông báo.
-    \item \textbf{Hỗ trợ AI} (FR12) --- sự kiện hành vi, kết quả gợi ý và kết quả dự báo.
-    \item \textbf{Quản trị, vi phạm và lưu vết} (FR10, NFR9.1) --- hồ sơ vi phạm, cảnh báo do luật ngưỡng sinh ra, nhật ký thao tác quản trị.
-\end{enumerate}
-
-Đặc tả đầy đủ từng trường của tất cả các thực thể --- gồm kiểu dữ liệu, ràng
-buộc và mã yêu cầu liên quan --- được trình bày tại Phụ lục K. Mục này chỉ
-giữ lại phần tổ chức tổng thể và sơ đồ quan hệ thực thể dưới đây.
+Đặc tả từng trường của các thực thể cốt lõi --- gồm kiểu dữ liệu, ràng buộc và mã yêu cầu liên quan --- được trình bày tại Phụ lục K. Mục này chỉ giữ lại phần tổ chức tổng thể và sơ đồ quan hệ thực thể dưới đây.
+% TODO: cập nhật Phụ lục K và xuất lại ERD theo 13 schema khi schema.dbml được chốt.
 
 \subsubsection*{Sơ đồ quan hệ thực thể (ERD)}
 \label{subsec:erd}
 
 Dựa trên các thực thể và mối quan hệ đã đặc tả, mô hình quan hệ thực thể (ERD)
-tổng quát của hệ thống Farmery được thể hiện tại Hình~\ref{fig:erd}. Sơ đồ tổng
-hợp mối liên kết giữa 8 nhóm thực thể nghiệp vụ: tài khoản và phân quyền người
-dùng, quản lý gian hàng và truy xuất nguồn gốc, chu trình giao dịch bán lẻ B2C
-và bán sỉ B2B, vận chuyển, khiếu nại, tương tác người dùng, các bảng phục vụ
-tính năng AI, cùng nhóm bảng quản trị/lưu vết vi phạm.
+tổng quát của hệ thống Farmery được thể hiện tại Hình~\ref{fig:erd}, gồm các
+bảng chính và quan hệ giữa chúng.
 
 \begin{sidewaysfigure}
     \centering
@@ -476,9 +554,10 @@ Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở
 \label{subsec:chinhsachbenthuba}
 
 \begin{itemize}
-    \item \textbf{Cổng thanh toán trung gian:} mọi giao dịch thanh toán và ký quỹ escrow đi qua cổng thanh toán được cấp phép; hệ thống không lưu dữ liệu thẻ (NFR3.4), chỉ lưu mã giao dịch để đối soát và ra lệnh giải ngân khi đủ điều kiện (FR7.3).
-    \item \textbf{Đơn vị vận chuyển thứ ba (3PL):} tích hợp qua REST API, mỗi lần gọi có thời gian chờ tối đa 5 giây và cơ chế thử lại khi lỗi tạm thời (NFR7.1); sự cố giao hàng được theo dõi trên bảng điều khiển giám sát (FR10.5).
-    \item \textbf{Đăng nhập qua bên thứ ba:} hỗ trợ OAuth 2.0; tài khoản đăng nhập qua mạng xã hội vẫn phải xác thực OTP cho các thao tác nhạy cảm (FR1.1, FR1.2).
+    \item \textbf{Cổng thanh toán trung gian:} mọi khoản thanh toán và hoàn tiền đi qua cổng thanh toán được cấp phép; hệ thống không lưu dữ liệu thẻ (NFR3.4), chỉ lưu mã giao dịch để đối soát. Kết quả thanh toán chỉ được ghi nhận khi webhook của cổng có chữ ký hợp lệ; cùng một webhook gửi lại nhiều lần chỉ được xử lý một lần. Ký quỹ cho đơn sỉ giá trị lớn (FR7.3) \emph{chỉ thiết kế}.
+    \item \textbf{Đơn vị vận chuyển chặng cuối (3PL):} tạo vận đơn qua REST API, mỗi lần gọi có thời gian chờ tối đa 5 giây và cơ chế thử lại khi lỗi tạm thời (NFR7.1); trạng thái giao về qua webhook, xử lý một lần như với cổng thanh toán. Đơn trễ và sự cố giao hàng hiện trên bảng điều khiển giám sát (FR10.5); lỗi của 3PL được Farmery xử lý với khách trước, đòi lại 3PL sau (Phụ lục~U).
+    \item \textbf{Dịch vụ hóa đơn điện tử:} bản hiện thực phát hành hóa đơn giả lập qua cùng giao diện mà nhà cung cấp dịch vụ thật sẽ dùng, nên khi kết nối thật chỉ đổi lớp tích hợp (FR7.2, NFR8.3).
+    \item \textbf{Đăng nhập qua bên thứ ba} \emph{(chỉ thiết kế)}: OAuth 2.0 với Google, Facebook; tài khoản đăng nhập theo cách này vẫn phải xác thực OTP cho các thao tác nhạy cảm (FR1.1, FR1.2).
     \item \textbf{Xác minh chứng nhận:} trong phạm vi đồ án, việc xác minh được thực hiện thủ công; khi có kết nối với cơ quan cấp chứng nhận sẽ chuyển sang đối chiếu tự động.
     \item \textbf{Xử lý nội bộ:} giới hạn tần suất thao tác (khóa 30 phút sau 5 lần sai), khóa tồn kho khi đặt hàng để chống bán vượt, lưu vết toàn bộ thao tác quản trị (NFR3.5, NFR1.2).
 \end{itemize}
@@ -486,5 +565,5 @@ Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở
 
 \section{Kết chương}
 
-Chương này đã mô hình hóa tám quy trình nghiệp vụ bằng lưu đồ, trình bày thiết kế cơ sở dữ liệu tám nhóm thực thể, thiết kế ba mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
+Chương này đã mô hình hóa tám quy trình nghiệp vụ bằng lưu đồ, trình bày kiến trúc theo ba mức C4 với 13 mô-đun và cơ sở dữ liệu 13 schema tương ứng, thiết kế ba mô-đun AI kèm ngưỡng chất lượng mục tiêu và các chính sách xử lý với bên thứ ba.
 % TODO: cập nhật kết chương sau khi hoàn thiện use case, giải pháp công nghệ, kiến trúc, sitemap, lược đồ tuần tự/lớp, API, UI/UX và test case.
