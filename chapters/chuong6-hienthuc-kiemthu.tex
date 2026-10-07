@@ -12,7 +12,17 @@
 \label{sec:moitruong}
 Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm thử đơn vị kèm đo độ phủ, phân tích tĩnh bằng SonarQube Cloud (bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công khai không giới hạn) và cổng chất lượng; mã mới không đạt ngưỡng bị chặn trước khi hợp nhất. Kiểm thử tải bằng k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian. Nếu quy mô mã nguồn vượt giới hạn của bản miễn phí, chuyển sang SonarQube Community Build tự chạy mà không phải viết lại cấu hình phân tích.
 
-% TODO: liệt kê phiên bản ngôn ngữ, framework (frontend/backend), cơ sở dữ liệu, dịch vụ bên thứ ba (thanh toán, vận chuyển, object storage), thư viện ML dùng cho các mô-đun tại mục~\ref{sec:thietkeAI}; ngưỡng cổng chất lượng đã đặt.
+Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\ref{sec:giaiphapcongnghe}:
+\begin{itemize}
+    \item \textbf{Kho mã:} một monorepo quản lý bằng pnpm workspaces và Turborepo, gồm ứng dụng mua hàng, ứng dụng nội bộ, ứng dụng lõi và các gói dùng chung (kiểu dữ liệu TypeScript, thư viện thành phần giao diện).
+    \item \textbf{Giao diện:} ứng dụng mua hàng bằng Next.js, đóng gói dạng PWA; ứng dụng nội bộ bằng React, Vite và Refine.
+    \item \textbf{Ứng dụng lõi:} NestJS trên Node.js và TypeScript; truy cập dữ liệu qua Prisma, riêng khóa dòng tồn viết bằng SQL thô.
+    \item \textbf{Dữ liệu:} PostgreSQL kèm các tiện ích pgvector, \texttt{unaccent}, \texttt{pg\_trgm}; Redis cho cache và hàng đợi; MinIO cho tệp.
+    \item \textbf{Dịch vụ AI:} Python với FastAPI; mô hình nhúng BGE-M3; thư viện dự báo chuỗi thời gian cho SARIMA, Prophet.
+    \item \textbf{Bên thứ ba ở môi trường thử nghiệm:} VNPay, Giao Hàng Nhanh; hóa đơn điện tử giả lập; Web Push (VAPID) và email qua SMTP.
+\end{itemize}
+
+% TODO: ghi phiên bản cụ thể của từng thành phần khi dựng xong môi trường; ngưỡng cổng chất lượng đã đặt.
 
 \subsection{Kiến trúc triển khai}
 \label{sec:trienkhai}

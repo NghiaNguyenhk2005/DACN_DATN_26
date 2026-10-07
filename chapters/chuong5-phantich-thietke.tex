@@ -205,8 +205,6 @@ Các use case dưới đây được chọn đại diện cho mọi loại actor
 \section{Giải pháp công nghệ}
 \label{sec:giaiphapcongnghe}
 
-% TODO: nhóm xác nhận lại lựa chọn cuối cùng cho khớp với công nghệ thực sự dùng khi hiện thực (Chương 6), đặc biệt phần back-end nếu nhóm quen ngôn ngữ khác.
-
 Mỗi hạng mục dưới đây được quyết định bằng cách nêu các phương án ứng viên, đối chiếu theo một bộ tiêu chí chung rồi chọn phương án phù hợp nhất. Bộ tiêu chí gồm năm điểm:
 \begin{itemize}
     \item \textbf{Khả năng đáp ứng yêu cầu phi chức năng} đã đặt ra tại mục~\ref{sec:yeucauphichucnang}, đặc biệt là hiệu năng và tính toàn vẹn dữ liệu.
@@ -220,18 +218,23 @@ Nguyên tắc xuyên suốt khi cân nhắc các phương án là \textbf{giảm
 
 \subsection{Front-end}
 
-\noindent\textbf{Phương án chọn: Next.js (nền React).} Các ứng viên được cân nhắc gồm React kết hợp Next.js, Vue kết hợp Nuxt, và Angular.
+Hệ thống có hai ứng dụng giao diện với yêu cầu khác nhau (mục~\ref{sec:luongvanhanh}), nên mỗi ứng dụng chọn công nghệ riêng, nhưng nằm chung một kho mã.
 
-Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang mở công khai, không yêu cầu đăng nhập, được truy cập bằng cách quét mã QR in trên bao bì, và cần được công cụ tìm kiếm lập chỉ mục để người mua tra cứu được cả khi không vào nền tảng. Loại trang này đòi hỏi server-side rendering (SSR) --- điều mà Next.js hỗ trợ sẵn. Ngoài ra, việc dùng chung một framework cho cả giao diện mua hàng lẫn trang quản trị giúp giảm khối lượng công việc trùng lặp.
+\noindent\textbf{Ứng dụng mua hàng --- phương án chọn: Next.js (nền React).} Các ứng viên được cân nhắc gồm React kết hợp Next.js, Vue kết hợp Nuxt, và Angular. Yếu tố quyết định là trang truy xuất nguồn gốc và trang sản phẩm: đây là các trang mở công khai, không yêu cầu đăng nhập, được truy cập bằng cách quét mã QR in trên bao bì, và cần được công cụ tìm kiếm lập chỉ mục. Loại trang này đòi hỏi server-side rendering (SSR) --- điều mà Next.js hỗ trợ sẵn; ứng dụng được đóng gói thành ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3).
+
+\noindent\textbf{Ứng dụng nội bộ --- phương án chọn: React kết hợp Vite và Refine.} Các ứng viên gồm dùng chung Next.js với ứng dụng mua hàng, React-Admin, và Refine. Ứng dụng nội bộ không cần SSR hay lập chỉ mục mà gồm chủ yếu các màn hình danh sách, biểu mẫu, hàng đợi duyệt theo vai trò. Refine là khung dựng ứng dụng quản trị trên React, có sẵn khung danh sách, biểu mẫu và lớp kiểm soát truy cập theo vai trò, không ràng buộc thư viện giao diện; Vite cho thời gian khởi động và đóng gói nhanh. Tách hẳn khỏi Next.js giữ cho mã của các màn hình có quyền cao không nằm trong gói tải xuống của ứng dụng mua hàng.
+
+\noindent\textbf{Tổ chức kho mã --- phương án chọn: monorepo với pnpm workspaces và Turborepo.} Hai ứng dụng giao diện, ứng dụng lõi NestJS và các gói dùng chung (định nghĩa kiểu dữ liệu TypeScript sinh từ API, thư viện thành phần giao diện) nằm trong một kho; Turborepo chỉ dựng lại phần bị ảnh hưởng khi một gói thay đổi. Phương án tách nhiều kho bị loại vì phải đồng bộ kiểu dữ liệu giữa các kho bằng tay; Nx đáp ứng tương tự nhưng cấu hình nặng hơn so với quy mô nhóm.
 
 \subsection{Back-end}
 
-\noindent\textbf{Framework --- phương án chọn: NestJS trên nền Node.js và TypeScript.} Các ứng viên gồm NestJS, Spring Boot, Django hoặc FastAPI, và Laravel. NestJS được chọn vì dùng chung ngôn ngữ TypeScript với phần giao diện, nhờ đó giảm một lần học và cho phép chia sẻ định nghĩa kiểu dữ liệu giữa hai phía; cấu trúc chia theo mô-đun cùng cơ chế guard kiểm soát quyền truy cập có sẵn cũng phù hợp trực tiếp với mô hình phân quyền nhiều vai trò của Farmery (mục~\ref{sec:doituongnguoidung}).
+\noindent\textbf{Framework --- phương án chọn: NestJS trên nền Node.js và TypeScript.} Các ứng viên gồm NestJS, Spring Boot, Django hoặc FastAPI, và Laravel. NestJS được chọn vì dùng chung ngôn ngữ TypeScript với phần giao diện, nhờ đó giảm một lần học và cho phép chia sẻ định nghĩa kiểu dữ liệu giữa hai phía; cấu trúc chia theo mô-đun cùng cơ chế guard kiểm soát quyền truy cập có sẵn cũng phù hợp trực tiếp với mô hình phân quyền nhiều vai trò của Farmery (mục~\ref{sec:doituongnguoidung}). Các đường dẫn của ứng dụng nội bộ mang tiền tố riêng và đi qua guard riêng (xác thực hai lớp, phiên ngắn --- NFR3.6) nhưng vẫn thuộc cùng một ứng dụng lõi, nên không phá cấu trúc modular monolith.
 
-\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được bốn nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
+\noindent\textbf{Truy cập dữ liệu --- phương án chọn: Prisma.} Các ứng viên gồm Prisma, TypeORM và Drizzle. Prisma được chọn vì lược đồ khai báo một nơi, sinh kiểu dữ liệu TypeScript và tệp migration từ lược đồ đó. Prisma không có cú pháp khóa dòng, nên riêng thao tác giữ chỗ và trừ tồn trong mô-đun tồn kho được viết bằng câu lệnh SQL thô \texttt{SELECT \ldots{} FOR UPDATE} bên trong giao dịch của Prisma; đây là chỗ duy nhất cần SQL thô và được gom trong một lớp truy cập riêng.
+
+\noindent\textbf{Hệ quản trị cơ sở dữ liệu --- phương án chọn: PostgreSQL.} Các ứng viên gồm PostgreSQL, MySQL và MongoDB. Đây là lựa chọn then chốt nhất vì một mình PostgreSQL đáp ứng được ba nhu cầu mà nếu chọn khác sẽ phải dựng thêm nhiều thành phần riêng:
 \begin{itemize}
     \item \textbf{Transaction có row-level locking} --- cần thiết để chống bán vượt khi nhiều giao dịch cùng giành một dòng tồn: nhiều đơn bán lẻ đặt cùng lúc, hoặc hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một nhà cung cấp (NFR4.1). Đây là ràng buộc kỹ thuật khó nhất của hệ thống, và cơ sở dữ liệu hướng tài liệu như MongoDB xử lý kém hơn hẳn.
-    \item \textbf{Dữ liệu không gian (PostGIS)} --- phục vụ quản lý vùng trồng và tính bán kính giao hàng, khớp trực tiếp với phạm vi không gian đã xác định tại mục~\ref{sec:phamvi}.
     \item \textbf{Kiểu dữ liệu JSON có đánh chỉ mục} --- phù hợp với nhật ký canh tác, vốn có tập trường khác nhau giữa từng loại cây trồng.
     \item \textbf{Lưu và truy vấn vector (tiện ích pgvector)} --- phục vụ tìm kiếm theo ngữ nghĩa (FR12.3) và phần gợi ý ``sản phẩm tương tự'' ngay trong cơ sở dữ liệu chính, không phải dựng thêm một cơ sở dữ liệu vector riêng rồi đồng bộ dữ liệu sản phẩm sang đó.
 \end{itemize}
@@ -242,7 +245,13 @@ Yếu tố quyết định là trang truy xuất nguồn gốc: đây là trang 
 
 \noindent\textbf{Cache và hàng đợi --- phương án chọn: Redis.} Một thành phần phục vụ hai nhu cầu: cache các truy vấn đọc nhiều, và làm hàng đợi cho các tác vụ chạy nền như gửi thông báo, sinh mã QR và thu thập dữ liệu cho các mô-đun AI. Dựng riêng một message broker chuyên dụng là không cần thiết ở quy mô này.
 
-\noindent\textbf{Dịch vụ bên thứ ba.} Cổng thanh toán chọn VNPay ở môi trường thử nghiệm, do tài liệu tiếng Việt đầy đủ nhất và hỗ trợ cơ chế tạm giữ tiền cần cho giao dịch số lượng lớn. Đơn vị vận chuyển chọn Giao Hàng Nhanh, do có API công khai và độ phủ tốt tại khu vực nông thôn --- yếu tố quan trọng vì đầu lấy hàng nằm tại vùng trồng.
+\noindent\textbf{Dịch vụ bên thứ ba.} Mỗi dịch vụ được chọn theo vai trò của nó trong trục bán lẻ; so sánh chi tiết ở Phụ lục I.
+\begin{itemize}
+    \item \textbf{Cổng thanh toán --- VNPay ở môi trường thử nghiệm}, so với MoMo và PayOS (chuyển khoản qua VietQR). VNPay gom được nhiều phương thức (thẻ nội địa, mã QR, ví) sau một lần tích hợp và có môi trường thử nghiệm kèm tài liệu tiếng Việt; PayOS giữ làm phương án bổ sung cho chuyển khoản VietQR.
+    \item \textbf{Vận chuyển chặng cuối --- Giao Hàng Nhanh (GHN) ở môi trường thử nghiệm}, so với Giao Hàng Tiết Kiệm và Ahamove. Chặng cuối là giao trong nội thành TP.HCM từ điểm bàn giao của chuyến trung chuyển, nên tiêu chí chính là API tạo vận đơn, webhook trạng thái và môi trường thử nghiệm công khai để kiểm thử trọn dòng thời gian đơn hàng. Chặng giữa (xe lạnh theo chuyến) không qua API của bên thứ ba mà do nhân viên kho cập nhật.
+    \item \textbf{Hóa đơn điện tử --- lớp tích hợp với bản giả lập}: sinh tệp PDF và mã tra cứu theo cùng giao diện mà một nhà cung cấp dịch vụ hóa đơn (VNPT, Viettel, MISA) sẽ cung cấp; kết nối thật chỉ được thiết kế, vì cần hợp đồng và chứng thư số của doanh nghiệp.
+    \item \textbf{Thông báo --- Web Push theo chuẩn VAPID và email qua SMTP}, không phụ thuộc nhà cung cấp riêng; SMS để sau vì tính phí theo tin.
+\end{itemize}
 
 \subsection{Thuật toán, công nghệ và mô hình AI}
 
@@ -314,7 +323,7 @@ Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 12 mô-đun của Farmer
 
 Hệ thống gồm các lớp sau, mỗi lớp ghi rõ công nghệ đã chọn:
 \begin{itemize}
-    \item \textbf{Lớp giao diện} --- Next.js, dựng dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3); phục vụ ba loại giao diện: trang mua hàng, trang quản lý của nhà cung cấp, và trang làm việc của nhân sự nội bộ.
+    \item \textbf{Lớp giao diện} --- hai ứng dụng: ứng dụng mua hàng dựng bằng Next.js dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3), phục vụ trang mua hàng và trang quản lý của nhà cung cấp; ứng dụng nội bộ dựng bằng React, Vite và Refine cho nhân sự nội bộ, đăng nhập hai lớp (NFR3.6).
     \item \textbf{Lớp ứng dụng} --- NestJS, tiếp nhận yêu cầu, kiểm tra quyền truy cập theo vai trò, điều phối giữa các mô-đun nghiệp vụ.
     \item \textbf{Lớp mô-đun nghiệp vụ} --- 12 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
     \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho cache và hàng đợi, object storage cho ảnh và tệp chứng nhận.
