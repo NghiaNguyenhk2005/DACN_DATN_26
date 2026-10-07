@@ -92,7 +92,7 @@ class Svg:
 
     def svg(self):
         defs = ''.join('<marker id="ah-%s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="%s"/></marker>'
-                       % (c.strip('#'), c) for c in getattr(self, '_markers', set()))
+                       % (c.strip('#'), c) for c in sorted(getattr(self, '_markers', set())))
         return ('<svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%%;height:auto" width="%d" height="%d" viewBox="0 0 %d %d"><defs>%s</defs>%s</svg>'
                 % (self.w, self.h, self.w, self.h, defs, '\n'.join(self.parts + self.later)))
 
