@@ -136,7 +136,7 @@ io.open(os.path.join(OUT, 'c4-ngu-canh.html'), 'w', encoding='utf-8').write(page
 # ======================= MỨC 2: CONTAINER =======================
 RHT = 186
 s = Svg(W, 6 * RHT + 300 + 80)
-BX, BY, BW, BH = 180, 10, 715, 6 * RHT + 300 + 60
+BX, BY, BW, BH = 165, 10, 740, 6 * RHT + 300 + 60
 s.rect(BX, BY, BW, BH, 'none', SYSTEM[1], 2.5, 18, '12 8')
 s.text(BX + 20, BY + 34, 'Hệ thống Farmery  [ranh giới hệ thống]', 24, 700, SYSTEM[1], 'start')
 
@@ -147,7 +147,7 @@ def cont(x, y, w, h, name, tech, desc, hot=False, extra=None):
     s.box(x, y, w, h, lines, fill=CONT[0], stroke=HOT if hot else CONT[1], sw=3 if hot else 2,
           valign='top' if extra else 'middle')
 
-LX, LW = 200, 290          # cột container bên trái
+LX, LW = 215, 270          # cột container bên trái
 CX, CW_ = 625, 250         # ứng dụng lõi
 rows = {}
 y = 60
@@ -210,7 +210,7 @@ for i, (nm, d, des, two) in enumerate(EXTS):
     ext(s, 1110, y0, 220, eh, SHORT[i], '', des, name_size=22)
     yy = y0 + eh / 2 + 18
     link(s, [(CX + CW_, yy), (1110, yy)], design=des, both=two)
-    s.label(992, yy, ex_labs[i], 200, color=GREY if des else '#33413a', pos='above')
+    s.label(1008, yy, ex_labs[i], 190, color=GREY if des else '#33413a', pos='above')
 
 leg = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container của Farmery</span>' % CONT) + \
       ('<span><i class="sw" style="background:%s;border-color:%s;border-width:3px"></i>Khối chứa lõi nghiệp vụ</span>' % (CONT[0], HOT)) + \
@@ -241,7 +241,7 @@ s.box(COLX[0], 54, COLX[3] + CWD - COLX[0], 76,
       fill=CONT[0], stroke=CONT[1])
 
 def frame(c0, c1, row, title, key):
-    x = COLX[c0] - 16; w = COLX[c1] + CWD + 16 - x
+    x = COLX[c0] - 10; w = COLX[c1] + CWD + 10 - x
     y = R[row] - 46
     s.rect(x, y, w, RH[row] + 62, BLK[key][0], BLK[key][1], 1.6, 14)
     s.text(x + 14, y + 30, title, 24, 800, BLK[key][1], 'start')
@@ -287,14 +287,14 @@ s.arrow([(cx(1), R[2] + MH), (cx(1), yr), (cx(3) - 40, yr), (cx(3) - 40, R[3])])
 s.label((cx(1) + cx(2) - 30) / 2, yr, 'tạo giao hàng khi đơn đã thanh toán', 190, pos='above')
 
 # Cột trái: TraceViet, dịch vụ AI, Redis, Google, Facebook
-LXc, LWc = 10, 180
+LXc, LWc = 10, 148
 ext(s, LXc, R[1] + 10, LWc, 100, 'TraceViet', '', True, name_size=22)
 link(s, [(COLX[0], R[1] + 60), (LXc + LWc, R[1] + 60)], design=True)
 s.box(LXc, R[2] - 30, LWc, 236, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(COLX[0], R[2] + 120), (LXc + LWc, R[2] + 120)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + 130, R[1] + 150), (LXc + 130, R[2] - 30)])  # catalog <-> AI
-s.box(LXc, R[3], LWc, MH, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
+s.box(LXc, R[3], LWc, MH + 10, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
 link(s, [(LXc + 50, R[2] + 206), (LXc + 50, R[3])])                              # Redis <-> AI
@@ -310,8 +310,8 @@ link(s, [(COLX[3] + CWD, R[2] + 90), (RX, R[2] + 90)], design=True)
 ytt, yhd = R[2] + MH + 4, R[2] + MH + 82
 ext(s, RX, ytt, RW, 70, 'Cổng thanh toán', '', False, name_size=22, tag=False)
 ext(s, RX, yhd, RW, 70, 'HĐĐT (giả lập)', '', False, name_size=22, tag=False)
-link(s, [(cx(2) - 30, R[2] + MH), (cx(2) - 30, ytt + 35), (RX, ytt + 35)])
-link(s, [(cx(2) + 30, R[2] + MH), (cx(2) + 30, yhd + 35), (RX, yhd + 35)])
+link(s, [(cx(2) + 30, R[2] + MH), (cx(2) + 30, ytt + 35), (RX, ytt + 35)])
+link(s, [(cx(2) - 30, R[2] + MH), (cx(2) - 30, yhd + 35), (RX, yhd + 35)])
 ext(s, RX, R[3] + 40, RW, 110, '3PL (GHN)', '', False, name_size=22)
 link(s, [(COLX[3] + CWD, R[3] + 95), (RX, R[3] + 95)])
 for j, (nm, des) in enumerate([('Email', False), ('Web Push', False), ('SMS', True)]):
@@ -336,7 +336,7 @@ leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-w
       ('<span>%sMột chiều</span><span>%sHai chiều</span>' % (icon(), icon(both=True)))
 io.open(os.path.join(OUT, 'c4-module.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Chữ đơn cách: tên schema. Mũi tên chạm biên ứng dụng lõi áp cho mọi mô-đun; phụ thuộc khác đi qua sự kiện.'))
+    'Chữ đơn cách: tên schema. Mũi tên chạm biên ứng dụng lõi áp cho mọi mô-đun; dữ liệu vào, ra từng mô-đun xem Bảng 5.6, phụ thuộc khác đi qua sự kiện (Phụ lục V).'))
 
 # ======================= LUỒNG ĐẦU–CUỐI MỘT ĐƠN LẺ =======================
 # (khóa, tên, schema/ghi chú, kiểu): kiểu = person | mod:<khối> | ext
