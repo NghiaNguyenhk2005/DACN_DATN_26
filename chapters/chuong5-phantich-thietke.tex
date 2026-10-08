@@ -460,16 +460,16 @@ Tóm tắt theo lớp, mỗi lớp ghi rõ công nghệ đã chọn:
 
 Sitemap thể hiện tổ chức các trang theo cấp bậc: mỗi nút là một trang hoặc một nhóm trang, đường nối cho biết trang nào nằm dưới trang nào~\cite{nngroup_sitemap}. Sitemap bắc cầu giữa mô hình use case tại mục~\ref{sec:sddchitiet} (người dùng làm được gì) và thiết kế giao diện (trang đó trông ra sao). Hình~\ref{fig:sitemap} trình bày hai cấp đầu; cấp 3 của từng khu vực, kèm mã FR tương ứng, liệt kê tại Bảng~\ref{tab:sitemap-chitiet} ở Phụ lục~T. Các quyết định chính:
 \begin{itemize}
-    \item \textbf{Hai cây, hai ứng dụng:} ứng dụng mua hàng có bốn khu (công khai, khách lẻ, khách sỉ, nhà cung cấp); ứng dụng nội bộ có sáu mục theo vai trò, mỗi người chỉ thấy mục của vai trò mình và một tài khoản có thể giữ nhiều vai trò (mục~\ref{sec:doituongnguoidung}).
+    \item \textbf{Hai cây, hai ứng dụng:} ứng dụng mua hàng có bốn khu (công khai, khách lẻ, khách sỉ, nhà cung cấp); ứng dụng nội bộ có sáu mục theo vai trò, mỗi người chỉ thấy mục của vai trò mình và một tài khoản có thể giữ nhiều vai trò (mục~\ref{sec:doituongnguoidung}). Mỗi ứng dụng có thêm một nhánh trang dùng chung: tài khoản, quyền dữ liệu và thông báo cho mọi người dùng đã đăng nhập; đăng nhập hai lớp, hộp việc và thông báo cho mọi vai trò nội bộ.
     \item \textbf{Trục bán lẻ đi trọn trong ứng dụng mua hàng:} tìm kiếm, chi tiết sản phẩm, giỏ, thanh toán, đơn hàng (dòng thời gian, mua lại, hóa đơn), đổi trả và đánh giá.
     \item \textbf{Không có trang tin nhắn chung:} trao đổi gắn với đơn hoặc yêu cầu đổi trả nằm ngay trong trang đó (FR9.1); hồ sơ nhà cung cấp là trang nguồn gốc, không phải gian hàng để theo dõi.
-    \item \textbf{Trang chỉ thiết kế hoặc để sau phần hiện thực} vẽ xám nét đứt: yêu thích, ký quỹ, tổng quan thống kê của nhà cung cấp.
+    \item \textbf{Trang chỉ thiết kế hoặc để sau phần hiện thực} vẽ xám nét đứt: yêu thích, ký quỹ, tổng quan thống kê của nhà cung cấp, báo cáo thống kê toàn sàn, sơ chế nhiều bước và kiểm kê.
     \item \textbf{Độc lập với framework:} sitemap mô tả tổ chức trang theo góc nhìn người dùng. Khi hiện thực, mỗi khu ứng với một nhóm route có bố cục và kiểm tra đăng nhập riêng; một số trang có thể thành thẻ hoặc hộp thoại mà không làm đổi cấu trúc cây.
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}[p]
 \centering
-\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-2.5cm\relax},center}
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
 \includegraphics[width=\textwidth]{image/comparison/sitemap-tong-quan.png}
 \end{adjustbox}
 \caption{Sitemap tổng quan của hai ứng dụng Farmery (cấp 1 và 2)}

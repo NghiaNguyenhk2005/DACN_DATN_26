@@ -14,25 +14,28 @@ D = '*'          # tiền tố đánh dấu trang chỉ thiết kế / sau phầ
 SHOP = [
     ('Công khai', 'không cần đăng nhập', ('#e9edeb', '#4d5c55'), [
         'Trang chủ theo mùa', 'Tìm kiếm', 'Danh mục', 'Chi tiết sản phẩm', 'Trang truy xuất QR',
-        'Hồ sơ nguồn gốc nhà cung cấp', 'Sàn sỉ', 'Đăng ký, đăng nhập', 'Chính sách (10 trang)']),
+        'Hồ sơ nguồn gốc nhà cung cấp', 'Sàn sỉ', 'Đăng ký, đăng nhập', 'Giới thiệu, chính sách, biểu phí']),
     ('Khách lẻ', 'sau đăng nhập', ('#fdf1dc', '#c98a1a'), [
         'Giỏ hàng', 'Thanh toán', 'Đơn hàng', 'Đổi trả, khiếu nại', 'Đánh giá',
-        'Thông báo, báo vào mùa', 'Tài khoản, quyền dữ liệu', D + 'Yêu thích']),
+        'Báo khi có hàng, vào mùa', 'Sổ địa chỉ', D + 'Yêu thích']),
     ('Khách sỉ', 'sau đăng nhập', ('#eef4fb', '#1a5fa8'), [
-        'Hồ sơ doanh nghiệp', 'Yêu cầu báo giá', 'Hợp đồng', 'Đơn sỉ một đợt', 'Thanh toán',
+        'Hồ sơ doanh nghiệp, địa chỉ nhận', 'Yêu cầu báo giá', 'Hợp đồng', 'Đơn sỉ một đợt', 'Thanh toán',
         'Khiếu nại', D + 'Ký quỹ']),
     ('Nhà cung cấp', 'sau đăng nhập', ('#eaf7ef', '#1f8a4c'), [
         'Hồ sơ, xác minh, loại thuế', 'Chứng nhận', 'Sản phẩm và lô', 'Nhật ký canh tác',
         'Tồn kho của tôi', 'Chào hàng, đơn thu mua', 'Báo giá, hợp đồng sỉ', 'Đơn sỉ', 'Đối soát',
-        'Đánh giá, uy tín', D + 'Tổng quan thống kê']),
+        'Đánh giá, uy tín', 'Thao tác nhập hộ', D + 'Tổng quan thống kê']),
 ]
 STAFF = [
-    ('Kiểm duyệt', 'staff_moderation', ['Hàng đợi duyệt', 'Đánh giá nghi vấn', 'Vi phạm']),
-    ('Vận hành', 'staff_operations', ['Khiếu nại, đổi trả', 'Giám sát đơn, giao hàng', 'Thu hồi lô', D + 'Báo cáo thống kê']),
+    ('Kiểm duyệt', 'staff_moderation', ['Hàng đợi duyệt', 'Đánh giá nghi vấn', 'Vi phạm nội dung']),
+    ('Vận hành', 'staff_operations', ['Khiếu nại, đổi trả, tranh chấp', 'Giám sát đơn, giao hàng', 'Thu hồi lô',
+                                      'Vi phạm từ đơn hàng', D + 'Báo cáo thống kê']),
     ('Thu mua', 'staff_sourcing', ['Chào hàng', 'Đơn thu mua', 'Định giá, dự báo']),
-    ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Đóng gói, in tem', 'Tồn kho, sổ nhập xuất', 'Chuyến trung chuyển']),
+    ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Đóng gói, in tem', 'Tồn kho, sổ nhập xuất', 'Chuyến trung chuyển',
+                                D + 'Sơ chế, kiểm kê']),
     ('Hỗ trợ vùng', 'staff_support', ['Nhà cung cấp phụ trách', 'Nhập liệu hộ']),
-    ('Quản trị', 'platform_owner', ['Tài khoản, vai trò', 'Danh mục', 'Cấu hình', 'Nhật ký thao tác']),
+    ('Quản trị', 'platform_owner', ['Tài khoản, vai trò', 'Danh mục', 'Cấu hình, biểu phí', 'Chính sách, phiên bản',
+                                    'Nhật ký thao tác']),
 ]
 
 
@@ -61,9 +64,15 @@ def pages_col(s, x, y, colw, stroke, pages):
     return spine, last, y
 
 
-def app(s, x0, x1, y, title, sub, fill, stroke):
-    s.box(x0, y, x1 - x0, 78, [(title, 24, 800, '#ffffff', False), (sub, 22, 400, '#e6eef8', False)],
+def app(s, x0, x1, y, title, sub, fill, stroke, common_title, common_pages, light):
+    """Hộp ứng dụng (trái) và nhánh trang dùng chung (phải); trả về tâm x của hộp ứng dụng."""
+    xs = x0 + (x1 - x0) * 0.56
+    s.box(x0, y, xs - 40 - x0, 96, [(title, 24, 800, '#ffffff', False), (sub, 22, 400, '#e6eef8', False)],
           fill=fill, stroke=stroke, rx=12)
+    s.box(xs, y, x1 - xs, 96, [(common_title, 22, 700, INK, False), (' · '.join(common_pages), 22, 500, INK, False)],
+          fill=light, stroke=stroke, sw=2.5, rx=12, pad=10)
+    hline(s, xs - 40, xs, y + 48, stroke)
+    return (x0 + xs - 40) / 2
 
 
 s = Svg(W, 2000)
@@ -71,11 +80,13 @@ s = Svg(W, 2000)
 # ---- ứng dụng mua hàng ----
 COLW, GAP, X0 = 318, 16, 20
 A1Y = 10
-app(s, X0, X0 + 4 * COLW + 3 * GAP, A1Y, 'Ứng dụng mua hàng', 'Next.js, PWA; trang công khai dựng phía máy chủ', '#1a5fa8', '#0f3d6e')
-BY = A1Y + 78 + 22
+ax = app(s, X0, X0 + 4 * COLW + 3 * GAP, A1Y, 'Ứng dụng mua hàng', 'Next.js, PWA; trang công khai dựng phía máy chủ',
+         '#1a5fa8', '#0f3d6e', 'Chung sau đăng nhập',
+         ['Tài khoản, quyền dữ liệu', 'Thông báo'], '#eef4fb')
+BY = A1Y + 96 + 22
 AY = BY + 22
 hline(s, X0 + COLW / 2, X0 + 3 * (COLW + GAP) + COLW / 2, BY)
-vline(s, 670, A1Y + 78, BY)
+vline(s, ax, A1Y + 96, BY)
 bottom = 0
 for i, (name, sub, (fill, stroke), pages) in enumerate(SHOP):
     x = X0 + i * (COLW + GAP)
@@ -89,11 +100,13 @@ for i, (name, sub, (fill, stroke), pages) in enumerate(SHOP):
 I1Y = bottom + 30
 CW2, G2 = 210, 12
 X2 = (W - 6 * CW2 - 5 * G2) / 2
-app(s, X2, X2 + 6 * CW2 + 5 * G2, I1Y, 'Ứng dụng nội bộ', 'React, Vite, Refine; đăng nhập 2FA, menu theo vai trò', '#6b4fa0', '#4a3672')
-BY2 = I1Y + 78 + 22
+ax = app(s, X2, X2 + 6 * CW2 + 5 * G2, I1Y, 'Ứng dụng nội bộ', 'React, Vite, Refine; menu theo vai trò',
+         '#6b4fa0', '#4a3672', 'Chung cho mọi vai trò', ['Đăng nhập 2FA', 'Hộp việc, thông báo', 'Tài khoản'],
+         '#f1eef8')
+BY2 = I1Y + 96 + 22
 RY = BY2 + 22
 hline(s, X2 + CW2 / 2, X2 + 5 * (CW2 + G2) + CW2 / 2, BY2)
-vline(s, 670, I1Y + 78, BY2)
+vline(s, ax, I1Y + 96, BY2)
 bottom2 = 0
 for i, (name, code, pages) in enumerate(STAFF):
     x = X2 + i * (CW2 + G2)
@@ -106,7 +119,7 @@ for i, (name, code, pages) in enumerate(STAFF):
 s.h = int(bottom2 + 6)
 
 leg = ('<span><i class="sw" style="background:#1a5fa8;border-color:#0f3d6e"></i>Ứng dụng</span>'
-       '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực hoặc vai trò</span>'
+       '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
        '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang (cấp 3 ở Phụ lục T)</span>'
        '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế hoặc sau phần hiện thực</span>')
 io.open(os.path.join(OUT, 'sitemap-tong-quan.html'), 'w', encoding='utf-8').write(page(
