@@ -293,10 +293,10 @@ s.box(LXc, R[1] + 124, LWc, 272, [('Dịch vụ AI', 23, 700, INK, False), ('[Co
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1], pad=6)
 link(s, [(COLX[0], R[2] + 60), (LXc + LWc, R[2] + 60)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
-s.box(LXc, R[3], LWc, MH + 10, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
+s.box(LXc, R[3] - 12, LWc, MH + 32, [('Sự kiện và cache', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
-link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3])])                              # Redis <-> AI
+link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3] - 12)])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', '', True, name_size=22)
 ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', '', True, name_size=22)
 link(s, [(COLX[0], R[4] + 47), (LXc + LWc, R[4] + 47)], design=True)
@@ -308,22 +308,22 @@ ext(s, RX, R[2] + 30, RW, 120, 'Chữ ký số', '', True, name_size=22)
 link(s, [(COLX[3] + CWD, R[2] + 90), (RX, R[2] + 90)], design=True)
 ytt, yhd = R[2] + MH + 56, R[2] + MH + 160
 ext(s, RX, ytt, RW, 70, 'Cổng thanh toán', '', False, name_size=22, tag=False)
-ext(s, RX, yhd, RW, 70, 'HĐĐT (giả lập)', '', False, name_size=22, tag=False)
+ext(s, RX, yhd, RW, 70, 'Hóa đơn điện tử', '', False, name_size=22, tag=False)
 link(s, [(cx(2) + 30, R[2] + MH), (cx(2) + 30, ytt + 35), (RX, ytt + 35)])
 s.label(1000, ytt + 35, 'lệnh thanh toán; webhook kết quả', 200, pos='above')
 link(s, [(cx(2) - 30, R[2] + MH), (cx(2) - 30, yhd + 35), (RX, yhd + 35)])
 s.label(1000, yhd + 35, 'dữ liệu hóa đơn; số HĐ, mã tra cứu', 200, pos='above')
-ext(s, RX, R[3] + 80, RW, 110, '3PL (GHN)', '', False, name_size=22)
+ext(s, RX, R[3] + 70, RW, 130, 'Vận chuyển nội thành', '', False, name_size=22)
 link(s, [(COLX[1] + CWD, R[3] + 95), (RX, R[3] + 95)])
 s.label((COLX[1] + CWD + RX) / 2, R[3] + 95, 'vận đơn; webhook trạng thái', 240, pos='above')
 for j, (nm, des) in enumerate([('Email', False), ('Web Push', False), ('SMS', True)]):
     yy = R[4] + j * 70
     ext(s, RX, yy, RW, 60, nm, '', des, name_size=22, tag=False)
     link(s, [(COLX[2] + CWD, yy + 30), (RX, yy + 30)], design=des, both=False)
-    s.label((COLX[2] + CWD + RX) / 2, yy + 30, ['thư, OTP', 'thông báo đẩy', 'tin nhắn'][j], 180, pos='above', color=GREY if des else '#33413a')
+    s.label((COLX[2] + CWD + RX) / 2, yy + 30, ['thư, OTP [SMTP]', 'thông báo đẩy', 'OTP, thông báo'][j], 180, pos='above', color=GREY if des else '#33413a')
 
 # Hàng dưới: kho tệp dưới mô-đun Tệp, CSDL nối từ biên khung 13 mô-đun
-s.box(COLX[1] - 20, YB, CWD + 40, 92, [('Kho tệp', 23, 700, INK, False), ('[Container: MinIO]', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
+s.box(COLX[1] - 20, YB, CWD + 40, 92, [('Lưu trữ tệp', 23, 700, INK, False), ('[Container: MinIO]', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(cx(1), R[4] + RH[4]), (cx(1), YB)])
 s.label(cx(1) + 125, CF_BOT + 30, 'URL ký trước; tệp', 200)
 s.box(COLX[2] + 40, YB, 2 * CWD + 30, 100, [('Cơ sở dữ liệu', 23, 700, INK, False), ('[Container: PostgreSQL] mỗi mô-đun một schema', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
