@@ -182,9 +182,9 @@ for key, name, desc in [('app', 'Người dùng bên ngoài', 'Vãng lai, khách
 # Hai ứng dụng tải tệp thẳng lên MinIO
 mx = LX + LW / 2
 link(s, [(mx, rows['app'][0] + RHT), (mx, rows['minio'][0])], both=False)
-s.label(mx + 108, rows['app'][0] + RHT + 35, 'Mua hàng tải ảnh, giấy tờ [URL ký trước]', 200)
+s.label(mx + 108, rows['app'][0] + RHT + 35, 'Tải ảnh, giấy tờ', 200)
 link(s, [(mx, rows['staff'][0]), (mx, rows['minio'][0] + RHT)], both=False)
-s.label(mx + 108, rows['staff'][0] - 35, 'Nội bộ tải ảnh nghiệm thu, tệp nhập hộ [URL ký trước]', 200)
+s.label(mx + 108, rows['staff'][0] - 35, 'Tải ảnh nghiệm thu', 200)
 # Redis <-> dịch vụ AI
 link(s, [(mx, rows['redis'][0] + RHT), (mx, rows['ai'][0])])
 s.label(mx + 108, rows['ai'][0] - 40, 'ProductChanged; vector', 200)
@@ -217,7 +217,7 @@ leg = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container 
       LEG_PERSON + LEG_EXT + LEG_ARROWS
 io.open(os.path.join(OUT, 'c4-container.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Người dùng truy cập hai ứng dụng qua trình duyệt [HTTPS]. Tệp đi thẳng từ trình duyệt lên kho tệp, không qua ứng dụng lõi; chỉ dịch vụ AI tách khỏi ứng dụng lõi.'))
+    'Người dùng truy cập hai ứng dụng qua trình duyệt [HTTPS]. Tệp đi thẳng từ trình duyệt lên kho tệp qua URL ký trước, không qua ứng dụng lõi; chỉ dịch vụ AI tách khỏi ứng dụng lõi.'))
 
 # ======================= MỨC 3: MÔ-ĐUN (COMPONENT) =======================
 COLX = [232, 458, 684, 910]; CWD = 196
@@ -289,14 +289,14 @@ s.label(cx(1) - 112, (R[2] + MH + R[3]) / 2, 'tạo giao hàng khi đơn đã th
 LXc, LWc = 10, 148
 ext(s, LXc, R[1], LWc, 96, 'TraceViet', '', True, name_size=22)
 link(s, [(COLX[0], R[1] + 48), (LXc + LWc, R[1] + 48)], design=True)
-s.box(LXc, R[1] + 124, LWc, 316, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
-      ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
-link(s, [(COLX[0], R[2] + 100), (LXc + LWc, R[2] + 100)])                     # thu mua <-> AI
+s.box(LXc, R[1] + 124, LWc, 272, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
+      ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1], pad=6)
+link(s, [(COLX[0], R[2] + 60), (LXc + LWc, R[2] + 60)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
 s.box(LXc, R[3], LWc, MH + 10, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
-link(s, [(LXc + 50, R[1] + 440), (LXc + 50, R[3])])                              # Redis <-> AI
+link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3])])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', '', True, name_size=22)
 ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', '', True, name_size=22)
 link(s, [(COLX[0], R[4] + 47), (LXc + LWc, R[4] + 47)], design=True)
