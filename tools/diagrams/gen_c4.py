@@ -182,9 +182,9 @@ for key, name, desc in [('app', 'Người dùng bên ngoài', 'Vãng lai, khách
 # Hai ứng dụng tải tệp thẳng lên MinIO
 mx = LX + LW / 2
 link(s, [(mx, rows['app'][0] + RHT), (mx, rows['minio'][0])], both=False)
-s.label(mx + 108, rows['app'][0] + RHT + 35, 'Tải tệp [URL ký trước]', 200)
+s.label(mx + 108, rows['app'][0] + RHT + 35, 'Mua hàng tải ảnh, giấy tờ [URL ký trước]', 200)
 link(s, [(mx, rows['staff'][0]), (mx, rows['minio'][0] + RHT)], both=False)
-s.label(mx + 108, rows['staff'][0] - 35, 'Tải tệp [URL ký trước]', 200)
+s.label(mx + 108, rows['staff'][0] - 35, 'Nội bộ tải ảnh nghiệm thu, tệp nhập hộ [URL ký trước]', 200)
 # Redis <-> dịch vụ AI
 link(s, [(mx, rows['redis'][0] + RHT), (mx, rows['ai'][0])])
 s.label(mx + 108, rows['ai'][0] - 40, 'ProductChanged; vector', 200)
@@ -227,7 +227,7 @@ MH = 176
 R = {1: 226}
 R[2] = R[1] + MH + 140
 R[3] = R[2] + MH + 185
-R[4] = R[3] + MH + 70
+R[4] = R[3] + MH + 92
 RH = {1: MH, 2: MH, 3: MH, 4: 200}
 MF_BOT = R[4] + RH[4] + 30            # đáy hàng mô-đun cuối
 CF_BOT = MF_BOT + 16                  # đáy ranh giới ứng dụng lõi
@@ -253,7 +253,7 @@ def mod(c, row, name, schema, fr, resp, key):
 
 frame(0, 2, 1, 'Nguồn cung', 'cung'); frame(3, 3, 1, 'Vận hành', 'vh')
 frame(0, 3, 2, 'Giao dịch', 'gd')
-frame(2, 3, 3, 'Sau bán', 'sau')
+frame(0, 1, 3, 'Sau bán', 'sau')
 frame(0, 2, 4, 'Nền tảng chung', 'chung')
 mod(0, 1, 'Sản phẩm, lô', 'catalog', 'FR4', 'Lô, nhật ký, QR, tìm kiếm', 'cung')
 mod(1, 1, 'Tồn kho', 'inventory', 'FR13.2–13.6', 'Dòng tồn, sổ kho, đóng gói', 'cung')
@@ -263,8 +263,8 @@ mod(0, 2, 'Thu mua', 'procurement', 'FR13.1–13.2', 'Chào hàng, đơn thu mua
 mod(1, 2, 'Bán lẻ', 'retail', 'FR5', 'Giỏ, đơn lẻ, mua lại, báo vào mùa', 'gd')
 mod(2, 2, 'Thanh toán', 'payment', 'FR7', 'Thanh toán, hoàn tiền, HĐĐT', 'gd')
 mod(3, 2, 'Bán sỉ', 'wholesale', 'FR6', 'RFQ, hợp đồng, giao 1 đợt', 'gd')
-mod(2, 3, 'Đánh giá', 'engagement', 'FR5.5, FR9.2', 'Đánh giá, điểm uy tín', 'sau')
-mod(3, 3, 'Giao hàng', 'fulfillment', 'FR8, FR9.1', 'Chuyến, vận đơn, khiếu nại', 'sau')
+mod(0, 3, 'Đánh giá', 'engagement', 'FR5.5, FR9.2', 'Đánh giá, điểm uy tín', 'sau')
+mod(1, 3, 'Giao hàng', 'fulfillment', 'FR8, FR9.1', 'Chuyến, vận đơn, khiếu nại', 'sau')
 mod(0, 4, 'Tài khoản', 'identity', 'FR1', 'OTP, eKYC, vai trò, đồng ý dữ liệu, 2FA', 'chung')
 mod(1, 4, 'Tệp', 'media', 'NFR1, NFR3', 'URL ký trước, kiểm tra tệp, WebP, hạn lưu', 'chung')
 mod(2, 4, 'Thông báo', 'notification', 'FR11', 'Web, đẩy, email theo kênh đăng ký', 'chung')
@@ -282,22 +282,21 @@ ym = R[2] + MH / 2
 s.arrow([(COLX[1] + CWD, ym), (COLX[2], ym)])
 s.arrow([(COLX[3], ym), (COLX[2] + CWD, ym)])
 # Bán lẻ -> giao hàng (dải dưới cùng giữa hàng 2 và 3)
-yr = R[3] - 54
-s.arrow([(cx(1), R[2] + MH), (cx(1), yr), (cx(3) - 40, yr), (cx(3) - 40, R[3])])
-s.label((cx(1) + cx(2) - 30) / 2, yr, 'tạo giao hàng khi đơn đã thanh toán', 190, pos='above')
+s.arrow([(cx(1), R[2] + MH), (cx(1), R[3])])
+s.label(cx(1) - 112, (R[2] + MH + R[3]) / 2, 'tạo giao hàng khi đơn đã thanh toán', 200)
 
 # Cột trái: TraceViet, dịch vụ AI, Redis, Google, Facebook
 LXc, LWc = 10, 148
-ext(s, LXc, R[1] + 10, LWc, 100, 'TraceViet', '', True, name_size=22)
-link(s, [(COLX[0], R[1] + 60), (LXc + LWc, R[1] + 60)], design=True)
-s.box(LXc, R[2] - 30, LWc, 236, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
+ext(s, LXc, R[1], LWc, 96, 'TraceViet', '', True, name_size=22)
+link(s, [(COLX[0], R[1] + 48), (LXc + LWc, R[1] + 48)], design=True)
+s.box(LXc, R[1] + 124, LWc, 316, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
-link(s, [(COLX[0], R[2] + 120), (LXc + LWc, R[2] + 120)])                     # thu mua <-> AI
-link(s, [(COLX[0], R[1] + 150), (LXc + 130, R[1] + 150), (LXc + 130, R[2] - 30)])  # catalog <-> AI
+link(s, [(COLX[0], R[2] + 100), (LXc + LWc, R[2] + 100)])                     # thu mua <-> AI
+link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
 s.box(LXc, R[3], LWc, MH + 10, [('Sự kiện', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
-link(s, [(LXc + 50, R[2] + 206), (LXc + 50, R[3])])                              # Redis <-> AI
+link(s, [(LXc + 50, R[1] + 440), (LXc + 50, R[3])])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', '', True, name_size=22)
 ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', '', True, name_size=22)
 link(s, [(COLX[0], R[4] + 47), (LXc + LWc, R[4] + 47)], design=True)
@@ -307,17 +306,21 @@ link(s, [(COLX[0], R[4] + 153), (LXc + LWc, R[4] + 153)], design=True)
 RX, RW = 1160, 170
 ext(s, RX, R[2] + 30, RW, 120, 'Chữ ký số', '', True, name_size=22)
 link(s, [(COLX[3] + CWD, R[2] + 90), (RX, R[2] + 90)], design=True)
-ytt, yhd = R[2] + MH + 4, R[2] + MH + 82
+ytt, yhd = R[2] + MH + 56, R[2] + MH + 160
 ext(s, RX, ytt, RW, 70, 'Cổng thanh toán', '', False, name_size=22, tag=False)
 ext(s, RX, yhd, RW, 70, 'HĐĐT (giả lập)', '', False, name_size=22, tag=False)
 link(s, [(cx(2) + 30, R[2] + MH), (cx(2) + 30, ytt + 35), (RX, ytt + 35)])
+s.label(1000, ytt + 35, 'lệnh thanh toán; webhook kết quả', 200, pos='above')
 link(s, [(cx(2) - 30, R[2] + MH), (cx(2) - 30, yhd + 35), (RX, yhd + 35)])
-ext(s, RX, R[3] + 40, RW, 110, '3PL (GHN)', '', False, name_size=22)
-link(s, [(COLX[3] + CWD, R[3] + 95), (RX, R[3] + 95)])
+s.label(1000, yhd + 35, 'dữ liệu hóa đơn; số HĐ, mã tra cứu', 200, pos='above')
+ext(s, RX, R[3] + 80, RW, 110, '3PL (GHN)', '', False, name_size=22)
+link(s, [(COLX[1] + CWD, R[3] + 95), (RX, R[3] + 95)])
+s.label((COLX[1] + CWD + RX) / 2, R[3] + 95, 'vận đơn; webhook trạng thái', 240, pos='above')
 for j, (nm, des) in enumerate([('Email', False), ('Web Push', False), ('SMS', True)]):
     yy = R[4] + j * 70
     ext(s, RX, yy, RW, 60, nm, '', des, name_size=22, tag=False)
     link(s, [(COLX[2] + CWD, yy + 30), (RX, yy + 30)], design=des, both=False)
+    s.label((COLX[2] + CWD + RX) / 2, yy + 30, ['thư, OTP', 'thông báo đẩy', 'tin nhắn'][j], 180, pos='above', color=GREY if des else '#33413a')
 
 # Hàng dưới: kho tệp dưới mô-đun Tệp, CSDL nối từ biên khung 13 mô-đun
 s.box(COLX[1] - 20, YB, CWD + 40, 92, [('Kho tệp', 23, 700, INK, False), ('[Container: MinIO]', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
