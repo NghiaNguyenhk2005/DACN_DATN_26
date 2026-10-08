@@ -287,24 +287,24 @@ s.label(cx(1) - 112, (R[2] + MH + R[3]) / 2, 'tạo giao hàng khi đơn đã th
 
 # Cột trái: TraceViet, dịch vụ AI, Redis, Google, Facebook
 LXc, LWc = 10, 148
-ext(s, LXc, R[1], LWc, 96, 'TraceViet', '', True, name_size=22)
+ext(s, LXc, R[1] - 24, LWc, 124, 'TraceViet', 'dữ liệu lô; mã truy xuất', True, name_size=22, tag=False)
 link(s, [(COLX[0], R[1] + 48), (LXc + LWc, R[1] + 48)], design=True)
 s.box(LXc, R[1] + 124, LWc, 272, [('Dịch vụ AI', 23, 700, INK, False), ('[Container: FastAPI]', 22, 400, '#1a4f86', False),
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1], pad=6)
 link(s, [(COLX[0], R[2] + 60), (LXc + LWc, R[2] + 60)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
-s.box(LXc, R[3] - 12, LWc, MH + 32, [('Sự kiện và cache', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
+s.box(LXc, R[3] - 18, LWc, MH + 48, [('Sự kiện và cache', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
       ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
-link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3] - 12)])                              # Redis <-> AI
-ext(s, LXc, R[4], LWc, 96, 'Google', '', True, name_size=22)
-ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', '', True, name_size=22)
+link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3] - 18)])                              # Redis <-> AI
+ext(s, LXc, R[4], LWc, 96, 'Google', 'đăng nhập; định danh', True, name_size=22, tag=False)
+ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', 'đăng nhập; định danh', True, name_size=22, tag=False)
 link(s, [(COLX[0], R[4] + 47), (LXc + LWc, R[4] + 47)], design=True)
 link(s, [(COLX[0], R[4] + 153), (LXc + LWc, R[4] + 153)], design=True)
 
 # Cột phải: chữ ký số, cổng thanh toán, HĐĐT, 3PL, email, Web Push, SMS
 RX, RW = 1160, 170
-ext(s, RX, R[2] + 30, RW, 120, 'Chữ ký số', '', True, name_size=22)
+ext(s, RX, R[2] + 30, RW, 120, 'Chữ ký số', 'hợp đồng; bản ký số', True, name_size=22, tag=False)
 link(s, [(COLX[3] + CWD, R[2] + 90), (RX, R[2] + 90)], design=True)
 ytt, yhd = R[2] + MH + 56, R[2] + MH + 160
 ext(s, RX, ytt, RW, 70, 'Cổng thanh toán', '', False, name_size=22, tag=False)
