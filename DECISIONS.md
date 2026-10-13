@@ -884,3 +884,34 @@ hình ở prototype.
 
 **Đánh đổi:** hai hệ thiết kế, FE phải nắm cả Tailwind lẫn API của antd; `@refinedev/antd` cần antd v5 trong khi
 antd đã lên v6, nâng bản phụ thuộc Refine.
+
+### Khung monorepo prototype và phiên bản phụ thuộc — 2026-10-13
+**Quyết định**
+- pnpm 9.15.9 (qua corepack, ghim ở `packageManager`) + Turborepo 2.11.5; workspace `apps/*`, `packages/*`, `report/`
+  đứng ngoài. Node 22 (`.nvmrc`, `engines >=22.12 <23`). Mọi gói trực tiếp ghim đúng bản (`save-exact`), chọn bản
+  đã phát hành ít nhất 2 tuần tính tới 13/10; gói do `shadcn init` tự kéo bản mới hơn thì hạ về bản đủ tuổi.
+- **TypeScript 5.9.3** cho cả workspace: openapi-typescript 7.13 (bản mới nhất) chỉ nhận TS `^5`, typescript-eslint
+  8.71 nhận `<6.1`. Không dùng TS 6/7.
+- **NestJS 11** (core 11.2.6, cli 11.0.24, swagger 11.4.7), không dùng 12: `@nestjs/cli` 12 mang sẵn TS `~6.0`,
+  `@nestjs/schematics` 12 đòi TS `>=6` và Node `^22.22.3` — xung đột với openapi-typescript và Node 22.19 đang cài.
+  Nhánh 11 vẫn được vá (11.2.7 ra 30/9); CLI 11 dùng đúng TS 5.9.3.
+- **React 19.2.8** cho cả shop và admin — bản create-next-app 16.3.6 ghim; Refine 5, `@refinedev/antd` 6, antd 5
+  nhận `^19`.
+- shop: Next 16.3.6, Tailwind 4.3.3, shadcn/ui style base-nova (Base UI 1.8.0; gói `cn` của shadcn thay clsx +
+  tailwind-merge). Font Be Vietnam Pro vì có bộ chữ tiếng Việt (Geist mặc định chỉ có `latin`).
+- admin: Vite 8.3.1, `@refinedev/core` 5.0.12 + `@refinedev/antd` 6.0.3, **antd 5.29.3** (gói Refine cần `^5.23`),
+  **react-router 7.18.4** (`@refinedev/react-router` 2 cần `^7`, chưa nhận 8), `@ant-design/v5-patch-for-react-19`
+  để antd 5 chạy đúng trên React 19 (mẫu Finefoods cũng dùng).
+- **ESLint 9.39.5**: eslint-config-next 16 kéo eslint-plugin-react, -import, -jsx-a11y, cả ba chỉ nhận tới `^9`.
+- contract: Swagger ở `/docs` đọc nguyên `openapi.yaml`, không sinh spec từ code. Kiểu sinh bằng openapi-typescript
+  không commit, CI sinh lại. Gói nội bộ build bằng tsup ra ESM + CJS vì Nest chạy CommonJS còn Next, Vite dùng ESM.
+- Kiểm spec bằng Redocly `recommended`; hạ `operation-summary` xuống cảnh báo (8 thao tác thiếu `summary`, chờ rà
+  ở M1), tắt `info-license` và `no-server-example.com` (dự án nội bộ, server cố ý là localhost).
+- Hợp đồng thêm `GET /health` (thao tác thứ 40, công khai) để CI, giám sát và FE kiểm API sống qua client có kiểu.
+- `turbo.json` đặt `agentGuidance: false`: turbo không tự ghi `AGENTS.md` vào gốc repo khi AI agent chạy lệnh.
+  `apps/shop/AGENTS.md` do `next dev` tự sinh thì giữ và commit, vì xóa đi Next lại tạo lại.
+
+**Đánh đổi:** ESLint 9 đã hết hỗ trợ (npm báo deprecated) — lên 10 khi eslint-config-next bỏ các plugin cũ. pnpm 9
+không có `minimumReleaseAge` (có từ pnpm 10.16), nên quy tắc 2 tuần chỉ áp cho gói trực tiếp, gói bắc cầu theo
+lockfile. Lên Nest 12 về sau phải kéo cả workspace lên TS 6, chờ openapi-typescript nhận TS 6. Bundle admin 1,2 MB
+(antd chưa tách chunk), chấp nhận cho ứng dụng nội bộ ở prototype.

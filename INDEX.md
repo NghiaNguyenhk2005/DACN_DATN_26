@@ -1,14 +1,15 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-13 (tách báo cáo LaTeX vào `report/`, gốc repo dành cho monorepo mã nguồn; lược đồ
-CSDL 13 schema, ERD và Phụ lục K sinh từ `schema.dbml`). Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
+Cập nhật lần cuối: 2026-10-13 (dựng khung monorepo prototype: `apps/shop`, `apps/admin`, `apps/api`,
+`packages/contract`, `packages/mock-data`, CI). Cùng ngày: tách báo cáo LaTeX vào `report/`; lược đồ CSDL 13 schema,
+ERD và Phụ lục K sinh từ `schema.dbml`. Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
 đầu–cuối: hai ứng dụng, sáu vai trò nội bộ, 13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML,
 sitemap; thân báo cáo 125 trang).
 
 ## Gốc dự án
 
 Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã nguồn; báo cáo nằm trọn trong `report/`; mã nguồn
-(monorepo pnpm + Turborepo: `apps/`, `packages/`) sẽ đặt thẳng ở gốc.
+(monorepo pnpm + Turborepo: `apps/`, `packages/`) đặt thẳng ở gốc — xem mục "Mã nguồn" bên dưới.
 
 | File | Vai trò |
 |---|---|
@@ -17,9 +18,26 @@ Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã 
 | `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/` |
-| `packages/contract/openapi.yaml` | Hợp đồng API của prototype (OpenAPI 3.1, 39 thao tác) — nguồn kiểu chung cho `apps/shop`, `apps/admin`, `apps/api`; tên trường bám `report/schema.dbml`, vai trò được gọi ghi ở `x-roles` |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/`; build của monorepo (`.turbo/`, `dist/`, `.next/`, kiểu sinh trong `packages/contract/src/generated/`) |
+| `.gitattributes` | `* text=auto eol=lf` — mọi file văn bản lưu LF kể cả trên Windows |
+| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml` | Gốc workspace pnpm (`apps/*`, `packages/*`; `report/` đứng ngoài). Ghim `packageManager: pnpm@9.15.9`, Node `>=22.12 <23`; script gốc gọi turbo: `dev`, `build`, `lint`, `lint:spec`, `generate`, `typecheck` |
+| `turbo.json` | Đồ thị tác vụ: `build`/`typecheck`/`lint` chờ `^build` và `generate`; `dev` chờ `^build` rồi chạy song song 3 app; `agentGuidance: false` để turbo không tự ghi `AGENTS.md` ở gốc |
+| `tsconfig.base.json`, `.nvmrc`, `.npmrc` | Cấu hình TypeScript chung (strict); Node 22; `save-exact` để `pnpm add` ghim đúng bản |
+| `.github/workflows/ci.yml` | CI trên push/PR vào `develop`, `main`: cài (cache pnpm, `--frozen-lockfile`) → `lint:spec` → `generate` → `lint` → `typecheck` → `build` |
 | `report/` | Toàn bộ báo cáo LaTeX — xem mục dưới |
+
+## Mã nguồn — `apps/`, `packages/`
+
+Cài và chạy từ gốc repo: `corepack enable` → `pnpm i` → `pnpm dev` (chạy cả 3 app). Chạy riêng một gói:
+`pnpm --filter @farmery/<tên> <script>`. Phiên bản và lý do chọn: `DECISIONS.md`, mục "Khung monorepo prototype".
+
+| Thư mục | Gói | Vai trò | Cổng / lệnh |
+|---|---|---|---|
+| `apps/shop/` | `@farmery/shop` | Ứng dụng mua hàng (gồm khu nhà cung cấp): Next.js 16 App Router + Tailwind 4 + shadcn/ui (`components.json`, style base-nova). `src/app/` trang, `src/components/layout/` đầu/chân trang, `src/components/ui/` thành phần shadcn (`pnpm dlx shadcn@4.21.0 add <tên>`), `src/lib/api.ts` client gọi API (`NEXT_PUBLIC_API_URL`) | 3000 · `typecheck` chạy `next typegen` trước `tsc` |
+| `apps/admin/` | `@farmery/admin` | Ứng dụng nội bộ: Vite + React + Refine 5 + Ant Design 5 (`@refinedev/antd`), cấu trúc theo mẫu Finefoods. `src/App.tsx` khai resource và route; `src/providers/` `authProvider`, `dataProvider` (stub, chờ nối API); `src/theme.ts` token antd; `src/pages/<resource>/` màn hình; `src/lib/api.ts` client (`VITE_API_URL`) | 5173 |
+| `apps/api/` | `@farmery/api` | NestJS 11, dữ liệu trong bộ nhớ (`src/store/mock-store.ts`, nạp từ `@farmery/mock-data`). Swagger UI ở `/docs` phục vụ nguyên `openapi.yaml` (JSON ở `/docs-json`); `GET /health`; `POST /dev/reset` (204, tắt khi `NODE_ENV=production`). CORS theo `CORS_ORIGINS` (mặc định 3000, 5173) | 4000 (`PORT`) · `dev` = `nest start --watch` |
+| `packages/contract/` | `@farmery/contract` | `openapi.yaml` — hợp đồng API (OpenAPI 3.1, 33 đường dẫn, 40 thao tác), tên trường bám `report/schema.dbml`, vai trò ở `x-roles`. `lint:spec` (Redocly, cấu hình `redocly.yaml`); `generate` sinh `src/generated/schema.ts` (openapi-typescript, không commit); `build` (tsup, ESM + CJS). Export `paths`, `components`, `Schema<K>`, `OrderStatus`, `createApiClient` (openapi-fetch, gắn Bearer token) | sửa spec xong chạy `pnpm generate` |
+| `packages/mock-data/` | `@farmery/mock-data` | Dữ liệu giả gõ theo `Schema<K>` của contract; `createSeed()` trả bản sao để API nạp lại khi `/dev/reset` | — |
 
 ## `report/` — Báo cáo
 
