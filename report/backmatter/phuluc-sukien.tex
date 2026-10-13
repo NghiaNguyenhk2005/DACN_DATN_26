@@ -38,6 +38,7 @@ lập, một sự kiện bị gửi lại nhiều lần chỉ có tác dụng m�
 \texttt{ProcurementReceived} & \texttt{procurement} & \texttt{retail}, \texttt{payment}, \texttt{notification} & Gửi thông báo có hàng cho người đã đăng ký; ghi khoản phải trả nhà cung cấp; báo nhà cung cấp kết quả nghiệm thu \\
 \texttt{OrderPlaced} & \texttt{retail} & \texttt{notification} & Xác nhận đơn cho khách \\
 \texttt{OrderCancelled} & \texttt{retail} & \texttt{inventory}, \texttt{payment}, \texttt{notification} & Nhả giữ chỗ; hoàn tiền nếu đã trả; báo khách \\
+\texttt{RfqUpdated} & \texttt{wholesale} & \texttt{notification} & Báo bên còn lại khi RFQ có lượt báo giá hoặc trao đổi mới \\
 \texttt{ContractConcluded} & \texttt{wholesale} & \texttt{payment}, \texttt{notification} & Lập yêu cầu thanh toán của đơn sỉ; báo hai bên hợp đồng đã giao kết \\
 \texttt{PaymentSucceeded} & \texttt{payment} & \texttt{retail}, \texttt{wholesale}, \texttt{notification} & Chuyển đơn sang ``Đã thanh toán''; báo người mua \\
 \texttt{Refunded} & \texttt{payment} & \texttt{retail}, \texttt{fulfillment}, \texttt{inventory}, \texttt{notification} & Cập nhật đơn và yêu cầu đổi trả; ghi bút toán hủy khi hoàn tiền không cần trả hàng; báo khách \\

@@ -2,7 +2,7 @@
 # Sinh 3 sơ đồ C4 (ngữ cảnh, container, mô-đun) và hình luồng một đơn lẻ vào tools/design/
 import io, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from svgkit import Svg, page
+from svgkit import Svg, page, BLK
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'design')
 W = 1340
@@ -221,8 +221,6 @@ io.open(os.path.join(OUT, 'c4-container.html'), 'w', encoding='utf-8').write(pag
 
 # ======================= MỨC 3: MÔ-ĐUN (COMPONENT) =======================
 COLX = [232, 458, 684, 910]; CWD = 196
-BLK = {'chung': ('#eaf7ef', '#1f8a4c'), 'cung': ('#eef4fb', '#1a5fa8'), 'gd': ('#fdf1dc', '#c98a1a'),
-       'sau': ('#fbe9e9', '#c23b3b'), 'vh': ('#f1eef8', '#6b4fa0')}
 MH = 176
 R = {1: 226}
 R[2] = R[1] + MH + 140

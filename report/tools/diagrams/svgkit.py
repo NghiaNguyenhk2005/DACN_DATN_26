@@ -4,6 +4,9 @@ import html
 
 FONT = "'Segoe UI','Noto Sans',Arial,sans-serif"
 MONO = "Consolas,'Courier New',monospace"
+# màu năm khối chức năng (nền, viền), dùng chung cho C4, ERD, sơ đồ tuần tự, sơ đồ lớp
+BLK = {'chung': ('#eaf7ef', '#1f8a4c'), 'cung': ('#eef4fb', '#1a5fa8'), 'gd': ('#fdf1dc', '#c98a1a'),
+       'sau': ('#fbe9e9', '#c23b3b'), 'vh': ('#f1eef8', '#6b4fa0')}
 CW = 0.50  # bề rộng trung bình một ký tự / cỡ chữ (ước lượng cho Segoe UI tiếng Việt)
 
 

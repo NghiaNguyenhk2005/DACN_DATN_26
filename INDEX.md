@@ -47,7 +47,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `chuong2-kienthuc-nentang.tex` | 2.1 Đặc điểm hàng nông sản · 2.2 Bối cảnh chính sách (**bảng văn bản → nghĩa vụ → tác động thiết kế** `tab:phaply`) · 2.3 Lý thuyết nền (B2B/B2C/B2B2C, 1P/3P) · 2.4 Ứng dụng AI (tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá) | Xong (20 trang); còn TODO trích dẫn mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · 3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này · 3.4 Kết chương | Xong (7 trang); còn TODO 3.1 |
 | `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (hai luồng 3P/1P, dòng thu và **điều kiện hòa vốn 1P**, 10 quy trình, dòng tồn, **giao hàng ba chặng**, **đổi trả–khiếu nại kèm cam kết thời gian**, chính sách pháp lý) · 4.2 Mô tả hệ thống (5 khối, **hai ứng dụng**, sơ đồ ngữ cảnh C4, nhóm người dùng + **6 vai trò nội bộ**, persona, customer journey) · 4.3 Yêu cầu (user story → FR1–FR13 có quy ước *(chỉ thiết kế)*, 5 mã đã rút; NFR1–NFR9; MoSCoW 11 Must + 2 Should) | Xong (46 trang) |
-| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; sequence/class tạm hoãn; API, UI/UX, test case còn TODO |
+| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · **lược đồ tuần tự** (2 ở thân: đặt hàng, hợp đồng sỉ; 2 ở Phụ lục W) · **lược đồ lớp miền** (17 lớp, `fig:class-mien`) · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; API, UI/UX, test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | §6.1.1 danh sách công nghệ; còn lại TODO |
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
@@ -71,7 +71,8 @@ thay vì đánh lại chữ cái.
 | `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho AI |
 | `phuluc-chitiet.tex` | **P** số liệu OCOP · **Q** hành trình khách hàng và 13 nguồn giao dịch kho · **R** 8 sơ đồ hoạt động · **S** 5 sơ đồ use case chi tiết, đặc tả UC-B2, UC-B5, UC-D4, UC-C7 · **T** sitemap cấp 3 theo hai ứng dụng kèm mã FR |
 | `phuluc-chinhsach.tex` | **Phụ lục U** — bộ 10 chính sách (`tab:bochinhsach`) và toàn văn U.1 kiểm hàng, U.2 đổi trả–hoàn tiền, U.3 bảo mật |
-| `phuluc-sukien.tex` | **Phụ lục V** — danh mục 16 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
+| `phuluc-sukien.tex` | **Phụ lục V** — danh mục 17 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
+| `phuluc-tuantu.tex` | **Phụ lục W** — lược đồ tuần tự đăng lô–duyệt–QR (`fig:seq-duyet-lo`) và đánh giá (`fig:seq-danh-gia`) |
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
@@ -94,12 +95,14 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_c4.py` | Sinh `c4-ngu-canh`, `c4-container`, `c4-module`, `luong-don-le` (luồng một đơn lẻ) |
 | `diagrams/gen_usecase.py` | Sinh 6 sơ đồ use case: `usecase-overview`, `usecase-nha-ban`, `usecase-nguoi-mua-le`, `usecase-nguoi-mua-si`, `usecase-noibo-nguonhang`, `usecase-noibo-vanhanh` |
 | `diagrams/gen_sitemap.py` | Sinh `sitemap-tong-quan` (hai cây theo hai ứng dụng) |
+| `diagrams/gen_sequence.py` | Sinh 4 lược đồ tuần tự `seq-*` (lớp `Seq`: lane theo mô-đun, gọi / trả về / sự kiện, khung `alt`/`loop` lồng được) |
+| `diagrams/gen_class.py` | Sinh `class-mien` (17 lớp miền, vị trí đặt tay theo lưới, bội số hai đầu, hợp thành, tham chiếu xuyên mô-đun nét đứt) |
 | `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh `erd-nen-tang`, `erd-giao-dich` (vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
 Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python tools/diagrams/gen_c4.py` (hoặc `gen_usecase.py`, `gen_sitemap.py`,
-`gen_activity.py`) → `npm run shot` → build lại PDF. Không sửa trực tiếp PNG.
+`gen_activity.py`, `gen_sequence.py`, `gen_class.py`, `gen_erd.py`) → `npm run shot` → build lại PDF. Không sửa trực tiếp PNG.
 
 **Cỡ chữ trong hình:** ảnh luôn bị ép về `\textwidth` = 16 cm và bị chặn chiều cao bởi `adjustbox`.
 - HTML (bề rộng thân 1420px): cỡ chữ in ra (pt) = `font_px × 16 / 1420 × 28,45`; tối thiểu 22px ≈ 7pt.
@@ -124,7 +127,7 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
 `fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:erd`, `fig:erd2` (Ch.5).
+`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, `fig:erd`, `fig:erd2` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
 **Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
 `fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).

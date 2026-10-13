@@ -368,7 +368,7 @@ Chọn khối đơn không có nghĩa là đóng cửa khả năng tách về sa
 
 Biện pháp bảo đảm ba ràng buộc trên với chi phí thấp nhất là cấp cho \textbf{mỗi mô-đun một schema riêng trong cùng một cơ sở dữ liệu}. Hệ thống vẫn chạy trên một cơ sở dữ liệu duy nhất nên giao dịch vẫn hoạt động bình thường, nhưng đường biên dữ liệu hiện ra rõ ràng và mọi vi phạm ràng buộc RB3 đều lộ ra ngay khi đọc mã.
 
-Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 13 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Hình chỉ vẽ các lời gọi trực tiếp; phụ thuộc còn lại đi qua sự kiện.
+Hình~\ref{fig:c4-module} áp ba ràng buộc này lên 13 mô-đun của Farmery, gom theo năm khối chức năng tại mục~\ref{sec:luongvanhanh}. Mỗi mô-đun ghi tên schema của nó; ba mô-đun thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn, nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Hình chỉ vẽ các lời gọi trực tiếp chính của luồng giao dịch; đủ các lời gọi ở cột ``Gọi tới'' của Bảng~\ref{tab:module-io}, phụ thuộc còn lại đi qua sự kiện.
 
 \begin{figure}[p]
 \centering
@@ -406,11 +406,11 @@ Nguồn cung & \texttt{supplier} (FR2, FR3) & Hồ sơ, chứng nhận, loại n
 & \texttt{inventory} (FR13.2--13.6) & Lệnh giữ chỗ, trừ tồn, nhập tồn, đóng gói, thu hồi $\rightarrow$ dòng tồn, sổ nhập xuất & \texttt{StockLow}, \texttt{BatchRecalled} & --- \\
 Giao dịch & \texttt{procurement} (FR13.1--13.2) & Chào hàng, đơn thu mua, kết quả nghiệm thu $\rightarrow$ đơn thu mua đã xác nhận, phần đạt nhập dòng tồn của Farmery & \texttt{ProcurementReceived} & \texttt{inventory}; dịch vụ AI \\
 & \texttt{retail} (FR5) & Giỏ, đơn lẻ, mua lại, đăng ký báo vào mùa $\rightarrow$ đơn kèm dòng thời gian tám trạng thái & \texttt{OrderPlaced}, \texttt{OrderCancelled} & \texttt{inventory}, \texttt{payment}, \texttt{fulfillment} \\
-& \texttt{wholesale} (FR6) & RFQ, báo giá, xác nhận giao kết $\rightarrow$ hợp đồng kèm mã băm, đơn sỉ giao một đợt & \texttt{ContractConcluded} & \texttt{inventory}, \texttt{payment}; ký số \emph{(chỉ thiết kế)} \\
+& \texttt{wholesale} (FR6) & RFQ, báo giá, xác nhận giao kết $\rightarrow$ hợp đồng kèm mã băm, đơn sỉ giao một đợt & \texttt{RfqUpdated}, \texttt{ContractConcluded} & \texttt{identity} (OTP), \texttt{media}, \texttt{inventory}, \texttt{payment}; ký số \emph{(chỉ thiết kế)} \\
 & \texttt{payment} (FR7) & Lệnh thanh toán, hoàn tiền; webhook của cổng $\rightarrow$ trạng thái thanh toán, hóa đơn giả lập, đối soát sỉ & \texttt{PaymentSucceeded}, \texttt{Refunded} & Cổng thanh toán, dịch vụ hóa đơn điện tử \\
 Sau bán & \texttt{fulfillment} (FR8, FR9.1) & Đơn đã thanh toán, chuyến trung chuyển, webhook 3PL, yêu cầu đổi trả kèm trao đổi $\rightarrow$ vận đơn, trạng thái giao, quyết định khiếu nại & \texttt{ShipmentStatusChanged}, \texttt{CaseResolved} & Đơn vị vận chuyển \\
-& \texttt{engagement} (FR5.5, FR9.2) & Đánh giá sau đơn hoàn tất, phản hồi $\rightarrow$ điểm đánh giá, điểm uy tín nhà cung cấp & \texttt{ReviewPosted} & --- \\
-Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu hồi lô; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt, khung giờ $\rightarrow$ hàng đợi duyệt, nhật ký thao tác, báo cáo & --- & \texttt{catalog}, \texttt{supplier}, \texttt{inventory} \\
+& \texttt{engagement} (FR5.5, FR9.2) & Đánh giá sau đơn hoàn tất, phản hồi $\rightarrow$ điểm đánh giá, điểm uy tín nhà cung cấp & \texttt{ReviewPosted} & \texttt{retail} (kiểm đơn đã hoàn tất) \\
+Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu hồi lô; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt, khung giờ $\rightarrow$ hàng đợi duyệt, nhật ký thao tác, báo cáo & --- & \texttt{catalog}, \texttt{supplier}, \texttt{inventory}, \texttt{engagement} \\
 \end{longtable}
 \endgroup
 
@@ -478,10 +478,52 @@ Sitemap thể hiện tổ chức các trang theo cấp bậc: mỗi nút là m�
 
 \subsection{Thiết kế lược đồ tuần tự}
 \label{subsec:tuantu}
-% TODO: sequence diagram cho các luồng chính: đặt hàng B2C, RFQ -- hợp đồng -- ký quỹ B2B, đăng và kiểm duyệt sản phẩm, gửi và kiểm duyệt đánh giá.
+
+Lược đồ tuần tự đi sâu hơn hình luồng một đơn bán lẻ ở mục~\ref{sec:kientruc}: vẫn ở mức mô-đun, nhưng tách lời gọi khỏi giá trị trả về và vẽ các nhánh rẽ bằng khung \texttt{alt} (nhánh loại trừ nhau), \texttt{loop} (lặp). Mỗi đường đời là một mô-đun của Bảng~\ref{tab:module-io}, một người dùng hoặc một hệ thống bên ngoài; sự kiện qua Redis vẽ nét đứt màu tím như ở Phụ lục~V. Bốn luồng được chọn là bốn chỗ có nhiều mô-đun phối hợp nhất:
+\begin{itemize}
+    \item \textbf{Đặt hàng và thanh toán đơn lẻ} (Hình~\ref{fig:seq-dat-hang}): giữ chỗ trước, trừ tồn sau, với ba nhánh trả trước thành công, COD đủ điều kiện, và thất bại hoặc quá 15 phút.
+    \item \textbf{Yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ} (Hình~\ref{fig:seq-hop-dong-si}): vòng thương lượng trong kênh của RFQ, sinh hợp đồng có mã băm, mỗi bên xác nhận bằng OTP.
+    \item \textbf{Đăng lô, kiểm duyệt và sinh mã QR}, \textbf{gửi và kiểm duyệt đánh giá}: hai luồng còn lại đặt tại Phụ lục~W (Hình~\ref{fig:seq-duyet-lo}, Hình~\ref{fig:seq-danh-gia}).
+\end{itemize}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/seq-dat-hang.png}
+\end{adjustbox}
+\caption{Lược đồ tuần tự đặt hàng và thanh toán đơn lẻ}
+\label{fig:seq-dat-hang}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/seq-hop-dong-si.png}
+\end{adjustbox}
+\caption{Lược đồ tuần tự từ yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ}
+\label{fig:seq-hop-dong-si}
+\end{figure}
+
+Hai điểm thiết kế hiện rõ qua các lược đồ này. Thứ nhất, \textbf{mọi lời gọi cần kết quả ngay đều nằm trong cùng giao dịch}: giữ chỗ, trừ tồn, kiểm OTP; còn thông báo, cập nhật dòng thời gian, tính lại vector đều đi qua sự kiện, nên một mô-đun nhận chậm không làm chậm người dùng. Thứ hai, \textbf{kết quả từ bên ngoài luôn đi vào qua webhook và được xử lý một lần}: cổng thanh toán gửi lại cùng một kết quả nhiều lần thì trạng thái đơn không đổi thêm.
 
 \subsection{Thiết kế lược đồ lớp}
-% TODO: class diagram cho các lớp miền chính, bám theo các nhóm thực thể tại mục 5.3.5.
+\label{subsec:lop}
+
+Hình~\ref{fig:class-mien} trình bày các lớp miền của trục bán lẻ và phần nguồn cung đứng trước nó --- đúng phạm vi hiện thực đã chốt tại mục~\ref{sec:phamvi}. Mỗi lớp ứng với một bảng cùng tên trong lược đồ cơ sở dữ liệu (mục~\ref{sec:csdl}) và thuộc đúng một mô-đun; hình chỉ giữ các thuộc tính quyết định hành vi, đủ cột ở Phụ lục~K. Ba quy ước của hình:
+\begin{itemize}
+    \item \textbf{Phương thức là thao tác nghiệp vụ}, không phải hàm đọc ghi trường: đơn hàng chỉ đổi trạng thái qua \texttt{advance}, \texttt{cancel}, \texttt{complete}; dòng tồn chỉ thay đổi qua \texttt{reserve} rồi \texttt{consume} hoặc \texttt{release} của giữ chỗ. Nhờ đó mọi ràng buộc --- không bán vượt, không nhảy cóc trạng thái --- nằm ở một chỗ.
+    \item \textbf{Quan hệ hợp thành} (hình thoi đặc) khi lớp con không tồn tại tách khỏi lớp chứa: dòng hàng thuộc đơn, nhật ký canh tác thuộc lô, giữ chỗ và dòng sổ nhập xuất thuộc dòng tồn.
+    \item \textbf{Liên kết xuyên mô-đun vẽ nét đứt}: hai lớp ở hai mô-đun chỉ giữ định danh của nhau (ràng buộc RB3), không giữ tham chiếu đối tượng --- ví dụ \texttt{OrderItem} lưu \texttt{holdingId} và \texttt{batchId}, không trỏ trực tiếp vào đối tượng dòng tồn.
+\end{itemize}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/class-mien.png}
+\end{adjustbox}
+\caption{Lược đồ lớp miền của trục bán lẻ và nguồn cung}
+\label{fig:class-mien}
+\end{figure}
 
 \subsection{Thiết kế cơ sở dữ liệu}
 \label{sec:csdl}

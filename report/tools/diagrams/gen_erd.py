@@ -2,7 +2,7 @@
 # Đọc schema.dbml, sinh 2 hình ERD (tools/design/erd-*.html) và Phụ lục K (backmatter/phuluc-csdl.tex)
 import io, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from svgkit import Svg, page, MONO, FONT
+from svgkit import Svg, page, BLK
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
 OUT = os.path.join(ROOT, 'tools', 'design')
@@ -117,9 +117,7 @@ BW, BH = 300, 58          # hộp bảng; tên bảng mono 22px ≈ 7pt
 PX, PY = 336, 116         # bước lưới
 X0, Y0 = 16, 54
 INK = '#16241e'
-BLOCK = {  # khối chức năng -> màu (nền cụm, viền)
-    'chung': ('#eef4fb', '#1a5fa8'), 'cung': ('#eef7f0', '#1f8a4c'), 'gd': ('#fdf4e8', '#b86a12'),
-    'sau': ('#f3eff9', '#6b4fa0'), 'vh': ('#f2f3f2', '#4d5c55')}
+BLOCK = BLK
 SCHEMA_BLOCK = {'identity': 'chung', 'notification': 'chung', 'media': 'chung', 'supplier': 'cung',
                 'catalog': 'cung', 'inventory': 'cung', 'procurement': 'gd', 'retail': 'gd', 'wholesale': 'gd',
                 'payment': 'gd', 'fulfillment': 'sau', 'engagement': 'sau', 'operations': 'vh'}

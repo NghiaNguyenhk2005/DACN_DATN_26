@@ -836,3 +836,20 @@ SỬA 2026-10-08 (cùng ngày, sau góp ý của user "activity chưa đẹp, vi
 **Đánh đổi:** một commit rename lớn — ai còn thay đổi báo cáo chưa gộp phải rebase; diff qua mốc này cần
 `git diff -M`. Chọn cùng một repo thay vì tách repo vì `MVP.md`, `DECISIONS.md` là nguồn chung của cả báo cáo
 lẫn mã, và mục 5.2 đã chốt monorepo.
+
+### Lược đồ tuần tự và lược đồ lớp (mục 5.3.3, 5.3.4) — 2026-10-13
+**Quyết định** (user chọn phương án đề xuất ở cả hai câu hỏi)
+- Lược đồ tuần tự ở **mức mô-đun**, cùng đường đời và màu với hình luồng một đơn lẻ; hình đó giữ nguyên ở 5.3.1.
+  Ký hiệu UML: gọi nét liền đầu đặc, trả về nét đứt đầu mở, sự kiện nét đứt tím, khung `alt`/`loop`.
+- Bốn luồng: đặt hàng + thanh toán (ba nhánh: trả trước, COD, thất bại/quá 15 phút) và RFQ → hợp đồng → xác nhận
+  OTP ở thân; đăng/duyệt lô–QR và đánh giá ở Phụ lục W mới (theo lệ nối chữ cái cuối, không đánh lại).
+- Lược đồ lớp chỉ phủ trục bán lẻ + nguồn cung: 17 lớp, mỗi lớp ứng một bảng của `schema.dbml`; phương thức là
+  thao tác nghiệp vụ (`advance`, `reserve`/`consume`/`release`); liên kết xuyên mô-đun nét đứt (chỉ giữ định danh).
+- Hệ quả lên văn bản: thêm sự kiện `RfqUpdated` (wholesale → notification) vào Phụ lục V; cột "Gọi tới" của
+  `tab:module-io` thêm `wholesale` → `identity` (OTP), `media`; `engagement` → `retail`; `operations` →
+  `engagement`. Hình C4 mức 3 không vẽ thêm các lời gọi này — câu dẫn đổi thành "chỉ vẽ các lời gọi trực tiếp
+  chính", bảng là nguồn đầy đủ.
+- Bảng màu năm khối dời vào `svgkit.BLK`, dùng chung cho C4, ERD, tuần tự, lớp (ERD trước đó tô lệch màu C4).
+
+**Đánh đổi:** vị trí lớp/bảng đặt tay theo lưới nên thêm lớp phải sửa tọa độ trong bộ sinh; đổi lại kiểm soát
+được chỗ giao cắt và giữ mọi hình ≤ 21,1 cm cao, chữ ≥ 7pt.
