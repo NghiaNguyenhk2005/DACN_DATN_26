@@ -37,3 +37,13 @@ __pycache__/
 report/_archive-old-tex/
 report/prism-uploads/
 report/chapters/_incoming/
+
+# Monorepo mã nguồn (pnpm + Turborepo)
+.turbo/
+dist/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+.env
+.env*.local
+packages/contract/src/generated/
