@@ -154,8 +154,10 @@ paths:
     post:
       tags: [Auth]
       operationId: requestOtp
-      summary: Gửi OTP tới số điện thoại hoặc email
-      description: Prototype không gửi thật; mã luôn là `123456` và được trả trong `devCode`.
+      summary: Gửi OTP tới email
+      description: |
+        OTP chỉ gửi qua email; gửi qua SMS chỉ thiết kế. Prototype (`DEMO_MODE`) không gửi thật,
+        mã luôn là `123456` và được trả trong `devCode`.
       security: []
       requestBody:
         required: true
@@ -163,9 +165,9 @@ paths:
           application/json:
             schema:
               type: object
-              required: [identifier]
+              required: [email]
               properties:
-                identifier: { type: string, description: Số điện thoại hoặc email, examples: ['0901234567'] }
+                email: { type: string, format: email, examples: ['khachle@example.com'] }
       responses:
         '200':
           description: Đã tạo phiên OTP
@@ -177,7 +179,7 @@ paths:
                 properties:
                   challengeId: { type: string }
                   expiresAt: { type: string, format: date-time }
-                  devCode: { type: string, description: Chỉ có ở prototype, examples: ['123456'] }
+                  devCode: { type: string, description: Chỉ có khi bật DEMO_MODE, examples: ['123456'] }
         '404': { $ref: '#/components/responses/NotFound' }
 
   /auth/login:
