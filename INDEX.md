@@ -17,7 +17,8 @@ Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã 
 | `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`, `slide-pack/`, `review/` |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/` |
+| `packages/contract/openapi.yaml` | Hợp đồng API của prototype (OpenAPI 3.1, 39 thao tác) — nguồn kiểu chung cho `apps/shop`, `apps/admin`, `apps/api`; tên trường bám `report/schema.dbml`, vai trò được gọi ghi ở `x-roles` |
 | `report/` | Toàn bộ báo cáo LaTeX — xem mục dưới |
 
 ## `report/` — Báo cáo
