@@ -38,6 +38,8 @@ tags:
   - name: Operations
     description: Vận hành, kho, quản trị
   - name: Media
+  - name: System
+    description: Theo dõi tình trạng dịch vụ
   - name: Dev
 security:
   - bearerAuth: []
@@ -827,6 +829,21 @@ paths:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
 
+  # ---------------------------------------------------------------- System
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Kiểm tra API còn sống
+      description: Dùng cho CI, giám sát và để FE báo khi API chưa chạy. Không chạm dữ liệu.
+      security: []
+      responses:
+        '200':
+          description: API đang chạy
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+
   # ---------------------------------------------------------------- Dev
   /dev/reset:
     post:
@@ -957,6 +974,12 @@ components:
       required: [nextCursor]
       properties:
         nextCursor: { type: [string, 'null'] }
+    Health:
+      type: object
+      required: [status, uptimeSeconds]
+      properties:
+        status: { type: string, enum: [ok] }
+        uptimeSeconds: { type: number, minimum: 0 }
     MediaFile:
       type: object
       required: [id, url]
