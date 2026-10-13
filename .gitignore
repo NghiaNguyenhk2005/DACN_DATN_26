@@ -32,3 +32,8 @@ review/
 # Cache Python sinh ra khi chạy tools/diagrams/
 __pycache__/
 
+
+# Tài liệu tham khảo cũ trong report/ — giữ ở máy, không theo dõi
+report/_archive-old-tex/
+report/prism-uploads/
+report/chapters/_incoming/
