@@ -25,6 +25,9 @@ const pages = [
   'c4-ngu-canh.html',
   'c4-container.html',
   'c4-module.html',
+  // ERD hai phần; HTML sinh từ tools/diagrams/gen_erd.py (đọc schema.dbml)
+  'erd-nen-tang.html',
+  'erd-giao-dich.html',
   'luong-don-le.html',
   'sitemap-tong-quan.html',
   // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
@@ -45,7 +48,9 @@ const pages = [
   const browser = await chromium.launch();
   const page = await browser.newPage({ deviceScaleFactor: 2 });
 
-  for (const file of pages) {
+  // node tools/render-comparison-tables.js a.html b.html — chỉ chụp các trang được nêu
+  const only = process.argv.slice(2);
+  for (const file of only.length ? only : pages) {
     const srcPath = path.join(designDir, file);
     const outPath = path.join(outDir, file.replace('.html', '.png'));
     await page.goto('file://' + srcPath.replace(/\\/g, '/'));

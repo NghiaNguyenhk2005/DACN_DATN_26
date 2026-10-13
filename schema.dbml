@@ -1,22 +1,291 @@
-Enum account_status {
+// Lược đồ CSDL Farmery — 13 schema, trùng tên và ranh giới với 13 mô-đun (Ch.5, Bảng tab:module-io).
+// Khóa ngoại (ref) chỉ nối bảng trong cùng schema. Tham chiếu sang schema khác ghi trong note cột theo dạng
+// '→ schema.bảng', lưu bằng định danh, không tạo khóa ngoại vật lý (ràng buộc RB3).
+// Bảng/trường "(chỉ thiết kế)" có trong lược đồ nhưng bản hiện thực không dùng.
+// Nguồn sinh Phụ lục K và ERD: python tools/diagrams/gen_erd.py
+
+Project farmery {
+  database_type: 'PostgreSQL'
+  Note: 'Một cơ sở dữ liệu, 13 schema. Tiện ích: pgvector, unaccent, pg_trgm.'
+}
+
+
+// ==============================================================================
+// NỀN TẢNG CHUNG — identity (FR1)
+// ==============================================================================
+
+Enum identity.account_status {
+  pending
   active
   locked
-  pending
+  closed
 }
 
-Enum seller_status {
-  pending
-  active
-  suspended
+Enum identity.role_code {
+  buyer_retail
+  buyer_wholesale
+  seller
+  staff_moderation
+  staff_operations
+  staff_sourcing
+  staff_warehouse
+  staff_support
+  platform_owner
 }
 
-Enum verification_status {
+Enum identity.verification_status {
   pending
   verified
   rejected
 }
 
-Enum cert_type {
+Enum identity.otp_purpose {
+  register
+  reset_password
+  sensitive_action
+  contract_confirm
+}
+
+Enum identity.data_request_type {
+  export
+  rectify
+  erase
+}
+
+Enum identity.request_status {
+  received
+  processing
+  completed
+  rejected
+}
+
+Table identity.users {
+  id bigint [pk, increment]
+  full_name varchar [not null]
+  email varchar [unique, note: 'Một trong email hoặc số điện thoại là bắt buộc (FR1.1)']
+  phone varchar [unique, note: 'Kênh nhận OTP (FR1.2)']
+  email_verified_at timestamp
+  phone_verified_at timestamp
+  password_hash varchar [note: 'Argon2id (NFR3.3); trống khi chỉ đăng nhập bằng mạng xã hội']
+  oauth_provider varchar [note: 'Google, Facebook (FR1.1, chỉ thiết kế)']
+  oauth_subject varchar [note: 'Định danh tài khoản mạng xã hội (chỉ thiết kế)']
+  totp_secret_enc varchar [note: 'Khóa xác thực hai lớp, mã hóa; bắt buộc với vai trò nội bộ (NFR3.6)']
+  status identity.account_status [not null, default: 'pending']
+  locked_until timestamp [note: 'Khóa tạm 30 phút sau 5 lần nhập sai OTP']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Tài khoản dùng chung cho mọi nhóm người dùng; vai trò nằm ở user_roles'
+}
+
+Table identity.user_roles {
+  user_id bigint [ref: > identity.users.id]
+  role identity.role_code
+  granted_by bigint [ref: > identity.users.id, note: 'Quản trị viên hệ thống gán vai trò nội bộ (FR10.6)']
+  granted_at timestamp [not null, default: `now()`]
+  revoked_at timestamp
+
+  indexes {
+    (user_id, role) [pk]
+  }
+
+  Note: 'Một tài khoản có thể giữ nhiều vai trò; mỗi vai trò là một tập quyền độc lập (NFR2.1)'
+}
+
+Table identity.otp_challenges {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > identity.users.id]
+  purpose identity.otp_purpose [not null]
+  channel varchar [not null, note: 'email hoặc sms']
+  code_hash varchar [not null, note: 'Chỉ lưu mã băm của OTP']
+  attempts int [not null, default: 0]
+  expires_at timestamp [not null]
+  consumed_at timestamp
+
+  Note: 'Mã OTP dùng một lần (FR1.2), cả cho xác nhận giao kết hợp đồng sỉ (FR6.3)'
+}
+
+Table identity.addresses {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > identity.users.id]
+  label varchar [note: 'Nhà riêng, công ty...']
+  recipient_name varchar [not null]
+  phone varchar [not null]
+  address_line varchar [not null]
+  ward varchar [not null]
+  province varchar [not null]
+  is_default boolean [not null, default: false]
+
+  Note: 'Sổ địa chỉ giao nhận (FR1.5)'
+}
+
+Table identity.businesses {
+  id bigint [pk, increment]
+  owner_user_id bigint [not null, unique, ref: > identity.users.id]
+  company_name varchar [not null]
+  tax_code varchar [not null, unique, note: 'Mã số thuế, dùng để xác minh (FR1.3)']
+  license_file_id bigint [not null, note: '→ media.media_files | Giấy phép kinh doanh']
+  verification_status identity.verification_status [not null, default: 'pending']
+  verified_by bigint [ref: > identity.users.id]
+  verified_at timestamp
+
+  Note: 'Hồ sơ doanh nghiệp thu mua — khách sỉ (FR1.3)'
+}
+
+Table identity.ekyc_documents {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > identity.users.id]
+  document_type varchar [not null, note: 'Căn cước công dân; mã số thuế với hợp tác xã']
+  front_file_id bigint [not null, note: '→ media.media_files | Ảnh mặt trước, mức truy cập riêng tư']
+  back_file_id bigint [note: '→ media.media_files']
+  selfie_file_id bigint [not null, note: '→ media.media_files | Ảnh chân dung để đối chiếu']
+  status identity.verification_status [not null, default: 'pending']
+  reviewed_by bigint [ref: > identity.users.id]
+  reviewed_at timestamp
+  rejection_reason text
+
+  Note: 'Giấy tờ eKYC của nhà cung cấp (FR1.4); không lưu số giấy tờ dạng rõ'
+}
+
+Table identity.consent_records {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > identity.users.id]
+  policy_type varchar [not null, note: 'terms hoặc privacy']
+  policy_version varchar [not null]
+  accepted_at timestamp [not null, default: `now()`]
+  ip_address varchar
+
+  Note: 'Mỗi lần đồng ý điều khoản và chính sách bảo mật; chỉ thêm, không sửa (FR1.6, NFR8.2)'
+}
+
+Table identity.data_requests {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > identity.users.id]
+  request_type identity.data_request_type [not null]
+  status identity.request_status [not null, default: 'received']
+  requested_at timestamp [not null, default: `now()`]
+  due_at timestamp [not null]
+  retained_note text [note: 'Phần dữ liệu giao dịch phải giữ theo thời hạn lưu bắt buộc (NFR8.5)']
+  handled_by bigint [ref: > identity.users.id]
+  completed_at timestamp
+
+  Note: 'Yêu cầu xem, tải về, sửa, xóa dữ liệu cá nhân (FR1.6)'
+}
+
+
+// ==============================================================================
+// NỀN TẢNG CHUNG — notification (FR11)
+// ==============================================================================
+
+Enum notification.channel {
+  in_app
+  push
+  email
+  sms [note: 'Chỉ thiết kế']
+}
+
+Table notification.notifications {
+  id bigint [pk, increment]
+  user_id bigint [not null, note: '→ identity.users']
+  event_type varchar [not null, note: 'Tên sự kiện nguồn: OrderPlaced, ShipmentStatusChanged, CertExpired...']
+  title varchar [not null]
+  body text [not null]
+  link_target varchar [note: 'Đường dẫn trang đích trong ứng dụng']
+  read_at timestamp
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Thông báo trên giao diện; bản gửi qua kênh khác ghi ở deliveries'
+}
+
+Table notification.deliveries {
+  id bigint [pk, increment]
+  notification_id bigint [not null, ref: > notification.notifications.id]
+  channel notification.channel [not null]
+  status varchar [not null, note: 'queued, sent, failed']
+  attempts int [not null, default: 0]
+  sent_at timestamp
+
+  Note: 'Mỗi lần gửi qua kênh đẩy, email (FR11.1)'
+}
+
+Table notification.preferences {
+  user_id bigint [note: '→ identity.users']
+  event_group varchar [note: 'Nhóm sự kiện: đơn hàng, khiếu nại, có hàng, RFQ...']
+  channel notification.channel
+  enabled boolean [not null, default: true]
+
+  indexes {
+    (user_id, event_group, channel) [pk]
+  }
+
+  Note: 'Kênh người dùng chọn cho từng nhóm thông báo'
+}
+
+Table notification.push_subscriptions {
+  id bigint [pk, increment]
+  user_id bigint [not null, note: '→ identity.users']
+  endpoint varchar [not null, unique]
+  p256dh varchar [not null]
+  auth_secret varchar [not null]
+  user_agent varchar
+  created_at timestamp [not null, default: `now()`]
+  revoked_at timestamp
+
+  Note: 'Đăng ký Web Push theo chuẩn VAPID của từng trình duyệt'
+}
+
+
+// ==============================================================================
+// NỀN TẢNG CHUNG — media
+// ==============================================================================
+
+Enum media.access_level {
+  public
+  private
+}
+
+Enum media.file_status {
+  pending_upload
+  ready
+  rejected
+  deleted
+}
+
+Table media.media_files {
+  id bigint [pk, increment]
+  owner_user_id bigint [not null, note: '→ identity.users']
+  bucket varchar [not null]
+  object_key varchar [not null, unique]
+  mime_type varchar [not null, note: 'Kiểm tra kiểu thật của tệp, không tin phần mở rộng']
+  size_bytes bigint [not null]
+  sha256 varchar [not null]
+  access_level media.access_level [not null, note: 'public: ảnh sản phẩm; private: eKYC, hợp đồng, minh chứng']
+  status media.file_status [not null, default: 'pending_upload']
+  variants jsonb [note: 'Các cỡ WebP đã sinh cho ảnh công khai (NFR1.1)']
+  retain_until timestamp [note: 'Hạn lưu; quá hạn thì xóa đối tượng']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Mọi tệp trong kho tệp; bảng khác tham chiếu bằng định danh, không lưu đường dẫn'
+}
+
+
+// ==============================================================================
+// NGUỒN CUNG — supplier (FR2, FR3)
+// ==============================================================================
+
+Enum supplier.supplier_status {
+  pending
+  active
+  suspended
+  banned
+}
+
+Enum supplier.seller_tax_type {
+  self_producer [note: 'Tự sản xuất nông sản']
+  household_business [note: 'Hộ, cá nhân kinh doanh']
+  enterprise_coop [note: 'Doanh nghiệp, hợp tác xã']
+}
+
+Enum supplier.cert_type {
   VietGAP
   GlobalGAP
   organic
@@ -24,545 +293,1105 @@ Enum cert_type {
   HACCP
 }
 
-Enum product_status {
-  active
-  hidden
+Enum supplier.approval_status {
   pending
-}
-
-Enum voucher_scope {
-  platform
-  shop
-}
-
-Enum order_status {
-  pending_payment
-  confirmed
-  processing
-  completed
-  cancelled
-  refunded
-}
-
-Enum payment_method {
-  cod
-  bank_transfer
-  vietqr
-  e_wallet
-}
-
-Enum payment_status {
-  pending
-  completed
-  failed
-  refunded
-}
-
-Enum holding_type {
-  standard
-  escrow
-}
-
-Enum escrow_status {
-  none
-  holding
-  released
-  refunded
-}
-
-Enum rfq_status {
-  new
-  negotiating
-  accepted
+  approved
   rejected
-  closed
+  expired
 }
 
-Enum contract_status {
-  draft
-  awaiting_confirmation
-  concluded
-  cancelled
-}
-
-Enum installment_status {
-  pending
-  delivering
-  delivered
-  failed
-}
-
-Enum debt_status {
-  not_due
-  overdue
-  settled
-}
-
-Enum review_status {
-  public
-  pending
-  hidden
-}
-
-Enum case_type {
-  complaint
-  violation
-}
-
-Enum case_status {
-  pending_review
-  under_investigation
-  resolved_refund
-  resolved_rejected
-  closed
-}
-
-Enum notification_type {
-  order_status
-  rfq_contract
-  cert_expiry
-  system_announcement
-}
-
-Enum notification_channel {
-  in_app
-  email
-  sms
-}
-
-Enum ai_insight_type {
-  recommendation
-  price_forecast
-  anomaly_alert
-}
-
-
-// ==============================================================================
-// NHÓM 1: TÀI KHOẢN, GIAN HÀNG & PHÂN QUYỀN (FR1)
-// ==============================================================================
-
-Table users {
+Table supplier.suppliers {
   id bigint [pk, increment]
-  full_name varchar [not null]
-  email varchar [unique]
-  phone varchar [unique, note: 'Kênh nhận OTP (FR1.2)']
-  password_hash varchar [note: 'Bcrypt/Argon2 (NFR3.3)']
-  status account_status [not null, default: 'active']
-  created_at timestamp [not null, default: `now()`]
-
-  note: 'Tài khoản dùng chung cho người mua và người bán'
-}
-
-Table addresses {
-  id bigint [pk, increment]
-  user_id bigint [not null, ref: > users.id]
-  recipient_name varchar [not null]
-  phone varchar [not null]
-  address_line varchar [not null]
-  ward varchar
-  district varchar
-  province varchar [not null]
-  is_default boolean [not null, default: false]
-
-  note: 'Sổ địa chỉ giao/nhận hàng (FR1.6)'
-}
-
-Table businesses {
-  id bigint [pk, increment]
-  owner_user_id bigint [not null, unique, ref: > users.id]
-  company_name varchar [not null]
-  tax_code varchar [unique, not null]
-  business_license_file varchar [not null, note: 'File scan GPKD (FR1.3)']
-  verification_status verification_status [not null, default: 'pending']
-
-  note: 'Hồ sơ doanh nghiệp thu mua B2B'
-}
-
-Table business_members {
-  id bigint [pk, increment]
-  business_id bigint [not null, ref: > businesses.id]
-  user_id bigint [not null, ref: > users.id]
-  internal_role varchar [not null, note: 'owner, buyer, accountant, viewer (FR1.4)']
-
-  indexes {
-    (business_id, user_id) [unique]
-  }
-
-  note: 'Phân quyền nội bộ RBAC trong tài khoản doanh nghiệp'
-}
-
-Table shops {
-  id bigint [pk, increment]
-  owner_user_id bigint [not null, unique, ref: > users.id]
-  name varchar [not null]
+  user_id bigint [not null, unique, note: '→ identity.users | Tài khoản vai trò seller']
+  display_name varchar [not null]
   description text
-  growing_region varchar [note: 'Khu vực canh tác công bố']
-  status seller_status [not null, default: 'pending', note: 'eKYC seller (FR1.5)']
+  avatar_file_id bigint [note: '→ media.media_files']
+  growing_region varchar [not null, note: 'Vùng trồng công bố (FR2.1)']
+  growing_area_code varchar [note: 'Mã số vùng trồng; hệ thống kiểm định dạng']
+  area_checked_by bigint [note: '→ identity.users | Kiểm duyệt viên đối chiếu với cổng công bố của Bộ']
+  tax_type supplier.seller_tax_type [not null, note: 'Loại người bán cho nghĩa vụ thuế (FR2.4)']
+  tax_code varchar [note: 'Bắt buộc với doanh nghiệp, hợp tác xã']
+  tax_confirmed_by bigint [note: '→ identity.users | Xác nhận cùng lúc với hồ sơ']
+  status supplier.supplier_status [not null, default: 'pending']
   created_at timestamp [not null, default: `now()`]
 
-  note: 'Gian hàng của nông dân/HTX'
+  Note: 'Hồ sơ nhà cung cấp — trang nguồn gốc công khai, không phải gian hàng (FR2.1)'
 }
 
-
-// ==============================================================================
-// NHÓM 2: DANH MỤC, CHỨNG NHẬN, SẢN PHẨM & TRUY XUẤT NGUỒN GỐC (FR2 - FR4)
-// ==============================================================================
-
-Table categories {
+Table supplier.certifications {
   id bigint [pk, increment]
-  parent_id bigint [ref: > categories.id, note: 'Tự tham chiếu, danh mục đa cấp (FR4.4)']
-  name varchar [not null, unique]
-}
-
-Table certifications {
-  id bigint [pk, increment]
-  shop_id bigint [not null, ref: > shops.id]
-  type cert_type [not null]
+  supplier_id bigint [not null, ref: > supplier.suppliers.id]
+  type supplier.cert_type [not null]
   certificate_number varchar [not null]
   issuing_authority varchar [not null]
-  evidence_file varchar [not null]
+  evidence_file_id bigint [not null, note: '→ media.media_files']
   issued_date date [not null]
-  expiry_date date [not null, note: 'Theo dõi hạn hiệu lực (FR3.3)']
-  approval_status verification_status [not null, default: 'pending', note: 'Kiểm duyệt bởi admin (FR3.2)']
-  reviewer_id bigint [ref: > users.id]
+  expiry_date date [not null, note: 'Nhắc gia hạn trước 30 ngày, quá hạn thì ẩn nhãn (FR3.3)']
+  approval_status supplier.approval_status [not null, default: 'pending']
+  reviewed_by bigint [note: '→ identity.users']
+  reviewed_at timestamp
+  supersedes_id bigint [ref: > supplier.certifications.id, note: 'Bản đính chính trỏ về bản cũ']
 
-  note: 'Chứng nhận chất lượng; append-only sau khi duyệt (NFR9.1)'
+  Note: 'Chứng nhận chất lượng (FR3.1–FR3.3); bản đã duyệt không sửa trực tiếp (NFR9.1)'
 }
 
-Table products {
+Table supplier.support_assignments {
   id bigint [pk, increment]
-  shop_id bigint [not null, ref: > shops.id]
-  category_id bigint [not null, ref: > categories.id]
+  supplier_id bigint [not null, ref: > supplier.suppliers.id]
+  staff_user_id bigint [not null, note: '→ identity.users | Vai trò staff_support']
+  assigned_at timestamp [not null, default: `now()`]
+  revoked_at timestamp
+
+  Note: 'Nhân viên hỗ trợ vùng chỉ truy cập dữ liệu của nhà cung cấp được phân công'
+}
+
+
+// ==============================================================================
+// NGUỒN CUNG — catalog (FR4, FR12.1, FR12.3)
+// ==============================================================================
+
+Enum catalog.product_group {
+  leafy_veg [note: 'Rau lá']
+  root_fruit [note: 'Củ quả']
+  dry_goods [note: 'Hàng khô']
+}
+
+Enum catalog.review_status {
+  draft
+  pending_review
+  approved
+  rejected
+  hidden
+}
+
+Table catalog.categories {
+  id bigint [pk, increment]
+  parent_id bigint [ref: > catalog.categories.id, note: 'Cây danh mục đa cấp (FR4.4)']
+  name varchar [not null]
+  is_leaf boolean [not null, default: false, note: 'Sản phẩm chỉ gắn vào danh mục lá (FR4.6)']
+  product_group catalog.product_group [note: 'Quyết định thời hạn khiếu nại của danh mục lá']
+  allowed_units varchar[] [note: 'Đơn vị tính hợp lệ']
+  required_fields jsonb [note: 'Trường bắt buộc theo danh mục: ngày thu hoạch, hạn bảo quản, vùng trồng']
+
+  Note: 'Cây danh mục nông sản đóng, do quản trị viên hệ thống định nghĩa (FR10.6)'
+}
+
+Table catalog.products {
+  id bigint [pk, increment]
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  category_id bigint [not null, ref: > catalog.categories.id]
   name varchar [not null]
   description text
-  image_urls json
-  unit varchar [not null, note: 'kg, tấn, thùng... (FR4.1)']
-  retail_price decimal(14,2) [not null]
-  status product_status [not null, default: 'pending']
+  unit varchar [not null, note: 'Thuộc allowed_units của danh mục']
+  image_ids bigint[] [note: '→ media.media_files | Ảnh sản phẩm thực tế']
+  reference_retail_price decimal(14,2) [note: 'Giá bán lẻ tham khảo do nhà cung cấp khai (FR4.1); giá bán thật ở retail.listings']
+  tax_group varchar [note: 'Nhóm thuế của sản phẩm (FR2.4)']
+  seasonality varchar [note: 'Khoảng tháng vào mùa; đặc trưng cho gợi ý']
+  search_tsv tsvector [note: 'Tìm toàn văn, bỏ dấu bằng unaccent (FR4.5)']
+  status catalog.review_status [not null, default: 'draft']
+  reviewed_by bigint [note: '→ identity.users']
   created_at timestamp [not null, default: `now()`]
   updated_at timestamp
 
-  note: 'Thông tin đăng bán; tồn kho thực tế theo dõi ở cấp lô hàng (batches)'
+  Note: 'Sản phẩm do nhà cung cấp đăng (FR4.1); đổi giá trên 20% thì chờ duyệt lại'
 }
 
-Table wholesale_price_tiers {
+Table catalog.batches {
   id bigint [pk, increment]
-  product_id bigint [not null, ref: > products.id]
-  min_quantity decimal(12,2) [not null]
-  unit_price decimal(14,2) [not null]
-
-  indexes {
-    (product_id, min_quantity) [unique]
-  }
-
-  note: 'Bậc giá theo số lượng mua sỉ (FR4.1, FR6.4)'
-}
-
-Table batches {
-  id bigint [pk, increment]
-  product_id bigint [not null, ref: > products.id]
-  batch_code varchar [unique, not null]
+  product_id bigint [not null, ref: > catalog.products.id]
+  batch_code varchar [not null, unique]
   harvest_date date [not null]
-  expiry_date date [not null]
-  stock_quantity decimal(12,2) [not null, default: 0, note: 'Tồn kho của lô, không âm (NFR1.2)']
-  qr_code varchar [unique, not null, note: 'Mã QR truy xuất nguồn gốc (FR4.2)']
+  best_before date [not null, note: 'Cơ sở xuất trước hết hạn trước (FEFO)']
+  declared_quantity decimal(12,2) [not null, note: 'Sản lượng nhà cung cấp khai; tồn thật nằm ở inventory.stock_holdings']
+  qr_token varchar [not null, unique, note: 'Mã trong QR, dẫn tới trang truy xuất công khai (FR4.2)']
+  status catalog.review_status [not null, default: 'pending_review']
+  approved_by bigint [note: '→ identity.users']
+  approved_at timestamp
+  recalled_at timestamp [note: 'Có giá trị khi lô bị thu hồi; trang truy xuất hiện cảnh báo (FR13.6)']
+
+  Note: 'Lô hàng — đơn vị truy xuất nguồn gốc'
+}
+
+Table catalog.farming_logs {
+  id bigint [pk, increment]
+  batch_id bigint [not null, ref: > catalog.batches.id]
+  activity_date date [not null]
+  activity varchar [not null, note: 'Gieo trồng, chăm sóc, xử lý, thu hoạch']
+  description text
+  image_ids bigint[] [note: '→ media.media_files']
+  published_at timestamp [note: 'Đã công khai thì không sửa trực tiếp (NFR9.1)']
+  supersedes_id bigint [ref: > catalog.farming_logs.id, note: 'Bản đính chính trỏ về bản cũ']
+  entered_by bigint [not null, note: '→ identity.users | Khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập hộ']
   created_at timestamp [not null, default: `now()`]
 
-  note: 'Lô hàng - đơn vị cốt lõi quản lý tồn kho và truy xuất nguồn gốc'
+  Note: 'Nhật ký canh tác theo lô (FR4.2)'
 }
 
-Table farming_logs {
-  id bigint [pk, increment]
-  batch_id bigint [not null, ref: > batches.id]
-  activity_date date [not null]
-  activity varchar [not null, note: 'Gieo trồng, bón phân, thu hoạch...']
-  description text
-  images json
-  is_published boolean [not null, default: false, note: 'Công khai qua QR; true -> không sửa trực tiếp (NFR9.1)']
-
-  note: 'Nhật ký canh tác theo lô (FR4.2)'
-}
-
-
-// ==============================================================================
-// NHÓM 3: GIỎ HÀNG & KHUYẾN MÃI
-// ==============================================================================
-
-Table carts {
-  id bigint [pk, increment]
-  user_id bigint [not null, unique, ref: > users.id]
+Table catalog.product_embeddings {
+  product_id bigint [pk, ref: - catalog.products.id]
+  embedding vector(1024) [not null, note: 'Vector BGE-M3 của tên, mô tả, danh mục, vùng trồng; chỉ mục HNSW']
+  model_version varchar [not null]
   updated_at timestamp [not null, default: `now()`]
+
+  Note: 'Ghi khi nhận sự kiện ProductEmbedded; dùng cho tìm kiếm ngữ nghĩa (FR12.3) và sản phẩm tương tự (FR12.1)'
 }
 
-Table cart_items {
+
+// ==============================================================================
+// NGUỒN CUNG — inventory (FR4.3, FR13.2–FR13.6)
+// ==============================================================================
+
+Enum inventory.owner_type {
+  supplier
+  farmery
+}
+
+Enum inventory.location_type {
+  supplier_site
+  farmery_warehouse
+}
+
+Enum inventory.movement_type {
+  open_from_batch [note: 'Mở dòng tồn khi lô được duyệt']
+  ownership_transfer [note: 'Thu mua: phần đạt sang dòng tồn của Farmery']
+  return_in [note: 'Hàng hoàn về do từ chối nhận, giao thất bại, trả sau khiếu nại']
+  reserve
+  release
+  retail_out
+  wholesale_out
+  write_off [note: 'Hủy do hỏng, hết hạn, hao hụt']
+  packing [note: 'Đóng gói một bước thành đơn vị bán lẻ']
+  refund_offset [note: 'Bút toán hủy khi hoàn tiền không cần trả hàng; không đổi số tồn']
+  recall_lock
+  stocktake_adjust [note: 'Chỉ thiết kế']
+}
+
+Enum inventory.reservation_status {
+  active
+  consumed
+  released
+  expired
+}
+
+Table inventory.stock_holdings {
   id bigint [pk, increment]
-  cart_id bigint [not null, ref: > carts.id]
-  product_id bigint [not null, ref: > products.id]
+  batch_id bigint [not null, note: '→ catalog.batches']
+  owner_type inventory.owner_type [not null]
+  owner_supplier_id bigint [note: '→ supplier.suppliers | Bắt buộc khi owner_type = supplier']
+  location_type inventory.location_type [not null]
+  warehouse_code varchar [note: 'Mã kho sơ chế khi hàng ở kho Farmery']
+  sale_unit varchar [not null, note: 'kg, gói 500 g...']
+  qty_on_hand decimal(12,2) [not null, default: 0, note: 'Khóa dòng (SELECT … FOR UPDATE) khi giữ chỗ, trừ tồn (NFR1.2)']
+  qty_reserved decimal(12,2) [not null, default: 0, note: 'Ràng buộc 0 ≤ qty_reserved ≤ qty_on_hand']
+  is_locked boolean [not null, default: false, note: 'Bị khóa do thu hồi lô']
+  updated_at timestamp [not null, default: `now()`]
+
+  Note: 'Dòng tồn: hàng của một lô theo chủ sở hữu và nơi chứa (FR13.3)'
+}
+
+Table inventory.stock_movements {
+  id bigint [pk, increment]
+  holding_id bigint [not null, ref: > inventory.stock_holdings.id]
+  movement_type inventory.movement_type [not null]
+  quantity decimal(12,2) [not null, note: 'Dương là tăng, âm là giảm']
+  counter_holding_id bigint [ref: > inventory.stock_holdings.id, note: 'Dòng đối ứng khi đổi chủ, đóng gói']
+  source_type varchar [not null, note: 'retail_order, wholesale_order, goods_receipt, return_request, recall...']
+  source_id bigint [not null]
+  performed_by bigint [note: '→ identity.users | Trống khi hệ thống tự thực hiện']
+  reason text
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Sổ nhập xuất; chỉ thêm, không sửa; mọi thay đổi số tồn phải có một dòng ở đây (FR13.3)'
+}
+
+Table inventory.reservations {
+  id bigint [pk, increment]
+  holding_id bigint [not null, ref: > inventory.stock_holdings.id]
+  source_type varchar [not null, note: 'retail_order, contract, procurement_order']
+  source_id bigint [not null]
   quantity decimal(12,2) [not null]
+  status inventory.reservation_status [not null, default: 'active']
+  expires_at timestamp [note: '15 phút với đơn lẻ chờ thanh toán']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Giữ chỗ trên dòng tồn; consumed khi trừ tồn, released khi hủy (FR4.3)'
+}
+
+Table inventory.packing_runs {
+  id bigint [pk, increment]
+  source_holding_id bigint [not null, ref: > inventory.stock_holdings.id, note: 'Hàng rời đã nghiệm thu']
+  output_holding_id bigint [not null, ref: > inventory.stock_holdings.id, note: 'Đơn vị bán lẻ đã dán tem']
+  input_qty decimal(12,2) [not null]
+  output_units int [not null]
+  shrinkage_qty decimal(12,2) [not null, default: 0]
+  label_data jsonb [not null, note: 'Nội dung nhãn bắt buộc in trên tem kèm QR của lô']
+  packed_by bigint [not null, note: '→ identity.users']
+  packed_at timestamp [not null, default: `now()`]
+
+  Note: 'Đóng gói một bước (FR13.4); sinh hai dòng packing trong sổ nhập xuất'
+}
+
+Table inventory.batch_recalls {
+  id bigint [pk, increment]
+  batch_id bigint [not null, unique, note: '→ catalog.batches']
+  reason text [not null]
+  initiated_by bigint [not null, note: '→ identity.users | Nhân viên vận hành']
+  affected_orders jsonb [note: 'Danh sách đơn đã bán từ lô, truy ngược từ sổ nhập xuất']
+  initiated_at timestamp [not null, default: `now()`]
+  closed_at timestamp
+
+  Note: 'Thu hồi lô (FR13.6); phát sự kiện BatchRecalled'
+}
+
+
+// ==============================================================================
+// GIAO DỊCH — procurement (FR13.1–FR13.2, FR12.2)
+// ==============================================================================
+
+Enum procurement.offer_status {
+  open
+  accepted
+  withdrawn
+  expired
+}
+
+Enum procurement.po_status {
+  draft
+  sent
+  supplier_confirmed
+  receiving
+  completed
+  cancelled
+  expired
+}
+
+Enum procurement.inspection_result {
+  accepted
+  partially_accepted
+  rejected
+}
+
+Table procurement.supplier_offers {
+  id bigint [pk, increment]
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  batch_id bigint [not null, note: '→ catalog.batches']
+  offered_qty decimal(12,2) [not null]
+  unit_price decimal(14,2) [not null, note: 'Giá chào']
+  expected_harvest date [not null]
+  status procurement.offer_status [not null, default: 'open']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Chào hàng lô sắp thu hoạch'
+}
+
+Table procurement.purchase_orders {
+  id bigint [pk, increment]
+  offer_id bigint [ref: > procurement.supplier_offers.id]
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  batch_id bigint [not null, note: '→ catalog.batches']
+  ordered_qty decimal(12,2) [not null]
+  unit_price decimal(14,2) [not null]
+  delivery_due date [not null]
+  status procurement.po_status [not null, default: 'draft']
+  confirm_deadline timestamp [not null, note: 'Quá hạn chưa xác nhận thì đơn tự hủy']
+  supplier_confirmed_at timestamp [note: 'Từ đây sản lượng được giữ chỗ (FR13.1)']
+  created_by bigint [not null, note: '→ identity.users | Nhân viên thu mua']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Đơn thu mua; chỉ có hiệu lực khi nhà cung cấp xác nhận (FR13.1)'
+}
+
+Table procurement.goods_receipts {
+  id bigint [pk, increment]
+  purchase_order_id bigint [not null, ref: > procurement.purchase_orders.id]
+  accepted_qty decimal(12,2) [not null]
+  rejected_qty decimal(12,2) [not null, default: 0]
+  shrinkage_qty decimal(12,2) [not null, default: 0]
+  adjusted_unit_price decimal(14,2) [note: 'Giá điều chỉnh đã thống nhất lại khi chất lượng lệch']
+  result procurement.inspection_result [not null]
+  note text
+  image_ids bigint[] [note: '→ media.media_files | Ảnh nghiệm thu']
+  target_holding_id bigint [note: '→ inventory.stock_holdings | Dòng tồn Farmery nhận phần đạt']
+  inspected_by bigint [not null, note: '→ identity.users | Nhân viên kho']
+  inspected_at timestamp [not null, default: `now()`]
+
+  Note: 'Nghiệm thu tại kho sơ chế (FR13.2); phát ProcurementReceived'
+}
+
+Table procurement.price_forecasts {
+  id bigint [pk, increment]
+  category_id bigint [not null, note: '→ catalog.categories']
+  region varchar [not null]
+  week_start date [not null]
+  predicted_price decimal(14,2) [not null]
+  lower_bound decimal(14,2) [not null]
+  upper_bound decimal(14,2) [not null]
+  model_name varchar [not null, note: 'SARIMA, Prophet hoặc gradient boosting']
+  generated_at timestamp [not null, default: `now()`]
 
   indexes {
-    (cart_id, product_id) [unique]
+    (category_id, region, week_start, model_name) [unique]
   }
+
+  Note: 'Kết quả dự báo giá do dịch vụ AI trả về, hiển thị ở màn hình lập đơn thu mua (FR12.2)'
 }
 
-Table vouchers {
+
+// ==============================================================================
+// GIAO DỊCH — retail (FR5)
+// ==============================================================================
+
+Enum retail.listing_status {
+  draft
+  active
+  paused
+  sold_out
+}
+
+Enum retail.order_status {
+  placed [note: 'Đã đặt']
+  paid [note: 'Đã thanh toán, hoặc COD đủ điều kiện']
+  packing [note: 'Đang đóng gói']
+  on_trip [note: 'Lên chuyến trung chuyển']
+  handed_to_3pl [note: '3PL đã nhận']
+  delivering
+  delivered
+  completed
+  disputed [note: 'Khiếu nại']
+  cancelled
+  returned [note: 'Hoàn hàng']
+}
+
+Enum retail.payment_option {
+  prepaid
+  cod
+}
+
+Enum retail.restock_kind {
+  back_in_stock
+  in_season
+}
+
+Table retail.listings {
+  id bigint [pk, increment]
+  product_id bigint [not null, note: '→ catalog.products']
+  sale_unit varchar [not null, note: 'Trùng sale_unit của dòng tồn đã đóng gói']
+  unit_price decimal(14,2) [not null, note: 'Do nhân viên thu mua đặt theo giá vốn, hao hụt và giá thị trường']
+  status retail.listing_status [not null, default: 'draft']
+  priced_by bigint [not null, note: '→ identity.users']
+  updated_at timestamp [not null, default: `now()`]
+
+  Note: 'Tin bán lẻ trên gian hàng của Farmery — bên bán duy nhất ở luồng này (FR5.1)'
+}
+
+Table retail.vouchers {
   id bigint [pk, increment]
   code varchar [not null, unique]
-  scope voucher_scope [not null]
-  shop_id bigint [ref: > shops.id, note: 'Null khi áp dụng toàn sàn']
   discount_percent decimal(5,2) [not null]
   max_discount decimal(14,2)
   min_order_amount decimal(14,2) [not null, default: 0]
   usage_limit int
-  expires_at timestamp
+  used_count int [not null, default: 0]
+  starts_at timestamp [not null]
+  expires_at timestamp [not null]
 
-  note: 'Mã giảm giá cấp sàn hoặc gian hàng (FR5.3)'
+  Note: 'Mã giảm giá của gian hàng bán lẻ (FR5.3)'
 }
 
-
-// ==============================================================================
-// NHÓM 4: ĐƠN HÀNG & THANH TOÁN B2C (FR5, FR7)
-// ==============================================================================
-
-Table orders {
+Table retail.carts {
   id bigint [pk, increment]
-  buyer_user_id bigint [not null, ref: > users.id]
-  shop_id bigint [not null, ref: > shops.id]
-  address_id bigint [not null, ref: > addresses.id, note: 'Địa chỉ giao tại thời điểm đặt (FR1.6)']
-  voucher_id bigint [ref: > vouchers.id]
-  status order_status [not null, default: 'pending_payment']
+  user_id bigint [not null, unique, note: '→ identity.users']
+  updated_at timestamp [not null, default: `now()`]
+}
+
+Table retail.cart_items {
+  cart_id bigint [ref: > retail.carts.id]
+  listing_id bigint [ref: > retail.listings.id]
+  quantity decimal(12,2) [not null, note: 'Không vượt lượng còn lại của dòng tồn']
+
+  indexes {
+    (cart_id, listing_id) [pk]
+  }
+
+  Note: 'FR5.1; mua lại tạo các dòng này từ đơn cũ (FR5.6)'
+}
+
+Table retail.orders {
+  id bigint [pk, increment]
+  order_code varchar [not null, unique]
+  buyer_user_id bigint [not null, note: '→ identity.users']
+  address_snapshot jsonb [not null, note: 'Chụp địa chỉ lúc đặt']
+  delivery_date date [not null]
+  delivery_slot varchar [not null, note: 'Khung giờ khách chọn (FR5.2)']
+  payment_option retail.payment_option [not null]
+  voucher_id bigint [ref: > retail.vouchers.id]
   subtotal decimal(14,2) [not null]
   discount_amount decimal(14,2) [not null, default: 0]
-  shipping_fee decimal(14,2) [not null, default: 0]
+  tax_amount decimal(14,2) [not null, default: 0]
+  shipping_fee decimal(14,2) [not null, note: 'Cước 3PL cộng phần bù chặng giữa (FR8.2)']
   total_amount decimal(14,2) [not null]
-  created_at timestamp [not null, default: `now()`]
+  status retail.order_status [not null, default: 'placed']
+  reserve_expires_at timestamp [note: 'Đơn trả trước quá 15 phút chưa thanh toán thì tự hủy']
+  cod_refused_at timestamp [note: 'Khách từ chối nhận COD không vì chất lượng; mất quyền COD']
+  reorder_of bigint [ref: > retail.orders.id, note: 'Đơn gốc khi mua lại (FR5.6)']
+  placed_at timestamp [not null, default: `now()`]
+  completed_at timestamp
 
-  note: 'Một đơn thuộc một gian hàng; một lần checkout nhiều gian hàng tạo nhiều đơn (FR5.2)'
+  Note: 'Đơn lẻ; COD chỉ mở khi dưới ngưỡng và tài khoản chưa có cod_refused_at (FR7.1)'
 }
 
-Table order_items {
+Table retail.order_items {
   id bigint [pk, increment]
-  order_id bigint [not null, ref: > orders.id]
-  batch_id bigint [not null, ref: > batches.id, note: 'Gắn đúng lô xuất hàng để truy vết nguồn gốc (FR4.3)']
-  product_name varchar [not null, note: 'Ảnh chụp tên sản phẩm tại thời điểm mua']
+  order_id bigint [not null, ref: > retail.orders.id]
+  listing_id bigint [not null, ref: > retail.listings.id]
+  holding_id bigint [not null, note: '→ inventory.stock_holdings | Dòng tồn được giữ chỗ theo FEFO']
+  batch_id bigint [not null, note: '→ catalog.batches | Giữ liên kết truy xuất, phục vụ thu hồi lô']
+  product_name varchar [not null, note: 'Chụp tên lúc mua']
   quantity decimal(12,2) [not null]
-  unit_price decimal(14,2) [not null, note: 'Ảnh chụp giá tại thời điểm mua']
+  unit_price decimal(14,2) [not null, note: 'Chụp giá lúc mua']
   line_total decimal(14,2) [not null]
-
-  note: 'Chi tiết đơn hàng; lưu ảnh chụp để giữ lịch sử khi sản phẩm đổi tên/giá'
 }
 
-Table payments {
+Table retail.order_status_events {
   id bigint [pk, increment]
-  order_id bigint [unique, ref: > orders.id, note: 'Thanh toán đơn B2C']
-  contract_id bigint [unique, ref: > contracts.id, note: 'Thanh toán gộp hợp đồng B2B']
-  installment_id bigint [unique, ref: > delivery_installments.id, note: 'Thanh toán theo đợt giao B2B']
-  method payment_method [not null]
-  status payment_status [not null, default: 'pending']
-  amount decimal(14,2) [not null]
-  holding_type holding_type [not null, default: 'standard']
-  escrow_status escrow_status [not null, default: 'none', note: 'Giữ tiền trung gian (FR7.4)']
-  gateway_transaction_id varchar
-  paid_at timestamp
-  released_at timestamp [note: 'Thời điểm giải ngân escrow cho người bán']
+  order_id bigint [not null, ref: > retail.orders.id]
+  to_status retail.order_status [not null]
+  source varchar [not null, note: 'system, staff, payment_webhook, carrier_webhook']
+  actor_user_id bigint [note: '→ identity.users']
+  note text
+  occurred_at timestamp [not null, default: `now()`]
+
+  Note: 'Mốc trên dòng thời gian tám trạng thái (FR5.4); mỗi mốc phát một thông báo'
+}
+
+Table retail.restock_subscriptions {
+  id bigint [pk, increment]
+  user_id bigint [not null, note: '→ identity.users']
+  product_id bigint [not null, note: '→ catalog.products']
+  kind retail.restock_kind [not null]
   created_at timestamp [not null, default: `now()`]
+  notified_at timestamp
 
-  note: 'Chỉ gắn đúng một trong order_id/contract_id/installment_id tại một thời điểm'
+  indexes {
+    (user_id, product_id, kind) [unique]
+  }
+
+  Note: 'Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7)'
 }
 
 
 // ==============================================================================
-// NHÓM 5: GIAO DỊCH B2B (FR6, FR7)
+// GIAO DỊCH — wholesale (FR6)
 // ==============================================================================
 
-Table rfqs {
+Enum wholesale.rfq_status {
+  open
+  negotiating
+  agreed
+  rejected
+  expired
+}
+
+Enum wholesale.contract_status {
+  draft
+  awaiting_confirmation
+  concluded [note: 'Đã xác nhận giao kết']
+  delivered
+  completed
+  cancelled
+}
+
+Enum wholesale.party {
+  buyer
+  supplier
+}
+
+Table wholesale.price_tiers {
   id bigint [pk, increment]
-  business_id bigint [not null, ref: > businesses.id]
-  shop_id bigint [not null, ref: > shops.id]
-  product_id bigint [not null, ref: > products.id]
-  requested_quantity decimal(12,2) [not null, note: 'FR6.1']
-  desired_delivery_time date [not null]
+  product_id bigint [not null, note: '→ catalog.products']
+  min_qty decimal(12,2) [not null, note: 'Bậc thấp nhất là MOQ']
+  unit_price decimal(14,2) [not null]
+  lead_time_days int [note: 'Lịch giao dự kiến']
+  valid_from date [not null]
+  valid_to date
+
+  Note: 'Bảng giá sỉ theo bậc số lượng (FR4.1, FR6.4)'
+}
+
+Table wholesale.rfqs {
+  id bigint [pk, increment]
+  business_id bigint [not null, note: '→ identity.businesses | Khách sỉ']
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  product_id bigint [not null, note: '→ catalog.products']
+  requested_qty decimal(12,2) [not null, note: 'Đối chiếu MOQ']
   quality_standard varchar
-  status rfq_status [not null, default: 'new']
+  desired_delivery date [not null]
+  status wholesale.rfq_status [not null, default: 'open']
   created_at timestamp [not null, default: `now()`]
 
-  note: 'Yêu cầu báo giá bán sỉ B2B'
+  Note: 'Yêu cầu báo giá (FR6.1)'
 }
 
-Table rfq_negotiations {
+Table wholesale.rfq_messages {
   id bigint [pk, increment]
-  rfq_id bigint [not null, ref: > rfqs.id]
-  sender_user_id bigint [not null, ref: > users.id]
-  proposed_quantity decimal(12,2) [not null]
-  proposed_unit_price decimal(14,2) [not null]
-  message text
+  rfq_id bigint [not null, ref: > wholesale.rfqs.id]
+  sender_user_id bigint [not null, note: '→ identity.users']
+  is_quote boolean [not null, default: false, note: 'true: lượt báo giá có số lượng, đơn giá, ngày giao']
+  proposed_qty decimal(12,2)
+  proposed_price decimal(14,2)
+  proposed_delivery date
+  content text
+  attachment_ids bigint[] [note: '→ media.media_files']
   sent_at timestamp [not null, default: `now()`]
 
-  note: 'Lịch sử thương lượng RFQ (FR6.2)'
+  Note: 'Báo giá và trao đổi trong kênh gắn với RFQ (FR6.2)'
 }
 
-Table contracts {
+Table wholesale.contracts {
   id bigint [pk, increment]
-  rfq_id bigint [not null, unique, ref: > rfqs.id]
-  agreed_quantity decimal(12,2) [not null]
-  agreed_unit_price decimal(14,2) [not null]
-  payment_terms varchar [note: 'Net 15, Net 30... (FR6.5)']
-  contract_file varchar [not null]
-  status contract_status [not null, default: 'draft']
-  concluded_at timestamp
+  rfq_id bigint [not null, unique, ref: - wholesale.rfqs.id]
+  contract_code varchar [not null, unique]
+  agreed_qty decimal(12,2) [not null]
+  agreed_unit_price decimal(14,2) [not null, note: 'Áp khung giá sỉ khi đạt MOQ (FR6.4)']
+  total_amount decimal(14,2) [not null]
+  delivery_date date [not null, note: 'Giao một đợt; giao nhiều đợt chỉ thiết kế (FR6.5)']
+  current_version int [not null, default: 1]
+  status wholesale.contract_status [not null, default: 'draft']
+  concluded_at timestamp [note: 'Khi cả hai bên đã xác nhận cùng một phiên bản']
 
-  note: 'Hợp đồng điện tử hình thành từ RFQ (FR6.3)'
+  Note: 'Hợp đồng sinh từ mẫu chuẩn khi RFQ được chốt (FR6.3)'
 }
 
-Table delivery_installments {
-  id bigint [pk, increment]
-  contract_id bigint [not null, ref: > contracts.id]
-  quantity decimal(12,2) [not null]
-  planned_delivery_date date [not null]
-  status installment_status [not null, default: 'pending']
-
-  note: 'Kế hoạch giao hàng theo đợt trên hợp đồng (FR6.5)'
-}
-
-Table debts {
-  id bigint [pk, increment]
-  contract_id bigint [not null, ref: > contracts.id]
-  installment_id bigint [ref: > delivery_installments.id, note: 'Null nếu công nợ tính gộp cả hợp đồng']
-  amount decimal(14,2) [not null]
-  due_date date [not null]
-  status debt_status [not null, default: 'not_due']
-
-  note: 'Công nợ thương mại B2B (FR6.5)'
-}
-
-
-// ==============================================================================
-// NHÓM 6: ĐÁNH GIÁ, KHIẾU NẠI, THÔNG BÁO (FR5.5, FR8.3, FR10, FR11)
-// ==============================================================================
-
-Table reviews {
-  id bigint [pk, increment]
-  order_item_id bigint [not null, unique, ref: > order_items.id]
-  user_id bigint [not null, ref: > users.id]
-  rating int [not null, note: '1 - 5 sao']
-  content text
-  images json
-  status review_status [not null, default: 'public']
-  seller_reply text
-  created_at timestamp [not null, default: `now()`]
-
-  note: 'Đánh giá sản phẩm/gian hàng sau khi mua (FR5.5)'
-}
-
-Table wishlist_items {
-  id bigint [pk, increment]
-  user_id bigint [not null, ref: > users.id]
-  product_id bigint [not null, ref: > products.id]
+Table wholesale.contract_versions {
+  contract_id bigint [ref: > wholesale.contracts.id]
+  version int
+  document_file_id bigint [not null, note: '→ media.media_files | Tệp PDF, mức truy cập riêng tư']
+  document_hash varchar [not null, note: 'SHA-256 của tệp']
+  created_by bigint [not null, note: '→ identity.users']
   created_at timestamp [not null, default: `now()`]
 
   indexes {
-    (user_id, product_id) [unique]
+    (contract_id, version) [pk]
   }
+
+  Note: 'Mỗi lần sửa bản nháp tạo một phiên bản mới'
 }
 
-Table cases {
+Table wholesale.contract_confirmations {
+  contract_id bigint [ref: > wholesale.contracts.id]
+  party wholesale.party
+  version int [not null, note: 'Phiên bản được xác nhận']
+  document_hash varchar [not null, note: 'Mã băm của đúng phiên bản đó']
+  user_id bigint [not null, note: '→ identity.users']
+  otp_challenge_id bigint [not null, note: '→ identity.otp_challenges']
+  confirmed_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (contract_id, party) [pk]
+  }
+
+  Note: 'Xác nhận giao kết bằng mã dùng một lần; ký số chỉ thiết kế'
+}
+
+Table wholesale.wholesale_orders {
   id bigint [pk, increment]
-  case_type case_type [not null, note: 'complaint (FR8.3) hoặc violation (FR10.2)']
-  order_id bigint [ref: > orders.id, note: 'Khiếu nại B2C (nullable)']
-  installment_id bigint [ref: > delivery_installments.id, note: 'Khiếu nại B2B (nullable)']
-  accused_shop_id bigint [ref: > shops.id, note: 'Gian hàng bị khiếu nại/vi phạm (nullable)']
-  reporter_user_id bigint [ref: > users.id]
-  reason varchar [not null]
+  contract_id bigint [not null, unique, ref: - wholesale.contracts.id]
+  holding_id bigint [not null, note: '→ inventory.stock_holdings | Dòng tồn của nhà cung cấp']
+  shipped_at timestamp
+  received_at timestamp [note: 'Bên mua xác nhận nhận hàng; hệ thống trừ tồn và mở thanh toán']
+  rejected_qty decimal(12,2) [not null, default: 0, note: 'Phần từ chối quay về đúng dòng tồn']
+  status varchar [not null, default: 'awaiting_delivery', note: 'awaiting_delivery, delivered, accepted, partially_rejected']
+
+  Note: 'Đơn sỉ giao một đợt theo hợp đồng'
+}
+
+
+// ==============================================================================
+// GIAO DỊCH — payment (FR7)
+// ==============================================================================
+
+Enum payment.payment_method {
+  cod
+  vietqr
+  card
+  e_wallet
+}
+
+Enum payment.payment_status {
+  pending
+  succeeded
+  failed
+  cancelled
+  refunded
+  partially_refunded
+}
+
+Enum payment.invoice_kind {
+  retail_sale [note: 'Hóa đơn bán hàng cho đơn lẻ']
+  commission_service [note: 'Hóa đơn dịch vụ hoa hồng cho nhà cung cấp']
+}
+
+Table payment.payments {
+  id bigint [pk, increment]
+  source_type varchar [not null, note: 'retail_order hoặc wholesale_order']
+  source_id bigint [not null, note: '→ retail.orders | Hoặc wholesale.wholesale_orders, tùy source_type']
+  method payment.payment_method [not null]
+  gateway varchar [note: 'vnpay, payos; trống với COD']
+  amount decimal(14,2) [not null]
+  status payment.payment_status [not null, default: 'pending']
+  gateway_txn_ref varchar [unique, note: 'Mã đối soát; webhook xử lý lặp không đổi kết quả']
+  paid_at timestamp
+  escrow_status varchar [note: 'Ký quỹ trung gian cho đơn sỉ lớn (FR7.3, chỉ thiết kế)']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Farmery chỉ ghi trạng thái, tiền đi qua cổng thanh toán (NFR3.4); phát PaymentSucceeded'
+}
+
+Table payment.refunds {
+  id bigint [pk, increment]
+  payment_id bigint [not null, ref: > payment.payments.id]
+  return_request_id bigint [note: '→ fulfillment.return_requests']
+  amount decimal(14,2) [not null]
+  status payment.payment_status [not null, default: 'pending']
+  gateway_refund_ref varchar
+  requested_by bigint [not null, note: '→ identity.users']
+  completed_at timestamp [note: 'Cam kết trong 7 ngày làm việc từ khi có quyết định']
+
+  Note: 'Hoàn tiền qua cổng theo quyết định xử lý khiếu nại (FR7.1); phát Refunded'
+}
+
+Table payment.invoices {
+  id bigint [pk, increment]
+  kind payment.invoice_kind [not null]
+  source_type varchar [not null]
+  source_id bigint [not null]
+  buyer_name varchar [not null]
+  buyer_tax_code varchar
+  subtotal decimal(14,2) [not null]
+  tax_amount decimal(14,2) [not null]
+  total decimal(14,2) [not null]
+  lookup_code varchar [not null, unique, note: 'Mã tra cứu']
+  pdf_file_id bigint [note: '→ media.media_files']
+  provider varchar [not null, default: 'mock', note: 'mock ở bản hiện thực; VNPT, Viettel, MISA chỉ thiết kế']
+  issued_at timestamp [not null, default: `now()`]
+
+  Note: 'Hóa đơn điện tử (FR7.2), phát hành khi đơn lẻ hoàn tất'
+}
+
+Table payment.commission_settlements {
+  id bigint [pk, increment]
+  wholesale_order_id bigint [not null, unique, note: '→ wholesale.wholesale_orders']
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  gross_amount decimal(14,2) [not null]
+  commission_rate decimal(5,4) [not null, note: 'Theo biểu phí công bố']
+  commission_amount decimal(14,2) [not null]
+  withholding_rate decimal(5,4) [note: 'Khấu trừ thuế thay hộ kinh doanh (FR7.4, chỉ thiết kế)']
+  withholding_amount decimal(14,2) [note: 'Chỉ thiết kế']
+  service_invoice_id bigint [ref: > payment.invoices.id]
+  settled_at timestamp
+
+  Note: 'Đối soát hoa hồng đơn sỉ (FR7.4); trang đối soát của nhà cung cấp đọc từ đây'
+}
+
+Table payment.supplier_payouts {
+  id bigint [pk, increment]
+  purchase_order_id bigint [not null, unique, note: '→ procurement.purchase_orders']
+  supplier_id bigint [not null, note: '→ supplier.suppliers']
+  amount decimal(14,2) [not null, note: 'Theo sản lượng đã nghiệm thu']
+  status payment.payment_status [not null, default: 'pending']
+  bank_reference varchar
+  paid_at timestamp
+
+  Note: 'Chi trả cho nhà cung cấp sau nghiệm thu thu mua, không chờ hàng bán được'
+}
+
+
+// ==============================================================================
+// SAU BÁN — fulfillment (FR8, FR9.1)
+// ==============================================================================
+
+Enum fulfillment.trip_status {
+  planned
+  loading
+  departed
+  handed_over
+  cancelled
+}
+
+Enum fulfillment.shipment_status {
+  created
+  picked_up
+  delivering
+  delivered
+  failed
+  returned
+}
+
+Enum fulfillment.request_type {
+  quality
+  wrong_or_missing
+  change_of_mind [note: 'Chỉ hàng khô còn nguyên niêm']
+  refused_at_door
+}
+
+Enum fulfillment.cause {
+  supply
+  packing
+  transport
+  recipient
+}
+
+Enum fulfillment.decision {
+  full_refund
+  partial_refund
+  replacement
+  rejected
+}
+
+Table fulfillment.transfer_trips {
+  id bigint [pk, increment]
+  trip_code varchar [not null, unique]
+  trip_date date [not null]
+  vehicle_plate varchar
+  carrier_name varchar [note: 'Đơn vị cho thuê xe lạnh']
+  status fulfillment.trip_status [not null, default: 'planned']
+  departed_at timestamp
+  handed_over_at timestamp [note: 'Bàn giao tại đầu TP.HCM']
+  created_by bigint [not null, note: '→ identity.users | Nhân viên kho']
+
+  Note: 'Chuyến trung chuyển xe lạnh Lâm Đồng–TP.HCM — chặng giữa (FR8.1)'
+}
+
+Table fulfillment.trip_orders {
+  trip_id bigint [ref: > fulfillment.transfer_trips.id]
+  order_id bigint [note: '→ retail.orders']
+  loaded_at timestamp
+
+  indexes {
+    (trip_id, order_id) [pk]
+  }
+
+  Note: 'Danh sách đơn của chuyến (manifest), lập sau giờ chốt đơn'
+}
+
+Table fulfillment.shipments {
+  id bigint [pk, increment]
+  order_id bigint [not null, unique, note: '→ retail.orders']
+  trip_id bigint [ref: > fulfillment.transfer_trips.id]
+  carrier varchar [not null, default: 'ghn']
+  carrier_order_code varchar [unique, note: 'Mã vận đơn của 3PL']
+  carrier_fee decimal(14,2) [not null]
+  middle_leg_fee decimal(14,2) [not null, note: 'Phần bù chặng giữa chia theo đơn (FR8.2)']
+  slot_start timestamp [not null]
+  slot_end timestamp [not null]
+  status fulfillment.shipment_status [not null, default: 'created']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Vận đơn chặng cuối; phát ShipmentStatusChanged'
+}
+
+Table fulfillment.shipment_events {
+  id bigint [pk, increment]
+  shipment_id bigint [not null, ref: > fulfillment.shipments.id]
+  status fulfillment.shipment_status [not null]
+  carrier_event_id varchar [unique, note: 'Chống xử lý lặp webhook']
+  payload jsonb
+  occurred_at timestamp [not null]
+  received_at timestamp [not null, default: `now()`]
+
+  Note: 'Trạng thái 3PL đẩy về qua webhook'
+}
+
+Table fulfillment.return_requests {
+  id bigint [pk, increment]
+  order_id bigint [not null, note: '→ retail.orders']
+  buyer_user_id bigint [not null, note: '→ identity.users']
+  request_type fulfillment.request_type [not null]
+  claim_deadline timestamp [not null, note: 'Theo nhóm hàng: rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày']
   description text
-  evidence_files json
-  status case_status [not null, default: 'pending_review']
-  resolution_note text
-  handled_by bigint [ref: > users.id]
+  evidence_ids bigint[] [note: '→ media.media_files | Ảnh, video minh chứng']
+  claimed_amount decimal(14,2) [not null]
+  suggested_cause fulfillment.cause [note: 'Hệ thống gợi ý']
+  cause fulfillment.cause
+  decision fulfillment.decision
+  refund_amount decimal(14,2)
+  return_required boolean [note: 'false khi dưới ngưỡng hoàn không cần trả hàng']
+  priority varchar [not null, default: 'normal', note: 'Tự nâng lên high khi quá hạn (FR10.3)']
+  due_at timestamp [not null, note: 'Ra quyết định trong 3 ngày làm việc']
+  handled_by bigint [note: '→ identity.users | Nhân viên vận hành']
+  status varchar [not null, default: 'received', note: 'received, reviewing, decided, closed']
   created_at timestamp [not null, default: `now()`]
-  resolved_at timestamp
+  decided_at timestamp
 
-  note: 'Gộp khiếu nại đơn hàng và vi phạm chính sách để giảm số bảng quản trị'
+  Note: 'Yêu cầu đổi trả, hoàn tiền, khiếu nại đơn lẻ (FR8.3); phát CaseResolved'
 }
 
-Table notifications {
+Table fulfillment.messages {
   id bigint [pk, increment]
-  user_id bigint [not null, ref: > users.id]
-  title varchar [not null]
+  order_id bigint [not null, note: '→ retail.orders']
+  return_request_id bigint [ref: > fulfillment.return_requests.id, note: 'Trống khi trao đổi về đơn, chưa có khiếu nại']
+  sender_user_id bigint [not null, note: '→ identity.users']
   content text [not null]
-  type notification_type [not null]
-  channel notification_channel [not null, default: 'in_app']
-  is_read boolean [not null, default: false]
-  metadata json [note: 'order_id, rfq_id, batch_id... để điều hướng']
+  attachment_ids bigint[] [note: '→ media.media_files']
+  sent_at timestamp [not null, default: `now()`]
+  read_at timestamp
+
+  Note: 'Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1)'
+}
+
+
+// ==============================================================================
+// SAU BÁN — engagement (FR5.5, FR9.2)
+// ==============================================================================
+
+Enum engagement.moderation_status {
+  published
+  flagged [note: 'Bị luật ngưỡng gắn cờ, chờ kiểm duyệt viên']
+  hidden
+}
+
+Table engagement.reviews {
+  id bigint [pk, increment]
+  order_id bigint [not null, note: '→ retail.orders | Chỉ đơn đã hoàn tất']
+  order_item_id bigint [not null, unique, note: '→ retail.order_items | Mỗi dòng hàng một đánh giá']
+  product_id bigint [not null, note: '→ catalog.products']
+  supplier_id bigint [not null, note: '→ supplier.suppliers | Nhà cung cấp gốc của lô']
+  buyer_user_id bigint [not null, note: '→ identity.users']
+  rating smallint [not null, note: '1–5']
+  content text
+  image_ids bigint[] [note: '→ media.media_files']
+  status engagement.moderation_status [not null, default: 'published']
+  flag_reasons jsonb
+  moderated_by bigint [note: '→ identity.users']
   created_at timestamp [not null, default: `now()`]
 
-  note: 'Thông báo đa kênh (FR11)'
+  Note: 'Đánh giá sau đơn hoàn tất (FR5.5); phát ReviewPosted'
+}
+
+Table engagement.review_replies {
+  review_id bigint [pk, ref: - engagement.reviews.id]
+  responder_user_id bigint [not null, note: '→ identity.users']
+  content text [not null]
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Phản hồi công khai một lần dưới mỗi đánh giá'
+}
+
+Table engagement.supplier_reputation {
+  supplier_id bigint [pk, note: '→ supplier.suppliers']
+  score decimal(5,2) [not null, note: 'Thang 0–100, trọng số theo thời gian và giá trị đơn, cửa sổ 6 tháng']
+  valid_review_count int [not null]
+  computed_at timestamp [not null, default: `now()`]
+
+  Note: 'Điểm uy tín tính lại sau mỗi đánh giá hợp lệ; từ 80 được hậu kiểm nhanh'
+}
+
+Table engagement.wishlist_items {
+  user_id bigint [note: '→ identity.users']
+  product_id bigint [note: '→ catalog.products']
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (user_id, product_id) [pk]
+  }
+
+  Note: 'Danh sách yêu thích (FR9.2, chỉ thiết kế)'
 }
 
 
 // ==============================================================================
-// NHÓM 7: KHUNG AI TỐI THIỂU (FR12)
+// VẬN HÀNH — operations (FR10, FR4.7)
 // ==============================================================================
 
-Table ai_insights {
+Enum operations.task_type {
+  supplier_profile
+  certification
+  product
+  batch
+  flagged_review
+  product_report [note: 'Người mua báo sản phẩm sai danh mục (FR4.7)']
+}
+
+Enum operations.task_status {
+  open
+  in_review
+  approved
+  rejected
+}
+
+Enum operations.sanction {
+  reminder
+  warning
+  hide_listing
+  suspend
+  ban
+}
+
+Table operations.platform_settings {
+  key varchar [pk, note: 'commission_rate, cod_max_amount, cutoff_time, delivery_slots, claim_window.leafy_veg...']
+  value jsonb [not null]
+  description text
+  updated_by bigint [not null, note: '→ identity.users | Quản trị viên hệ thống']
+  updated_at timestamp [not null, default: `now()`]
+
+  Note: 'Cấu hình nền tảng (FR10.6); mọi lần đổi ghi vào staff_audit_logs'
+}
+
+Table operations.review_tasks {
   id bigint [pk, increment]
-  insight_type ai_insight_type [not null]
-  target_type varchar [not null, note: 'user, product, category tùy insight_type']
+  task_type operations.task_type [not null]
+  target_id bigint [not null, note: 'Định danh bản ghi cần duyệt ở schema tương ứng']
+  reporter_user_id bigint [note: '→ identity.users | Người báo cáo, nếu có']
+  status operations.task_status [not null, default: 'open']
+  assigned_to bigint [note: '→ identity.users']
+  due_at timestamp [note: 'Hồ sơ nhà cung cấp: 5 ngày làm việc']
+  decision_reason text
+  decided_at timestamp
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Hàng đợi duyệt chung của kiểm duyệt viên (FR10.1, FR10.2)'
+}
+
+Table operations.violation_records {
+  id bigint [pk, increment]
+  subject_type varchar [not null, note: 'supplier, buyer, product, review']
+  subject_id bigint [not null]
+  review_task_id bigint [ref: > operations.review_tasks.id]
+  violation_type varchar [not null, note: 'Sai danh mục, đánh giá giả, gian lận đơn, giả mạo chứng nhận']
+  sanction operations.sanction [not null]
+  effective_at timestamp [not null, note: 'Khóa tài khoản người bán: sau 5 ngày báo trước, trừ yêu cầu của cơ quan nhà nước']
+  reason text [not null]
+  decided_by bigint [not null, note: '→ identity.users']
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Hồ sơ vi phạm và chế tài phân cấp (FR10.2)'
+}
+
+Table operations.threshold_alerts {
+  id bigint [pk, increment]
+  rule_key varchar [not null, note: 'Luật ngưỡng: tỷ lệ khiếu nại, hủy đơn, đánh giá dồn cụm...']
+  target_type varchar [not null]
   target_id bigint [not null]
-  payload json [not null, note: 'Chi tiết kết quả: điểm gợi ý/giá dự báo/mô tả bất thường']
-  generated_at timestamp [not null, default: `now()`]
+  observed_value decimal(14,4) [not null]
+  threshold_value decimal(14,4) [not null]
+  status varchar [not null, default: 'open', note: 'open, acknowledged, resolved']
+  acknowledged_by bigint [note: '→ identity.users']
+  created_at timestamp [not null, default: `now()`]
 
-  note: 'Bảng kết quả AI dùng chung cho gợi ý, dự báo giá và cảnh báo bất thường (FR12.1-FR12.3)'
+  Note: 'Cảnh báo do luật ngưỡng sinh ra; giám sát bất thường không dùng học máy'
+}
+
+Table operations.staff_audit_logs {
+  id bigint [pk, increment]
+  staff_user_id bigint [not null, note: '→ identity.users']
+  role varchar [not null, note: 'Mã vai trò dùng khi thao tác']
+  action varchar [not null, note: 'approve, lock, arbitrate, recall, enter_on_behalf, update_setting...']
+  target_schema varchar [not null]
+  target_table varchar [not null]
+  target_id varchar [not null]
+  on_behalf_of_supplier_id bigint [note: '→ supplier.suppliers | Nhà cung cấp xem được thao tác làm thay mình']
+  before_state jsonb
+  after_state jsonb
+  reason text
+  ip_address varchar
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Nhật ký thao tác nội bộ; chỉ thêm, không sửa (FR10.7, NFR9.1)'
 }
 
 
 // ==============================================================================
-// NHÓM TRỰC QUAN HÓA
+// Nhóm hiển thị trên dbdiagram — mỗi nhóm một schema
 // ==============================================================================
 
-TableGroup Nhom1_TaiKhoan_GianHang {
-  users
-  addresses
-  businesses
-  business_members
-  shops
+TableGroup identity {
+  identity.users
+  identity.user_roles
+  identity.otp_challenges
+  identity.addresses
+  identity.businesses
+  identity.ekyc_documents
+  identity.consent_records
+  identity.data_requests
 }
-
-TableGroup Nhom2_DanhMuc_TruyXuat_SanPham {
-  categories
-  certifications
-  products
-  wholesale_price_tiers
-  batches
-  farming_logs
+TableGroup notification {
+  notification.notifications
+  notification.deliveries
+  notification.preferences
+  notification.push_subscriptions
 }
-
-TableGroup Nhom3_GioHang_KhuyenMai {
-  carts
-  cart_items
-  vouchers
+TableGroup media {
+  media.media_files
 }
-
-TableGroup Nhom4_DonHang_ThanhToan_B2C {
-  orders
-  order_items
-  payments
+TableGroup supplier {
+  supplier.suppliers
+  supplier.certifications
+  supplier.support_assignments
 }
-
-TableGroup Nhom5_GiaoDich_B2B {
-  rfqs
-  rfq_negotiations
-  contracts
-  delivery_installments
-  debts
+TableGroup catalog {
+  catalog.categories
+  catalog.products
+  catalog.batches
+  catalog.farming_logs
+  catalog.product_embeddings
 }
-
-TableGroup Nhom6_DanhGia_KhieuNai_ThongBao {
-  reviews
-  wishlist_items
-  cases
-  notifications
+TableGroup inventory {
+  inventory.stock_holdings
+  inventory.stock_movements
+  inventory.reservations
+  inventory.packing_runs
+  inventory.batch_recalls
 }
-
-TableGroup Nhom7_AI {
-  ai_insights
+TableGroup procurement {
+  procurement.supplier_offers
+  procurement.purchase_orders
+  procurement.goods_receipts
+  procurement.price_forecasts
+}
+TableGroup retail {
+  retail.listings
+  retail.vouchers
+  retail.carts
+  retail.cart_items
+  retail.orders
+  retail.order_items
+  retail.order_status_events
+  retail.restock_subscriptions
+}
+TableGroup wholesale {
+  wholesale.price_tiers
+  wholesale.rfqs
+  wholesale.rfq_messages
+  wholesale.contracts
+  wholesale.contract_versions
+  wholesale.contract_confirmations
+  wholesale.wholesale_orders
+}
+TableGroup payment {
+  payment.payments
+  payment.refunds
+  payment.invoices
+  payment.commission_settlements
+  payment.supplier_payouts
+}
+TableGroup fulfillment {
+  fulfillment.transfer_trips
+  fulfillment.trip_orders
+  fulfillment.shipments
+  fulfillment.shipment_events
+  fulfillment.return_requests
+  fulfillment.messages
+}
+TableGroup engagement {
+  engagement.reviews
+  engagement.review_replies
+  engagement.supplier_reputation
+  engagement.wishlist_items
+}
+TableGroup operations {
+  operations.platform_settings
+  operations.review_tasks
+  operations.violation_records
+  operations.threshold_alerts
+  operations.staff_audit_logs
 }

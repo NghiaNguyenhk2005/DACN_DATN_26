@@ -9,7 +9,7 @@ Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán 
 | File | Vai trò |
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
-| `schema.dbml` | Lược đồ CSDL (dbdiagram); nguồn của ERD và Phụ lục K. **Đang lệch báo cáo** (commit `65936c6` đưa về mô hình cũ, chờ thành viên — xem NOTES "Sơ đồ còn thiếu") |
+| `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
 | `main.pdf` | Bản build gần nhất, 237 trang (thân báo cáo Chương 1–8 chiếm 125 trang) |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
@@ -33,7 +33,7 @@ Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán 
 | `chuong2-kienthuc-nentang.tex` | 2.1 Đặc điểm hàng nông sản · 2.2 Bối cảnh chính sách (**bảng văn bản → nghĩa vụ → tác động thiết kế** `tab:phaply`) · 2.3 Lý thuyết nền (B2B/B2C/B2B2C, 1P/3P) · 2.4 Ứng dụng AI (tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá) | Xong (20 trang); còn TODO trích dẫn mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · 3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này · 3.4 Kết chương | Xong (7 trang); còn TODO 3.1 |
 | `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (hai luồng 3P/1P, dòng thu và **điều kiện hòa vốn 1P**, 10 quy trình, dòng tồn, **giao hàng ba chặng**, **đổi trả–khiếu nại kèm cam kết thời gian**, chính sách pháp lý) · 4.2 Mô tả hệ thống (5 khối, **hai ứng dụng**, sơ đồ ngữ cảnh C4, nhóm người dùng + **6 vai trò nội bộ**, persona, customer journey) · 4.3 Yêu cầu (user story → FR1–FR13 có quy ước *(chỉ thiết kế)*, 5 mã đã rút; NFR1–NFR9; MoSCoW 11 Must + 2 Should) | Xong (46 trang) |
-| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · CSDL 13 schema · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế (33 trang); ERD và Phụ lục K chờ `schema.dbml` (có `% TODO`); sequence/class tạm hoãn; API, UI/UX, test case còn TODO |
+| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; sequence/class tạm hoãn; API, UI/UX, test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | §6.1.1 danh sách công nghệ; còn lại TODO |
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
@@ -51,7 +51,7 @@ thay vì đánh lại chữ cái.
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản |
 | `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 16 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
 | `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
-| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu 4 nhóm cốt lõi theo cách nhóm cũ (chờ cập nhật theo 13 schema) |
+| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đủ 13 schema, mỗi schema một bảng `tab:db-<schema>` (~30 trang). **Sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay |
 | `phuluc-nguong.tex` | **Phụ lục L** — ngưỡng NFR và ngưỡng AI kèm căn cứ |
 | `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
 | `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho AI |
@@ -80,6 +80,7 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_c4.py` | Sinh `c4-ngu-canh`, `c4-container`, `c4-module`, `luong-don-le` (luồng một đơn lẻ) |
 | `diagrams/gen_usecase.py` | Sinh 6 sơ đồ use case: `usecase-overview`, `usecase-nha-ban`, `usecase-nguoi-mua-le`, `usecase-nguoi-mua-si`, `usecase-noibo-nguonhang`, `usecase-noibo-vanhanh` |
 | `diagrams/gen_sitemap.py` | Sinh `sitemap-tong-quan` (hai cây theo hai ứng dụng) |
+| `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh `erd-nen-tang`, `erd-giao-dich` (vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
@@ -109,7 +110,7 @@ Quy trình sửa hình: sửa bộ sinh → `python tools/diagrams/gen_c4.py` (h
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
 `fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:erd` (Ch.5; ERD lệch `schema.dbml`).
+`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:erd`, `fig:erd2` (Ch.5).
 **Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
 `fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).

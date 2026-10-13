@@ -800,3 +800,24 @@ SỬA 2026-10-08: cả 6 sơ đồ use case sinh tự động, bỏ bản vẽ t
 
 **Đánh đổi:** PlantUML tự dàn bố cục nên khó ép chữ lớn; đổi lại nguồn `.puml` ngắn, dễ sửa khi quy trình đổi.
 SỬA 2026-10-08 (cùng ngày, sau góp ý của user "activity chưa đẹp, viền gần nhau khó nhìn"): bỏ PlantUML, 10 sơ đồ hoạt động sinh bằng `tools/diagrams/gen_activity.py` (svgkit) — lane tô màu theo loại tác nhân, tiêu đề lane nền đậm, lề rộng quanh hộp, nhãn điều kiện ngắn có nền, chi tiết ngoại lệ chuyển xuống ghi chú dưới hình; ký hiệu UML chuẩn cho sự kiện thời gian (đồng hồ cát) và nhận tín hiệu (hình cờ lõm). Khung lồng nhau ở C4 mức 3 và use case tổng quan bỏ nét đứt, giãn khoảng cách, bỏ khung "13 mô-đun" thừa. Thân báo cáo giữ 2 sơ đồ hoạt động (thu mua, đặt hàng); giao ba chặng và đổi trả chuyển Phụ lục R → thân còn tr. 1–125.
+
+### Lược đồ CSDL 13 schema, ERD và Phụ lục K sinh từ `schema.dbml` — 2026-10-13
+**Quyết định**
+- User chốt "thay luôn" bản ERD/`schema.dbml` của thành viên (`65936c6`, `b4ce420`, vẫn theo mô hình cũ), không
+  chờ trả lời. `schema.dbml` viết lại thành 13 schema trùng 13 mô-đun (`schema.table`), 65 bảng, 565 cột.
+- Khóa ngoại chỉ giữa hai bảng cùng schema (38 FK). Tham chiếu xuyên schema ghi trong note cột dạng
+  `→ schema.bảng`, không tạo FK vật lý — đúng RB3; bộ sinh đọc dấu này để in Phụ lục K và vẽ nét đứt.
+- Vai trò tách ra `identity.user_roles` (một tài khoản nhiều vai trò, 9 mã, bỏ `staff_delivery`); tệp qua
+  `media.media_files`, bảng khác giữ định danh (`*_file_id`, `bigint[]`). Giá bán lẻ nằm ở `retail.listings`
+  do nhân viên thu mua đặt; `catalog.products` chỉ còn giá tham khảo nhà cung cấp khai (FR4.1).
+- Phần chỉ thiết kế không có bảng riêng: giao nhiều đợt (FR6.5), ký số. Ký quỹ (FR7.3) và khấu trừ thuế
+  (FR7.4) chỉ giữ cột. Bỏ `debts`, `business_members`, `delivery_installments`, `store_followers`, chat tự do,
+  bảng gợi ý cá nhân hóa và hành vi người dùng (để sau phần hiện thực).
+- ERD tách hai hình `[p]` (nền tảng chung + nguồn cung + vận hành; giao dịch + sau bán) thay một hình xoay
+  ngang: 65 bảng trên một trang thì chữ dưới 7pt. Hình chỉ ghi tên bảng; không vẽ đường tới `identity.users`,
+  `media.media_files`; đường xuyên schema chỉ vẽ theo danh sách chọn tay trong `gen_erd.py`.
+- Phụ lục K sinh tự động, đủ 13 schema (~30 trang, `\footnotesize`) thay cho 4 nhóm cốt lõi viết tay, để
+  không bao giờ lệch lược đồ. Bỏ `image/ERD.png`.
+
+**Đánh đổi:** báo cáo dài thêm khoảng 25 trang ở phụ lục; nếu cần rút, lọc bớt cột hiển nhiên (`id`,
+`created_at`) trong `gen_erd.py` thay vì sửa tay `phuluc-csdl.tex`.
