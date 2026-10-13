@@ -1,0 +1,256 @@
+\chapter{Kiến thức và công nghệ nền tảng}
+\label{chap:coso}
+
+Chương này trình bày các kiến thức nền tảng mà Farmery vận dụng: đặc điểm của chính mặt hàng nông sản và hệ quả của chúng lên thiết kế hệ thống, bối cảnh chính sách và tiêu chuẩn chất lượng tại Việt Nam, các lý thuyết về mô hình thương mại điện tử, chuỗi cung ứng, truy xuất nguồn gốc, uy tín và công nghệ nền tảng, cùng các bài toán trí tuệ nhân tạo được tích hợp vào hệ thống. Các nền tảng và nghiên cứu cụ thể có liên quan được khảo sát riêng tại Chương~\ref{chap:lienquan}.
+
+\section{Đặc điểm hàng nông sản}
+\label{sec:dacdiemnongsan}
+
+Toàn bộ thiết kế của Farmery xuất phát từ một điểm: nông sản không hành xử giống các loại hàng hóa khác trên sàn thương mại điện tử. Mục này làm rõ phạm vi khái niệm ``nông sản'' được dùng trong đồ án, các đặc điểm phân biệt nông sản với hàng hóa thông thường, và các chứng nhận mà một lô nông sản cần có để ra thị trường.
+
+\subsection{Phạm vi khái niệm nông sản trong đồ án}
+\label{subsec:dinhnghianongsan}
+
+Pháp luật Việt Nam không có một định nghĩa duy nhất về ``nông sản'' áp dụng cho mọi mục đích. Đồ án xác định phạm vi dựa trên ba căn cứ:
+
+\begin{itemize}
+    \item \textbf{Luật An toàn thực phẩm số 55/2010/QH12} \parencite{luat_attp_2010} --- Điều 2 định nghĩa \emph{thực phẩm tươi sống} là ``thực phẩm chưa qua chế biến bao gồm thịt, trứng, cá, thuỷ hải sản, rau, củ, quả tươi và các thực phẩm khác chưa qua chế biến'' (khoản 21); phân biệt \emph{sơ chế} --- xử lý sản phẩm trồng trọt để tạo ra thực phẩm tươi sống có thể ăn ngay hoặc nguyên liệu cho khâu chế biến (khoản 16) --- với \emph{chế biến}, tức xử lý theo phương pháp công nghiệp hoặc thủ công để tạo thành sản phẩm thực phẩm (khoản 4).
+    \item \textbf{Nghị định số 15/2018/NĐ-CP} \parencite{nd15_2018} --- Điều 4 khoản 1 quy định nhóm phải tự công bố sản phẩm, trong đó có \emph{thực phẩm đã qua chế biến bao gói sẵn}. Đây là ranh giới pháp lý phân biệt nhóm nông sản tươi hoặc sơ chế (không phải tự công bố) với nhóm chế biến sâu đóng gói (bắt buộc tự công bố).
+    \item \textbf{Luật Trồng trọt số 31/2018/QH14} \parencite{luat_trongtrot_2018} --- xác định hoạt động trồng trọt bao gồm cả khâu thu hoạch, sơ chế, bảo quản, chế biến và thương mại sản phẩm cây trồng, cho thấy chuỗi giá trị nông sản được pháp luật nhìn nhận là liên tục từ ruộng tới thị trường.
+\end{itemize}
+
+Trên cơ sở đó, hàng hóa được chia thành bốn nhóm với ranh giới trong và ngoài phạm vi như sau:
+\begin{itemize}
+    \item \textbf{Nhóm 1 --- Nông sản tươi chưa qua chế biến} (rau, củ, quả, gạo, các loại hạt): \emph{trong phạm vi}, là trục chính của nền tảng.
+    \item \textbf{Nhóm 2 --- Nông sản sơ chế hoặc bảo quản đơn giản} (sấy khô, cấp đông, đóng gói hút chân không, không thêm phụ gia): \emph{trong phạm vi}.
+    \item \textbf{Nhóm 3 --- Nông sản chế biến sâu} (nước ép, mứt, trà, tinh dầu --- phần lớn sản phẩm OCOP thuộc nhóm này): \emph{trong phạm vi có điều kiện} --- nhà cung cấp bắt buộc phải có bản tự công bố sản phẩm và giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm.
+    \item \textbf{Nhóm 4 --- Ngoài phạm vi}: thủy sản sống, thịt tươi, động vật sống (đòi hỏi điều kiện kiểm dịch và bảo quản khác hẳn); thực phẩm chức năng, thuốc bảo vệ thực vật, vật tư nông nghiệp và mọi hàng hóa phi thực phẩm.
+\end{itemize}
+
+Ranh giới này không chỉ mang tính học thuật: nó là căn cứ trực tiếp để xây dựng danh mục sản phẩm đóng và danh sách loại trừ ở khâu đăng bán, nhằm ngăn nhà cung cấp đăng nhầm hoặc cố tình đăng sai loại hàng (mục~\ref{sec:quytrinhnghiepvu}).
+
+\subsection{Nông sản khác hàng hóa thông thường ở điểm nào}
+\label{subsec:sosanhnongsan}
+
+So với hàng công nghiệp và hàng tiêu dùng đóng gói --- nhóm hàng mà các sàn thương mại điện tử phổ thông được thiết kế để phục vụ --- nông sản có bốn khác biệt chi phối toàn bộ thiết kế hệ thống:
+
+\begin{itemize}
+    \item \textbf{Mau hỏng, hạn sử dụng tính bằng ngày.} Hàng công nghiệp tồn kho hàng năm không mất giá trị; rau quả tươi mất giá trị theo từng ngày. Hệ quả: tồn kho phải quản lý theo lô kèm hạn sử dụng, ưu tiên xuất trước lô hết hạn trước, và thời gian giao hàng trở thành ràng buộc chứ không phải tiện ích. Đi kèm là tỷ lệ tổn thất sau thu hoạch 20--40\% (Chương~\ref{chap:gioithieu}), buộc phải tính chi phí hao hụt vào mô hình kinh doanh.
+    \item \textbf{Nguồn cung theo mùa vụ, không theo đơn đặt hàng.} Nhà máy sản xuất thêm khi có cầu; nông dân không thể thu hoạch sớm hơn mùa vụ. Hệ quả: giá và sản lượng biến động mạnh theo thời điểm trong năm, cần dự báo thay vì chỉ ghi nhận.
+    \item \textbf{Chất lượng không đồng nhất giữa các lô.} Hai lô cùng giống, cùng vùng trồng vẫn khác nhau về kích cỡ và độ chín, lại bán theo khối lượng hoặc theo bó chứ không theo ``cái''. Hệ quả: dữ liệu mô tả phải gắn theo từng lô thay vì theo mã sản phẩm, và hệ thống phải hỗ trợ nhiều đơn vị tính.
+    \item \textbf{Người mua không tự kiểm chứng được chất lượng.} Người mua không thể nhìn quả cà chua để biết nó có dư lượng thuốc bảo vệ thực vật hay không --- kể cả sau khi đã ăn. Đây chính là loại hàng hóa mà lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}) mô tả. Cộng với ràng buộc pháp lý về an toàn thực phẩm, truy xuất nguồn gốc và chứng nhận bên thứ ba trở thành bắt buộc chứ không phải tùy chọn, và khâu kiểm duyệt không thể chỉ dựa vào tự động hóa.
+\end{itemize}
+
+Phụ lục G đối chiếu đầy đủ chín tiêu chí giữa nông sản, hàng công nghiệp và hàng tiêu dùng đóng gói, kèm ràng buộc thiết kế tương ứng của từng tiêu chí.
+
+\subsection{Chứng nhận và giấy tờ để nông sản ra thị trường}
+\label{subsec:chungnhan}
+
+Một lô nông sản muốn đi từ trang trại ra thị trường --- đặc biệt là thị trường xuất khẩu --- phải kèm theo hai loại hồ sơ.
+
+\noindent\textbf{Chứng nhận về cách thức sản xuất}, cấp cho cơ sở và có hiệu lực nhiều năm, chia thành ba nhóm. Nhóm \emph{thực hành nông nghiệp tốt} gồm GlobalG.A.P. --- chuẩn được công nhận rộng rãi nhất, bao phủ từ trước thu hoạch tới đóng gói, có thể bổ sung mô-đun GRASP về điều kiện lao động \parencite{globalgap_ifa} --- và VietGAP cho chuỗi cung ứng nội địa. Nhóm \emph{canh tác hữu cơ} gồm USDA Organic \parencite{usda_nop}, EU Organic \parencite{eu_organic_2018848} và JAS Organic. Nhóm \emph{an toàn thực phẩm cho khâu chế biến} lấy HACCP làm nền, phát triển lên thành ISO 22000, FSSC 22000, BRCGS Food Safety và IFS Food --- trong đó bốn chuẩn sau nằm trong danh sách được Sáng kiến An toàn Thực phẩm Toàn cầu công nhận \parencite{gfsi_cpo}. Ngoài ra còn các chứng nhận phục vụ thị trường ngách như Halal, Kosher, Fairtrade và Rainforest Alliance.
+
+\noindent\textbf{Giấy tờ đi theo từng lô hàng}, cấp riêng cho mỗi chuyến hàng. Quan trọng nhất là giấy chứng nhận kiểm dịch thực vật lập theo chuẩn ISPM 12 \parencite{ippc_ispm12}, giấy chứng nhận xuất xứ để hưởng ưu đãi thuế quan, và phiếu kết quả phân tích dư lượng. Để xuất khẩu chính ngạch còn cần mã số vùng trồng và mã số cơ sở đóng gói, tại Việt Nam cấp theo Nghị định số 38/2026/NĐ-CP \parencite{ppd_masovungtrong}. Ở thị trường nội địa, nhóm chế biến sâu phải có giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm và bản tự công bố sản phẩm.
+
+Phụ lục H liệt kê đầy đủ từng chứng nhận kèm phạm vi áp dụng, thị trường đích và mức độ hỗ trợ của Farmery. Trong phạm vi đồ án, hệ thống hỗ trợ tải lên và kiểm duyệt nhóm chứng nhận về cách thức sản xuất; nhóm giấy tờ theo lô phục vụ xuất khẩu nằm ngoài phạm vi (mục~\ref{sec:phamvi}) nhưng được nêu ở đây để thấy bức tranh đầy đủ mà một nền tảng nông sản hoàn chỉnh phải xử lý.
+
+\noindent\textbf{Hệ thống truy xuất nguồn gốc nông sản quốc gia.} Từ ngày 1/7/2026, Bộ Nông nghiệp và Môi trường vận hành chính thức hệ thống truy xuất nguồn gốc nông, lâm, thủy sản của Nhà nước \parencite{traceviet_2026}. Cách hệ thống này tổ chức dữ liệu --- nông hộ, vùng trồng, lô hàng, cơ sở đóng gói --- trùng với cách Farmery tổ chức nhật ký canh tác theo lô, nên dùng được làm tham chiếu khi thiết kế lược đồ dữ liệu ở mục~\ref{subsec:dacta-csdl}. Tuy vậy trường vùng trồng của Farmery hiện chỉ là mô tả tự do, chưa mô hình hóa thành định danh xác thực chéo được với mã số vùng trồng do Nhà nước cấp --- khoảng cách này được phân tích ngay ở mục kế tiếp.
+
+\subsection{Thảo luận: nhật ký canh tác cho thị trường xuất khẩu}
+\label{subsec:nhatkycanhtac-xuatkhau}
+
+Mục~\ref{sec:phamvi} đã đặt nghiệp vụ xuất khẩu xuyên biên giới ra ngoài phạm vi đồ án. Mục này đối chiếu thiết kế nhật ký canh tác hiện tại với yêu cầu thực tế của thị trường xuất khẩu --- không nhằm thay đổi thiết kế, mà để cho thấy việc thu hẹp phạm vi dựa trên hiểu biết cụ thể về phần bị bỏ ra.
+
+\noindent\textbf{Hai khung quy định đáng chú ý.} Lệnh số 248 của Tổng cục Hải quan Trung Quốc, ban hành ngày 12/4/2021 và có hiệu lực từ 1/1/2022, buộc mọi cơ sở sản xuất, chế biến và bảo quản thực phẩm nước ngoài phải đăng ký mã số trước khi xuất hàng vào Trung Quốc. Riêng mười tám nhóm thực phẩm rủi ro cao --- trong đó có rau quả tươi và rau quả sấy khô --- phải do cơ quan thẩm quyền của nước xuất khẩu tiến cử, doanh nghiệp không tự đăng ký trực tiếp được \parencite{gacc_decree248}. Ở châu Âu, Điều 18 Quy định (EC) số 178/2002 buộc mọi tác nhân trong chuỗi thực phẩm phải xác định được nhà cung cấp liền trước và khách hàng liền sau của mình, tức nguyên tắc ``một bước lùi, một bước tiến'' \parencite{eu_gfl_178_2002}. Cần lưu ý bản thân Điều 18 không ấn định thời hạn lưu hồ sơ; các mốc cụ thể nằm ở hướng dẫn thi hành của Uỷ ban châu Âu, theo đó hàng có hạn sử dụng dưới ba tháng chỉ cần lưu sáu tháng, còn hàng không ghi hạn sử dụng thì lưu năm năm \parencite{ec_gfl_guidance}.
+
+\noindent\textbf{Khoảng cách so với thiết kế hiện tại.} Phụ lục N đối chiếu năm tiêu chí: cách xác minh chứng nhận, cách định danh vùng trồng, thời hạn lưu trữ hồ sơ, số bên tham gia truy xuất, và yêu cầu giám sát sinh vật gây hại. Điểm chung của cả năm là chúng không phải chuyện ``thêm vài trường dữ liệu''. Xác minh chứng nhận phải đi qua đầu mối Nhà nước thay vì do kiểm duyệt viên của nền tảng tự kiểm duyệt; định danh vùng trồng phải là mã số chính thức có thể bị thu hồi; và chuỗi truy xuất giãn từ hai lớp --- nhà cung cấp và nền tảng --- thành năm sáu bên độc lập gồm cả cơ sở đóng gói, đơn vị kiểm dịch và hải quan hai nước.
+
+Khoảng cách đó xác nhận quyết định đặt xuất khẩu ngoài phạm vi là hợp lý: nó kéo theo thay đổi về quy trình xác minh, thời hạn lưu trữ và số bên tham gia, vượt khỏi khối lượng hợp lý của một đồ án một học kỳ. Điều kiện cụ thể để mở rộng về sau được trình bày tại Chương~\ref{chap:ketluan}.
+
+\section{Bối cảnh chính sách và tiêu chuẩn chất lượng nông sản}
+\label{sec:boicanhchinhsach}
+
+Chương trình OCOP (Mỗi xã một sản phẩm) là chương trình quốc gia hỗ trợ chuẩn hóa và nâng cao giá trị sản phẩm nông thôn/nông sản đặc trưng vùng miền. Hình~\ref{fig:ocop} (Phụ lục~P) tổng hợp số liệu tăng trưởng từ 2024 đến 2025 \parencite{danviet_2024_ocop, vietnamnet_2025_ocop}. Giai đoạn 2026--2030, chương trình được định hướng chuyển trọng tâm ``từ số lượng sang chất lượng'', trong đó đẩy mạnh số hóa sản xuất, truy xuất nguồn gốc và tiêu thụ qua thương mại điện tử được xác định là một trong các trụ cột \parencite{vietnamnet_2025_ocop} --- đây là tín hiệu chính sách thuận lợi cho định hướng của Farmery, đồng thời cũng là nguồn cung sản phẩm có thương hiệu và câu chuyện xuất xứ, phù hợp để đưa lên một sàn TMĐT có tính năng truy xuất nguồn gốc.
+
+
+Về chính sách, nông nghiệp được xác định là lĩnh vực ưu tiên chuyển đổi số từ Quyết định số 749/QĐ-TTg (2020) \parencite{qd749_2020} và Nghị quyết số 57-NQ/TW của Bộ Chính trị \parencite{nq57_tw}. Văn bản cập nhật nhất là \textbf{Quyết định số 5943/QĐ-BNNMT (31/12/2025)} của Bộ Nông nghiệp và Môi trường \parencite{botnmt_2025}, phê duyệt kế hoạch chuyển đổi số ngành với ba nội dung liên quan trực tiếp tới Farmery: xây dựng cơ sở dữ liệu dùng chung cho nông nghiệp, đưa dữ liệu về nguyên tắc chỉ khai báo một lần, và ứng dụng dữ liệu lớn cùng AI trong giám sát và dự báo sản xuất \parencite{qd5943_2025}. Đây là căn cứ cho thấy định hướng của đồ án phù hợp với chủ trương vĩ mô.
+
+Về tiêu chuẩn chất lượng, VietGAP và GlobalGAP là hai chuẩn thực hành nông nghiệp tốt mà Farmery dùng làm căn cứ kiểm duyệt chứng nhận:
+\begin{itemize}
+    \item \textbf{VietGAP} (Vietnamese Good Agricultural Practices) --- tiêu chuẩn trong nước, khoảng 70 tiêu chí, phù hợp chuỗi cung ứng nội địa (siêu thị, bếp ăn tập thể, chợ đầu mối).
+    \item \textbf{GlobalGAP} --- tiêu chuẩn quốc tế nghiêm ngặt hơn, 252 tiêu chuẩn (36 tiêu chí bắt buộc 100\%, 127 tiêu chí tối thiểu 95\%, 89 tiêu chí khuyến nghị), là điều kiện tiếp cận thị trường khó tính (EU, Nhật Bản, Hàn Quốc, Úc, Mỹ); sản phẩm đạt chuẩn được gán mã định danh GGN 13 chữ số trong cơ sở dữ liệu toàn cầu, truy xuất minh bạch hơn VietGAP.
+\end{itemize}
+Một cơ sở đạt GlobalGAP đã vượt chuẩn VietGAP nên không cần chứng nhận VietGAP riêng; VietGAP thường là bước đệm năng lực trước khi nông dân/HTX tiến tới GlobalGAP nếu có định hướng xuất khẩu \parencite{vietgap_globalgap}. Đây là căn cứ để Farmery thiết kế quy trình kiểm duyệt chứng nhận theo 2 cấp độ (nội địa/VietGAP và xuất khẩu/GlobalGAP) tương ứng với 2 nhóm khách mua lẻ và mua sỉ B2B.
+
+\noindent\textbf{Khung pháp lý cho một nền tảng thương mại điện tử nông sản.} Ngoài các chính sách định hướng ở trên, Farmery chịu ràng buộc trực tiếp của các văn bản về thương mại điện tử, người tiêu dùng, dữ liệu cá nhân, thuế, hóa đơn, nhãn hàng hóa và an toàn thực phẩm. Một điểm quyết định cách đọc các văn bản này: theo Luật Thương mại điện tử 2025, Farmery đồng thời là \emph{nền tảng kinh doanh trực tiếp} (tự bán lẻ) và \emph{nền tảng trung gian} (cho nhà cung cấp bán sỉ), nên chịu cả hai nhóm nghĩa vụ \parencite{luattmdt2025}. Bảng~\ref{tab:phaply} đối chiếu từng văn bản với nghĩa vụ chính và tác động tới thiết kế; số hiệu, ngày ban hành, hiệu lực và nội dung các điều được dẫn đã được đối chiếu với bản đăng trên Công báo hoặc Cổng thông tin điện tử Chính phủ, trừ các điểm ghi chú riêng dưới bảng.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{3.50cm} L{6.70cm} L{4.70cm}}
+\caption{Văn bản pháp luật, nghĩa vụ và tác động tới thiết kế Farmery}
+\label{tab:phaply} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Văn bản} & \textbf{Nghĩa vụ chính đối với Farmery} & \textbf{Tác động thiết kế} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Văn bản} & \textbf{Nghĩa vụ chính đối với Farmery} & \textbf{Tác động thiết kế} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Luật Thương mại điện tử 122/2025, hiệu lực 1/7/2026 \parencite{luattmdt2025} & Công khai chính sách và để người dùng đồng ý trước khi mở tài khoản (Điều 11); hiển thị đủ tiền hàng, thuế, phí giao trước khi đặt và cho xem lại sau khi đặt (Điều 12); nền tảng bán trực tiếp phải công khai nội dung nhãn bắt buộc (Điều 16 khoản 1); nền tảng trung gian xác thực danh tính người bán trước khi cho bán, kiểm duyệt nội dung trước khi hiển thị, báo người bán ít nhất 5 ngày trước khi hạn chế tài khoản (Điều 17); lưu dữ liệu hợp đồng ít nhất 3 năm (Điều 16 khoản 2, Điều 17 khoản 2) & FR1.4, FR1.6, FR5.2, FR10.1; NFR8.1, NFR8.5; Phụ lục D và U \\
+Nghị định 248/2026, hiệu lực 1/7/2026, thay Nghị định 52/2013 và 85/2021 \parencite{nd248_2026} & Nội dung tối thiểu của từng chính sách: bảo mật (có quy trình xóa dữ liệu), khiếu nại (thời hạn phản hồi ban đầu và thời hạn giải quyết), giá và phí, thanh toán, ưu tiên hiển thị, giao hàng (kể cả kiểm hàng), đổi trả--hoàn tiền (Điều 4--14); xác thực người bán bằng số định danh, áp dụng từ 1/1/2027 (Điều 18, Điều 52) & Bộ chính sách ở Phụ lục U; cam kết thời gian xử lý khiếu nại; tiêu chí xếp hạng tìm kiếm được công khai \\
+Luật Bảo vệ quyền lợi người tiêu dùng 19/2023 \parencite{luatbvqlntd2023} & Giao dịch từ xa: cho người tiêu dùng xem, xác nhận và tải lại hợp đồng; người tiêu dùng chỉ được đơn phương chấm dứt khi người bán cung cấp thông tin sai hoặc thiếu (Điều 38) --- luật không đặt quyền ``đổi ý'' chung; nền tảng trung gian lưu và cho tải chứng từ giao dịch (Điều 39) & FR5.4 (xem lại đơn), FR7.2; chính sách không đổi ý với hàng tươi là hợp lệ khi được công khai trước \\
+Luật Bảo vệ dữ liệu cá nhân 91/2025 và Nghị định 356/2025, hiệu lực 1/1/2026 \parencite{luatbvdlcn2025, nd356_2025} & Xử lý dữ liệu cá nhân có đồng ý, đúng mục đích; bảo đảm quyền xem, sửa, yêu cầu xóa của chủ thể dữ liệu & FR1.6, NFR8.2, NFR3.2 (mã hóa tệp eKYC) \\
+Luật Thuế GTGT 48/2024 và Luật sửa đổi 149/2025 \parencite{luatgtgt2024, luat149_2025} & Nông dân tự sản xuất bán ra: không chịu thuế (Điều 5 khoản 1); nông sản chưa chế biến ở khâu thương mại: 5\% (Điều 9 khoản 2 điểm d) --- áp cho đơn lẻ của Farmery; doanh nghiệp bán cho doanh nghiệp, hợp tác xã khác: không phải kê khai, tính nộp (Luật 149/2025, từ 1/1/2026) & FR2.4 (loại người bán, nhóm thuế sản phẩm); thuế suất in trên hóa đơn đơn lẻ (FR7.2) \\
+Nghị định 117/2025 và Nghị định 68/2026 \parencite{nd117_2025, nd68_2026} & Sàn có chức năng đặt hàng và thanh toán khấu trừ, nộp thuế thay cho người bán là hộ, cá nhân ngay khi giao dịch thành công: hàng hóa 1\% GTGT và 0,5\% TNCN; cấp chứng từ khấu trừ; trả lại phần đã khấu trừ khi đơn bị hủy hoặc trả hàng. Ngưỡng doanh thu không chịu thuế hiện là 1 tỷ đồng/năm \parencite{nd141_2026} & FR7.4, NFR8.4 --- chỉ thiết kế, áp cho sàn sỉ \\
+Nghị định 70/2025 sửa Nghị định 123/2020 về hóa đơn \parencite{nd70_2025} & Lập hóa đơn điện tử đúng nội dung và thời điểm & FR7.2, NFR8.3 (bản hiện thực dùng hóa đơn giả lập) \\
+Nghị định 37/2026, thay Nghị định 43/2017 và 111/2021 về nhãn \parencite{nd37_2026} & Thực phẩm tươi không bao bì bán trực tiếp không phải ghi nhãn; đơn vị đã đóng gói phải có nhãn: tên hàng, đơn vị chịu trách nhiệm, xuất xứ, định lượng, ngày sản xuất, hạn sử dụng, hướng dẫn bảo quản (Điều 35, 42, Phụ lục I); hàng giao tới người tiêu dùng phải có nhãn, nền tảng lưu dữ liệu nhãn và chứng từ ít nhất 5 năm (Điều 41); được dùng nhãn điện tử, sản phẩm bị thu hồi phải hiện cảnh báo (Điều 52) & FR13.4 (tem QR kèm nhãn khi đóng gói), FR13.6 (cảnh báo thu hồi trên trang truy xuất), NFR8.5 \\
+Luật An toàn thực phẩm 55/2010 và Nghị định 15/2018 \parencite{luat_attp_2010, nd15_2018} & Cơ sở sơ chế, đóng gói phải có Giấy chứng nhận cơ sở đủ điều kiện an toàn thực phẩm, trừ cơ sở nhỏ lẻ hoặc đã có HACCP, ISO 22000 (Điều 11--12); nông hộ sản xuất ban đầu nhỏ lẻ không thuộc diện cấp & Điều kiện vận hành kho sơ chế, không phải yêu cầu phần mềm \\
+Luật Giao dịch điện tử 20/2023 \parencite{luatgddt2023} & Chữ ký số tương đương chữ ký tay; hình thức xác nhận khác theo pháp luật liên quan (Điều 22--23) & FR6.3 gọi là ``xác nhận giao kết''; ký số để ở hướng phát triển \\
+\end{longtable}
+\endgroup
+
+Ba điểm được viết dè dặt vì chưa có hướng dẫn rõ hoặc đang thay đổi:
+\begin{itemize}
+    \item \textbf{Khấu trừ thuế với nông dân tự sản xuất:} Nghị định 117/2025 không có điều riêng cho người bán là nông dân; về nguyên tắc hàng không chịu GTGT thì không có GTGT để khấu trừ, và thu nhập trực tiếp từ sản xuất nông nghiệp được miễn thuế thu nhập cá nhân theo pháp luật thuế thu nhập cá nhân. Vì vậy hệ thống chỉ lưu loại người bán và để nhân sự xác nhận việc có áp khấu trừ hay không, không tự suy ra tỷ lệ.
+    \item \textbf{Hiệu lực của quy định an toàn thực phẩm:} Nghị định 46/2026/NĐ-CP thay Nghị định 15/2018 đã bị tạm ngưng hiệu lực cho tới khi Luật An toàn thực phẩm sửa đổi có hiệu lực \parencite{nq15_2026}; điều kiện của kho sơ chế có thể thay đổi theo văn bản mới.
+    \item \textbf{Ngưỡng doanh thu không chịu thuế} được dẫn qua tin chính thức của Báo Điện tử Chính phủ và tiêu đề văn bản trên Cổng thông tin, chưa đọc toàn văn Nghị định 141/2026; báo cáo không ghi cứng con số này vào thiết kế mà để cấu hình.
+\end{itemize}
+
+\section{Cơ sở lý thuyết nền tảng}
+\label{sec:lythuyet}
+
+\subsection{Mô hình thương mại điện tử: hai trục phân loại}
+\label{subsec:haitruc}
+
+Thương mại điện tử được phân loại theo hai tiêu chí mà thực tế hay bị gộp làm một.
+
+Tiêu chí thứ nhất là \textbf{bản chất các bên giao dịch}: B2B (Business to Business) giữa các doanh nghiệp, đặc trưng bởi đơn hàng số lượng lớn theo hợp đồng; B2C (Business to Consumer) giữa doanh nghiệp và người tiêu dùng cá nhân.
+
+B2B2C (Business to Business to Consumer) là trường hợp chuỗi có ba mắt xích: một doanh nghiệp bán cho một doanh nghiệp khác, rồi doanh nghiệp thứ hai bán tiếp cho người tiêu dùng cuối.
+
+Tiêu chí thứ hai --- và là tiêu chí quyết định với Farmery --- là \textbf{ai sở hữu hàng hóa trong lúc giao dịch diễn ra}. Mô hình \emph{third-party} (3P) để người bán giữ quyền sở hữu hàng cho tới khi giao; nền tảng chỉ trung gian và thu hoa hồng, không chịu rủi ro tồn kho. Mô hình \emph{first-party} (1P) thì ngược lại: chính nền tảng mua hàng vào, tự định giá và bán lại, hưởng chênh lệch nhưng gánh toàn bộ rủi ro hàng không bán hết.
+
+Hai tiêu chí này \textbf{độc lập với nhau}, nên kết hợp được thành bốn trường hợp. Cùng là B2B2C nhưng Shopee theo hướng 3P (thương hiệu tự bán cho người tiêu dùng qua sàn), còn mảng bán lẻ của Amazon theo hướng 1P (Amazon mua từ thương hiệu rồi bán lại). Việc phân biệt hai trục này quan trọng vì chúng quyết định hai thứ khác nhau: trục thứ nhất quyết định hệ thống phải phục vụ những nhóm người dùng nào, trục thứ hai quyết định ai chịu rủi ro tài chính và ai chịu trách nhiệm chất lượng trước người mua.
+
+Farmery vận dụng cả hai trục và khác nhau giữa hai kênh:
+\begin{itemize}
+    \item \textbf{Kênh bán sỉ --- B2B kết hợp 3P:} nhà cung cấp bán thẳng cho doanh nghiệp thu mua, Farmery đứng giữa.
+    \item \textbf{Kênh bán lẻ --- B2B2C kết hợp 1P:} nhà cung cấp bán cho Farmery, Farmery bán tiếp cho người tiêu dùng, và sở hữu hàng trong suốt quá trình đó.
+\end{itemize}
+Lý do lựa chọn cùng cách hai kênh bổ trợ nhau được phân tích tại mục~\ref{sec:businessmodelcanvas}.
+
+\subsection{Lý thuyết chuỗi cung ứng nông sản ngắn (SFSC) và disintermediation}
+
+Chuỗi cung ứng thực phẩm ngắn (SFSC), theo định nghĩa của EU, là một chuỗi cung ứng liên quan đến một số lượng hạn chế các nhà điều hành kinh tế, cam kết hợp tác, phát triển kinh tế địa phương và duy trì mối quan hệ gần gũi về địa lý và xã hội giữa các nhà sản xuất thực phẩm, nhà chế biến và người tiêu dùng \parencite{tapchicongsan2018}. Có một số hình thức khác nhau của SFSC: bán trực tiếp từ nông dân đến người tiêu dùng cuối cùng (tại nông trại, chợ nông dân, giao hàng qua internet), các chương trình giao hộp sản phẩm, ``tự hái'', và nông nghiệp được cộng đồng hỗ trợ (CSA). Lợi ích chính của SFSC là tăng tính minh bạch và niềm tin cho người tiêu dùng, đồng thời mang lại lợi nhuận kinh tế tốt hơn và quyền tự chủ lớn hơn cho nhà sản xuất; hạn chế chính là khối lượng sản xuất/phân phối bị giới hạn, chi phí vận hành trên mỗi đơn vị sản phẩm cao hơn và khó mở rộng quy mô so với chuỗi cung ứng dài truyền thống.
+
+Một khái niệm liên quan đến SFSC là disintermediation (loại bỏ trung gian) --- quá trình mà công nghệ số cho phép nhà sản xuất tiếp cận trực tiếp người mua cuối, cắt giảm các tầng trung gian truyền thống. Một ví dụ điển hình là chiến lược mà nhà bán lẻ máy tính trực tuyến Dell áp dụng vào đầu thế kỷ 21 \parencite{britannica_disintermediation}: công ty bán hàng hóa qua trang web của mình nhưng không có mặt trực tiếp tại các trung tâm mua sắm, giúp cung cấp hàng hóa với giá thấp hơn nhà bán lẻ truyền thống. Farmery về bản chất là một nỗ lực disintermediation có kiểm soát: không loại bỏ hoàn toàn trung gian (vẫn hợp tác với đơn vị vận chuyển), nhưng loại bỏ các tầng trung gian thương mại thuần túy hưởng chênh lệch giá mà không tạo thêm giá trị tương xứng như thương lái ép giá, đồng thời giữ được lợi ích quy mô của chuỗi cung ứng dài (tiếp cận thị trường rộng hơn) nhờ nền tảng số.
+
+\subsection{Truy xuất nguồn gốc thực phẩm: chuẩn GS1 và vai trò của blockchain}
+\label{subsec:gs1blockchain}
+
+GS1 là tổ chức quốc tế phi lợi nhuận xây dựng các chuẩn định danh và trao đổi dữ liệu dùng chung toàn cầu cho chuỗi cung ứng, trong đó có bộ chuẩn dành riêng cho truy xuất nguồn gốc (GS1 Traceability Standard). GS1 định nghĩa cả mã định danh và phương tiện lưu trữ dữ liệu: GTIN cho sản phẩm ở mọi cấp độ đóng gói, GLN cho các bên và địa điểm, SSCC cho các đơn vị hậu cần và các khóa chuyên dụng cho tài sản và mối quan hệ. Sau khi có định danh, hệ thống ghi lại thông tin chuỗi cung ứng gắn với các định danh này, cho phép truy xuất thông tin lô hàng khi cần thu hồi hoặc xác minh xuất xứ \parencite{gs1_keys}. Farmery ứng dụng điều này và tạo ra các mã QR gắn với từng lô hàng, đại diện cho khả năng định danh nguồn gốc, ghi lại dữ liệu ứng với lô hàng đó.
+
+Blockchain là công nghệ chuỗi khối phân tán, cho phép ghi chép và lưu trữ thông tin theo cách không thể thay đổi hoặc làm giả, nhờ đó đảm bảo tính minh bạch, tin cậy và bảo mật cao cho các giao dịch. Trong lĩnh vực thương mại điện tử, blockchain có thể hỗ trợ các bên (doanh nghiệp, nông dân, đơn vị vận chuyển) trong truy xuất nguồn gốc sản phẩm, tối ưu hóa quản lý chuỗi cung ứng và nâng cao hiệu quả giao dịch thương mại quốc tế.
+
+Tuy nhiên, blockchain vấp phải một giới hạn căn bản khi áp dụng cho truy xuất nguồn gốc thực phẩm: nó chỉ bảo đảm dữ liệu không bị sửa \emph{sau khi đã ghi}, chứ không xác minh được dữ liệu đưa vào ban đầu có đúng hay không. Nông dân và cơ sở chế biến nhỏ vẫn nhập thông tin thủ công, nên gian lận tại nguồn hoặc tráo hàng trước khi đóng gói vẫn xảy ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Vì vậy Farmery lưu nhật ký canh tác trên cơ sở dữ liệu tập trung theo nguyên lý định danh của GS1, kèm cơ chế bất biến sau khi công khai (NFR9.1).
+
+Điều kiện để blockchain thực sự phát huy tác dụng thể hiện rõ ở trường hợp thành công được trích dẫn nhiều nhất: Walmart phối hợp với IBM Food Trust rút thời gian truy vết nguồn gốc một lô xoài bán tại Hoa Kỳ từ bảy ngày xuống còn 2,2 giây \parencite{walmart_ibm_foodtrust}. Kết quả này có một tiền đề mà Farmery không có: Walmart đủ lớn để buộc toàn bộ nhà cung cấp trong chuỗi nhập liệu đúng chuẩn lên cùng một hệ thống. Một sàn thương mại điện tử mới, với nhiều nhà cung cấp nhỏ lẻ phân tán, không có đòn bẩy đàm phán tương đương --- mà chính chất lượng dữ liệu đầu vào mới quyết định giá trị của bản ghi bất biến.
+
+Lý do thường được viện dẫn để trì hoãn blockchain --- chi phí hạ tầng --- lại không đứng vững khi kiểm chứng. Một nghiên cứu so sánh chi phí hạ tầng công nghệ thông tin giữa mô hình tập trung và mô hình blockchain trên mười ba kịch bản triển khai cho chuỗi cung ứng gia cầm tại Thái Lan kết luận blockchain có chi phí hạ tầng thấp hơn khoảng 43\% so với cách làm tập trung đang vận hành \parencite{thai_broiler_blockchain_2025}. Báo cáo này vì vậy không lấy chi phí làm căn cứ để chưa dùng blockchain.
+
+Căn cứ thật nằm ở nhóm rào cản khác. Một nghiên cứu năm 2025 về rào cản áp dụng blockchain cho chuỗi cung ứng thực phẩm dễ hư hỏng --- cùng đặc thù dễ hư hỏng của nông sản mà Farmery phục vụ --- xếp hạng mười bốn rào cản, ba vị trí cao nhất lần lượt là lo ngại bảo mật dữ liệu đi kèm mức độ trưởng thành công nghệ chưa đủ, nguy cơ xâm phạm quyền riêng tư dữ liệu, và thiếu hạ tầng số \parencite{perishable_blockchain_barriers_2025}. Rào cản thứ ba trùng khít với đặc điểm đã phân tích của nhóm nhà cung cấp tại mục~\ref{sec:doituongnguoidung}: hạn chế về kỹ năng số và thiết bị. Nói cách khác, đưa blockchain vào lúc này sẽ dựng thêm rào cản gia nhập cho đúng nhóm người dùng mà đề tài đặt mục tiêu hạ rào cản.
+
+\noindent\textbf{Hệ thống truy xuất nguồn gốc nông sản của Nhà nước (TraceViet).} Ngày 26/12/2025, Bộ Nông nghiệp và Môi trường ra mắt hệ thống truy xuất nguồn gốc nông, lâm, thủy sản, thí điểm với sầu riêng trong sáu tháng đầu năm 2026 và vận hành chính thức từ ngày 1/7/2026; người dân quét mã trên sản phẩm để xem thông tin nguồn gốc tại cổng TraceViet \parencite{tuoitre_traceviet_2025}. Hệ thống được định hướng kết nối với các cơ sở dữ liệu chuyên ngành của Bộ, trong đó có mã số vùng trồng và mã số cơ sở đóng gói \parencite{mae_traceviet_2026}. Chuẩn kết nối do Cục Chuyển đổi số công bố cho thấy ba điểm chi phối thiết kế của Farmery \parencite{traceviet_chuanketnoi}:
+\begin{itemize}
+    \item \textbf{Vai trò kết nối:} một nền tảng như Farmery tham gia với tư cách \emph{đơn vị cung cấp giải pháp}, phải đăng ký, được cấp mã đơn vị, nộp khóa công khai và qua kiểm thử kỹ thuật trước khi được kết nối chính thức.
+    \item \textbf{Chiều dữ liệu:} chuẩn mô tả chiều \emph{đẩy} dữ liệu --- doanh nghiệp, vùng trồng, nông hộ, sản phẩm, nhật ký sản xuất, lô thu hoạch, vận chuyển --- dưới dạng tệp XML có ký số; chuẩn không mô tả giao diện tra cứu cho bên ngoài.
+    \item \textbf{Mã truy xuất:} mã lô do đơn vị giải pháp tự gán, còn mã truy xuất chính thức do hệ thống của Bộ cấp sau khi phê duyệt dữ liệu.
+\end{itemize}
+Văn bản chuẩn kết nối tại thời điểm tham khảo còn để trống số quyết định ban hành, và chỉ công bố địa chỉ môi trường chính thức. Vì vậy Farmery thiết kế lớp tích hợp theo đúng chuẩn đã công bố nhưng hiện thực bằng bản giả lập; kết nối thật chỉ bật khi nhóm được cấp quyền. Mỗi lô vẫn có mã QR riêng của Farmery sinh ngay khi được duyệt nội bộ, và việc mở bán không phụ thuộc vào kết quả đồng bộ lên hệ thống của Bộ. Điều này giải quyết một phần giới hạn đã nêu ở trên về blockchain: dữ liệu đầu vào được đối chiếu thêm một lần bởi cơ quan quản lý chuyên ngành, thay vì chỉ được bảo đảm không bị sửa sau khi ghi.
+
+\subsection{Nguồn dữ liệu nông sản cho phân tích và mô hình AI}
+\label{subsec:nguondulieunongsan}
+
+Các mô-đun AI trong phạm vi đồ án --- tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm và dự báo nhu cầu, giá theo mùa vụ --- cần dữ liệu nông sản làm đầu vào huấn luyện và đánh giá. Mục này khảo sát các nguồn công khai tại Việt Nam có thể phục vụ mục đích đó, đối chiếu với dữ liệu mà chính nền tảng sẽ tạo ra sau khi vận hành. Phụ lục O tổng hợp bảy nguồn đã khảo sát kèm mức khả dụng của từng nguồn.
+
+Một quan sát đáng nêu thẳng: mục ``Nông nghiệp'' trên Cổng dữ liệu mở quốc gia chỉ có hai bộ dữ liệu được công bố tại thời điểm khảo sát, ít hơn hẳn các lĩnh vực khác trên cùng cổng \parencite{opendata_govvn}. Nguồn có giá trị nhất về mặt thống kê là số liệu diện tích, năng suất và sản lượng theo cây trồng và địa phương do Cục Thống kê công bố \parencite{cucthongke_nongnghiep}, nhưng tần suất theo quý và năm nên chỉ đủ dựng đường nền theo mùa vụ, không đủ chi tiết để dự báo giá ngắn hạn.
+
+\noindent\textbf{Nhận định.} Không có nguồn mở nào đủ tốt để huấn luyện thẳng mô-đun dự báo ngay từ ngày đầu vận hành. Hướng khả thi kết hợp ba lớp. Thứ nhất, số liệu vĩ mô của Cục Thống kê và FAOSTAT làm đường nền theo mùa vụ. Thứ hai, dữ liệu do chính Farmery tích lũy sau khi vận hành --- giai đoạn đầu chưa đủ dữ liệu thì dùng phương pháp thống kê đơn giản theo mùa vụ, chuyển sang mô hình học máy khi lượng giao dịch đủ lớn. Thứ ba, hệ thống truy xuất quốc gia và mã số vùng trồng dùng để \emph{chuẩn hóa lược đồ định danh}, không phải để lấy dữ liệu huấn luyện --- nhất quán với nguyên lý định danh GS1 đã chọn ở mục~\ref{subsec:gs1blockchain}.
+
+Hạn chế về dữ liệu này được nêu lại khi đánh giá mô-đun AI tại Chương~\ref{chap:danhgia}, thay vì né tránh.
+
+\subsection{Hệ thống đánh giá, uy tín và niềm tin (reputation, information asymmetry)}
+\label{subsec:reputation}
+
+Nền tảng lý thuyết cho vấn đề đảm bảo có một hệ thống đánh giá đủ uy tín được xây dựng dựa trên khái niệm bất cân xứng thông tin (information asymmetry), nổi bật với mô hình kinh điển ``The Market for Lemons'' của Akerlof (1970) \parencite{akerlof1970lemons}. Theo đó, khi người bán nắm rõ chất lượng thực tế của sản phẩm hơn người mua và người mua thiếu công cụ để kiểm chứng trước khi giao dịch, thị trường sẽ đối mặt với rủi ro ``lựa chọn đối nghịch'' (adverse selection) --- nơi hàng kém chất lượng dần đào thải hàng hóa tốt, vì người bán sản phẩm chất lượng cao không thể chứng minh giá trị thực để thuyết phục mức giá tương xứng. Đối với một sàn thương mại điện tử nông sản như Farmery, đây là bài toán cốt lõi cần giải quyết: nếu thiếu vắng các cơ chế minh bạch hóa, người tiêu dùng sẽ hoàn toàn mất phương hướng trong việc phân biệt nông sản ``sạch'' thực sự với các sản phẩm có mục đích marketing.
+
+Hệ thống đánh giá và uy tín (reputation system) là cơ chế phổ biến để giảm bất cân xứng thông tin trên các sàn giao dịch trực tuyến, bằng cách tích lũy phản hồi từ các giao dịch trước đó (điểm số, bình luận, tỷ lệ hoàn thành đơn) thành một chỉ số uy tín công khai cho từng người bán \parencite{springer_article}. Các cơ chế này giúp thị trường vận hành hiệu quả hơn bằng cách tạo động lực cho người bán duy trì chất lượng để bảo vệ uy tín dài hạn, dù vẫn tồn tại vấn đề như tâm lý ngại đánh giá tiêu cực do sợ bị trả đũa, hoặc đánh giá tập trung ở nhóm khách hàng cực đoan. Với Farmery, hệ thống đánh giá cần kết hợp với dữ liệu truy xuất nguồn gốc khách quan và chứng nhận đã được xác minh như hai lớp bổ sung cho đánh giá chủ quan của người dùng, giúp giảm thiểu rủi ro đánh giá giả hoặc thao túng, đặc biệt quan trọng với nhóm khách B2B khi giá trị mỗi giao dịch lớn hơn nhiều so với B2C.
+
+\subsection{Nền tảng công nghệ: kiến trúc web, RBAC, cổng thanh toán trung gian và escrow}
+
+Về kiến trúc web, với một sàn thương mại điện tử đa vai trò như Farmery, để có thể phục vụ nhiều nhóm người dùng gồm nông dân/HTX, người tiêu dùng, doanh nghiệp B2B và nhân sự nội bộ của nền tảng, hệ thống có thể được xây dựng theo mô hình kiến trúc phân lớp hoặc kiến trúc hướng dịch vụ, tùy thuộc vào quy mô và yêu cầu mở rộng. Các thành phần chính bao gồm: lớp giao diện cung cấp web/app tương ứng với từng nhóm người dùng; lớp API và nghiệp vụ chịu trách nhiệm xử lý các quy trình kinh doanh; lớp dữ liệu sử dụng cơ sở dữ liệu quan hệ để lưu trữ thông tin người dùng, sản phẩm, đơn hàng, giao dịch và hợp đồng, kết hợp với hệ thống object storage cho hình ảnh, tài liệu và các chứng nhận liên quan. Ngoài ra, hệ thống có thể tích hợp với các dịch vụ bên thứ ba như cổng thanh toán, đơn vị vận chuyển và các hệ thống xác thực hoặc kiểm tra chứng nhận thông qua API khi cần thiết.
+
+Đối với kiểm soát truy cập, Farmery áp dụng mô hình Role-Based Access Control (RBAC), trong đó quyền truy cập không được cấp trực tiếp cho từng người dùng mà được tổ chức thông qua các vai trò (role); người dùng được gán một hoặc nhiều vai trò, mỗi vai trò liên kết với một tập hợp các quyền tương ứng với chức năng nghiệp vụ. Mô hình RBAC được Sandhu và cộng sự hệ thống hóa thành một khung lý thuyết vào năm 1996 \parencite{sandhu1996rbac}. Với đặc thù của Farmery, RBAC phù hợp để quản lý tối thiểu bốn nhóm vai trò chính: nông dân/HTX, người tiêu dùng, doanh nghiệp thu mua và nhân sự nội bộ của nền tảng. Cách tổ chức này giúp áp dụng nguyên tắc đặc quyền tối thiểu (Principle of Least Privilege), qua đó hạn chế nguy cơ truy cập trái phép, sai sót trong vận hành và các rủi ro bảo mật.
+
+Về thanh toán, trung gian thanh toán (payment intermediary) là các tổ chức được cấp phép cung cấp dịch vụ hỗ trợ thu hộ/chi hộ và chuyển tiền giữa các bên trong giao dịch điện tử mà không phải là ngân hàng trực tiếp của cả hai bên (ví như các cổng ví điện tử VNPay, Momo tại Việt Nam). Bên cạnh hình thức thanh toán thông thường, Farmery có thể xem xét áp dụng cơ chế escrow (ký quỹ trung gian) cho các giao dịch có giá trị lớn, đặc biệt là giao dịch B2B: khoản tiền của người mua được một bên trung gian giữ lại và chỉ được giải ngân cho người bán khi các điều kiện đã thỏa thuận được đáp ứng. Cơ chế này giúp giảm rủi ro cho cả hai phía: doanh nghiệp thu mua hạn chế nguy cơ thanh toán nhưng không nhận được hàng hóa đúng cam kết, trong khi nông dân/HTX có thêm sự đảm bảo rằng khoản tiền đã được người mua nộp và được giữ bởi bên trung gian.
+
+\subsection{Mô hình doanh thu marketplace (business model)}
+\label{subsec:businessmodel}
+
+Theo Osterwalder và Pigneur, mô hình kinh doanh của một tổ chức được mô tả một cách có hệ thống qua 9 khối xây dựng (Business Model Canvas): phân khúc khách hàng, giá trị đề xuất, kênh phân phối, quan hệ khách hàng, dòng doanh thu, nguồn lực chính, hoạt động chính, đối tác chính và cơ cấu chi phí \parencite{osterwalder2010bmc}. Áp dụng khung này vào các sàn marketplace, dòng doanh thu (revenue streams) phổ biến gồm:
+\begin{itemize}
+    \item Phí hoa hồng trên mỗi giao dịch thành công (phổ biến nhất, tỷ lệ \% theo giá trị đơn hàng).
+    \item Phí niêm yết/gói nổi bật để sản phẩm hiển thị ưu tiên.
+    \item Phí dịch vụ giá trị gia tăng (kho vận, hỗ trợ chụp ảnh/marketing cho nhà cung cấp).
+    \item Quảng cáo trong sàn.
+\end{itemize}
+Đa số marketplace giai đoạn đầu ưu tiên phí hoa hồng làm dòng doanh thu chính vì gắn trực tiếp với giá trị giao dịch thực tế phát sinh trên nền tảng, ít tạo rào cản gia nhập cho người bán mới so với phí niêm yết cố định. Mô hình doanh thu cụ thể của Farmery được phân tích chi tiết tại mục~\ref{sec:businessmodelcanvas}.
+
+\subsection{Quản lý tồn kho hàng dễ hư hỏng và phối hợp với đơn vị vận chuyển thứ ba (3PL)}
+\label{subsec:khobai}
+
+Đối với hàng nông sản dễ hư hỏng, nguyên tắc quản lý tồn kho phổ biến là FEFO (First-Expired-First-Out) --- ưu tiên xuất bán lô hàng có hạn sử dụng/thời gian thu hoạch gần nhất trước, khác với nguyên tắc FIFO (First-In-First-Out) thường dùng cho hàng hóa không có hạn sử dụng rõ ràng. Việc quản lý tồn kho theo lô (batch) kết hợp với cảnh báo sớm khi lô hàng sắp hết hạn hoặc tồn kho xuống thấp giúp giảm tỷ lệ hao hụt --- vấn đề đã được phân tích tại Chương~\ref{chap:gioithieu} (Hình~\ref{fig:thuctrang}), nơi tỷ lệ tổn thất sau thu hoạch tại Việt Nam vẫn ở mức 20--40\% một phần do thiếu công cụ quản lý tồn kho hiệu quả ở khâu bán lẻ/bán sỉ.
+
+Về vận chuyển, nhiều nền tảng thương mại điện tử không tự đầu tư đội xe hay kho bãi mà thuê ngoài đơn vị logistics bên thứ ba (3PL). Cách làm này giúp nền tảng tập trung nguồn lực vào công nghệ thay vì hạ tầng vật lý tốn kém --- đặc biệt là kho lạnh, vốn còn rất thiếu tại Việt Nam (Chương~\ref{chap:gioithieu}) --- nhưng đổi lại phải phụ thuộc vào chất lượng dịch vụ của đối tác. Ở chiều ngược lại, các sàn lớn khi đủ quy mô thường tự xây dựng năng lực kho vận rồi mở dịch vụ đó cho người bán, thậm chí cho doanh nghiệp ngoài sàn --- vừa kiểm soát được chất lượng giao hàng, vừa biến chi phí hạ tầng thành một nguồn doanh thu. Farmery chọn cách thuê ngoài toàn bộ phương tiện nhưng tự giữ những khâu mà 3PL phục vụ kém nhất với hàng tươi: nghiệm thu, đóng gói và dán tem tại kho sơ chế, và điều phối chặng trung chuyển dài bằng xe lạnh thuê theo chuyến cố định; chặng cuối trong thành phố giao cho 3PL nội thành. Tự đầu tư đội giao hàng chỉ đáng khi mật độ đơn đủ lớn, nên được để ở hướng phát triển. Ranh giới giữa phần nền tảng tự làm và phần thuê ngoài được nêu tại mục~\ref{sec:phamvi}.
+
+\section{Ứng dụng AI trong phân tích dữ liệu và ra quyết định thương mại điện tử}
+
+Bên cạnh các cơ sở lý thuyết về mô hình kinh doanh và niềm tin, Farmery còn tích hợp các nhóm bài toán trí tuệ nhân tạo (AI) nhằm hỗ trợ ra quyết định cho cả người dùng và đội ngũ vận hành, được thiết kế chi tiết tại mục~\ref{sec:thietkeAI} và hiện thực tại mục~\ref{sec:hienthucAI}.
+
+\subsection{Tìm kiếm theo ngữ nghĩa (semantic search)}
+\label{subsec:semanticsearch}
+Tìm kiếm theo từ khóa chỉ trả về sản phẩm có chứa đúng từ người dùng gõ. Với nông sản, cách gọi của người mua và cách mô tả của người bán thường lệch nhau: người mua tìm ``rau ăn lẩu'' hay ``trái cây ít ngọt cho người tiểu đường'', còn trang sản phẩm ghi ``cải cúc'', ``bưởi da xanh''. Tìm kiếm theo ngữ nghĩa giải quyết khoảng lệch này bằng cách biểu diễn cả câu truy vấn lẫn mô tả sản phẩm thành vector trong cùng một không gian, sao cho hai đoạn văn gần nghĩa thì có vector gần nhau \parencite{reimers2019sbert}; kết quả được xếp theo độ gần giữa vector truy vấn và vector sản phẩm.
+
+Tìm kiếm ngữ nghĩa thuần túy lại yếu ở chiều ngược lại: nó dễ bỏ sót kết quả khớp chính xác theo tên riêng, mã sản phẩm hay tên vùng trồng --- những thứ tìm kiếm từ khóa làm tốt. Vì vậy hướng phổ biến là \emph{tìm kiếm lai} (hybrid search): chạy song song hai cách tìm rồi hợp nhất hai danh sách kết quả. Phương pháp hợp nhất đơn giản và bền vững nhất là reciprocal rank fusion, cộng điểm của mỗi kết quả theo nghịch đảo thứ hạng của nó ở từng danh sách, không cần chuẩn hóa điểm giữa hai cách tìm \parencite{cormack2009rrf}.
+
+Với tiếng Việt, điều kiện cần là mô hình nhúng văn bản phải được huấn luyện trên dữ liệu đa ngôn ngữ có tiếng Việt. Một số mô hình mã nguồn mở đáp ứng được điều này, ví dụ BGE-M3 hỗ trợ hơn một trăm ngôn ngữ và dùng được cho cả truy vấn ngắn lẫn văn bản dài \parencite{chen2024bgem3}. Chất lượng tìm kiếm thường được đo bằng nDCG (normalized discounted cumulative gain), chỉ số thưởng cho việc đặt kết quả đúng ở thứ hạng cao \parencite{jarvelin2002ndcg}.
+
+\subsection{Hệ thống gợi ý sản phẩm (recommendation system)}
+Hệ thống gợi ý là một trong những ứng dụng AI phổ biến nhất trong thương mại điện tử, giúp cá nhân hóa trải nghiệm mua sắm bằng cách đề xuất sản phẩm phù hợp dựa trên hành vi, lịch sử mua hàng hoặc đặc điểm của người dùng và sản phẩm tương tự. Theo khảo sát của Su và Khoshgoftaar (2009), hai hướng tiếp cận phổ biến là collaborative filtering (collaborative filtering) --- dựa trên sự tương đồng hành vi giữa các người dùng --- và content-based filtering (content-based filtering) --- dựa trên đặc điểm của sản phẩm đã tương tác trước đó; các hệ thống hiện đại thường kết hợp cả hai (hybrid) để giảm bớt vấn đề ``cold start'' (thiếu dữ liệu tương tác cho người dùng/sản phẩm mới) \parencite{su2009collaborative}. Với Farmery, hệ thống gợi ý có thể tận dụng đặc thù dữ liệu nông sản (mùa vụ, vùng trồng, chứng nhận) để gợi ý sản phẩm phù hợp thời điểm, giúp tăng khả năng tiêu thụ hàng tươi trước khi hết hạn sử dụng.
+
+\subsection{Dự báo giá nông sản}
+Dự báo giá là bài toán chuỗi thời gian (time-series forecasting): theo Hyndman và Athanasopoulos, phương pháp dự báo dựa trên dữ liệu lịch sử (sản lượng, giá, mùa vụ) để ước lượng xu hướng và tính mùa vụ trong tương lai gần, kết hợp giữa mô hình thống kê cổ điển (ARIMA, SARIMA) (ví dụ ARIMA, exponential smoothing) với các mô hình học máy khi dữ liệu đủ lớn \parencite{hyndman2021forecasting}. Với Farmery, dự báo giá giúp nhân viên thu mua quyết định mua lô nào, với giá nào và đặt giá bán lẻ sao cho còn lãi sau hao hụt; dự báo nhu cầu và cảnh báo dư cung, khan hiếm cần dữ liệu giao dịch mà nền tảng mới chưa có nên để ở hướng phát triển. Đây là hướng đã được kiểm chứng ở các nền tảng đối chứng: Ninjacart dùng học máy để dự báo nhu cầu và tối ưu vận chuyển \parencite{ninjacart}, còn Farm2Market công bố mô hình dự báo giá đạt độ chính xác khoảng 82\% \parencite{farm2market_2025}.
+
+\subsection{Giám sát dấu hiệu bất thường}
+Một sàn giao dịch luôn cần cơ chế phát hiện các dấu hiệu bất thường: đánh giá giả nhằm thao túng uy tín, mức giá lệch xa mặt bằng chung, hoặc hành vi đặt và hủy đơn liên tục. Theo khảo sát của Chandola, Banerjee và Kumar (2009), các kỹ thuật học máy phổ biến cho bài toán này gồm phương pháp thống kê, phân loại và phân cụm để phát hiện điểm dữ liệu lệch khỏi phân bố đã học được \parencite{chandola2009anomaly}.
+
+Tuy nhiên, các kỹ thuật này đòi hỏi hai điều kiện mà một nền tảng mới chưa có: lưu lượng giao dịch thật đủ lớn để học được thế nào là ``bình thường'', và tập nhãn các trường hợp gian lận đã xác nhận để đo được chất lượng mô hình. Thiếu cả hai, mô hình học máy sẽ không kiểm chứng được bằng số đo --- mâu thuẫn với mục tiêu đánh giá đặt ra tại mục~\ref{sec:muctieudanhgia}. Vì vậy trong phạm vi đồ án, Farmery dùng \emph{luật ngưỡng} do quản trị viên hệ thống cấu hình (ví dụ: số đánh giá năm sao từ cùng một người mua trong khoảng thời gian ngắn, tỷ lệ hủy đơn vượt mức, giá lệch quá một biên độ so với trung vị danh mục) làm lớp cảnh báo sơ bộ trước khi kiểm duyệt viên hoặc nhân viên vận hành xem xét thủ công. Việc thay thế lớp luật ngưỡng này bằng mô hình học máy được đặt ở hướng phát triển (Chương~\ref{chap:ketluan}), khi nền tảng đã tích lũy đủ dữ liệu vận hành và nhãn từ chính phán quyết của nhân sự xử lý cảnh báo.
+
+\section{Kết chương}
+
+Chương này đã hệ thống hóa các kiến thức nền tảng cần thiết cho đồ án:
+\begin{itemize}
+    \item \textbf{Đặc điểm mặt hàng:} phạm vi khái niệm nông sản, các đặc điểm phân biệt nông sản với hàng hóa thông thường và hệ quả của chúng lên thiết kế, cùng hệ thống chứng nhận để nông sản ra thị trường.
+    \item \textbf{Bối cảnh và tiêu chuẩn:} định hướng chuyển đổi số nông nghiệp, chương trình OCOP và hai chuẩn VietGAP/GlobalGAP làm căn cứ kiểm duyệt chứng nhận.
+    \item \textbf{Mô hình kinh doanh và chuỗi cung ứng:} các mô hình thương mại điện tử, chuỗi cung ứng thực phẩm ngắn và rút ngắn tầng trung gian, mô hình doanh thu, nguyên tắc xuất trước hàng hết hạn trước và hợp tác với đơn vị vận chuyển thứ ba --- làm nền cho ngữ cảnh nghiệp vụ tại mục~\ref{sec:ngucanh}.
+    \item \textbf{Niềm tin và minh bạch:} truy xuất nguồn gốc theo GS1, lý do chưa dùng blockchain, lý thuyết bất cân xứng thông tin và hệ thống uy tín --- làm nền cho vấn đề V4 tại mục~\ref{sec:vande}.
+    \item \textbf{Công nghệ nền tảng:} kiến trúc web phân lớp, RBAC, cổng thanh toán trung gian và cơ chế tạm giữ tiền.
+    \item \textbf{Trí tuệ nhân tạo:} ba bài toán tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm và dự báo nhu cầu, giá; cùng lý do giám sát bất thường được hiện thực bằng luật ngưỡng thay vì học máy trong phạm vi đồ án.
+\end{itemize}
+Các kiến thức trên đủ bao quát phần phân tích yêu cầu và thiết kế ở Chương~\ref{chap:hethong} và Chương~\ref{chap:phantich}. Riêng các công nghệ hiện thực cụ thể (framework front-end/back-end, thư viện và mô hình AI) sẽ được so sánh và lựa chọn tại mục~\ref{sec:giaiphapcongnghe} sau khi nhóm chốt giải pháp.
+% TODO: sau khi chốt công nghệ ở mục 5.2, bổ sung vào chương này phần kiến thức nền tảng về các framework/thư viện đã chọn (nếu hội đồng yêu cầu).

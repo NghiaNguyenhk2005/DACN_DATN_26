@@ -1,0 +1,136 @@
+% Phụ lục B — bộ công cụ đánh giá khả dụng, dùng cho mục 7.4.
+
+\section*{Phụ lục B. Bộ công cụ đánh giá khả dụng}
+\label{apdx:khaosat}
+\addcontentsline{toc}{section}{Phụ lục B. Bộ công cụ đánh giá khả dụng}
+
+Phụ lục này cung cấp công cụ để tiến hành đánh giá khả dụng nêu tại
+mục~\ref{sec:danhgiaux}: thiết kế buổi thử, kịch bản tác vụ, phiếu ghi kết quả
+và cách tính bốn chỉ số hành vi; kèm danh sách kiểm tra khả năng tiếp cận và
+danh sách kiểm tra ứng dụng web cài đặt được.
+
+\subsection*{B.1. Thiết kế buổi thử}
+
+\noindent\textbf{Đối tượng tham gia.} Nông dân và thành viên ban điều hành hợp
+tác xã tại vùng trồng thí điểm --- nhóm có mức độ thành thạo công nghệ thấp
+nhất trong các nhóm người dùng (mục~\ref{sec:doituongnguoidung}). Đây là phép
+thử khó nhất: nếu nhóm này dùng được thì các nhóm còn lại không phải trở ngại.
+
+\noindent\textbf{Cỡ mẫu.} Tối thiểu 5 người, mục tiêu 8 người. Với kiểm thử khả
+dụng, 5 người đã đủ phát hiện phần lớn lỗi nghiêm trọng về giao diện.
+
+\noindent\textbf{Vì sao đo hành vi thay vì dùng bảng câu hỏi.} Bảng câu hỏi
+chuẩn hóa cho ra một điểm tổng về cảm nhận, nhưng không chỉ ra người dùng vướng
+ở đâu; với nhóm nông dân, việc tự chấm thang điểm năm mức cho các nhận định
+trừu tượng cũng dễ bị trả lời cho xong. Bốn chỉ số hành vi dưới đây đo trực
+tiếp điều nhóm cần biết để sửa giao diện: người dùng có tự làm xong không, mất
+bao lâu, cần giúp mấy lần và thao tác sai ở đâu.
+
+\noindent\textbf{Nguyên tắc tiến hành:}
+\begin{itemize}
+    \item Người quan sát \textbf{không hướng dẫn thao tác}. Chỉ đọc bối cảnh tác
+    vụ rồi quan sát. Khi người tham gia hỏi, trả lời bằng câu trung lập kiểu
+    ``anh/chị thử xem trên màn hình có gì giúp được không''.
+    \item Ghi thời điểm bắt đầu và kết thúc từng tác vụ, mỗi lần người tham gia
+    phải nhờ giúp, mỗi thao tác sai phải làm lại, và \emph{nguyên văn} câu than
+    phiền nếu có --- câu nói tự nhiên của người dùng thường chỉ thẳng ra vấn đề
+    giao diện.
+    \item Một tác vụ được tính là \textbf{hoàn thành không cần hỗ trợ} khi người
+    tham gia tự làm xong mà người quan sát không phải chỉ dẫn thao tác cụ thể
+    lần nào.
+\end{itemize}
+
+\subsection*{B.2. Kịch bản tác vụ}
+
+Ba tác vụ dưới đây bao phủ các thao tác mà nhà cung cấp phải làm thường xuyên
+nhất. Người quan sát đọc to phần bối cảnh, không đọc phần tiêu chí hoàn thành.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{table}[H]
+\centering
+\small
+\caption{Kịch bản tác vụ dùng trong đánh giá khả dụng}
+\label{tab:kichban-khaosat}
+\begin{tabular}{L{1.16cm} L{6.76cm} L{6.98cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Bối cảnh đọc cho người tham gia} & \textbf{Tiêu chí hoàn thành} \\
+\midrule
+\textbf{T1} & ``Anh/chị vừa thu hoạch một lô rau và muốn đưa lên bán. Hãy đăng lô rau này lên hệ thống, có kèm ảnh.'' & Sản phẩm được tạo, gắn đúng danh mục lá, có ít nhất một ảnh, nhập đủ đơn vị tính và ngày thu hoạch, và chuyển sang trạng thái chờ duyệt. \\
+\textbf{T2} & ``Hôm nay anh/chị vừa bón phân cho lô rau vừa đăng. Hãy ghi lại việc đó vào hệ thống.'' & Tạo được một bản ghi nhật ký canh tác gắn đúng lô, có ngày và nội dung hoạt động. \\
+\textbf{T3} & ``Có người hỏi lô rau này trồng ở đâu. Hãy tìm mã QR của lô để đưa cho họ tra cứu.'' & Tìm tới được mã QR của đúng lô và mở được trang truy xuất tương ứng. \\
+\bottomrule
+\end{tabular}
+\end{table}
+\endgroup
+
+\noindent\textbf{Tác vụ bổ sung (tùy chọn).} Nếu còn thời gian và người tham
+gia chưa mệt, thử thêm tác vụ xem đơn thu mua của Farmery và xác nhận đơn ---
+đây là luồng đặc thù của mô hình 1P.
+
+\subsection*{B.3. Phiếu ghi kết quả của người quan sát}
+
+Mỗi người tham gia dùng một phiếu.
+
+\begingroup
+\tblsetup\renewcommand{\arraystretch}{1.6}
+\begin{table}[H]
+\centering
+\small
+\caption{Phiếu ghi kết quả quan sát theo từng tác vụ}
+\label{tab:phieu-quansat}
+\begin{tabular}{L{1.13cm} L{2.26cm} L{1.95cm} L{2.05cm} L{2.05cm} L{4.40cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Tác vụ} & \textbf{Tự hoàn thành?} & \textbf{Thời gian} & \textbf{Số lần nhờ giúp} & \textbf{Số lỗi làm lại} & \textbf{Chỗ vướng, nguyên văn câu than phiền} \\
+\midrule
+T1 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
+T2 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
+T3 & Có / Không & \hrulefill & \hrulefill & \hrulefill & \hrulefill \\
+\bottomrule
+\end{tabular}
+\end{table}
+\endgroup
+
+\noindent Thông tin nền cần ghi cho mỗi người tham gia: độ tuổi, vai trò (nông
+dân hay cán bộ hợp tác xã), loại thiết bị đang dùng, và mức độ quen dùng ứng
+dụng mua sắm trực tuyến (thường xuyên / thỉnh thoảng / chưa từng).
+
+\subsection*{B.4. Cách tính bốn chỉ số}
+
+\begin{itemize}
+    \item \textbf{Tỷ lệ hoàn thành không cần hỗ trợ} của một tác vụ = số người tự
+    hoàn thành / tổng số người thử. Đây là chỉ số đối chiếu với ngưỡng 80\% tại
+    Phụ lục L.
+    \item \textbf{Thời gian hoàn thành} báo cáo bằng trung vị, chỉ tính trên những
+    người đã hoàn thành; dùng trung vị vì vài người rất chậm sẽ kéo lệch trung
+    bình.
+    \item \textbf{Số lần nhờ giúp} và \textbf{số lỗi phải làm lại} báo cáo bằng
+    trung bình trên mỗi người cho từng tác vụ, kèm danh sách chỗ vướng xếp theo
+    số người gặp --- danh sách này là đầu vào trực tiếp cho vòng sửa giao diện.
+\end{itemize}
+
+\subsection*{B.5. Kiểm tra khả năng tiếp cận tự động}
+
+Chạy công cụ axe-core trên các màn hình chính --- trang chủ, chi tiết sản phẩm,
+trang truy xuất, giỏ hàng, trang đăng sản phẩm của nhà cung cấp --- đối chiếu
+chuẩn WCAG mức AA. Báo cáo số lỗi theo mức độ nghiêm trọng và số lỗi đã sửa.
+Cần ghi rõ giới hạn: kiểm tra tự động chỉ phát hiện được một phần lỗi tiếp
+cận --- nhà phát triển công cụ công bố con số khoảng 57\% số lỗi gặp trong thực
+tế, còn nếu tính theo số tiêu chí thành công của WCAG thì tỷ lệ tự động kiểm
+được thấp hơn nhiều. Vì vậy kết quả này bổ sung chứ không thay thế buổi thử với
+người dùng thật.
+
+\subsection*{B.6. Danh sách kiểm tra ứng dụng web cài đặt được}
+
+Thực hiện trên tối thiểu hai điện thoại thật, một Android tầm trung và một iOS
+(NFR7.3):
+\begin{enumerate}
+    \item Cài được nền tảng lên màn hình chính và mở lại từ biểu tượng.
+    \item Nhận được thông báo đẩy khi một đơn hàng đổi trạng thái.
+    \item Tắt mạng, ghi một bản nhật ký canh tác; bật mạng lại, bản ghi được gửi
+    đủ một lần, không trùng.
+    \item Tắt mạng, cập nhật trạng thái một đơn giao hàng; bật mạng lại, trạng
+    thái được đồng bộ đúng.
+\end{enumerate}

@@ -1,0 +1,78 @@
+% ============================================================
+% FILE RỜI — CHƯA \input VÀO main.tex
+% Nội dung: đào sâu lập luận blockchain đã có tại
+% chapters/chuong2-kienthuc-nentang.tex, subsec:gs1blockchain — GIỮ NGUYÊN
+% kết luận "chưa dùng blockchain ở MVP", chỉ bổ sung case study thực tế và
+% phân tích riêng kịch bản xuất khẩu (đã thống nhất với nhóm).
+%
+% Đề xuất khi merge: THAY THẾ đoạn "Tuy nhiên, blockchain vấp phải..." đến
+% hết đoạn hiện tại trong subsec:gs1blockchain bằng đoạn mở rộng dưới đây,
+% giữ nguyên 2 đoạn đầu (định nghĩa GS1, định nghĩa blockchain).
+% ============================================================
+
+% ------------------------------------------------------------
+% ĐOẠN THAY THẾ cho đoạn thứ 3 hiện tại của subsec:gs1blockchain
+% (đoạn bắt đầu "Tuy nhiên, blockchain vấp phải một giới hạn căn bản...")
+% ------------------------------------------------------------
+
+Tuy nhiên, blockchain vấp phải một giới hạn căn bản khi áp dụng cho truy xuất nguồn gốc thực phẩm: nó chỉ bảo đảm dữ liệu không bị sửa \emph{sau khi đã ghi}, chứ không xác minh được dữ liệu đưa vào ban đầu có đúng hay không. Nông dân và cơ sở chế biến nhỏ vẫn nhập thông tin thủ công, nên gian lận tại nguồn hoặc tráo hàng trước khi đóng gói vẫn xảy ra mà blockchain không phát hiện được \parencite{bath_blockchain}. Hạn chế này được xác nhận trực tiếp bởi triển khai thực tế cùng ngành, cùng thị trường: TE-FOOD --- nền tảng blockchain xử lý truy xuất cho quy mô lớn tại Việt Nam (khoảng 18.000 heo và 200.000 gà mỗi ngày) --- thừa nhận blockchain không giải quyết được vấn đề dữ liệu đầu vào sai lệch (``garbage in, garbage out''); nếu dữ liệu đưa vào vô giá trị thì bản ghi bất biến trên chuỗi khối cũng không tạo thêm giá trị thực chất \parencite{tefood_blockchain}.
+
+Ngược lại, trường hợp thành công điển hình nhất của blockchain trong truy xuất thực phẩm --- Walmart triển khai IBM Food Trust cho rau lá xanh, giảm thời gian truy vết khi có sự cố an toàn thực phẩm từ hơn 6 ngày xuống còn 2,2 giây \parencite{walmart_ibm_foodtrust} --- có một điều kiện tiên quyết mà Farmery chưa có ở giai đoạn MVP: Walmart là nhà bán lẻ đủ lớn để áp đặt toàn bộ nhà cung cấp trong chuỗi nhập liệu đúng chuẩn lên cùng một hệ thống, trong khi một sàn thương mại điện tử mới với nhiều nhà cung cấp nhỏ lẻ không có đòn bẩy đàm phán tương đương. Về mặt chi phí, một nghiên cứu so sánh hạ tầng công nghệ thông tin giữa hệ thống tập trung và blockchain cho chuỗi cung ứng gia cầm tại Thái Lan (2025) xác nhận rào cản chính khi cân nhắc blockchain là chi phí hạ tầng cảm nhận cao hơn đáng kể so với hệ thống tập trung sẵn có \parencite{thai_broiler_blockchain_2025}; một nghiên cứu khác về rào cản áp dụng blockchain cho chuỗi cung ứng thực phẩm dễ hư hỏng (2025) --- cùng đặc thù ``dễ hư hỏng'' của nông sản Farmery đang phục vụ --- xếp hạng ba rào cản lớn nhất là lo ngại bảo mật/thiếu trưởng thành công nghệ, đe dọa quyền riêng tư dữ liệu, và thiếu hạ tầng số \parencite{perishable_blockchain_barriers_2025}, đúng với đặc điểm nhóm nông dân/HTX đã phân tích tại mục~\ref{sec:doituongnguoidung}.
+
+\noindent\textbf{Kịch bản xuất khẩu có đổi kết luận không?} Giá trị lớn nhất của blockchain phát huy khi nhiều bên độc lập, không tin tưởng lẫn nhau, cần cùng xác nhận một chuỗi sự kiện mà không có bên trung gian nào đủ uy tín để tất cả cùng tin. Kịch bản xuất khẩu --- với chuỗi tác nhân gồm nhà cung cấp, cơ sở đóng gói, đơn vị kiểm dịch thực vật, hải quan Việt Nam, đơn vị vận chuyển quốc tế và hải quan/GACC nước nhập khẩu --- đúng là mô hình nhiều bên độc lập xuyên biên giới mà lý thuyết blockchain thường viện dẫn làm ví dụ lý tưởng, khác hẳn bối cảnh trong nước hiện tại của Farmery (chỉ hai lớp: nhà cung cấp và Farmery). Tuy vậy, ba lý do sau cho thấy điều này chưa đủ để đảo ngược kết luận ở giai đoạn MVP: \textbf{(1)} vấn đề dữ liệu đầu vào sai lệch không biến mất khi thêm actor xuyên biên giới --- ngược lại, càng nhiều bên độc lập tham gia nhập liệu ban đầu thì rủi ro gian lận tại nguồn càng cao, đúng như TE-FOOD đã thừa nhận; \textbf{(2)} Nhà nước đã và đang xây dựng chính hệ thống tập trung làm đầu mối truy xuất quốc gia (CheckVN, vận hành từ 1/7/2026, đã chia sẻ trực tiếp với GACC --- mục~\ref{subsec:nhatkycanhtac-xuatkhau}), tức bên trung gian đủ uy tín đã tồn tại, làm giảm phần lớn lý do cần blockchain trong bối cảnh cụ thể của nông sản Việt Nam xuất khẩu; \textbf{(3)} chi phí vận hành blockchain tăng theo số tầng chuỗi cung ứng \parencite{longo2020blockchain_dairy} và rào cản hạ tầng số của nhóm nông dân/HTX (mục~\ref{sec:doituongnguoidung}) là điểm yếu nhất của chính nhóm mà Farmery đặt làm trung tâm giảm rào cản gia nhập.
+
+Vì vậy, Farmery vẫn lưu nhật ký canh tác trên cơ sở dữ liệu tập trung theo nguyên lý định danh của GS1, kèm cơ chế bất biến sau khi công khai (NFR9.1), kể cả khi tính đến kịch bản xuất khẩu. Điều kiện cụ thể để xem xét lại trong tương lai: khi Farmery mở rộng sang nhiều đối tác xuất khẩu tại nhiều quốc gia có hệ thống truy xuất riêng không liên thông với nhau; khi khối lượng giao dịch xuất khẩu đủ lớn để chi phí hạ tầng blockchain không còn là rào cản đáng kể so với giá trị lô hàng; hoặc khi hạ tầng số của nhóm nông dân/HTX đã cải thiện đủ để không còn là điểm nghẽn kỹ thuật.
+
+% ============================================================
+% Nguồn tham khảo cần bổ sung vào references.bib khi merge (nhóm cần tìm
+% nguồn chính thống/học thuật để thay thế nếu các nguồn báo chí dưới đây
+% chưa đủ uy tín cho một đồ án chuyên ngành):
+%
+% @online{tefood_blockchain,
+%   author  = {{TE-FOOD}},
+%   title   = {{Blockchain traceability for livestock supply chains in Vietnam}},
+%   year    = {2023},
+%   note    = {Cần tìm nguồn chính thống hơn (bài báo học thuật/case study công bố chính thức) thay cho nguồn báo chí ban đầu}
+% }
+%
+% @online{walmart_ibm_foodtrust,
+%   author  = {{IBM}},
+%   title   = {{Walmart and IBM Food Trust -- leafy greens traceability}},
+%   year    = {2018},
+%   note    = {Case study công bố chính thức của IBM/Walmart về thời gian truy vết 2,2 giây}
+% }
+%
+% @article{thai_broiler_blockchain_2025,
+%   author  = {{Various}},
+%   title   = {{Cost comparison between centralized and blockchain-based
+%               traceability systems for Thai broiler supply chain}},
+%   journal = {{Journal of Innovation and Entrepreneurship}},
+%   year    = {2025}
+% }
+%
+% @article{perishable_blockchain_barriers_2025,
+%   author  = {{Various}},
+%   title   = {{Barriers to blockchain adoption in perishable food supply chains}},
+%   journal = {{Environment, Development and Sustainability}},
+%   year    = {2025}
+% }
+%
+% @article{longo2020blockchain_dairy,
+%   author  = {{Longo, F. et al.}},
+%   title   = {{Blockchain-based traceability system in the dairy supply chain (Italy)}},
+%   year    = {2020}
+% }
+% ============================================================
+
+% ============================================================
+% VIỆC CẦN NHÓM XÁC NHẬN TRƯỚC KHI MERGE:
+% 1. Đoạn trên được viết để THAY THẾ toàn bộ đoạn thứ 3 hiện tại của
+%    subsec:gs1blockchain (giữ nguyên 2 đoạn đầu định nghĩa GS1/blockchain).
+%    Xác nhận cách thay thế này, hay muốn giữ đoạn cũ và chỉ nối thêm.
+% 2. Các nguồn case study (TE-FOOD, Walmart/IBM) hiện dựa trên bài báo/trang
+%    tin công nghệ — nhóm cần tìm nguồn chính thống hơn (paper, case study
+%    chính thức của IBM) trước khi đưa vào references.bib chính thức.
+% 3. Đoạn văn khá dài (5 đoạn) — khi merge có thể cân nhắc tách thành gạch
+%    đầu dòng cho phần "ba lý do" theo quy ước trình bày đã thống nhất
+%    trong DECISIONS.md.
+% ============================================================

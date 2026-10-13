@@ -1,0 +1,48 @@
+% Phụ lục V — danh mục sự kiện nghiệp vụ giữa các mô-đun (mục 5.3.1, Bảng tab:module-io).
+
+\section*{Phụ lục V. Danh mục sự kiện nghiệp vụ}
+\label{apdx:sukien}
+\addcontentsline{toc}{section}{Phụ lục V. Danh mục sự kiện nghiệp vụ}
+
+Các mô-đun của ứng dụng lõi chỉ gọi nhau trực tiếp khi cần kết quả ngay trong
+cùng một giao dịch (giữ chỗ, trừ tồn, tạo giao dịch thanh toán, tạo giao hàng).
+Mọi phụ thuộc còn lại đi qua sự kiện phát vào Redis: mô-đun phát không cần biết
+ai nhận, mô-đun nhận xử lý ngoài đường giao dịch chính. Bảng~\ref{tab:sukien}
+liệt kê các sự kiện, mô-đun phát và từng mô-đun nhận; mỗi bên nhận xử lý độc
+lập, một sự kiện bị gửi lại nhiều lần chỉ có tác dụng một lần.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{3.55cm} L{2.20cm} L{3.30cm} L{5.10cm}}
+\caption{Danh mục sự kiện nghiệp vụ}
+\label{tab:sukien} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Sự kiện} & \textbf{Phát bởi} & \textbf{Nhận bởi} & \textbf{Tác dụng ở bên nhận} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Sự kiện} & \textbf{Phát bởi} & \textbf{Nhận bởi} & \textbf{Tác dụng ở bên nhận} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\texttt{UserVerified} & \texttt{identity} & \texttt{supplier}, \texttt{notification} & Mở quyền đăng bán cho nhà cung cấp đã xác minh; báo kết quả cho người dùng \\
+\texttt{CertExpired} & \texttt{supplier} & \texttt{catalog}, \texttt{notification} & Ẩn nhãn chứng nhận hết hạn trên sản phẩm và trang truy xuất; nhắc nhà cung cấp gia hạn \\
+\texttt{BatchApproved} & \texttt{catalog} & \texttt{inventory}, \texttt{notification} & Mở dòng tồn của nhà cung cấp cho lô; báo nhà cung cấp lô đã được duyệt \\
+\texttt{ProductChanged} & \texttt{catalog} & Dịch vụ AI & Tính lại vector của sản phẩm \\
+\texttt{ProductEmbedded} & Dịch vụ AI & \texttt{catalog} & Lưu vector mới cho tìm kiếm theo ngữ nghĩa và sản phẩm tương tự \\
+\texttt{StockLow} & \texttt{inventory} & \texttt{notification}, \texttt{operations} & Báo chủ dòng tồn và nhân viên thu mua; đưa lên bảng điều khiển giám sát tồn kho \\
+\texttt{BatchRecalled} & \texttt{inventory} & \texttt{retail}, \texttt{wholesale}, \texttt{catalog}, \texttt{notification} & Lập danh sách đơn đã bán từ lô; hiện cảnh báo thu hồi trên trang truy xuất; báo người mua \\
+\texttt{ProcurementReceived} & \texttt{procurement} & \texttt{retail}, \texttt{payment}, \texttt{notification} & Gửi thông báo có hàng cho người đã đăng ký; ghi khoản phải trả nhà cung cấp; báo nhà cung cấp kết quả nghiệm thu \\
+\texttt{OrderPlaced} & \texttt{retail} & \texttt{notification} & Xác nhận đơn cho khách \\
+\texttt{OrderCancelled} & \texttt{retail} & \texttt{inventory}, \texttt{payment}, \texttt{notification} & Nhả giữ chỗ; hoàn tiền nếu đã trả; báo khách \\
+\texttt{ContractConcluded} & \texttt{wholesale} & \texttt{payment}, \texttt{notification} & Lập yêu cầu thanh toán của đơn sỉ; báo hai bên hợp đồng đã giao kết \\
+\texttt{PaymentSucceeded} & \texttt{payment} & \texttt{retail}, \texttt{wholesale}, \texttt{notification} & Chuyển đơn sang ``Đã thanh toán''; báo người mua \\
+\texttt{Refunded} & \texttt{payment} & \texttt{retail}, \texttt{fulfillment}, \texttt{inventory}, \texttt{notification} & Cập nhật đơn và yêu cầu đổi trả; ghi bút toán hủy khi hoàn tiền không cần trả hàng; báo khách \\
+\texttt{ShipmentStatusChanged} & \texttt{fulfillment} & \texttt{retail}, \texttt{notification} & Cập nhật dòng thời gian của đơn; báo khách ở mỗi trạng thái \\
+\texttt{CaseResolved} & \texttt{fulfillment} & \texttt{payment}, \texttt{inventory}, \texttt{operations}, \texttt{notification} & Hoàn tiền theo quyết định; nhập hàng trả về; thống kê khiếu nại; báo khách \\
+\texttt{ReviewPosted} & \texttt{engagement} & \texttt{operations}, \texttt{notification} & Đưa đánh giá bị gắn cờ vào hàng đợi duyệt; báo nhà cung cấp có đánh giá mới \\
+\end{longtable}
+\endgroup

@@ -1,0 +1,155 @@
+\chapter{Giới thiệu}
+\label{chap:gioithieu}
+
+\section{Động cơ của đề tài}
+\label{sec:dongco}
+
+\subsection{Bối cảnh và thực trạng}
+\label{sec:thuctrang}
+
+Chuỗi cung ứng nông sản truyền thống tại Việt Nam hiện vẫn phụ thuộc nặng vào các khâu trung gian --- nông sản thường đi qua 4--5 khâu trước khi đến tay người tiêu dùng cuối, khiến giá thành bị đội lên 30--40\% so với giá tại trang trại \parencite{tapchicongthuong_ipsard_2023_2024} --- trong khi phần lớn nông dân vẫn giao dịch qua kênh tự do do thương lái định giá. Hình~\ref{fig:thuctrang} tổng hợp các số liệu chính minh họa cho thực trạng này.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/thuc-trang-chuoi-cung-ung.png}
+\caption{Thực trạng chuỗi cung ứng nông sản Việt Nam}
+\label{fig:thuctrang}
+\end{figure}
+
+Vai trò của thương lái trong bối cảnh này mang tính hai mặt \parencite{vilas_logistics}:
+\begin{itemize}
+    \item \textbf{Mặt tích cực:} giải quyết bài toán thu gom, sơ chế và vận chuyển phân tán mà từng nông hộ nhỏ khó tự thực hiện.
+    \item \textbf{Mặt tiêu cực:} do nắm thông tin thị trường tốt hơn nông dân (bất cân xứng thông tin --- mục~\ref{subsec:reputation}) và thường là điểm bán duy nhất tại địa phương vào thời điểm thu hoạch, thương lái có vị thế đàm phán giá vượt trội, dẫn đến hiện tượng ép giá khi vào vụ thu hoạch rộ.
+\end{itemize}
+
+\subsection{Đặc thù của mặt hàng nông sản}
+
+Thực trạng trên không thể tách rời khỏi bản chất của chính mặt hàng. Nông sản tươi mau hỏng, sản lượng dồn theo mùa vụ, chất lượng không đồng nhất giữa các lô, và đặc biệt là người mua không tự kiểm chứng được chất lượng kể cả sau khi đã sử dụng. Những đặc điểm này khiến nông sản không thể được phục vụ tốt bởi các nền tảng thương mại điện tử vốn thiết kế cho hàng công nghiệp. Phân tích đầy đủ các đặc điểm này cùng hệ quả của chúng lên thiết kế hệ thống được trình bày tại mục~\ref{sec:dacdiemnongsan}.
+
+\subsection{Vấn đề cần giải quyết}
+\label{sec:vande}
+
+Từ thực trạng trên, đồ án xác định bốn vấn đề chính dẫn tới hiện tượng ``được mùa mất giá'' và sự thiếu tin cậy trên thị trường nông sản:
+
+\begin{enumerate}
+    \item[\textbf{V1.}] \textbf{Cung dồn theo mùa vụ:} sản lượng tăng ồ ạt và đồng loạt khi vào vụ thu hoạch do sản xuất còn theo tập quán mùa vụ, thiếu thông tin nhu cầu để quy hoạch rải vụ.
+    \item[\textbf{V2.}] \textbf{Thiếu kênh tiêu thụ:} nông dân thiếu phương án tiêu thụ đa kênh và năng lực chế biến sâu/bảo quản để hấp thụ sản lượng dư thừa, nên vẫn phụ thuộc vào thương lái địa phương.
+    \item[\textbf{V3.}] \textbf{Hao hụt sau thu hoạch và thiếu kho lạnh:}
+    \begin{itemize}
+        \item Theo ông Nguyễn Thanh Bình, Chủ tịch Hiệp hội Rau quả Việt Nam (Vinafruit), được TheLeader (2024) dẫn lại, tỷ lệ hao hụt với một số loại trái cây có thể lên tới 35--40\% \parencite{theleader_2024}.
+        \item Xét trên toàn ngành rau quả, tỷ lệ tổn thất sau thu hoạch ở mức 20--40\%, tương ứng thiệt hại 3,5--4,1 tỷ USD mỗi năm; số liệu đầu năm 2026 cho thấy tình trạng thiếu kho lạnh chuyên dụng cho rau quả tươi chưa được cải thiện đáng kể so với năm 2024 \parencite{tuoitre_2026}.
+        \item Hệ quả: nông dân buộc phải ``bán ngay, bán vội'' khi thu hoạch, càng suy yếu vị thế đàm phán giá trước thương lái.
+    \end{itemize}
+    \item[\textbf{V4.}] \textbf{Thiếu minh bạch nguồn gốc và niềm tin:} người mua thiếu công cụ kiểm chứng chất lượng trước khi giao dịch, nên khó phân biệt nông sản ``sạch'' thật với sản phẩm chỉ gắn mác marketing. Theo lý thuyết bất cân xứng thông tin (mục~\ref{subsec:reputation}), khi đó người bán hàng chất lượng cao không chứng minh được giá trị thực để nhận mức giá tương xứng, làm suy giảm động lực sản xuất theo tiêu chuẩn.
+\end{enumerate}
+
+Bốn vấn đề này được ánh xạ sang hướng giải quyết cụ thể của Farmery và các mục tiêu tương ứng tại mục~\ref{sec:muctieu}; bảng ánh xạ đầy đủ được trình bày tại Phụ lục F.
+
+\section{Mục tiêu}
+\label{sec:muctieu}
+
+\subsection{Mục tiêu tổng quát}
+
+Xây dựng Farmery --- một nền tảng thương mại điện tử chuyên biệt cho nông sản, vận hành đồng thời hai luồng: một sàn bán sỉ nơi nông dân và hợp tác xã tự bán cho doanh nghiệp thu mua, và một gian hàng bán lẻ nơi chính nền tảng thu mua hàng rồi bán lại cho người tiêu dùng --- nhằm góp phần giải quyết bốn vấn đề đã nêu tại mục~\ref{sec:vande}.
+
+\subsection{Mục tiêu cụ thể}
+
+\begin{enumerate}
+    \item[\textbf{MT1.}] Xây dựng quy trình đăng ký, xác thực và kiểm duyệt chứng nhận chất lượng cho nhà cung cấp, làm cơ sở minh bạch hóa thông tin nguồn gốc sản phẩm.
+    \item[\textbf{MT2.}] Hiện thực cơ chế truy xuất nguồn gốc bằng mã QR gắn với nhật ký canh tác theo từng lô sản phẩm.
+    \item[\textbf{MT3.}] Hiện thực luồng bán sỉ ở mức tối giản cho doanh nghiệp thu mua: yêu cầu báo giá, hợp đồng có xác nhận giao kết, giá bậc theo sản lượng tối thiểu (MOQ) và giao hàng một đợt; thiết kế đầy đủ phần giao nhiều đợt và ký quỹ.
+    \item[\textbf{MT4.}] Hiện thực luồng bán lẻ theo mô hình nền tảng tự thu mua và bán lại, gồm đơn thu mua, nghiệm thu, tồn kho theo lô, đóng gói kèm tem QR và định giá bán.
+    \item[\textbf{MT5.}] Hiện thực trọn trục bán lẻ phía khách hàng --- giỏ hàng, thanh toán, theo dõi đơn, giao hàng ba chặng, đổi trả và hoàn tiền --- phù hợp đặc thù hàng nông sản dễ hư hỏng.
+    \item[\textbf{MT6.}] Tích hợp các tính năng AI hỗ trợ ra quyết định: tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm tương tự và dự báo giá nông sản cho khâu thu mua.
+    \item[\textbf{MT7.}] Xây dựng công cụ quản trị gồm kiểm duyệt, giám sát vi phạm và báo cáo thống kê để vận hành nền tảng.
+\end{enumerate}
+
+\subsection{Mục tiêu đánh giá hệ thống}
+\label{sec:muctieudanhgia}
+
+Ngoài việc xây dựng được hệ thống, đồ án đặt mục tiêu kiểm chứng kết quả bằng số đo thay vì mô tả định tính. Bốn nhóm mục tiêu đánh giá dưới đây định hướng toàn bộ Chương~\ref{chap:danhgia}:
+
+\begin{itemize}
+    \item \textbf{Đánh giá chức năng:} chứng minh các yêu cầu chức năng đã đề ra đều hoạt động đúng, thông qua bộ test case phủ hết các nhóm yêu cầu và các luồng nghiệp vụ chính của cả hai luồng thương mại.
+    \item \textbf{Đánh giá hiệu năng và độ tin cậy:} đo thời gian phản hồi, khả năng chịu tải đồng thời và tính toàn vẹn dữ liệu, đối chiếu với các ngưỡng phi chức năng đã đặt ra. Trường hợp cần kiểm chứng kỹ nhất là chống bán vượt tồn kho khi cùng một lô hàng được giao dịch song song ở hai luồng.
+    \item \textbf{Đánh giá mô-đun AI:} đo chất lượng từng mô-đun bằng chỉ số phù hợp với bài toán của nó, đối chiếu với ngưỡng mục tiêu đã đặt trước khi hiện thực để tránh việc chọn chỉ số sau khi đã biết kết quả.
+    \item \textbf{Đánh giá khả dụng:} thử nghiệm với đại diện các nhóm người dùng, trong đó nhóm nông dân và hợp tác xã là phép thử khó nhất do hạn chế về kỹ năng số --- nếu nhóm này dùng được thì các nhóm còn lại không phải trở ngại.
+\end{itemize}
+
+Nguyên tắc chi phối việc chọn phạm vi hiện thực: những hạng mục không đánh giá được bằng số trong điều kiện của đồ án thì không đưa vào phạm vi, mà chuyển sang hướng phát triển tại Chương~\ref{chap:ketluan}.
+
+\section{Phạm vi}
+\label{sec:phamvi}
+
+Mục này giới thiệu ranh giới của đồ án trên bốn khía cạnh: không gian, thời gian, nội dung nghiệp vụ và mức độ hiện thực về mặt kỹ thuật.
+
+\subsection{Phạm vi không gian}
+
+Farmery được thiết kế cho thị trường nội địa Việt Nam, với một địa bàn thí điểm cụ thể thay vì phủ toàn quốc ngay từ đầu. Nguồn cung được lấy từ vùng trồng rau và hoa quả ôn đới tại Lâm Đồng --- vùng chuyên canh rau lớn nhất cả nước, có sản lượng đều quanh năm và tỷ lệ hộ sản xuất đạt chứng nhận cao hơn mặt bằng chung. Kênh bán lẻ giao hàng trong phạm vi Thành phố Hồ Chí Minh, cách vùng trồng khoảng ba trăm ki-lô-mét với tuyến xe lạnh vận hành hằng ngày --- đủ gần để hàng tươi tới tay người mua trong vòng một ngày kể từ khi rời kho.
+
+Lựa chọn địa bàn này không phải ngẫu nhiên mà xuất phát trực tiếp từ đặc thù luồng bán lẻ: vì nền tảng tự sở hữu hàng, mọi giờ hàng nằm trên đường đều là chi phí hao hụt do chính nền tảng gánh. Riêng luồng bán sỉ không chịu ràng buộc này do khối lượng đơn hàng lớn bù đắp được chi phí vận chuyển, nên có thể phục vụ khách doanh nghiệp trên toàn quốc. Các nghiệp vụ thương mại xuyên biên giới nằm ngoài phạm vi.
+
+\subsection{Phạm vi thời gian}
+
+Số liệu thực trạng và các văn bản chính sách được tham chiếu trong đồ án thuộc giai đoạn 2020--2026, ưu tiên nguồn cập nhật nhất tại thời điểm thực hiện. Bản thân đồ án được thực hiện trong một học kỳ, chia thành hai giai đoạn ứng với hai mốc nộp bài --- giữa kỳ ngày 15/10/2026 và cuối kỳ ngày 31/12/2026 --- theo kế hoạch trình bày ở cuối báo cáo. Dữ liệu dùng để kiểm thử và đánh giá hệ thống là dữ liệu mô phỏng do nhóm sinh ra, không phải dữ liệu giao dịch thương mại thật --- đây là giới hạn cần lưu ý khi đọc kết quả đánh giá tại Chương~\ref{chap:danhgia}, đặc biệt với các mô-đun AI vốn phụ thuộc vào lượng dữ liệu tích lũy theo thời gian.
+
+\subsection{Phạm vi nội dung}
+
+Hệ thống phục vụ ba nhóm người dùng bên ngoài --- nhà cung cấp là nông dân và hợp tác xã, khách sỉ là doanh nghiệp thu mua, khách lẻ là người tiêu dùng cá nhân --- cùng nhân sự nội bộ của Farmery được chia thành sáu vai trò theo phạm vi công việc (chi tiết tại mục~\ref{sec:doituongnguoidung}). Về nghiệp vụ, đồ án bao phủ toàn bộ vòng đời của một lô nông sản trên nền tảng: từ đăng ký và xác thực nhà cung cấp, đăng và kiểm duyệt sản phẩm, tới hai luồng bán hàng song song, quản lý tồn kho và vận chuyển, đánh giá uy tín, và cuối cùng là các công cụ quản trị (mục~\ref{sec:quytrinhnghiepvu}).
+
+\subsection{Phạm vi hiện thực}
+
+Báo cáo thiết kế đủ cả hai luồng, nhưng phần hiện thực tập trung vào trục bán lẻ đầu--cuối, nơi Farmery trực tiếp chịu trách nhiệm với người tiêu dùng. Các yêu cầu được chia thành ba mức:
+\begin{itemize}
+    \item \textbf{Trục chính, làm sâu:} tìm kiếm và lọc kèm tìm kiếm theo ngữ nghĩa, sản phẩm tương tự, giỏ hàng, đặt hàng có giữ chỗ tồn, thanh toán, theo dõi đơn, giao hàng ba chặng, đổi trả--hoàn tiền, đánh giá, thông báo, và trang truy xuất nguồn gốc qua mã QR.
+    \item \textbf{Nguồn hàng, rút gọn:} đăng ký và xác thực nhà cung cấp, chứng nhận, đăng sản phẩm và lô kèm mã QR, đơn thu mua có nhà cung cấp xác nhận, nghiệm thu nhập kho, dòng tồn và sổ nhập xuất, một bước đóng gói ra đơn vị bán lẻ, thu hồi lô. Sơ chế, phân loại nhiều bước và kiểm kê chỉ được thiết kế.
+    \item \textbf{Bán sỉ, tối giản:} yêu cầu báo giá, phản hồi, chốt giá, sinh hợp đồng và xác nhận giao kết, giao một đợt với thanh toán thường. Giao nhiều đợt và ký quỹ trung gian chỉ được thiết kế.
+\end{itemize}
+Các mục chỉ thiết kế được ghi chú ngay trong danh sách yêu cầu (mục~\ref{sec:yeucauchucnang}); các hạng mục đã rút khỏi bộ yêu cầu được nêu ở hướng phát triển (Chương~\ref{chap:ketluan}).
+
+\subsection{Giới hạn kỹ thuật}
+
+Trong khuôn khổ một đồ án chuyên ngành, hệ thống dừng ở phiên bản thử nghiệm với các giới hạn được xác định trước:
+\begin{itemize}
+    \item \textbf{Xác minh chứng nhận và mã số vùng trồng thực hiện thủ công}, do cơ quan cấp chưa có giao diện tra cứu cho bên ngoài.
+    \item \textbf{Không ứng dụng blockchain} cho truy xuất nguồn gốc --- lý do phân tích tại mục~\ref{subsec:gs1blockchain}.
+    \item \textbf{Không vận hành kho bãi quy mô lớn và không có đội giao hàng riêng}: Farmery chỉ duy trì kho sơ chế và đóng gói nhỏ tại vùng trồng. Đơn lẻ đi bằng xe lạnh thuê theo chuyến cố định về TP.HCM rồi giao qua đơn vị vận chuyển nội thành; trong đồ án, đơn vị vận chuyển được kết nối qua môi trường thử nghiệm và chuyến trung chuyển do nhân viên kho cập nhật trên hệ thống.
+    \item \textbf{Không xử lý giấy tờ xuất khẩu} như kiểm dịch thực vật hay chứng nhận xuất xứ; hệ thống chỉ quản lý nhóm chứng nhận thực hành sản xuất và an toàn thực phẩm (mục~\ref{subsec:chungnhan}).
+    \item \textbf{Thanh toán và hóa đơn chạy trên môi trường thử nghiệm}: thanh toán qua môi trường thử của cổng thanh toán, không phải giao dịch tài chính thật; hóa đơn điện tử là bản giả lập kèm mã tra cứu, kết nối nhà cung cấp hóa đơn thật chỉ được thiết kế.
+    \item \textbf{Không phát triển ứng dụng di động gốc}: người dùng bên ngoài dùng ứng dụng mua hàng dạng ứng dụng web cài đặt được (PWA), nhân sự nội bộ dùng một ứng dụng web nội bộ riêng; hai ứng dụng gọi chung một giao diện lập trình.
+    \item \textbf{Không kết nối hệ thống truy xuất nguồn gốc của Nhà nước}: đồng bộ dữ liệu lô lên TraceViet được để ở hướng phát triển, vì phụ thuộc quyền kết nối mà đồ án chưa có.
+\end{itemize}
+
+\section{Ý nghĩa}
+\label{sec:ynghia}
+
+\subsection{Ý nghĩa thực tiễn}
+
+Hệ thống hướng tới hỗ trợ trực tiếp các nhóm người dùng đã phân tích tại mục~\ref{sec:doituongnguoidung}:
+\begin{itemize}
+    \item \textbf{Nhà cung cấp:} có hai lựa chọn đầu ra thay vì phụ thuộc vào thương lái --- tự bán sỉ để giữ toàn bộ giá bán, hoặc bán cả lô để nhận tiền ngay.
+    \item \textbf{Khách sỉ:} có kênh đặt hàng theo hợp đồng với nguồn cung đã được xác minh chứng nhận.
+    \item \textbf{Khách lẻ:} mua được nông sản truy xuất được nguồn gốc, với một đầu mối duy nhất chịu trách nhiệm về chất lượng.
+    \item \textbf{Đội ngũ vận hành:} có công cụ thu mua, kiểm duyệt, giám sát và báo cáo để vận hành nền tảng.
+\end{itemize}
+
+\subsection{Ý nghĩa khoa học}
+
+Đồ án góp phần hệ thống hóa và vận dụng có chọn lọc các lý thuyết liên quan đến mô hình thương mại điện tử nhiều vai trò, chuỗi cung ứng thực phẩm ngắn và hiện tượng rút ngắn tầng trung gian, truy xuất nguồn gốc theo chuẩn GS1, cùng lý thuyết bất cân xứng thông tin trong thiết kế hệ thống uy tín, vào một bài toán ứng dụng cụ thể là nông sản Việt Nam.
+
+Đóng góp riêng nằm ở chỗ đồ án không dừng ở việc chọn một mô hình kinh doanh có sẵn mà phân tích vì sao các nền tảng hiện có đều tránh mô hình tự sở hữu hàng đối với nông sản tươi (mục~\ref{sec:visaochualam}), rồi từ đó xác định điều kiện ràng buộc để mô hình kết hợp trở nên khả thi. Việc đối chiếu với các nghiên cứu đã công bố và các nền tảng đã triển khai thực tế giúp làm rõ khoảng trống mà đồ án hướng tới lấp đầy (xem mục~\ref{subsec:researchgap}).
+
+\section{Cấu trúc báo cáo}
+
+Báo cáo được tổ chức thành tám chương như sau:
+\begin{itemize}
+    \item \textbf{Chương~\ref{chap:gioithieu}} --- giới thiệu đề tài: động cơ thực hiện, các vấn đề cần giải quyết, mục tiêu, phạm vi và ý nghĩa của đồ án.
+    \item \textbf{Chương~\ref{chap:coso}} --- kiến thức và công nghệ nền tảng: bối cảnh chính sách, tiêu chuẩn nông sản, các lý thuyết và bài toán AI được vận dụng.
+    \item \textbf{Chương~\ref{chap:lienquan}} --- các nghiên cứu và hệ thống liên quan, phân tích khoảng trống để định vị đồ án.
+    \item \textbf{Chương~\ref{chap:hethong}} --- hệ thống đề xuất: ngữ cảnh nghiệp vụ, mô tả hệ thống, vấn đề nghiên cứu, thách thức và các yêu cầu.
+    \item \textbf{Chương~\ref{chap:phantich}} --- phân tích và thiết kế: mô hình hóa quy trình, giải pháp công nghệ, kiến trúc, cơ sở dữ liệu, mô hình AI, API, UI/UX và test case.
+    \item \textbf{Chương~\ref{chap:hienthuc}} --- hiện thực và kiểm thử hệ thống.
+    \item \textbf{Chương~\ref{chap:danhgia}} --- đánh giá hệ thống ở phía front-end, back-end và mô-đun AI.
+    \item \textbf{Chương~\ref{chap:ketluan}} --- tổng kết kết quả đạt được và hướng phát triển.
+\end{itemize}
+Cuối báo cáo là kế hoạch thực hiện theo hai giai đoạn, tài liệu tham khảo và các phụ lục.

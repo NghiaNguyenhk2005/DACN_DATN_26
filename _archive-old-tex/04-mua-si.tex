@@ -1,0 +1,36 @@
+\clearpage
+\begin{figure}[p]
+\centering
+\begin{tikzpicture}[farm/chart]
+    \node[farm/terminal] (start) at (0,0) {Bắt đầu mua sỉ};
+    \node[farm/process] (rfq) at (0,-1.4) {Doanh nghiệp: gửi RFQ gồm sản phẩm, số lượng, chất lượng và lịch giao mong muốn};
+    \node[farm/decision] (moq) at (0,-3.3) {Đạt MOQ\\của nhà bán?};
+    \node[farm/side] (alternative) at (6,-3.3) {Hệ thống: gợi ý gộp đơn cùng khu vực hoặc chuyển mua lẻ};
+    \node[farm/terminal] (retail) at (6,-5.3) {Chuyển quy trình B2C};
+    \node[farm/process] (quote) at (0,-5.3) {Nhà bán: báo giá theo bậc, thời gian đáp ứng và điều kiện thanh toán};
+    \node[farm/process] (negotiate) at (0,-6.8) {Hai bên: thương lượng qua hệ thống nhắn tin nội bộ};
+    \node[farm/decision] (agreed) at (0,-8.6) {Thống nhất\\điều khoản?};
+    \node[farm/process] (contract) at (0,-10.6) {Hệ thống: sinh hợp đồng, gồm phạt vi phạm và công nợ; hai bên ký điện tử / mã xác nhận};
+    \node[farm/process] (delivery) at (0,-12.4) {Nhà bán giao theo từng đợt; hệ thống lập hóa đơn và cập nhật sổ công nợ};
+    \node[farm/process] (settle) at (0,-14.1) {Doanh nghiệp: xác nhận số lượng, chất lượng từng đợt; thanh toán theo kỳ hạn};
+    \node[farm/decision] (complete) at (0,-16) {Còn đợt giao\\theo hợp đồng?};
+    \node[farm/side] (reconcile) at (6,-16) {Hai bên: đối soát, hoàn tất thanh toán công nợ theo kỳ hạn};
+    \node[farm/terminal] (finish) at (0,-18) {Hoàn tất hợp đồng};
+    \node[farm/exception,text width=3.8cm] (exceptions) at (6,-10.6) {\textbf{Ngoại lệ hợp đồng}\\[3pt]Giao thiếu / trễ: áp dụng phạt và ghi lịch sử uy tín.\\[4pt]Quá hạn công nợ: nhắc tự động; có thể khóa RFQ mới đến khi trả đủ.\\[4pt]Hủy giữa kỳ: xử lý theo điều khoản hủy đã ký.};
+    \foreach \source/\target in {start/rfq,rfq/moq,quote/negotiate,negotiate/agreed,contract/delivery,delivery/settle,settle/complete}
+        \draw[farm/arrow] (\source) -- (\target);
+    \draw[farm/arrow] (moq) -- node[farm/label,right] {Có} (quote);
+    \draw[farm/arrow] (moq) -- node[farm/label,above] {Không} (alternative);
+    \draw[farm/arrow] (alternative.north) |- node[farm/label,near start,right] {Gộp đơn, gửi lại} (rfq.east);
+    \draw[farm/arrow] (alternative) -- node[farm/label,right] {Chọn mua lẻ} (retail);
+    \draw[farm/arrow] (agreed) -- node[farm/label,right] {Có} (contract);
+    \draw[farm/arrow] (agreed.west) -- (-3.5,-8.6) |- node[farm/label,near start,left] {Chưa} (quote.west);
+    \draw[farm/arrow] (complete) -- node[farm/label,above] {Không} (reconcile);
+    \draw[farm/arrow] (reconcile.south) |- (finish.east);
+    \draw[farm/arrow] (complete.west) -- (-3.5,-16) |- node[farm/label,near start,left] {Có} (delivery.west);
+    \draw[farm/arrow,dashed] (contract) -- (exceptions);
+\end{tikzpicture}
+\caption{Flowchart mua sỉ (B2B): báo giá, hợp đồng, giao hàng và công nợ.}
+\label{fig:flow-mua-si}
+\end{figure}
+\clearpage
