@@ -492,28 +492,41 @@ Sitemap thể hiện tổ chức các trang theo cấp bậc: mỗi nút là m�
 Cơ sở dữ liệu được chia thành 13 schema, trùng tên và trùng ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}: mỗi mô-đun sở hữu đúng một schema, tham chiếu sang schema khác bằng định danh, không kết nối bảng xuyên schema (RB3). Các thực thể chính theo năm khối:
 \begin{itemize}
     \item \textbf{Nền tảng chung} --- \texttt{identity}: tài khoản, vai trò, sổ địa chỉ, hồ sơ doanh nghiệp, giấy tờ eKYC, bản ghi đồng ý dữ liệu và yêu cầu xóa; \texttt{notification}: thông báo, kênh đăng ký, đăng ký nhận thông báo đẩy; \texttt{media}: tệp (chủ sở hữu, khóa đối tượng, kiểu, kích thước, mã băm, mức truy cập, trạng thái, hạn lưu) --- các bảng khác tham chiếu tệp qua định danh thay vì lưu đường dẫn rời.
-    \item \textbf{Nguồn cung} --- \texttt{supplier}: hồ sơ nhà cung cấp, chứng nhận, loại người bán cho thuế; \texttt{catalog}: danh mục, sản phẩm, lô, nhật ký canh tác, mã QR, vector sản phẩm; \texttt{inventory}: dòng tồn, sổ nhập xuất, giữ chỗ, đóng gói, thu hồi lô.
-    \item \textbf{Giao dịch} --- \texttt{procurement}: chào hàng, đơn thu mua, nghiệm thu, kết quả dự báo giá; \texttt{retail}: giỏ, đơn lẻ, mốc trạng thái, đăng ký báo vào mùa; \texttt{wholesale}: bảng giá bậc, RFQ, báo giá và trao đổi, hợp đồng (phiên bản, mã băm), đơn sỉ; \texttt{payment}: giao dịch thanh toán, hoàn tiền, hóa đơn, đối soát hoa hồng và trường khấu trừ thuế \emph{(chỉ thiết kế)}.
-    \item \textbf{Sau bán} --- \texttt{fulfillment}: chuyến trung chuyển, vận đơn, mốc giao, yêu cầu đổi trả, tin trao đổi theo đơn; \texttt{engagement}: đánh giá, phản hồi, điểm uy tín.
+    \item \textbf{Nguồn cung} --- \texttt{supplier}: hồ sơ nhà cung cấp, chứng nhận, loại người bán cho thuế, phân công nhân viên hỗ trợ vùng; \texttt{catalog}: danh mục, sản phẩm, lô, nhật ký canh tác, mã QR, vector sản phẩm; \texttt{inventory}: dòng tồn, sổ nhập xuất, giữ chỗ, đóng gói, thu hồi lô.
+    \item \textbf{Giao dịch} --- \texttt{procurement}: chào hàng, đơn thu mua, nghiệm thu, kết quả dự báo giá; \texttt{retail}: tin bán lẻ (giá do nhân viên thu mua đặt), mã giảm giá, giỏ, đơn lẻ, mốc trạng thái, đăng ký báo vào mùa; \texttt{wholesale}: bảng giá bậc, RFQ, báo giá và trao đổi, hợp đồng (phiên bản, mã băm), đơn sỉ; \texttt{payment}: giao dịch thanh toán, hoàn tiền, hóa đơn, chi trả thu mua cho nhà cung cấp, đối soát hoa hồng và trường khấu trừ thuế \emph{(chỉ thiết kế)}.
+    \item \textbf{Sau bán} --- \texttt{fulfillment}: chuyến trung chuyển, vận đơn, mốc giao, yêu cầu đổi trả, tin trao đổi theo đơn; \texttt{engagement}: đánh giá, phản hồi, điểm uy tín, danh sách yêu thích \emph{(chỉ thiết kế)}.
     \item \textbf{Vận hành} --- \texttt{operations}: cấu hình nền tảng, hàng đợi duyệt, hồ sơ vi phạm, cảnh báo do luật ngưỡng, nhật ký thao tác nội bộ.
 \end{itemize}
 
-Đặc tả từng trường của các thực thể cốt lõi --- gồm kiểu dữ liệu, ràng buộc và mã yêu cầu liên quan --- được trình bày tại Phụ lục K. Mục này chỉ giữ lại phần tổ chức tổng thể và sơ đồ quan hệ thực thể dưới đây.
-% TODO: cập nhật Phụ lục K và xuất lại ERD theo 13 schema khi schema.dbml được chốt.
+Lược đồ gồm 65 bảng; hai bảng \texttt{identity.users} và \texttt{media.media\_files} được gần như mọi schema tham chiếu tới. Từ điển dữ liệu đầy đủ --- từng cột với kiểu, ràng buộc, giá trị hợp lệ và mã yêu cầu liên quan --- được trình bày tại Phụ lục K; cả phụ lục lẫn hai hình dưới đây đều sinh tự động từ cùng một tệp lược đồ của dự án nên không lệch nhau.
 
 \subsubsection*{Sơ đồ quan hệ thực thể (ERD)}
 \label{subsec:erd}
 
-Dựa trên các thực thể và mối quan hệ đã đặc tả, mô hình quan hệ thực thể (ERD)
-tổng quát của hệ thống Farmery được thể hiện tại Hình~\ref{fig:erd}, gồm các
-bảng chính và quan hệ giữa chúng.
+Sơ đồ quan hệ thực thể được tách thành hai hình theo năm khối chức năng: Hình~\ref{fig:erd} gồm khối nền tảng chung, nguồn cung và vận hành; Hình~\ref{fig:erd2} gồm khối giao dịch và sau bán. Mỗi khung màu là một schema. Hai loại đường phản ánh trực tiếp ràng buộc RB3:
+\begin{itemize}
+    \item \textbf{Nét liền} --- khóa ngoại thật giữa hai bảng trong cùng schema, ký hiệu chân chim ở phía nhiều.
+    \item \textbf{Nét đứt} --- tham chiếu sang schema khác bằng định danh, không có khóa ngoại vật lý; mô-đun sở hữu bảng đích bảo đảm tính nhất quán qua giao diện công khai và sự kiện. Hình chỉ vẽ các tham chiếu chính để sơ đồ đọc được: sản phẩm trỏ về nhà cung cấp, dòng tồn trỏ về lô, tin bán lẻ trỏ về sản phẩm, dòng hàng của đơn trỏ về dòng tồn được giữ chỗ, thanh toán trỏ về đơn.
+\end{itemize}
+Bảng thuộc hình còn lại vẽ thành ô nét đứt không nền; bảng chỉ thiết kế vẽ nét đứt nền xám.
 
-\begin{sidewaysfigure}
-    \centering
-    \includegraphics[width=0.95\textwidth,height=0.82\textheight,keepaspectratio]{image/ERD.png}
-    \caption{Sơ đồ quan hệ thực thể (ERD) hệ thống Farmery}
-    \label{fig:erd}
-\end{sidewaysfigure}
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/erd-nen-tang.png}
+\end{adjustbox}
+\caption{ERD phần nền tảng chung, nguồn cung và vận hành (7 schema, 31 bảng)}
+\label{fig:erd}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{\dimexpr\textheight-1.6cm\relax},center}
+\includegraphics[width=\textwidth]{image/comparison/erd-giao-dich.png}
+\end{adjustbox}
+\caption{ERD phần giao dịch và sau bán (6 schema, 34 bảng)}
+\label{fig:erd2}
+\end{figure}
 
 
 \subsection{Thiết kế mô-đun AI}

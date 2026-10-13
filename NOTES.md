@@ -167,6 +167,17 @@ hình cũ (thêm lại `debts`, `business_members`; mất `stock_holdings`, `sto
 lại: cập nhật `schema.dbml` theo 13 schema của mục 5.3.5 (thêm `media_files`, kênh `push`, 6 vai trò nội
 bộ), Phụ lục K, xuất lại ERD, bỏ dòng `% TODO` ở mục 5.3.5. Sơ đồ tuần tự, sơ đồ lớp vẫn tạm hoãn; hình
 "Luồng một đơn bán lẻ" ở mục 5.3.1 chỉ bù một phần, không thay thế.
+**Cập nhật 2026-10-13:** user chốt "thay luôn" bản ERD của thành viên (không chờ trả lời). Đã viết lại
+`schema.dbml` theo 13 schema (65 bảng), sinh ERD hai hình và Phụ lục K bằng `tools/diagrams/gen_erd.py`, bỏ
+`image/ERD.png` và dòng `% TODO` ở mục 5.3.5 — xem `DECISIONS.md` ("Lược đồ CSDL 13 schema..."). Phần sơ đồ
+tuần tự, sơ đồ lớp tách sang mục riêng bên dưới.
+Status: resolved
+
+### Sơ đồ tuần tự và sơ đồ lớp (mục 5.3.3, 5.3.4) — Claude — 2026-10-13
+Tách từ mục "Sơ đồ còn thiếu sau khi tái cấu trúc". Hai mục vẫn chỉ có dòng `% TODO`; user tạm hoãn từ
+1/10. Sơ đồ lớp nên bám `schema.dbml` (đã chốt 13/10); sơ đồ tuần tự cho 4 luồng: đặt hàng lẻ, RFQ — hợp
+đồng sỉ, đăng và duyệt sản phẩm, gửi và duyệt đánh giá (lưu ý `% TODO` hiện còn ghi "ký quỹ B2B", đã thành
+chỉ thiết kế).
 Status: open
 
 ### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23
