@@ -1,31 +1,46 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ đầu–cuối: hai ứng dụng, sáu vai trò nội bộ,
-13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML, sitemap; thân báo cáo 125 trang). Trước đó:
-2026-10-01 (sơ đồ C4, sitemap, quy ước bảng, Phụ lục P–T, MVP.md; thân 108 trang).
+Cập nhật lần cuối: 2026-10-13 (tách báo cáo LaTeX vào `report/`, gốc repo dành cho monorepo mã nguồn; lược đồ
+CSDL 13 schema, ERD và Phụ lục K sinh từ `schema.dbml`). Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
+đầu–cuối: hai ứng dụng, sáu vai trò nội bộ, 13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML,
+sitemap; thân báo cáo 125 trang).
 
 ## Gốc dự án
+
+Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã nguồn; báo cáo nằm trọn trong `report/`; mã nguồn
+(monorepo pnpm + Turborepo: `apps/`, `packages/`) sẽ đặt thẳng ở gốc.
+
+| File | Vai trò |
+|---|---|
+| `README.md` | Giới thiệu ngắn và bố cục repo |
+| `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
+| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
+| `NOTES.md` | Việc đang mở, chưa chốt |
+| `INDEX.md` | File này |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/` |
+| `packages/contract/openapi.yaml` | Hợp đồng API của prototype (OpenAPI 3.1, 39 thao tác) — nguồn kiểu chung cho `apps/shop`, `apps/admin`, `apps/api`; tên trường bám `report/schema.dbml`, vai trò được gọi ghi ở `x-roles` |
+| `report/` | Toàn bộ báo cáo LaTeX — xem mục dưới |
+
+## `report/` — Báo cáo
+
+Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `tools/`…) tính từ `report/`.
 
 | File | Vai trò |
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 237 trang (thân báo cáo Chương 1–8 chiếm 125 trang) |
-| `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
-| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
-| `NOTES.md` | Việc đang mở, chưa chốt |
-| `INDEX.md` | File này |
-| `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`) |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`, `slide-pack/`, `review/` |
-| `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo |
+| `main.pdf` | Bản build gần nhất, 267 trang |
+| `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
+| `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10) |
+| `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10); `chapters/_incoming/` cũng vậy |
 
-**Quy trình build:** `pdflatex` → **`biber`** (không phải `bibtex` — dự án dùng `biblatex` với `backend=biber`) →
+**Quy trình build** (chạy trong `report/`): `pdflatex` → **`biber`** (không phải `bibtex` — dự án dùng `biblatex` với `backend=biber`) →
 `pdflatex` ×2. Không build trong lúc LaTeX Workshop của VS Code đang tự build: hai tiến trình ghi chồng làm
 `main.aux` hỏng (log cụt, mọi tham chiếu undefined); gặp thì xoá `main.aux`, `.toc`, `.lof`, `.lot`, `.out`,
 `.bcf`, `.run.xml` rồi build lại đủ bốn bước.
 
-## `chapters/` — Nội dung chính (8 chương)
+## `report/chapters/` — Nội dung chính (8 chương)
 
 | File | Nội dung | Trạng thái |
 |---|---|---|
@@ -33,12 +48,12 @@ Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán 
 | `chuong2-kienthuc-nentang.tex` | 2.1 Đặc điểm hàng nông sản · 2.2 Bối cảnh chính sách (**bảng văn bản → nghĩa vụ → tác động thiết kế** `tab:phaply`) · 2.3 Lý thuyết nền (B2B/B2C/B2B2C, 1P/3P) · 2.4 Ứng dụng AI (tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá) | Xong (20 trang); còn TODO trích dẫn mục 2.1 |
 | `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · 3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này · 3.4 Kết chương | Xong (7 trang); còn TODO 3.1 |
 | `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (hai luồng 3P/1P, dòng thu và **điều kiện hòa vốn 1P**, 10 quy trình, dòng tồn, **giao hàng ba chặng**, **đổi trả–khiếu nại kèm cam kết thời gian**, chính sách pháp lý) · 4.2 Mô tả hệ thống (5 khối, **hai ứng dụng**, sơ đồ ngữ cảnh C4, nhóm người dùng + **6 vai trò nội bộ**, persona, customer journey) · 4.3 Yêu cầu (user story → FR1–FR13 có quy ước *(chỉ thiết kế)*, 5 mã đã rút; NFR1–NFR9; MoSCoW 11 Must + 2 Should) | Xong (46 trang) |
-| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; sequence/class tạm hoãn; API, UI/UX, test case còn TODO |
+| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · **lược đồ tuần tự** (2 ở thân: đặt hàng, hợp đồng sỉ; 2 ở Phụ lục W) · **lược đồ lớp miền** (17 lớp, `fig:class-mien`) · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; API, UI/UX, test case còn TODO |
 | `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | §6.1.1 danh sách công nghệ; còn lại TODO |
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `backmatter/` — Phụ lục A–V
+## `report/backmatter/` — Phụ lục A–V
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ. Phụ lục mới nối đuôi (U, V)
 thay vì đánh lại chữ cái.
@@ -57,11 +72,12 @@ thay vì đánh lại chữ cái.
 | `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho AI |
 | `phuluc-chitiet.tex` | **P** số liệu OCOP · **Q** hành trình khách hàng và 13 nguồn giao dịch kho · **R** 8 sơ đồ hoạt động · **S** 5 sơ đồ use case chi tiết, đặc tả UC-B2, UC-B5, UC-D4, UC-C7 · **T** sitemap cấp 3 theo hai ứng dụng kèm mã FR |
 | `phuluc-chinhsach.tex` | **Phụ lục U** — bộ 10 chính sách (`tab:bochinhsach`) và toàn văn U.1 kiểm hàng, U.2 đổi trả–hoàn tiền, U.3 bảo mật |
-| `phuluc-sukien.tex` | **Phụ lục V** — danh mục 16 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
+| `phuluc-sukien.tex` | **Phụ lục V** — danh mục 17 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
+| `phuluc-tuantu.tex` | **Phụ lục W** — lược đồ tuần tự đăng lô–duyệt–QR (`fig:seq-duyet-lo`) và đánh giá (`fig:seq-danh-gia`) |
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
-## `frontmatter/` — Phần mở đầu
+## `report/frontmatter/` — Phần mở đầu
 
 | File | Trạng thái |
 |---|---|
@@ -71,7 +87,7 @@ thay vì đánh lại chữ cái.
 | `danhmuc-tuvietat.tex` | Xong |
 | `phieunhiemvu.tex` | Không còn được `\input` từ `main.tex`; giữ phòng khi dùng lại |
 
-## `tools/` — Sinh hình
+## `report/tools/` — Sinh hình
 
 | File | Vai trò |
 |---|---|
@@ -80,12 +96,14 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_c4.py` | Sinh `c4-ngu-canh`, `c4-container`, `c4-module`, `luong-don-le` (luồng một đơn lẻ) |
 | `diagrams/gen_usecase.py` | Sinh 6 sơ đồ use case: `usecase-overview`, `usecase-nha-ban`, `usecase-nguoi-mua-le`, `usecase-nguoi-mua-si`, `usecase-noibo-nguonhang`, `usecase-noibo-vanhanh` |
 | `diagrams/gen_sitemap.py` | Sinh `sitemap-tong-quan` (hai cây theo hai ứng dụng) |
+| `diagrams/gen_sequence.py` | Sinh 4 lược đồ tuần tự `seq-*` (lớp `Seq`: lane theo mô-đun, gọi / trả về / sự kiện, khung `alt`/`loop` lồng được) |
+| `diagrams/gen_class.py` | Sinh `class-mien` (17 lớp miền, vị trí đặt tay theo lưới, bội số hai đầu, hợp thành, tham chiếu xuyên mô-đun nét đứt) |
 | `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh `erd-nen-tang`, `erd-giao-dich` (vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
-Quy trình sửa hình: sửa bộ sinh → `python tools/diagrams/gen_c4.py` (hoặc `gen_usecase.py`, `gen_sitemap.py`,
-`gen_activity.py`) → `npm run shot` → build lại PDF. Không sửa trực tiếp PNG.
+Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python tools/diagrams/gen_c4.py` (hoặc `gen_usecase.py`, `gen_sitemap.py`,
+`gen_activity.py`, `gen_sequence.py`, `gen_class.py`, `gen_erd.py`) → `npm run shot` → build lại PDF. Không sửa trực tiếp PNG.
 
 **Cỡ chữ trong hình:** ảnh luôn bị ép về `\textwidth` = 16 cm và bị chặn chiều cao bởi `adjustbox`.
 - HTML (bề rộng thân 1420px): cỡ chữ in ra (pt) = `font_px × 16 / 1420 × 28,45`; tối thiểu 22px ≈ 7pt.
@@ -110,7 +128,7 @@ Quy trình sửa hình: sửa bộ sinh → `python tools/diagrams/gen_c4.py` (h
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
 `fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:erd`, `fig:erd2` (Ch.5).
+`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, `fig:erd`, `fig:erd2` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
 **Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
 `fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).

@@ -178,7 +178,8 @@ Tách từ mục "Sơ đồ còn thiếu sau khi tái cấu trúc". Hai mục v�
 1/10. Sơ đồ lớp nên bám `schema.dbml` (đã chốt 13/10); sơ đồ tuần tự cho 4 luồng: đặt hàng lẻ, RFQ — hợp
 đồng sỉ, đăng và duyệt sản phẩm, gửi và duyệt đánh giá (lưu ý `% TODO` hiện còn ghi "ký quỹ B2B", đã thành
 chỉ thiết kế).
-Status: open
+**Cập nhật 2026-10-13:** đã vẽ xong — xem `DECISIONS.md` ("Lược đồ tuần tự và lược đồ lớp...").
+Status: resolved
 
 ### Lưu đồ trong flowcharts/ chưa khớp mô hình mới — Claude — 2026-09-23
 Các lưu đồ TikZ hiện có vẫn vẽ theo mô hình cũ (nhà bán tự bán ở cả hai kênh,
