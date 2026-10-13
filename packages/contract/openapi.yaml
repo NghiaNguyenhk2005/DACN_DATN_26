@@ -242,6 +242,7 @@ paths:
     post:
       tags: [Buyer]
       operationId: createAddress
+      summary: Thêm địa chỉ giao hàng
       x-roles: [buyer_retail]
       requestBody:
         required: true
@@ -299,6 +300,7 @@ paths:
     delete:
       tags: [Buyer]
       operationId: removeCartItem
+      summary: Xóa một tin bán khỏi giỏ
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/ListingId'
@@ -339,6 +341,7 @@ paths:
     get:
       tags: [Buyer]
       operationId: listMyOrders
+      summary: Đơn hàng của tôi
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/Cursor'
@@ -449,6 +452,7 @@ paths:
     get:
       tags: [Seller]
       operationId: listSellerProducts
+      summary: Sản phẩm của nhà cung cấp
       x-roles: [seller]
       responses:
         '200':
@@ -482,6 +486,7 @@ paths:
     get:
       tags: [Seller]
       operationId: listSellerBatches
+      summary: Danh sách lô
       x-roles: [seller]
       parameters:
         - { name: productId, in: query, schema: { $ref: '#/components/schemas/Id' } }
@@ -519,6 +524,7 @@ paths:
     get:
       tags: [Seller]
       operationId: getSellerBatch
+      summary: Chi tiết lô
       x-roles: [seller]
       parameters:
         - $ref: '#/components/parameters/BatchId'
@@ -535,6 +541,7 @@ paths:
     get:
       tags: [Seller]
       operationId: listFarmingLogs
+      summary: Nhật ký canh tác của lô
       x-roles: [seller]
       parameters:
         - $ref: '#/components/parameters/BatchId'
@@ -688,6 +695,7 @@ paths:
     get:
       tags: [Operations]
       operationId: getOrder
+      summary: Chi tiết đơn (nội bộ)
       x-roles: [staff_operations, staff_warehouse]
       parameters:
         - $ref: '#/components/parameters/OrderId'
