@@ -1,0 +1,6 @@
+extends:
+  - recommended
+rules:
+  operation-summary: warn
+  info-license: off
+  no-server-example.com: off
