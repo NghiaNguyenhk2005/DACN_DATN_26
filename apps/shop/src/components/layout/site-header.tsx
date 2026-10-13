@@ -11,7 +11,7 @@ export function SiteHeader() {
           Farmery
         </Link>
         <form action="/tim-kiem" className="flex-1">
-          <Input name="q" type="search" placeholder="Tìm nông sản, vd: xoai cat" aria-label="Tìm kiếm" />
+          <Input name="q" type="search" placeholder="Tìm nông sản, vd: dau tay" aria-label="Tìm kiếm" />
         </form>
         <Button variant="ghost" size="icon" aria-label="Giỏ hàng">
           <ShoppingCart />

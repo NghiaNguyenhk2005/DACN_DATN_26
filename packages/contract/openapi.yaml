@@ -1179,7 +1179,7 @@ components:
       required: [id, batchCode, productId, productName, harvestDate, bestBefore, declaredQuantity, status, createdAt]
       properties:
         id: { $ref: '#/components/schemas/Id' }
-        batchCode: { type: string, examples: ['XCHL-2610-01'] }
+        batchCode: { type: string, examples: ['DTDL-2610-01'] }
         productId: { $ref: '#/components/schemas/Id' }
         productName: { type: string }
         harvestDate: { type: string, format: date }
@@ -1425,7 +1425,7 @@ components:
         taskType: { $ref: '#/components/schemas/TaskType' }
         targetId: { $ref: '#/components/schemas/Id' }
         status: { $ref: '#/components/schemas/TaskStatus' }
-        title: { type: string, description: Dòng tóm tắt để hiện trong hàng đợi, examples: ['Lô XCHL-2610-01 — Xoài cát Hòa Lộc'] }
+        title: { type: string, description: Dòng tóm tắt để hiện trong hàng đợi, examples: ['Lô DTDL-2610-01 — Dâu tây Đà Lạt'] }
         dueAt: { type: [string, 'null'], format: date-time }
         createdAt: { type: string, format: date-time }
     ReviewTaskDetail:
