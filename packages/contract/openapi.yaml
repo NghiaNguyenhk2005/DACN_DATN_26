@@ -1312,10 +1312,14 @@ components:
       type: object
       required: [subtotal, taxAmount, shippingFee, totalAmount, codAllowed, deliverySlots]
       properties:
-        subtotal: { type: integer }
-        taxAmount: { type: integer }
-        shippingFee: { type: integer, description: Cước 3PL cộng phần bù chặng giữa }
-        totalAmount: { type: integer }
+        subtotal: { type: integer, description: Tiền hàng theo giá niêm yết (đã gồm thuế GTGT) }
+        taxAmount:
+          type: integer
+          description: |
+            Phần thuế GTGT đã nằm trong `subtotal`, tách ra để hiển thị và in hóa đơn:
+            round(subtotal × r / (100 + r)) với r = `retailVatPercent`. Không cộng thêm vào tổng.
+        shippingFee: { type: integer, description: 'Cước 3PL cộng phần bù chặng giữa, đã gồm thuế; 0 khi tiền hàng ≥ freeShippingThreshold' }
+        totalAmount: { type: integer, description: subtotal + shippingFee }
         codAllowed: { type: boolean }
         codReason: { type: [string, 'null'], description: 'Lý do không cho COD, để hiển thị' }
         deliverySlots:
@@ -1438,12 +1442,22 @@ components:
         createdAt: { type: string, format: date-time }
     PlatformSettings:
       type: object
-      description: operations.platform_settings; PUT chỉ gửi khóa cần đổi
+      description: operations.platform_settings; PUT chỉ gửi khóa cần đổi. `default` là giá trị nạp sẵn ở prototype
       properties:
-        codMaxAmount: { type: integer, minimum: 0, description: VND }
-        cutoffTime: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', examples: ['16:00'] }
+        codMaxAmount: { type: integer, minimum: 0, default: 1000000, description: VND }
+        cutoffTime: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', default: '16:00' }
         deliverySlots:
           type: array
-          items: { type: string, examples: ['08:00-11:00'] }
-        freeShippingThreshold: { type: integer, minimum: 0 }
+          items: { type: string }
+          default: ['08:00-11:00', '14:00-17:00', '18:00-21:00']
+        shippingFee: { type: integer, minimum: 0, default: 25000, description: 'VND, đã gồm thuế' }
+        freeShippingThreshold: { type: integer, minimum: 0, default: 300000, description: Tiền hàng từ mức này thì miễn phí giao }
         reservationMinutes: { type: integer, minimum: 1, default: 15 }
+        retailVatPercent:
+          type: number
+          minimum: 0
+          default: 5
+          description: |
+            Thuế suất GTGT khi Farmery bán nông sản chưa chế biến hoặc chỉ sơ chế thông thường cho cá nhân
+            (Luật 48/2024/QH15; Nghị định 181/2025, sửa bởi Nghị định 359/2025). Hàng đã chế biến theo
+            nhóm thuế riêng của sản phẩm, ngoài phạm vi prototype.
