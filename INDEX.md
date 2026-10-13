@@ -1,25 +1,46 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-13 (tách báo cáo LaTeX vào `report/`, gốc repo dành cho monorepo mã nguồn; lược đồ
-CSDL 13 schema, ERD và Phụ lục K sinh từ `schema.dbml`). Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
+Cập nhật lần cuối: 2026-10-13 (chuẩn bị prototype làm nền MVP: tiền tố `/api`, nền `apps/api` kiểm hợp đồng,
+13 mô-đun, test e2e; `MVP.md` mục 6; kế hoạch có tuần prototype). Cùng ngày: dựng khung monorepo prototype
+(`apps/shop`, `apps/admin`, `apps/api`, `packages/contract`, `packages/mock-data`, CI); tách báo cáo LaTeX vào `report/`; lược đồ CSDL 13 schema,
+ERD và Phụ lục K sinh từ `schema.dbml`. Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
 đầu–cuối: hai ứng dụng, sáu vai trò nội bộ, 13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML,
 sitemap; thân báo cáo 125 trang).
 
 ## Gốc dự án
 
 Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã nguồn; báo cáo nằm trọn trong `report/`; mã nguồn
-(monorepo pnpm + Turborepo: `apps/`, `packages/`) sẽ đặt thẳng ở gốc.
+(monorepo pnpm + Turborepo: `apps/`, `packages/`) đặt thẳng ở gốc — xem mục "Mã nguồn" bên dưới.
 
 | File | Vai trò |
 |---|---|
 | `README.md` | Giới thiệu ngắn và bố cục repo |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
-| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
+| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau. Mục 6: phần giả lập ở prototype và bản thật ở MVP, bốn điều kiện rà ở mốc 21/10 |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/` |
-| `packages/contract/openapi.yaml` | Hợp đồng API của prototype (OpenAPI 3.1, 39 thao tác) — nguồn kiểu chung cho `apps/shop`, `apps/admin`, `apps/api`; tên trường bám `report/schema.dbml`, vai trò được gọi ghi ở `x-roles` |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/`; build của monorepo (`.turbo/`, `dist/`, `.next/`, kiểu sinh trong `packages/contract/src/generated/`) |
+| `.gitattributes` | `* text=auto eol=lf` — mọi file văn bản lưu LF kể cả trên Windows |
+| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml` | Gốc workspace pnpm (`apps/*`, `packages/*`; `report/` đứng ngoài). Ghim `packageManager: pnpm@9.15.9`, Node `>=22.12 <23`; script gốc gọi turbo: `dev`, `build`, `lint`, `lint:spec`, `generate`, `typecheck`, `test` |
+| `turbo.json` | Đồ thị tác vụ: `build`/`typecheck`/`lint`/`test` chờ `^build` và `generate`; `dev` chờ `^build` rồi chạy song song 3 app; `agentGuidance: false` để turbo không tự ghi `AGENTS.md` ở gốc |
+| `tsconfig.base.json`, `.nvmrc`, `.npmrc` | Cấu hình TypeScript chung (strict); Node 22; `save-exact` để `pnpm add` ghim đúng bản |
+| `.github/workflows/ci.yml` | CI trên push/PR vào `develop`, `main`: cài (cache pnpm, `--frozen-lockfile`) → `lint:spec` → `generate` → `lint` → `typecheck` → `test` → `build` |
 | `report/` | Toàn bộ báo cáo LaTeX — xem mục dưới |
+
+## Mã nguồn — `apps/`, `packages/`
+
+Cài và chạy từ gốc repo: `corepack enable` → `pnpm i` → `pnpm dev` (chạy cả 3 app). Chạy riêng một gói:
+`pnpm --filter @farmery/<tên> <script>`. Mỗi app có `.env.example` (sao thành `.env` ở api, `.env.local` ở shop,
+admin để đổi mặc định). Phiên bản và lý do chọn: `DECISIONS.md`, mục "Khung monorepo prototype"; cách giữ prototype
+làm nền MVP: mục "Chuẩn bị prototype làm nền MVP".
+
+| Thư mục | Gói | Vai trò | Cổng / lệnh |
+|---|---|---|---|
+| `apps/shop/` | `@farmery/shop` | Ứng dụng mua hàng (gồm khu nhà cung cấp): Next.js 16 App Router + Tailwind 4 + shadcn/ui (`components.json`, style base-nova). `src/app/` trang, `src/components/layout/` đầu/chân trang, `src/components/ui/` thành phần shadcn (`pnpm dlx shadcn@4.21.0 add <tên>`), `src/lib/api.ts` client gọi API (`NEXT_PUBLIC_API_URL`) | 3000 · `typecheck` chạy `next typegen` trước `tsc` |
+| `apps/admin/` | `@farmery/admin` | Ứng dụng nội bộ: Vite + React + Refine 5 + Ant Design 5 (`@refinedev/antd`), cấu trúc theo mẫu Finefoods. `src/App.tsx` khai resource và route; `src/providers/` `authProvider`, `dataProvider` (stub, chờ nối API); `src/theme.ts` token antd; `src/pages/<resource>/` màn hình; `src/lib/api.ts` client (`VITE_API_URL`) | 5173 |
+| `apps/api/` | `@farmery/api` | NestJS 11, mọi đường dẫn dưới `/api`. `src/core/` nền chung: cấu hình (`app-config.ts`: `PORT`, `CORS_ORIGINS`, `DEMO_MODE`, `JWT_SECRET`, `VALIDATE_RESPONSES`), kiểm dữ liệu vào/ra theo `openapi.yaml` (`openapi-validator.ts`), `AuthGuard` đọc `security`/`x-roles` từ hợp đồng, JWT (`token.service.ts`), lỗi RFC 9457 (`problem.ts`, `problem.filter.ts`), `Idempotency-Key`, `DemoResetRegistry`. `src/modules/` 13 mô-đun theo báo cáo, `catalog` là mẫu controller → service → repository (bản trong bộ nhớ). `src/integrations/` interface dịch vụ ngoài (`OtpSender`, `PaymentGateway`) kèm bản giả. `src/system/` `GET /api/health`, `POST /api/dev/reset` (204, chỉ khi `DEMO_MODE`). `app.setup.ts` dùng chung cho `main.ts` và test. Swagger ở `/docs` (JSON `/docs-json`). `test/` e2e jest + supertest. `README.md`: khuôn viết endpoint, quy tắc, mã lỗi khung tự trả | 4000 · `dev` = `nest start --watch` · `test` |
+| `packages/contract/` | `@farmery/contract` | `openapi.yaml` — hợp đồng API (OpenAPI 3.1, 33 đường dẫn, 40 thao tác, `servers` có tiền tố `/api`), tên trường bám `report/schema.dbml`, vai trò ở `x-roles`. `lint:spec` (Redocly, cấu hình `redocly.yaml`; thiếu `summary` là lỗi); `generate` sinh `src/generated/schema.ts` (openapi-typescript, không commit); `build` (tsup, ESM + CJS). Export `paths`, `components`, `Schema<K>`, `OrderStatus`, `createApiClient` (openapi-fetch, gắn Bearer token) | sửa spec xong chạy `pnpm generate` |
+| `packages/mock-data/` | `@farmery/mock-data` | Dữ liệu giả gõ theo `Schema<K>` của contract, theo vùng thí điểm Lâm Đồng (dâu tây Đà Lạt), không dùng thông tin người thật; `createSeed()` trả bản sao để repository nạp lại khi `/api/dev/reset` | — |
 
 ## `report/` — Báo cáo
 
@@ -74,7 +95,7 @@ thay vì đánh lại chữ cái.
 | `phuluc-chinhsach.tex` | **Phụ lục U** — bộ 10 chính sách (`tab:bochinhsach`) và toàn văn U.1 kiểm hàng, U.2 đổi trả–hoàn tiền, U.3 bảo mật |
 | `phuluc-sukien.tex` | **Phụ lục V** — danh mục 17 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
 | `phuluc-tuantu.tex` | **Phụ lục W** — lược đồ tuần tự đăng lô–duyệt–QR (`fig:seq-duyet-lo`) và đánh giá (`fig:seq-danh-gia`) |
-| `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ |
+| `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ; tuần 4 (16–22/10) là prototype, tuần 5 thay lớp lưu trữ bằng Prisma |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
 ## `report/frontmatter/` — Phần mở đầu

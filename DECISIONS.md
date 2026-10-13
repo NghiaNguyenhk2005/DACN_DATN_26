@@ -871,3 +871,87 @@ lẫn mã, và mục 5.2 đã chốt monorepo.
 **Đánh đổi:** thuế suất lấy từ bài phân tích của Tạp chí Kinh tế Tài chính và văn bản được dẫn trong đó, chưa đối chiếu
 nguyên văn Nghị định 359/2025; hàng đã chế biến (một phần hàng khô, sản phẩm OCOP) chịu thuế suất khác và chưa mô
 hình ở prototype.
+SỬA 2026-10-13 (cùng ngày): mọi đường dẫn nằm dưới tiền tố `/api` (khai ở `servers`), nội bộ ở `/api/admin`;
+`POST /auth/otp` chỉ nhận email vì SMS chỉ thiết kế; thêm `GET /health` (40 thao tác) — xem mục "Chuẩn bị prototype
+làm nền MVP".
+
+### Thư viện giao diện: shadcn/ui cho shop, Ant Design 5 cho admin — 2026-10-13
+**Quyết định**
+- Ứng dụng mua hàng (Next.js App Router): shadcn/ui + Tailwind, hợp với Server Components.
+- Ứng dụng nội bộ (Refine): Ant Design 5 qua `@refinedev/antd` — tích hợp đầy đủ nhất (bảng, form, trang đăng nhập,
+  Inferencer); hai thành viên BE tự dựng được màn Kho, Cấu hình. Mẫu tham khảo: Refine Finefoods.
+- FE chỉnh token của antd (màu chính, bo góc, font) theo bảng màu của shop để hai ứng dụng không lệch quá xa; bảng
+  trên màn hẹp cuộn ngang hoặc ẩn cột phụ (NFR7.3).
+- Loại Mantine, Chakra (gói Refine còn bám Mantine v5, Chakra v2 tại 13/10) và MUI cho shop (phải `use client`
+  nhiều chỗ). Phương án shadcn/ui cho cả hai bị loại vì admin phải ráp tay nhiều hơn trong 8 ngày.
+
+**Đánh đổi:** hai hệ thiết kế, FE phải nắm cả Tailwind lẫn API của antd; `@refinedev/antd` cần antd v5 trong khi
+antd đã lên v6, nâng bản phụ thuộc Refine.
+
+### Khung monorepo prototype và phiên bản phụ thuộc — 2026-10-13
+**Quyết định**
+- pnpm 9.15.9 (qua corepack, ghim ở `packageManager`) + Turborepo 2.11.5; workspace `apps/*`, `packages/*`, `report/`
+  đứng ngoài. Node 22 (`.nvmrc`, `engines >=22.12 <23`). Mọi gói trực tiếp ghim đúng bản (`save-exact`), chọn bản
+  đã phát hành ít nhất 2 tuần tính tới 13/10; gói do `shadcn init` tự kéo bản mới hơn thì hạ về bản đủ tuổi.
+- **TypeScript 5.9.3** cho cả workspace: openapi-typescript 7.13 (bản mới nhất) chỉ nhận TS `^5`, typescript-eslint
+  8.71 nhận `<6.1`. Không dùng TS 6/7.
+- **NestJS 11** (core 11.2.6, cli 11.0.24, swagger 11.4.7), không dùng 12: `@nestjs/cli` 12 mang sẵn TS `~6.0`,
+  `@nestjs/schematics` 12 đòi TS `>=6` và Node `^22.22.3` — xung đột với openapi-typescript và Node 22.19 đang cài.
+  Nhánh 11 vẫn được vá (11.2.7 ra 30/9); CLI 11 dùng đúng TS 5.9.3.
+- **React 19.2.8** cho cả shop và admin — bản create-next-app 16.3.6 ghim; Refine 5, `@refinedev/antd` 6, antd 5
+  nhận `^19`.
+- shop: Next 16.3.6, Tailwind 4.3.3, shadcn/ui style base-nova (Base UI 1.8.0; gói `cn` của shadcn thay clsx +
+  tailwind-merge). Font Be Vietnam Pro vì có bộ chữ tiếng Việt (Geist mặc định chỉ có `latin`).
+- admin: Vite 8.3.1, `@refinedev/core` 5.0.12 + `@refinedev/antd` 6.0.3, **antd 5.29.3** (gói Refine cần `^5.23`),
+  **react-router 7.18.4** (`@refinedev/react-router` 2 cần `^7`, chưa nhận 8), `@ant-design/v5-patch-for-react-19`
+  để antd 5 chạy đúng trên React 19 (mẫu Finefoods cũng dùng).
+- **ESLint 9.39.5**: eslint-config-next 16 kéo eslint-plugin-react, -import, -jsx-a11y, cả ba chỉ nhận tới `^9`.
+- contract: Swagger ở `/docs` đọc nguyên `openapi.yaml`, không sinh spec từ code. Kiểu sinh bằng openapi-typescript
+  không commit, CI sinh lại. Gói nội bộ build bằng tsup ra ESM + CJS vì Nest chạy CommonJS còn Next, Vite dùng ESM.
+- Kiểm spec bằng Redocly `recommended`; hạ `operation-summary` xuống cảnh báo (8 thao tác thiếu `summary`, chờ rà
+  ở M1), tắt `info-license` và `no-server-example.com` (dự án nội bộ, server cố ý là localhost).
+- Hợp đồng thêm `GET /health` (thao tác thứ 40, công khai) để CI, giám sát và FE kiểm API sống qua client có kiểu.
+- `turbo.json` đặt `agentGuidance: false`: turbo không tự ghi `AGENTS.md` vào gốc repo khi AI agent chạy lệnh.
+  `apps/shop/AGENTS.md` do `next dev` tự sinh thì giữ và commit, vì xóa đi Next lại tạo lại.
+
+**Đánh đổi:** ESLint 9 đã hết hỗ trợ (npm báo deprecated) — lên 10 khi eslint-config-next bỏ các plugin cũ. pnpm 9
+không có `minimumReleaseAge` (có từ pnpm 10.16), nên quy tắc 2 tuần chỉ áp cho gói trực tiếp, gói bắc cầu theo
+lockfile. Lên Nest 12 về sau phải kéo cả workspace lên TS 6, chờ openapi-typescript nhận TS 6. Bundle admin 1,2 MB
+(antd chưa tách chunk), chấp nhận cho ứng dụng nội bộ ở prototype.
+SỬA 2026-10-13 (cùng ngày): `operation-summary` trả về mức lỗi sau khi bổ sung đủ `summary`; `MockStore` dùng
+chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm Đồng — xem mục "Chuẩn bị prototype làm nền MVP".
+
+### Chuẩn bị prototype làm nền MVP — 2026-10-13
+**Quyết định** (user duyệt theo đề xuất)
+- Prototype là nền của MVP, không viết lại. Ở mốc 21/10 rà bốn điều kiện (`MVP.md` mục 6): code nghiệp vụ đi qua
+  repository; luật nghiệp vụ có test; lối tắt demo chỉ nằm sau `DEMO_MODE`; API và hai ứng dụng khớp hợp đồng. Cùng
+  mốc đó so tốc độ thật với khối lượng còn lại để cắt phạm vi sớm nếu cần.
+- **OTP chỉ gửi qua email.** FR1.2 và quy trình đăng ký ở Chương 4 từng ghi "qua số điện thoại hoặc email" trong khi
+  SMS chỉ thiết kế, nên MVP không gửi được OTP tới số điện thoại. Số điện thoại khai để liên hệ, giao hàng, chưa xác
+  minh. Đã sửa Chương 4, Phụ lục T, note `identity.users` (Phụ lục K sinh lại) và `POST /auth/otp`.
+- **Tiền tố `/api` cho mọi đường dẫn, ứng dụng nội bộ gọi `/api/admin`.** Báo cáo (bảng container, hình C4) ghi
+  `/api` và `/staff`, hợp đồng dùng `/admin` không tiền tố. Chọn đổi `servers` của hợp đồng + `setGlobalPrefix`
+  (2 dòng) thay cho đổi tên 13 đường dẫn; báo cáo và hai hình C4 đổi `/staff` thành `/api/admin`.
+- **Dữ liệu demo theo vùng thí điểm của báo cáo** (Lâm Đồng → TP.HCM): dâu tây Đà Lạt thay xoài cát Hòa Lộc, để
+  kịch bản demo khớp nguồn cung và luồng giao ba chặng. Dữ liệu giả không dùng thông tin người thật.
+- **Xác thực hai lớp của nội bộ dùng TOTP** (cột `totp_secret_enc` đã có), không phụ thuộc SMS; prototype thay bằng
+  OTP cố định.
+- **Nền `apps/api`:**
+  - Kiểm dữ liệu vào, và cả phản hồi khi không phải production, theo `openapi.yaml` bằng express-openapi-validator
+    5.6.2 (chạy được với OpenAPI 3.1). Đường dẫn ngoài hợp đồng trả 404 `NOT_IN_CONTRACT`; có trong hợp đồng mà chưa
+    làm trả 501 `NOT_IMPLEMENTED`.
+  - `AuthGuard` đọc `security` và `x-roles` thẳng từ hợp đồng, không có decorator vai trò riêng, nên quyền chỉ khai
+    một nơi. JWT ký thật (`@nestjs/jwt` 11.0.2, `JWT_SECRET`).
+  - Lỗi theo RFC 9457 (`ProblemException` kèm `code`); `Idempotency-Key` cho POST, giữ trong bộ nhớ.
+  - Khung đủ 13 mô-đun theo `tab:module-io`; `catalog` là mẫu controller → service → repository. Dịch vụ ngoài sau
+    interface (`OtpSender`, `PaymentGateway`) kèm bản giả. Cấu hình qua biến môi trường (`.env.example`).
+  - Test e2e bằng jest 30.5.2 + supertest 7.3.0, chạy trong CI (`pnpm test`).
+- Giữ Nest 11 tới demo; đợt nâng 12 xét sau 21/10 (`NOTES.md`). Ghi chú phát hành Nest 12 cho biết app CommonJS vẫn
+  chạy và có `nest upgrade`, nên nâng muộn không đắt.
+- `ReviewTaskDetail` thiếu dữ liệu cho việc duyệt sản phẩm, hồ sơ nhà cung cấp, chứng nhận: phải chốt ở M1 (15/10),
+  không để sau, vì MVP có cả ba loại duyệt.
+
+**Đánh đổi:** kiểm phản hồi theo hợp đồng làm endpoint trả sai schema báo 500 ngay khi dev — chủ ý để lộ lệch sớm,
+tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
+đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
+build lại sau các sửa đổi báo cáo.

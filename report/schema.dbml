@@ -62,8 +62,8 @@ Enum identity.request_status {
 Table identity.users {
   id bigint [pk, increment]
   full_name varchar [not null]
-  email varchar [unique, note: 'Một trong email hoặc số điện thoại là bắt buộc (FR1.1)']
-  phone varchar [unique, note: 'Kênh nhận OTP (FR1.2)']
+  email varchar [unique, note: 'Một trong email hoặc số điện thoại là bắt buộc (FR1.1); kênh nhận OTP (FR1.2), nên bản hiện thực bắt buộc email']
+  phone varchar [unique, note: 'Liên hệ, giao hàng; nhận OTP qua SMS chỉ thiết kế']
   email_verified_at timestamp
   phone_verified_at timestamp
   password_hash varchar [note: 'Argon2id (NFR3.3); trống khi chỉ đăng nhập bằng mạng xã hội']

@@ -107,7 +107,7 @@ Mỗi quy trình dưới đây được trình bày theo các bước tuần t�
 \subsubsection*{Đăng ký và xác thực nhà cung cấp, kiểm duyệt chứng nhận}
 \begin{enumerate}
     \item Nhà cung cấp (nông dân hoặc hợp tác xã) đăng ký tài khoản, nhập thông tin định danh (căn cước công dân hoặc mã số thuế đối với hợp tác xã), thông tin trang trại, vùng canh tác, và khai báo loại người bán dùng cho nghĩa vụ thuế: tự sản xuất nông sản, hộ hoặc cá nhân kinh doanh, doanh nghiệp hoặc hợp tác xã (FR2.4).
-    \item Hệ thống gửi mã xác thực (OTP) qua số điện thoại hoặc email; nếu nhập sai quá 5 lần, tài khoản bị khóa tạm thời trong 30 phút.
+    \item Hệ thống gửi mã xác thực (OTP) qua email (gửi qua SMS \emph{(chỉ thiết kế)}); nếu nhập sai quá 5 lần, tài khoản bị khóa tạm thời trong 30 phút.
     \item Nhà cung cấp thực hiện xác minh danh tính điện tử (eKYC --- FR1.4): tải ảnh chụp giấy tờ định danh và ảnh chân dung để hệ thống đối chiếu; kết quả được ghi vào trạng thái eKYC của gian hàng.
     \item Nhà cung cấp tải lên giấy chứng nhận VietGAP, GlobalGAP, hữu cơ (organic), OCOP hoặc HACCP (nếu có), kèm mã số chứng nhận, cơ quan cấp và ngày hết hạn.
     \item Kiểm duyệt viên xác minh theo ba tầng: hệ thống kiểm tra định dạng mã số vùng trồng; kiểm duyệt viên đối chiếu mã này với cổng công bố công khai của Bộ Nông nghiệp và Môi trường và ghi kết quả; giấy chứng nhận VietGAP, GlobalGAP, hữu cơ được duyệt hồ sơ thủ công. Đối chiếu gián tiếp qua hệ thống truy xuất của Bộ là hướng phát triển (Chương~\ref{chap:ketluan}).
@@ -452,7 +452,7 @@ Mục này làm rõ cách mỗi nhóm người dùng ở mục~\ref{sec:doituong
 \begin{itemize}
     \item \textbf{Kênh tiếp cận:} tự đăng ký trên nền tảng web qua kênh quảng bá số (mạng xã hội, SEO) hoặc giới thiệu từ cộng đồng quan tâm nông sản sạch.
     \item \textbf{Liên hệ hỗ trợ:} thắc mắc về một đơn cụ thể được trao đổi ngay trong trang đơn hoặc trang khiếu nại của đơn đó; hỏi đáp chung qua Zalo OA và hotline.
-    \item \textbf{Thủ tục:} đăng ký số điện thoại hoặc email, xác thực OTP --- không yêu cầu xác minh giấy tờ, có thể mua ngay sau khi xác thực.
+    \item \textbf{Thủ tục:} đăng ký bằng email, xác thực OTP qua email; số điện thoại khai để giao hàng, chưa xác minh qua SMS --- không yêu cầu xác minh giấy tờ, có thể mua ngay sau khi xác thực.
     \item \textbf{Kết quả:} tài khoản được gán vai trò \texttt{buyer\_retail}, truy cập ngay quy trình bán lẻ (mục~\ref{sec:quytrinhnghiepvu}).
 \end{itemize}
 
