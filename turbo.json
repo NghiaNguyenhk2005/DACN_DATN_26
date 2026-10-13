@@ -2,28 +2,61 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "stream",
   "agentGuidance": false,
-  "globalEnv": ["NODE_ENV"],
+  "globalEnv": [
+    "NODE_ENV"
+  ],
   "tasks": {
     "lint:spec": {
-      "inputs": ["openapi.yaml", "redocly.yaml"]
+      "inputs": [
+        "openapi.yaml",
+        "redocly.yaml"
+      ]
     },
     "generate": {
-      "inputs": ["openapi.yaml"],
-      "outputs": ["src/generated/**"]
+      "inputs": [
+        "openapi.yaml"
+      ],
+      "outputs": [
+        "src/generated/**"
+      ]
     },
     "build": {
-      "dependsOn": ["^build", "generate"],
-      "env": ["NEXT_PUBLIC_*", "VITE_*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "dependsOn": [
+        "^build",
+        "generate"
+      ],
+      "env": [
+        "NEXT_PUBLIC_*",
+        "VITE_*"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "typecheck": {
-      "dependsOn": ["^build", "generate"]
+      "dependsOn": [
+        "^build",
+        "generate"
+      ]
     },
     "lint": {
-      "dependsOn": ["^build", "generate"]
+      "dependsOn": [
+        "^build",
+        "generate"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^build",
+        "generate"
+      ]
     },
     "dev": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": false,
       "persistent": true
     }

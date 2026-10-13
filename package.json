@@ -11,7 +11,8 @@
     "lint": "turbo run lint",
     "lint:spec": "turbo run lint:spec",
     "generate": "turbo run generate",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "turbo": "2.11.5",
