@@ -1,5 +1,5 @@
 import { DashboardOutlined } from "@ant-design/icons";
-import { AuthPage, ErrorComponent, ThemedLayout, useNotificationProvider } from "@refinedev/antd";
+import { AuthPage, ErrorComponent, ThemedLayout, ThemedTitle, useNotificationProvider } from "@refinedev/antd";
 import { Authenticated, Refine } from "@refinedev/core";
 import routerProvider, {
   CatchAllNavigate,
@@ -40,7 +40,7 @@ export function App() {
               <Route
                 element={
                   <Authenticated key="authenticated-routes" fallback={<CatchAllNavigate to="/login" />}>
-                    <ThemedLayout>
+                    <ThemedLayout Title={({ collapsed }) => <ThemedTitle collapsed={collapsed} text="Farmery" />}>
                       <Outlet />
                     </ThemedLayout>
                   </Authenticated>
