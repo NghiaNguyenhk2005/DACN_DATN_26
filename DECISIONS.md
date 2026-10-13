@@ -853,3 +853,21 @@ lẫn mã, và mục 5.2 đã chốt monorepo.
 
 **Đánh đổi:** vị trí lớp/bảng đặt tay theo lưới nên thêm lớp phải sửa tọa độ trong bộ sinh; đổi lại kiểm soát
 được chỗ giao cắt và giữ mọi hình ≤ 21,1 cm cao, chữ ≥ 7pt.
+
+### Hợp đồng API prototype và tham số demo — 2026-10-13
+**Quyết định**
+- Hợp đồng viết trước ở `packages/contract/openapi.yaml`, là nguồn kiểu chung cho FE và BE. Thư mục `api contract`
+  (báo cáo nghiên cứu v6) giữ làm tham khảo; phần đồng bộ TraceViet, SSE, chuỗi băm không vào prototype.
+- ID trong API là chuỗi chữ số, CSDL giữ `bigint` theo `schema.dbml`; trang công khai tra theo `qr_token`.
+- Lô có thể khai trước khi thu hoạch: `harvest_date` là ngày dự kiến cho tới khi thu hoạch, để nhật ký từ lúc gieo
+  trồng có lô để gắn vào. Không tách thêm thực thể "mùa vụ".
+- Tham số nạp sẵn: COD tối đa 1.000.000đ; giờ chốt đơn 16:00; khung giờ giao 8–11h, 14–17h, 18–21h; phí giao
+  25.000đ, miễn phí từ 300.000đ tiền hàng; giữ chỗ 15 phút.
+- Thuế GTGT 5% khi Farmery (doanh nghiệp, luồng 1P) bán nông sản chưa chế biến hoặc chỉ sơ chế thông thường cho cá
+  nhân — Luật Thuế GTGT 48/2024/QH15, Nghị định 181/2025/NĐ-CP sửa bởi Nghị định 359/2025/NĐ-CP. Bán cho doanh
+  nghiệp, hợp tác xã ở khâu thương mại thì không phải kê khai, tính nộp (liên quan luồng sỉ, chưa làm).
+- Giá niêm yết đã gồm thuế; `taxAmount` là phần thuế tách ra để hiển thị và in hóa đơn, không cộng thêm.
+
+**Đánh đổi:** thuế suất lấy từ bài phân tích của Tạp chí Kinh tế Tài chính và văn bản được dẫn trong đó, chưa đối chiếu
+nguyên văn Nghị định 359/2025; hàng đã chế biến (một phần hàng khô, sản phẩm OCOP) chịu thuế suất khác và chưa mô
+hình ở prototype.

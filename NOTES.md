@@ -222,3 +222,21 @@ Status: open
   khai không giới hạn — đã ghi vào mục 6.1.1.
 Status: resolved
 
+
+### Chọn thư viện giao diện cho hai ứng dụng — Claude — 2026-10-13
+Cần chốt trước khi dựng khung. Đã tra cứu (npm ngày 13/10, tài liệu Refine):
+- Gói tích hợp Refine: `@refinedev/antd` 6.0 cần antd v5 (antd mới nhất 6.x); `@refinedev/mui` 8.0 cần MUI v6;
+  `@refinedev/mantine` vẫn cần Mantine v5 (mới nhất v9); `@refinedev/chakra-ui` cần Chakra v2 (mới nhất v3).
+  → Loại Mantine và Chakra cho ứng dụng nội bộ.
+- Refine có tích hợp shadcn/ui qua registry `ui.refine.dev` (layout, data table, view Create/Edit/List/Show, form
+  đăng nhập); mới nhất trong các tích hợp, chưa có Inferencer, ít hook dựng sẵn hơn Ant Design.
+- Ứng dụng mua hàng (Next.js App Router): shadcn/ui hợp nhất với Server Components; MUI, Chakra cần `use client`
+  nhiều chỗ.
+- Mẫu tham khảo: Refine Finefoods (admin đơn thực phẩm, bản antd và MUI); Your Next Store, Next Prisma Tailwind
+  Ecommerce (storefront shadcn).
+
+Hai phương án còn lại:
+- A. shadcn/ui cho shop + Ant Design 5 cho admin: admin nhanh nhất (bảng, form, AuthPage dựng sẵn); hai hệ thiết kế.
+- B. shadcn/ui cho cả hai (Tailwind dùng chung qua `packages/ui`): một bộ thành phần cho một người FE; admin phải ráp
+  tay nhiều hơn.
+Status: open
