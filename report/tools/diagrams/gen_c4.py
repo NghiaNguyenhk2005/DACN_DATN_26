@@ -170,7 +170,7 @@ extra = [('', 8, 400, INK, False), ('13 mô-đun, 5 khối (mức 3):', 22, 700,
 for b, m in blocks:
     extra += [(b, 22, 700, '#1a4f86', False), (m, 22, 400, INK, True)]
 cont(CX, CY0, CW_, CY1 - CY0, 'Ứng dụng lõi (modular monolith)', 'NestJS',
-     'API REST: /api cho ứng dụng mua hàng, /staff cho ứng dụng nội bộ; nhận webhook của cổng thanh toán và 3PL', hot=True, extra=extra)
+     'API REST: /api cho ứng dụng mua hàng, /api/admin cho ứng dụng nội bộ; nhận webhook của cổng thanh toán và 3PL', hot=True, extra=extra)
 
 # Người dùng (ngoài ranh giới) -> hai ứng dụng
 for key, name, desc in [('app', 'Người dùng bên ngoài', 'Vãng lai, khách lẻ, khách sỉ, nhà cung cấp'),
@@ -191,7 +191,7 @@ s.label(mx + 108, rows['ai'][0] - 40, 'ProductChanged; vector', 200)
 
 # Container bên trái <-> ứng dụng lõi, nhãn đặt trên đường
 labs = {'app': 'Gọi /api; nhận JSON [HTTPS]', 'minio': 'Cấp URL ký trước; xác nhận tệp, sinh WebP',
-        'staff': 'Gọi /staff; nhận JSON [HTTPS]', 'pg': 'Đọc/ghi, khóa dòng tồn [SQL]',
+        'staff': 'Gọi /api/admin; nhận JSON [HTTPS]', 'pg': 'Đọc/ghi, khóa dòng tồn [SQL]',
         'redis': 'Phát sự kiện; nhận sự kiện, cache', 'ai': 'Truy vấn, chuỗi giá; vector, dự báo'}
 for key, (y0, h) in rows.items():
     yy = y0 + h / 2 + 30
@@ -235,7 +235,7 @@ s = Svg(W, YB + 104)
 s.rect(200, 10, 944, CF_BOT - 10, 'none', HOT, 2.5, 18, '12 8')
 s.text(218, 42, 'Ứng dụng lõi  [Container: NestJS]', 24, 700, HOT, 'start')
 s.box(COLX[0], 54, COLX[3] + CWD - COLX[0], 76,
-      [('Lớp API: /api (ứng dụng mua hàng), /staff (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
+      [('Lớp API: /api (ứng dụng mua hàng), /api/admin (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
       fill=CONT[0], stroke=CONT[1])
 
 def frame(c0, c1, row, title, key):

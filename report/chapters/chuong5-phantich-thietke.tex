@@ -339,7 +339,7 @@ Bảng~\ref{tab:container-io} ghi dữ liệu vào và ra của từng container
 \bottomrule
 \endfoot
 Ứng dụng mua hàng & Next.js, PWA & Thao tác của khách vãng lai, khách lẻ, khách sỉ, nhà cung cấp & Lời gọi tới \texttt{/api}; tệp tải thẳng lên kho tệp; trang truy xuất, trang sản phẩm dựng sẵn phía máy chủ \\
-Ứng dụng nội bộ & React, Vite, Refine & Thao tác của sáu vai trò nội bộ sau đăng nhập hai lớp & Lời gọi tới \texttt{/staff}; ảnh nghiệm thu, tệp nhập hộ tải thẳng lên kho tệp \\
+Ứng dụng nội bộ & React, Vite, Refine & Thao tác của sáu vai trò nội bộ sau đăng nhập hai lớp & Lời gọi tới \texttt{/api/admin}; ảnh nghiệm thu, tệp nhập hộ tải thẳng lên kho tệp \\
 Ứng dụng lõi & NestJS, 13 mô-đun & Yêu cầu REST từ hai ứng dụng; webhook của cổng thanh toán và đơn vị vận chuyển; kết quả của dịch vụ AI & Phản hồi JSON; sự kiện nghiệp vụ vào Redis; lời gọi ra hệ thống bên ngoài; đường dẫn ký trước cho tệp \\
 Cơ sở dữ liệu & PostgreSQL, pgvector & Đọc, ghi của từng mô-đun trên schema riêng; khóa dòng tồn trong một giao dịch & Dữ liệu nghiệp vụ; kết quả tìm kiếm toàn văn và theo vector \\
 Lưu trữ tệp & MinIO, chuẩn S3 & Tệp tải lên qua đường dẫn ký trước & Ảnh công khai dạng WebP nhiều cỡ; tệp riêng tư qua đường dẫn ký trước hạn ngắn \\
