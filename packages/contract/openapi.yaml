@@ -1,0 +1,1449 @@
+openapi: 3.1.0
+info:
+  title: Farmery API — prototype
+  version: 0.1.0
+  summary: Hợp đồng API dùng chung cho apps/shop, apps/admin và apps/api
+  description: |
+    Nguồn hợp đồng duy nhất của prototype (13–21/10/2026). Kiểu TypeScript sinh bằng
+    openapi-typescript, client dùng openapi-fetch; không gõ lại kiểu bằng tay.
+
+    Phạm vi: trục bán lẻ đầu–cuối theo MVP.md, rút gọn cho kịch bản demo. Không có bán sỉ,
+    đồng bộ TraceViet, thanh toán thật, 3PL thật. Tên trường bám schema.dbml (đổi sang camelCase).
+
+    Quy ước:
+    - ID là chuỗi chữ số ("1024"); CSDL dùng bigint, API trả chuỗi để JavaScript không tràn số.
+      Trang công khai tra theo `traceCode` (qr_token), không lộ ID nội bộ.
+    - Tiền là số nguyên VND. Số lượng là số thực, đơn vị theo `saleUnit`/`unit`.
+    - Thời gian ISO-8601 (UTC); ngày dạng YYYY-MM-DD.
+    - Lỗi theo RFC 9457 (application/problem+json), có `code` máy đọc được.
+    - Danh sách phân trang theo cursor: trả `items` và `nextCursor` (null khi hết).
+    - POST tạo mới nhận header `Idempotency-Key` (UUID); gửi lại cùng key trả lại kết quả cũ.
+      Bắt buộc với `POST /orders`, tùy chọn ở chỗ khác.
+    - Vai trò được phép gọi ghi ở `x-roles`; không có `x-roles` nghĩa là chỉ cần đăng nhập
+      (hoặc công khai nếu `security: []`).
+    - Prototype giữ dữ liệu trong bộ nhớ; `POST /dev/reset` đưa về dữ liệu gốc.
+servers:
+  - url: http://localhost:4000
+    description: apps/api chạy local
+tags:
+  - name: Public
+    description: Khách vãng lai, không cần đăng nhập
+  - name: Auth
+  - name: Buyer
+    description: Khách lẻ (buyer_retail)
+  - name: Seller
+    description: Nhà cung cấp (seller), chỉ thấy dữ liệu của mình
+  - name: Moderation
+    description: Kiểm duyệt viên (staff_moderation)
+  - name: Operations
+    description: Vận hành, kho, quản trị
+  - name: Media
+  - name: Dev
+security:
+  - bearerAuth: []
+
+paths:
+  # ---------------------------------------------------------------- Public
+  /categories:
+    get:
+      tags: [Public]
+      operationId: listCategories
+      summary: Cây danh mục (FR4.4)
+      security: []
+      responses:
+        '200':
+          description: Danh mục gốc, mỗi nút có `children`
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Category' }
+
+  /products:
+    get:
+      tags: [Public]
+      operationId: searchProducts
+      summary: Tìm kiếm, lọc sản phẩm đang bán (FR4.5, FR12.3)
+      description: |
+        `q` khớp không dấu và gần đúng (gõ sai một vài ký tự). Prototype chưa có tìm theo ngữ nghĩa.
+        Chỉ trả sản phẩm đã duyệt.
+      security: []
+      parameters:
+        - { name: q, in: query, schema: { type: string } }
+        - { name: categoryId, in: query, schema: { $ref: '#/components/schemas/Id' } }
+        - { name: region, in: query, description: Vùng trồng, schema: { type: string } }
+        - { name: cert, in: query, schema: { $ref: '#/components/schemas/CertType' } }
+        - { name: inStock, in: query, schema: { type: boolean } }
+        - { name: inSeason, in: query, description: Đang vào mùa — trang chủ dùng, schema: { type: boolean } }
+        - { name: minPrice, in: query, schema: { type: integer, minimum: 0 } }
+        - { name: maxPrice, in: query, schema: { type: integer, minimum: 0 } }
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageBase'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items: { $ref: '#/components/schemas/ProductCard' }
+
+  /products/{productId}:
+    get:
+      tags: [Public]
+      operationId: getProduct
+      summary: Chi tiết sản phẩm kèm lô đang bán và sản phẩm tương tự (FR4.1, FR12.1)
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProductDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /public/trace/{traceCode}:
+    get:
+      tags: [Public]
+      operationId: getPublicTrace
+      summary: Trang truy xuất theo mã QR (FR4.2, FR13.6)
+      description: Chỉ lô đã duyệt mới tra được; lô chưa duyệt hoặc bị từ chối trả 404.
+      security: []
+      parameters:
+        - name: traceCode
+          in: path
+          required: true
+          description: qr_token in trên tem Farmery (không phải mã QR do cơ quan nhà nước cấp)
+          schema: { type: string, minLength: 6, maxLength: 64 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TraceView' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /suppliers/{supplierId}:
+    get:
+      tags: [Public]
+      operationId: getSupplierProfile
+      summary: Hồ sơ nguồn gốc nhà cung cấp (FR2.1, FR3.1)
+      security: []
+      parameters:
+        - { name: supplierId, in: path, required: true, schema: { $ref: '#/components/schemas/Id' } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SupplierProfile' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ---------------------------------------------------------------- Auth
+  /auth/otp:
+    post:
+      tags: [Auth]
+      operationId: requestOtp
+      summary: Gửi OTP tới số điện thoại hoặc email
+      description: Prototype không gửi thật; mã luôn là `123456` và được trả trong `devCode`.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [identifier]
+              properties:
+                identifier: { type: string, description: Số điện thoại hoặc email, examples: ['0901234567'] }
+      responses:
+        '200':
+          description: Đã tạo phiên OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [challengeId, expiresAt]
+                properties:
+                  challengeId: { type: string }
+                  expiresAt: { type: string, format: date-time }
+                  devCode: { type: string, description: Chỉ có ở prototype, examples: ['123456'] }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Đăng nhập bằng OTP
+      description: |
+        Nhân sự nội bộ cũng đăng nhập qua bước này ở prototype (thay cho 2FA thật).
+        Dữ liệu giả có sẵn tài khoản cho từng vai trò.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [challengeId, code]
+              properties:
+                challengeId: { type: string }
+                code: { type: string, pattern: '^[0-9]{6}$' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accessToken, user]
+                properties:
+                  accessToken: { type: string, description: 'JWT; claim `roles` là mảng RoleCode' }
+                  user: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /me:
+    get:
+      tags: [Auth]
+      operationId: getMe
+      summary: Người dùng hiện tại
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /me/addresses:
+    get:
+      tags: [Buyer]
+      operationId: listAddresses
+      summary: Sổ địa chỉ (FR1.5)
+      x-roles: [buyer_retail]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Address' }
+    post:
+      tags: [Buyer]
+      operationId: createAddress
+      x-roles: [buyer_retail]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AddressInput' }
+      responses:
+        '201':
+          description: Đã tạo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Address' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  # ---------------------------------------------------------------- Buyer
+  /cart:
+    get:
+      tags: [Buyer]
+      operationId: getCart
+      summary: Giỏ hàng (FR5.1)
+      x-roles: [buyer_retail]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+
+  /cart/items/{listingId}:
+    put:
+      tags: [Buyer]
+      operationId: setCartItem
+      summary: Thêm hoặc đổi số lượng một tin bán trong giỏ
+      description: Số lượng không vượt lượng còn bán được; vượt thì trả 422 `CART_QTY_EXCEEDS_STOCK`.
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/ListingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [quantity]
+              properties:
+                quantity: { type: number, exclusiveMinimum: 0 }
+      responses:
+        '200':
+          description: Giỏ sau khi đổi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+    delete:
+      tags: [Buyer]
+      operationId: removeCartItem
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/ListingId'
+      responses:
+        '200':
+          description: Giỏ sau khi xóa
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+
+  /checkout/quote:
+    post:
+      tags: [Buyer]
+      operationId: quoteCheckout
+      summary: Tính tiền trước khi xác nhận (FR5.2, FR8.2)
+      description: |
+        Trả tiền hàng, thuế, cước giao, khung giờ còn nhận đơn và việc COD có được phép hay không.
+        COD chỉ mở khi tổng tiền ≤ `cod_max_amount` và tài khoản chưa từng từ chối nhận COD (FR7.1).
+      x-roles: [buyer_retail]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [addressId]
+              properties:
+                addressId: { $ref: '#/components/schemas/Id' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CheckoutQuote' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /orders:
+    get:
+      tags: [Buyer]
+      operationId: listMyOrders
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageBase'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items: { $ref: '#/components/schemas/OrderSummary' }
+    post:
+      tags: [Buyer]
+      operationId: placeOrder
+      summary: Đặt đơn từ giỏ hàng (FR5.2)
+      description: |
+        Khóa dòng tồn theo FEFO và giữ chỗ. Đơn `prepaid` ở trạng thái `placed`, giữ chỗ tới
+        `reserveExpiresAt` (15 phút), quá hạn chưa thanh toán thì tự hủy. Đơn `cod` hợp lệ chuyển
+        thẳng sang `paid`. Giỏ được làm rỗng khi đặt thành công.
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [addressId, deliveryDate, deliverySlot, paymentOption]
+              properties:
+                addressId: { $ref: '#/components/schemas/Id' }
+                deliveryDate: { type: string, format: date }
+                deliverySlot: { type: string, examples: ['08:00-11:00'] }
+                paymentOption: { $ref: '#/components/schemas/PaymentOption' }
+      responses:
+        '201':
+          description: Đã đặt
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '409':
+          description: Hết hàng trong lúc đặt (`STOCK_CONFLICT`)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /orders/{orderId}:
+    get:
+      tags: [Buyer]
+      operationId: getMyOrder
+      summary: Chi tiết đơn và dòng thời gian (FR5.4)
+      description: FE hỏi lại mỗi 5 giây khi đơn chưa kết thúc.
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /orders/{orderId}/pay:
+    post:
+      tags: [Buyer]
+      operationId: payOrder
+      summary: Thanh toán giả lập cho đơn trả trước
+      description: Thay cho cổng thanh toán ở prototype. `placed` → `paid`; quá hạn giữ chỗ trả 409 `RESERVATION_EXPIRED`.
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /orders/{orderId}/cancel:
+    post:
+      tags: [Buyer]
+      operationId: cancelMyOrder
+      summary: Hủy đơn trước khi đóng gói
+      description: Chỉ được khi đơn đang `placed` hoặc `paid`; nhả giữ chỗ. Ngoài ra trả 409 `ORDER_NOT_CANCELLABLE`.
+      x-roles: [buyer_retail]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ---------------------------------------------------------------- Seller
+  /seller/products:
+    get:
+      tags: [Seller]
+      operationId: listSellerProducts
+      x-roles: [seller]
+      responses:
+        '200':
+          description: Sản phẩm của nhà cung cấp đang đăng nhập
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SellerProduct' }
+    post:
+      tags: [Seller]
+      operationId: createSellerProduct
+      summary: Đăng sản phẩm mới, chờ duyệt (FR4.1)
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProductInput' }
+      responses:
+        '201':
+          description: Đã tạo, trạng thái `pending_review`
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SellerProduct' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /seller/batches:
+    get:
+      tags: [Seller]
+      operationId: listSellerBatches
+      x-roles: [seller]
+      parameters:
+        - { name: productId, in: query, schema: { $ref: '#/components/schemas/Id' } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/ReviewStatus' } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Batch' }
+    post:
+      tags: [Seller]
+      operationId: createBatch
+      summary: Khai báo lô mới, chờ kiểm duyệt (FR4.1, FR4.6)
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BatchInput' }
+      responses:
+        '201':
+          description: Đã tạo lô ở `pending_review` và một việc duyệt trong hàng đợi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Batch' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /seller/batches/{batchId}:
+    get:
+      tags: [Seller]
+      operationId: getSellerBatch
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/BatchId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Batch' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /seller/batches/{batchId}/logs:
+    get:
+      tags: [Seller]
+      operationId: listFarmingLogs
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/BatchId'
+      responses:
+        '200':
+          description: Nhật ký theo thời gian tăng dần, gồm cả bản đã bị đính chính
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/FarmingLog' }
+    post:
+      tags: [Seller]
+      operationId: appendFarmingLog
+      summary: Ghi một dòng nhật ký canh tác (FR4.2)
+      description: |
+        Chỉ nối thêm, không sửa hay xóa (NFR9.1). Muốn sửa thì gửi bản mới có `supersedesId`
+        trỏ về bản cũ; bản cũ vẫn hiện trên trang truy xuất kèm dấu "đã đính chính".
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/BatchId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FarmingLogInput' }
+      responses:
+        '201':
+          description: Đã ghi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FarmingLog' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  # ---------------------------------------------------------------- Moderation
+  /admin/review-tasks:
+    get:
+      tags: [Moderation]
+      operationId: listReviewTasks
+      summary: Hàng đợi duyệt (FR10.1)
+      x-roles: [staff_moderation]
+      parameters:
+        - { name: type, in: query, schema: { $ref: '#/components/schemas/TaskType' } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/TaskStatus' } }
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageBase'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items: { $ref: '#/components/schemas/ReviewTask' }
+
+  /admin/review-tasks/{taskId}:
+    get:
+      tags: [Moderation]
+      operationId: getReviewTask
+      summary: Chi tiết việc duyệt kèm đối tượng cần duyệt
+      x-roles: [staff_moderation]
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReviewTaskDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/review-tasks/{taskId}/approve:
+    post:
+      tags: [Moderation]
+      operationId: approveReviewTask
+      summary: Duyệt
+      description: |
+        Với lô: lô chuyển `approved`, trang truy xuất mở công khai, mở dòng tồn từ lô
+        (`open_from_batch`), trả `traceUrl` để in QR.
+      x-roles: [staff_moderation]
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReviewTaskDetail' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/review-tasks/{taskId}/reject:
+    post:
+      tags: [Moderation]
+      operationId: rejectReviewTask
+      summary: Từ chối, kèm lý do gửi cho nhà cung cấp
+      x-roles: [staff_moderation]
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string, minLength: 5, maxLength: 1000 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReviewTaskDetail' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ---------------------------------------------------------------- Operations
+  /admin/orders:
+    get:
+      tags: [Operations]
+      operationId: listOrders
+      summary: Giám sát đơn lẻ (FR10.3)
+      x-roles: [staff_operations, staff_warehouse]
+      parameters:
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/OrderStatus' } }
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageBase'
+                  - type: object
+                    required: [items]
+                    properties:
+                      items:
+                        type: array
+                        items: { $ref: '#/components/schemas/OrderSummary' }
+
+  /admin/orders/{orderId}:
+    get:
+      tags: [Operations]
+      operationId: getOrder
+      x-roles: [staff_operations, staff_warehouse]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/orders/{orderId}/advance:
+    post:
+      tags: [Operations]
+      operationId: advanceOrder
+      summary: Chuyển đơn sang trạng thái kế tiếp trên dòng thời gian
+      description: |
+        Thứ tự: paid → packing → on_trip → handed_to_3pl → delivering → delivered → completed.
+        Ở hệ thống thật một số bước do webhook 3PL đẩy; prototype cho nhân viên bấm thay.
+        Đơn `placed`, `completed`, `cancelled`, `returned`, `disputed` trả 409 `ORDER_TRANSITION_INVALID`.
+        Mỗi lần chuyển ghi một `OrderStatusEvent` có `source: staff`.
+      x-roles: [staff_operations, staff_warehouse]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string, maxLength: 500 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderDetail' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/inventory/holdings:
+    get:
+      tags: [Operations]
+      operationId: listStockHoldings
+      summary: Dòng tồn theo lô (FR13.3)
+      x-roles: [staff_warehouse, staff_operations]
+      parameters:
+        - { name: batchId, in: query, schema: { $ref: '#/components/schemas/Id' } }
+        - { name: productId, in: query, schema: { $ref: '#/components/schemas/Id' } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/StockHolding' }
+
+  /admin/inventory/holdings/{holdingId}/movements:
+    get:
+      tags: [Operations]
+      operationId: listStockMovements
+      summary: Sổ nhập xuất của một dòng tồn
+      x-roles: [staff_warehouse, staff_operations]
+      parameters:
+        - { name: holdingId, in: path, required: true, schema: { $ref: '#/components/schemas/Id' } }
+      responses:
+        '200':
+          description: Mới nhất trước
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/StockMovement' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/settings:
+    get:
+      tags: [Operations]
+      operationId: listSettings
+      summary: Cấu hình nền tảng (FR10.6)
+      x-roles: [platform_owner, staff_operations]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PlatformSettings' }
+    put:
+      tags: [Operations]
+      operationId: updateSettings
+      summary: Cập nhật một phần cấu hình
+      x-roles: [platform_owner]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlatformSettings' }
+      responses:
+        '200':
+          description: Cấu hình sau khi cập nhật
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PlatformSettings' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  # ---------------------------------------------------------------- Media
+  /media:
+    post:
+      tags: [Media]
+      operationId: uploadMedia
+      summary: Tải ảnh minh chứng (nhật ký, sản phẩm)
+      description: |
+        Prototype nhận tệp trực tiếp (≤ 5 MB, JPEG/PNG/WebP). Giai đoạn 2 đổi sang đường dẫn
+        ký trước tới kho tệp; `MediaFile` giữ nguyên nên FE chỉ đổi cách tải.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, contentMediaType: application/octet-stream }
+      responses:
+        '201':
+          description: Đã lưu
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MediaFile' }
+        '413':
+          description: Tệp quá lớn
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '415':
+          description: Không phải ảnh
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  # ---------------------------------------------------------------- Dev
+  /dev/reset:
+    post:
+      tags: [Dev]
+      operationId: resetData
+      summary: Đưa dữ liệu trong bộ nhớ về bản gốc trước mỗi lần demo
+      description: Chỉ bật khi NODE_ENV khác production.
+      security: []
+      responses:
+        '204': { description: Đã khôi phục }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      schema: { type: string }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string, format: uuid }
+    IdempotencyKeyRequired:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, format: uuid }
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Id' }
+    ListingId:
+      name: listingId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Id' }
+    BatchId:
+      name: batchId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Id' }
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Id' }
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Id' }
+
+  responses:
+    BadRequest:
+      description: Sai định dạng yêu cầu
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Unauthorized:
+      description: Thiếu hoặc sai token, sai OTP
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Forbidden:
+      description: Không có quyền với tài nguyên (vd lô của nhà cung cấp khác)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    NotFound:
+      description: Không tìm thấy
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Conflict:
+      description: Xung đột trạng thái (vd chuyển trạng thái đơn không hợp lệ)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Unprocessable:
+      description: Đúng cú pháp nhưng sai nghiệp vụ (vd COD vượt ngưỡng, ngày thu hoạch trong tương lai)
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+
+  schemas:
+    # ------------------------------------------------------------ chung
+    Id:
+      type: string
+      pattern: '^[0-9]+$'
+      description: Định danh bigint dạng chuỗi
+      examples: ['1024']
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+        code:
+          type: string
+          description: |
+            Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, STOCK_CONFLICT,
+            COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_CANCELLABLE,
+            ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED, BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID
+        errors:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field: { type: string }
+              message: { type: string }
+    PageBase:
+      type: object
+      required: [nextCursor]
+      properties:
+        nextCursor: { type: [string, 'null'] }
+    MediaFile:
+      type: object
+      required: [id, url]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        url: { type: string, format: uri }
+        mimeType: { type: string }
+
+    # ------------------------------------------------------------ enum (khớp schema.dbml)
+    RoleCode:
+      type: string
+      enum: [buyer_retail, buyer_wholesale, seller, staff_moderation, staff_operations,
+             staff_sourcing, staff_warehouse, staff_support, platform_owner]
+    CertType:
+      type: string
+      enum: [VietGAP, GlobalGAP, organic, OCOP, HACCP]
+    ReviewStatus:
+      type: string
+      description: catalog.review_status
+      enum: [draft, pending_review, approved, rejected, hidden]
+    OrderStatus:
+      type: string
+      description: |
+        retail.order_status. Tám bước trên dòng thời gian: placed, paid, packing, on_trip,
+        handed_to_3pl, delivering, delivered, completed. Nhánh khác: disputed, cancelled, returned.
+      enum: [placed, paid, packing, on_trip, handed_to_3pl, delivering, delivered, completed,
+             disputed, cancelled, returned]
+    PaymentOption:
+      type: string
+      enum: [prepaid, cod]
+    FarmingActivity:
+      type: string
+      description: Loại công việc canh tác nhà cung cấp được ghi; đóng gói, nhập kho, vận chuyển do Farmery sinh
+      enum: [planting, care, treatment, harvest, other]
+    TaskType:
+      type: string
+      enum: [supplier_profile, certification, product, batch, flagged_review, product_report]
+    TaskStatus:
+      type: string
+      enum: [open, in_review, approved, rejected]
+    MovementType:
+      type: string
+      enum: [open_from_batch, ownership_transfer, return_in, reserve, release, retail_out,
+             wholesale_out, write_off, packing, refund_offset, recall_lock]
+
+    # ------------------------------------------------------------ danh mục, sản phẩm
+    Category:
+      type: object
+      required: [id, name, isLeaf, children]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        isLeaf: { type: boolean }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/Category' }
+    SupplierRef:
+      type: object
+      required: [id, displayName, growingRegion]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        displayName: { type: string }
+        growingRegion: { type: string }
+    Listing:
+      type: object
+      description: Tin bán lẻ của Farmery (1P) — giá do nhân viên thu mua đặt
+      required: [id, saleUnit, unitPrice, available]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        saleUnit: { type: string, examples: ['kg', 'gói 500 g'] }
+        unitPrice: { type: integer, description: VND }
+        available: { type: number, description: Lượng còn bán được = tồn − đang giữ chỗ }
+    ProductCard:
+      type: object
+      required: [id, name, imageUrl, supplier, certifications, inSeason, listing]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        imageUrl: { type: [string, 'null'], format: uri }
+        categoryName: { type: string }
+        supplier: { $ref: '#/components/schemas/SupplierRef' }
+        certifications:
+          type: array
+          items: { $ref: '#/components/schemas/CertType' }
+        inSeason: { type: boolean }
+        listing:
+          oneOf:
+            - $ref: '#/components/schemas/Listing'
+            - type: 'null'
+          description: null khi chưa có tin bán đang mở
+    BatchOnSale:
+      type: object
+      required: [batchCode, harvestDate, bestBefore, traceCode]
+      properties:
+        batchCode: { type: string }
+        harvestDate: { type: string, format: date }
+        bestBefore: { type: string, format: date }
+        traceCode: { type: string }
+    ProductDetail:
+      allOf:
+        - $ref: '#/components/schemas/ProductCard'
+        - type: object
+          required: [description, imageUrls, unit, batchesOnSale, similar]
+          properties:
+            description: { type: string }
+            imageUrls:
+              type: array
+              items: { type: string, format: uri }
+            unit: { type: string }
+            seasonality: { type: string, examples: ['Tháng 4–7'] }
+            batchesOnSale:
+              type: array
+              items: { $ref: '#/components/schemas/BatchOnSale' }
+            similar:
+              type: array
+              maxItems: 5
+              description: Prototype lấy cùng danh mục; giai đoạn 2 dùng vector (FR12.1)
+              items: { $ref: '#/components/schemas/ProductCard' }
+
+    # ------------------------------------------------------------ nhà cung cấp, chứng nhận
+    Certification:
+      type: object
+      required: [type, certificateNumber, issuingAuthority, issuedDate, expiryDate, valid]
+      properties:
+        type: { $ref: '#/components/schemas/CertType' }
+        certificateNumber: { type: string }
+        issuingAuthority: { type: string }
+        issuedDate: { type: string, format: date }
+        expiryDate: { type: string, format: date }
+        valid: { type: boolean, description: Đã duyệt và chưa hết hạn (FR3.3) }
+    SupplierProfile:
+      allOf:
+        - $ref: '#/components/schemas/SupplierRef'
+        - type: object
+          required: [description, certifications, products]
+          properties:
+            description: { type: string }
+            avatarUrl: { type: [string, 'null'], format: uri }
+            growingAreaCode: { type: [string, 'null'] }
+            reputationScore: { type: [number, 'null'], minimum: 0, maximum: 5 }
+            certifications:
+              type: array
+              items: { $ref: '#/components/schemas/Certification' }
+            products:
+              type: array
+              items: { $ref: '#/components/schemas/ProductCard' }
+
+    # ------------------------------------------------------------ lô, nhật ký, truy xuất
+    ProductInput:
+      type: object
+      required: [categoryId, name, unit]
+      properties:
+        categoryId: { $ref: '#/components/schemas/Id' }
+        name: { type: string, minLength: 2, maxLength: 200 }
+        description: { type: string, maxLength: 5000 }
+        unit: { type: string, description: Thuộc đơn vị hợp lệ của danh mục }
+        imageIds:
+          type: array
+          items: { $ref: '#/components/schemas/Id' }
+        referenceRetailPrice: { type: integer, minimum: 0 }
+        seasonality: { type: string }
+    SellerProduct:
+      type: object
+      required: [id, name, categoryId, unit, status]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        categoryId: { $ref: '#/components/schemas/Id' }
+        unit: { type: string }
+        status: { $ref: '#/components/schemas/ReviewStatus' }
+        imageUrl: { type: [string, 'null'], format: uri }
+    BatchInput:
+      type: object
+      required: [productId, harvestDate, bestBefore, declaredQuantity]
+      properties:
+        productId: { $ref: '#/components/schemas/Id' }
+        harvestDate:
+          type: string
+          format: date
+          description: Ngày thu hoạch (dự kiến nếu khai lô trước khi thu hoạch); bestBefore phải sau ngày này
+        bestBefore: { type: string, format: date }
+        declaredQuantity: { type: number, exclusiveMinimum: 0, description: Theo đơn vị của sản phẩm }
+    Batch:
+      type: object
+      required: [id, batchCode, productId, productName, harvestDate, bestBefore, declaredQuantity, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        batchCode: { type: string, examples: ['XCHL-2610-01'] }
+        productId: { $ref: '#/components/schemas/Id' }
+        productName: { type: string }
+        harvestDate: { type: string, format: date }
+        bestBefore: { type: string, format: date }
+        declaredQuantity: { type: number }
+        status: { $ref: '#/components/schemas/ReviewStatus' }
+        rejectReason: { type: [string, 'null'] }
+        traceCode: { type: [string, 'null'], description: Chỉ có khi đã duyệt }
+        traceUrl: { type: [string, 'null'], format: uri, description: Đường dẫn in vào QR; chỉ có khi đã duyệt }
+        recalledAt: { type: [string, 'null'], format: date-time }
+        createdAt: { type: string, format: date-time }
+    FarmingLogInput:
+      type: object
+      required: [activityDate, activity]
+      properties:
+        activityDate: { type: string, format: date, description: Không ở tương lai }
+        activity: { $ref: '#/components/schemas/FarmingActivity' }
+        description: { type: string, maxLength: 2000 }
+        imageIds:
+          type: array
+          maxItems: 6
+          items: { $ref: '#/components/schemas/Id' }
+        supersedesId:
+          $ref: '#/components/schemas/Id'
+          description: Có khi đây là bản đính chính; phải trỏ tới nhật ký cùng lô
+    FarmingLog:
+      type: object
+      required: [id, batchId, activityDate, activity, imageUrls, enteredBy, createdAt, superseded]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        batchId: { $ref: '#/components/schemas/Id' }
+        activityDate: { type: string, format: date }
+        activity: { $ref: '#/components/schemas/FarmingActivity' }
+        description: { type: [string, 'null'] }
+        imageUrls:
+          type: array
+          items: { type: string, format: uri }
+        supersedesId: { oneOf: [{ $ref: '#/components/schemas/Id' }, { type: 'null' }] }
+        superseded: { type: boolean, description: Đã có bản đính chính thay thế }
+        enteredBy:
+          type: object
+          description: Người nhập — khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập hộ (FR10.7)
+          required: [userId, displayName, onBehalf]
+          properties:
+            userId: { $ref: '#/components/schemas/Id' }
+            displayName: { type: string }
+            onBehalf: { type: boolean }
+        createdAt: { type: string, format: date-time }
+    PublicFarmingLog:
+      type: object
+      description: Bản rút gọn cho trang công khai — không có ID người nhập
+      required: [activityDate, activity, imageUrls, isCorrection, superseded, enteredOnBehalf]
+      properties:
+        activityDate: { type: string, format: date }
+        activity: { $ref: '#/components/schemas/FarmingActivity' }
+        description: { type: [string, 'null'] }
+        imageUrls:
+          type: array
+          items: { type: string, format: uri }
+        isCorrection: { type: boolean }
+        superseded: { type: boolean }
+        enteredOnBehalf: { type: boolean, description: Nhân viên hỗ trợ vùng nhập hộ }
+    TraceView:
+      type: object
+      required: [traceCode, product, supplier, batch, certifications, logs, recall]
+      properties:
+        traceCode: { type: string }
+        product:
+          type: object
+          required: [id, name, categoryName]
+          properties:
+            id: { $ref: '#/components/schemas/Id' }
+            name: { type: string }
+            categoryName: { type: string }
+            imageUrl: { type: [string, 'null'], format: uri }
+        supplier: { $ref: '#/components/schemas/SupplierRef' }
+        batch:
+          type: object
+          required: [batchCode, harvestDate, bestBefore]
+          properties:
+            batchCode: { type: string }
+            harvestDate: { type: string, format: date }
+            bestBefore: { type: string, format: date }
+        certifications:
+          type: array
+          description: 'Chứng nhận của nhà cung cấp, kể cả đã hết hạn (`valid: false`)'
+          items: { $ref: '#/components/schemas/Certification' }
+        logs:
+          type: array
+          description: Theo thời gian tăng dần
+          items: { $ref: '#/components/schemas/PublicFarmingLog' }
+        recall:
+          type: object
+          description: Cảnh báo thu hồi (FR13.6)
+          required: [recalled]
+          properties:
+            recalled: { type: boolean }
+            reason: { type: [string, 'null'] }
+            recalledAt: { type: [string, 'null'], format: date-time }
+
+    # ------------------------------------------------------------ tài khoản
+    Me:
+      type: object
+      required: [id, displayName, roles]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        displayName: { type: string }
+        phone: { type: [string, 'null'] }
+        email: { type: [string, 'null'], format: email }
+        roles:
+          type: array
+          items: { $ref: '#/components/schemas/RoleCode' }
+        supplierId:
+          oneOf: [{ $ref: '#/components/schemas/Id' }, { type: 'null' }]
+          description: Có khi tài khoản là nhà cung cấp
+    AddressInput:
+      type: object
+      required: [recipientName, phone, addressLine, ward, province]
+      properties:
+        label: { type: string }
+        recipientName: { type: string }
+        phone: { type: string }
+        addressLine: { type: string }
+        ward: { type: string }
+        province: { type: string }
+        isDefault: { type: boolean, default: false }
+    Address:
+      allOf:
+        - $ref: '#/components/schemas/AddressInput'
+        - type: object
+          required: [id, isDefault]
+          properties:
+            id: { $ref: '#/components/schemas/Id' }
+
+    # ------------------------------------------------------------ giỏ, đơn
+    CartItem:
+      type: object
+      required: [listingId, productId, productName, saleUnit, unitPrice, quantity, available, lineTotal]
+      properties:
+        listingId: { $ref: '#/components/schemas/Id' }
+        productId: { $ref: '#/components/schemas/Id' }
+        productName: { type: string }
+        imageUrl: { type: [string, 'null'], format: uri }
+        saleUnit: { type: string }
+        unitPrice: { type: integer }
+        quantity: { type: number }
+        available: { type: number }
+        lineTotal: { type: integer }
+    Cart:
+      type: object
+      required: [items, subtotal]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CartItem' }
+        subtotal: { type: integer }
+    DeliverySlotOption:
+      type: object
+      required: [date, slot, available]
+      properties:
+        date: { type: string, format: date }
+        slot: { type: string, examples: ['08:00-11:00'] }
+        available: { type: boolean, description: false khi đã qua giờ chốt đơn }
+    CheckoutQuote:
+      type: object
+      required: [subtotal, taxAmount, shippingFee, totalAmount, codAllowed, deliverySlots]
+      properties:
+        subtotal: { type: integer }
+        taxAmount: { type: integer }
+        shippingFee: { type: integer, description: Cước 3PL cộng phần bù chặng giữa }
+        totalAmount: { type: integer }
+        codAllowed: { type: boolean }
+        codReason: { type: [string, 'null'], description: 'Lý do không cho COD, để hiển thị' }
+        deliverySlots:
+          type: array
+          items: { $ref: '#/components/schemas/DeliverySlotOption' }
+    OrderItem:
+      type: object
+      required: [productName, quantity, unitPrice, lineTotal, batchCode, traceCode]
+      properties:
+        productName: { type: string }
+        saleUnit: { type: string }
+        quantity: { type: number }
+        unitPrice: { type: integer }
+        lineTotal: { type: integer }
+        batchCode: { type: string }
+        traceCode: { type: string, description: Mở trang truy xuất của đúng lô đã giao }
+    OrderStatusEvent:
+      type: object
+      required: [toStatus, source, occurredAt]
+      properties:
+        toStatus: { $ref: '#/components/schemas/OrderStatus' }
+        source: { type: string, enum: [system, staff, payment_webhook, carrier_webhook] }
+        note: { type: [string, 'null'] }
+        occurredAt: { type: string, format: date-time }
+    OrderSummary:
+      type: object
+      required: [id, orderCode, status, totalAmount, placedAt, itemCount]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        orderCode: { type: string, examples: ['FM-261018-0007'] }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        totalAmount: { type: integer }
+        itemCount: { type: integer }
+        buyerName: { type: string, description: Chỉ có ở API nội bộ }
+        placedAt: { type: string, format: date-time }
+    OrderDetail:
+      allOf:
+        - $ref: '#/components/schemas/OrderSummary'
+        - type: object
+          required: [items, address, deliveryDate, deliverySlot, paymentOption, subtotal, taxAmount, shippingFee, timeline]
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/OrderItem' }
+            address: { $ref: '#/components/schemas/AddressInput' }
+            deliveryDate: { type: string, format: date }
+            deliverySlot: { type: string }
+            paymentOption: { $ref: '#/components/schemas/PaymentOption' }
+            subtotal: { type: integer }
+            taxAmount: { type: integer }
+            shippingFee: { type: integer }
+            reserveExpiresAt:
+              type: [string, 'null']
+              format: date-time
+              description: Hạn giữ chỗ 15 phút của đơn trả trước chưa thanh toán; FE đếm ngược theo trường này
+            timeline:
+              type: array
+              description: Các mốc đã qua, cũ trước
+              items: { $ref: '#/components/schemas/OrderStatusEvent' }
+            cancellable: { type: boolean }
+
+    # ------------------------------------------------------------ kiểm duyệt
+    ReviewTask:
+      type: object
+      required: [id, taskType, targetId, status, title, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        taskType: { $ref: '#/components/schemas/TaskType' }
+        targetId: { $ref: '#/components/schemas/Id' }
+        status: { $ref: '#/components/schemas/TaskStatus' }
+        title: { type: string, description: Dòng tóm tắt để hiện trong hàng đợi, examples: ['Lô XCHL-2610-01 — Xoài cát Hòa Lộc'] }
+        dueAt: { type: [string, 'null'], format: date-time }
+        createdAt: { type: string, format: date-time }
+    ReviewTaskDetail:
+      allOf:
+        - $ref: '#/components/schemas/ReviewTask'
+        - type: object
+          properties:
+            decisionReason: { type: [string, 'null'] }
+            decidedAt: { type: [string, 'null'], format: date-time }
+            batch:
+              description: Có khi taskType = batch
+              type: object
+              required: [batch, supplier, logs, certifications]
+              properties:
+                batch: { $ref: '#/components/schemas/Batch' }
+                supplier: { $ref: '#/components/schemas/SupplierRef' }
+                logs:
+                  type: array
+                  items: { $ref: '#/components/schemas/FarmingLog' }
+                certifications:
+                  type: array
+                  items: { $ref: '#/components/schemas/Certification' }
+
+    # ------------------------------------------------------------ tồn kho, cấu hình
+    StockHolding:
+      type: object
+      required: [id, batchId, batchCode, productName, ownerType, locationType, saleUnit, qtyOnHand, qtyReserved, isLocked]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        batchId: { $ref: '#/components/schemas/Id' }
+        batchCode: { type: string }
+        productName: { type: string }
+        ownerType: { type: string, enum: [supplier, farmery] }
+        locationType: { type: string, enum: [supplier_site, farmery_warehouse] }
+        saleUnit: { type: string }
+        qtyOnHand: { type: number }
+        qtyReserved: { type: number }
+        isLocked: { type: boolean }
+    StockMovement:
+      type: object
+      required: [id, movementType, quantity, sourceType, sourceId, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        movementType: { $ref: '#/components/schemas/MovementType' }
+        quantity: { type: number, description: 'Dương là tăng, âm là giảm' }
+        sourceType: { type: string, examples: ['retail_order'] }
+        sourceId: { $ref: '#/components/schemas/Id' }
+        reason: { type: [string, 'null'] }
+        createdAt: { type: string, format: date-time }
+    PlatformSettings:
+      type: object
+      description: operations.platform_settings; PUT chỉ gửi khóa cần đổi
+      properties:
+        codMaxAmount: { type: integer, minimum: 0, description: VND }
+        cutoffTime: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', examples: ['16:00'] }
+        deliverySlots:
+          type: array
+          items: { type: string, examples: ['08:00-11:00'] }
+        freeShippingThreshold: { type: integer, minimum: 0 }
+        reservationMinutes: { type: integer, minimum: 1, default: 15 }

@@ -16,6 +16,7 @@ node_modules/
 
 # Phase plans (tạm thời, không commit theo quy ước)
 PHASE*-PLAN.md
+PHASE*-PLAN.html
 
 # Bộ tài liệu gửi kèm khi nhờ dựng slide — sinh lại được từ báo cáo, không commit
 slide-pack/
@@ -31,3 +32,8 @@ review/
 # Cache Python sinh ra khi chạy tools/diagrams/
 __pycache__/
 
+
+# Tài liệu tham khảo cũ trong report/ — giữ ở máy, không theo dõi
+report/_archive-old-tex/
+report/prism-uploads/
+report/chapters/_incoming/
