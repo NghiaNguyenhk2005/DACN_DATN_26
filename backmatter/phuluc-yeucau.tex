@@ -27,25 +27,30 @@ dùng sử dụng trực tiếp.
 \endhead
 \bottomrule
 \endfoot
-Nhà cung cấp & Biết giá thị trường trước khi chốt bán, để không bị ép giá khi vào vụ & FR12.2 \\
-& Bán được cả lô ngay khi thu hoạch, không phải lo hàng hỏng trong lúc chờ & FR2.3, quy trình thu mua \\
+Nhà cung cấp & Biết giá thị trường trước khi chốt bán, để không bị ép giá khi vào vụ & Chưa đáp ứng: dự báo giá (FR12.2) chỉ phục vụ nhân viên thu mua \\
+& Bán được cả lô ngay khi thu hoạch, không phải lo hàng hỏng trong lúc chờ & FR13.1, FR13.2 \\
 & Chứng minh sản phẩm đạt chuẩn để bán được giá cao hơn & FR3.1--FR3.3, FR4.2 \\
 & Thao tác đơn giản, có người hướng dẫn để không bỏ cuộc & NFR6.1--NFR6.3 \\
 & Theo dõi doanh thu và đơn hàng của mình & FR2.2 \\
-Khách sỉ & Đặt hàng định kỳ với sản lượng ổn định & FR6.3, FR6.5 \\
+Khách sỉ & Đặt hàng định kỳ với sản lượng ổn định & FR6.3; FR6.5 \emph{(chỉ thiết kế)} \\
 & Xác minh được chứng nhận của nhà cung cấp & FR3.2, FR4.2 \\
 & Giá giảm theo sản lượng đặt & FR6.1, FR6.4 \\
-& Yên tâm rằng tiền chỉ chuyển đi khi đã nhận đủ hàng & FR7.3 \\
-& Được báo sớm khi nguồn hàng có nguy cơ khan hiếm & FR11.3, FR12.2 \\
+& Yên tâm rằng tiền chỉ chuyển đi khi đã nhận đủ hàng & FR6.3 (thanh toán khi xác nhận nhận hàng); FR7.3 \emph{(chỉ thiết kế)} \\
+& Được báo sớm khi nguồn hàng có nguy cơ khan hiếm & Hướng phát triển (FR11.3 đã rút, Chương~\ref{chap:ketluan}) \\
 Khách lẻ & Biết rau mình mua trồng ở đâu, ai trồng & FR4.2, FR4.5 \\
 & Có một nơi chịu trách nhiệm khi hàng không đạt & FR8.3, quy trình bán lẻ \\
 & Hàng giao nhanh trong ngày để rau còn tươi & FR8.1, FR8.2, NFR1.1 \\
 & Tìm được đúng loại nông sản mình cần & FR4.4, FR4.5, FR12.3, FR12.1 \\
-Nhân viên thu mua & So sánh chào giá giữa các nhà cung cấp theo mùa vụ & FR12.2, FR6.1 \\
-& Được cảnh báo sớm các lô sắp hết hạn để kịp xả hàng & FR2.3, FR11.2 \\
-Kiểm duyệt viên & Duyệt nhanh hồ sơ và sản phẩm để không làm nản nhà cung cấp mới & FR10.1, FR3.2, FR4.6 \\
+& Mua lại nhanh những thứ hay mua & FR5.6 \\
+& Được báo khi sản phẩm mình chờ có hàng hoặc vào mùa & FR5.7, FR11.1 \\
+& Đổi trả được khi rau hỏng mà không phải gửi trả lại & FR8.3 \\
+Nhân viên thu mua & So sánh chào giá giữa các nhà cung cấp theo mùa vụ & FR13.1, FR12.2 \\
+& Được cảnh báo sớm các lô sắp hết hạn để kịp xả hàng & FR10.5, FR11.2 \\
+Kiểm duyệt viên, nhân viên vận hành & Duyệt nhanh hồ sơ và sản phẩm để không làm nản nhà cung cấp mới & FR10.1, FR3.2, FR4.6 \\
 & Thấy bức tranh tổng thể về giao dịch và tồn kho & FR10.4, FR10.5 \\
 & Xử lý được sản phẩm đăng sai loại hàng & FR4.7, FR10.2 \\
+Nhân viên kho, hỗ trợ vùng & Ghi nhận nhập, xuất và hao hụt ngay tại chỗ bằng điện thoại & FR13.2--FR13.4, NFR7.3 \\
+& Nhập hộ nhật ký canh tác cho bà con, có ghi người nhập & FR4.2, FR10.7 \\
 \end{longtable}
 \endgroup
 
@@ -73,11 +78,11 @@ FR4: Sản phẩm \& truy xuất nguồn gốc & \checkmark & \checkmark & \chec
 FR5: Giao dịch bán lẻ & & & \checkmark & \checkmark & \\
 FR6: Giao dịch bán sỉ & \checkmark & \checkmark & & & \\
 FR7: Thanh toán & \checkmark & \checkmark & \checkmark & \checkmark & \\
-FR8: Vận chuyển \& khiếu nại & \checkmark & \checkmark & \checkmark & & \checkmark \\
-FR9: Tương tác người dùng & \checkmark & \checkmark & \checkmark & & \\
+FR8: Giao hàng \& khiếu nại & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+FR9: Tương tác người dùng & & & \checkmark & & \checkmark \\
 FR10: Vận hành và quản trị nền tảng & & & & & \checkmark \\
 FR11: Thông báo & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
-FR12: Hỗ trợ AI & \checkmark & \checkmark & \checkmark & \checkmark & \\
+FR12: Hỗ trợ AI & & \checkmark & \checkmark & \checkmark & \\
 FR13: Thu mua \& quản lý kho (1P) & \checkmark & & & \checkmark & \checkmark \\
 \end{longtable}
 \endgroup

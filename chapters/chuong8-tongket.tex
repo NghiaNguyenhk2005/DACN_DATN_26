@@ -13,6 +13,7 @@ Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, m�
     \item \textbf{Phân quyền nội bộ trong tài khoản doanh nghiệp.} Mỗi tài khoản doanh nghiệp hiện do một người đại diện sử dụng. Việc phân tách vai trò nội bộ như người đặt hàng, kế toán và người duyệt chi là nhu cầu thật của doanh nghiệp quy mô lớn, nhưng không mang đặc thù nông sản nên được để lại.
     \item \textbf{Mua trả sau và hạn mức tín dụng cho khách sỉ.} Hệ thống hiện yêu cầu thanh toán theo từng đợt giao. Cơ chế cho nợ theo kỳ hạn kéo theo bài toán thẩm định tín dụng và thu hồi nợ, vượt khỏi phạm vi một đồ án phần mềm.
     \item \textbf{Ứng dụng di động riêng và kênh hỗ trợ qua mạng xã hội} cho nhóm nhà cung cấp ít rành công nghệ.
+    \item \textbf{Luồng bán sỉ ở mức tối giản.} Đơn sỉ giao một đợt, thanh toán thường; giao nhiều đợt, ký quỹ trung gian và khấu trừ thuế thay cho nhà cung cấp mới dừng ở thiết kế, vì phần hiện thực dồn cho trục bán lẻ.
 \end{itemize}
 
 \section{Hướng phát triển}
@@ -22,11 +23,16 @@ Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, m�
 Các hạn chế nêu trên đều là hướng phát triển trực tiếp khi nền tảng đi vào vận hành thật. Thứ tự ưu tiên nên dựa vào điều kiện kích hoạt của từng hạng mục:
 \begin{itemize}
     \item Khi đã tích lũy đủ lưu lượng giao dịch và tập nhãn từ chính phán quyết của kiểm duyệt viên và nhân viên vận hành, thay lớp luật ngưỡng bằng mô hình unsupervised learning, rồi chuyển dần sang supervised learning.
-    \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng; hiện thực đội giao hàng riêng, vốn mới được thiết kế, khi mật độ đơn trong vùng phục vụ đủ để có lãi.
-    \item Khi năng lực kho, đóng gói và kiểm định đã ổn định với nhà cung cấp trên sàn, mở các dịch vụ này cho doanh nghiệp ngoài sàn --- con đường mà các sàn lớn đã đi khi biến hạ tầng kho vận thành một nguồn doanh thu độc lập.
-    \item Khi nhu cầu làm việc ngoại tuyến của nhân sự hiện trường vượt quá khả năng của ứng dụng web cài đặt được, phát triển ứng dụng di động gốc cho nhân viên giao hàng và nhân viên kho.
+    \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng.
+    \item \textbf{Đội giao hàng riêng} cho chặng cuối, chỉ khi có lãi: mật độ đơn trong vùng phục vụ phải đủ để chi phí cố định (phương tiện, nhân sự, thiết bị giữ lạnh) chia trên mỗi đơn thấp hơn cước 3PL nội thành cho cùng chặng; dưới ngưỡng đó, Farmery tiếp tục thuê 3PL. Khi có đội riêng, bổ sung lại vai trò nhân viên giao hàng và thao tác ngoại tuyến cho vai trò này.
+    \item \textbf{Dịch vụ kho mở}: khi năng lực kho, đóng gói và kiểm định đã ổn định cho luồng bán lẻ, cho nhà cung cấp bán sỉ trên sàn thuê lại (gửi hàng, xuất theo đơn sỉ, tính phí theo khối lượng và số ngày lưu), rồi mở cho doanh nghiệp ngoài sàn --- con đường mà các sàn lớn đã đi khi biến hạ tầng kho vận thành một nguồn doanh thu độc lập.
+    \item \textbf{Chào sỉ phần tồn dư của Farmery} theo giá công bố, khi lượng tồn dư đủ lớn và quy tắc không cạnh tranh với nhà cung cấp đã được kiểm chứng.
+    \item \textbf{Ký số hợp đồng sỉ} qua tổ chức cung cấp dịch vụ chứng thực chữ ký số công cộng cho hợp đồng giá trị lớn, bổ sung cho xác nhận giao kết trong hệ thống.
+    \item \textbf{Cảnh báo khan hiếm cho khách sỉ} khi mô hình dự báo giá đã chạy ổn định và đủ tin cậy để dự báo cả nguồn cung.
+    \item \textbf{Gói hiển thị nổi bật} cho nhà cung cấp đạt ngưỡng uy tín, luôn gắn nhãn ``Tài trợ'' để tách bạch với kết quả tự nhiên.
+    \item Khi nhu cầu làm việc ngoại tuyến của nhân sự hiện trường vượt quá khả năng của ứng dụng web, phát triển ứng dụng di động gốc cho nhân viên kho và nhân viên hỗ trợ vùng.
     \item Khi có nhu cầu xuất khẩu, bổ sung quản lý các giấy tờ đi theo lô hàng đã khảo sát tại mục~\ref{subsec:chungnhan}. Theo phân tích khoảng cách tại mục~\ref{subsec:nhatkycanhtac-xuatkhau}, ba việc cần làm theo thứ tự: thay trường vùng trồng tự do bằng tham chiếu tới mã số vùng trồng chính thức để xác thực chéo được với hệ thống truy xuất quốc gia; đặt thời hạn lưu trữ nhật ký canh tác theo yêu cầu của thị trường đích; và mở rộng mô hình tác nhân truy xuất để bao gồm cơ sở đóng gói và đơn vị kiểm dịch thực vật, thay vì chỉ hai lớp nhà cung cấp và nền tảng như hiện tại.
-    \item Khi được cấp quyền kết nối chính thức với hệ thống truy xuất nguồn gốc của Bộ Nông nghiệp và Môi trường, và khi có giao diện tra cứu mã số vùng trồng, chứng nhận cho bên ngoài, thay bản giả lập và việc đối chiếu thủ công bằng kết nối thật.
+    \item \textbf{Đồng bộ TraceViet}: khi được cấp quyền kết nối với hệ thống truy xuất nguồn gốc của Bộ Nông nghiệp và Môi trường, đồng bộ dữ liệu lô đã duyệt theo chuẩn kết nối đã công bố và hiển thị mã truy xuất do Bộ cấp trên trang truy xuất; khi có giao diện tra cứu mã số vùng trồng, chứng nhận cho bên ngoài, thay việc đối chiếu thủ công bằng kết nối thật.
 \end{itemize}
 
 \subsection{Mở rộng về kiến trúc}

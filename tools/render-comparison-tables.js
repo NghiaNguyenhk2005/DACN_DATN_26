@@ -19,12 +19,25 @@ const pages = [
   'usecase-nha-ban.html',
   'usecase-nguoi-mua-le.html',
   'usecase-nguoi-mua-si.html',
-  'usecase-quan-tri-vien.html',
+  'usecase-noibo-nguonhang.html',
+  'usecase-noibo-vanhanh.html',
   // Sơ đồ C4 (ngữ cảnh, container, mô-đun) và sitemap; HTML sinh từ tools/diagrams/*.py
   'c4-ngu-canh.html',
   'c4-container.html',
   'c4-module.html',
+  'luong-don-le.html',
   'sitemap-tong-quan.html',
+  // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
+  'act-thu-mua.html',
+  'act-dat-hang.html',
+  'act-giao-hang.html',
+  'act-doi-tra.html',
+  'act-dang-ky-ncc.html',
+  'act-dang-san-pham.html',
+  'act-ban-si.html',
+  'act-danh-gia.html',
+  'act-thu-hoi.html',
+  'act-vi-pham.html',
 ];
 
 (async () => {

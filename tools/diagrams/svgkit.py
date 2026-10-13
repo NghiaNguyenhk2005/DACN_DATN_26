@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Bộ dựng SVG tối giản cho sơ đồ C4 và sitemap, xuất HTML cùng khuôn với tools/design/.
+# Bộ dựng SVG tối giản cho sơ đồ C4, use case, sitemap; xuất HTML cùng khuôn với tools/design/
 import html
 
 FONT = "'Segoe UI','Noto Sans',Arial,sans-serif"
@@ -7,8 +7,8 @@ MONO = "Consolas,'Courier New',monospace"
 CW = 0.50  # bề rộng trung bình một ký tự / cỡ chữ (ước lượng cho Segoe UI tiếng Việt)
 
 
-def wrap(text, width, size, mono=False):
-    cw = (0.56 if mono else CW) * size
+def wrap(text, width, size, mono=False, weight=400):
+    cw = (0.6 if mono else (0.56 if weight >= 600 else CW)) * size
     maxc = max(4, int(width / cw))
     out, line = [], ''
     for w in text.split(' '):
@@ -45,7 +45,7 @@ class Svg:
         """lines: list of (text, size, weight, color, mono). Trả về y cuối."""
         cy = y
         for (t, size, weight, color, mono) in lines:
-            for ln in wrap(t, w - 2 * pad, size, mono):
+            for ln in wrap(t, w - 2 * pad, size, mono, weight):
                 cy += size * 1.18
                 tx = x + w / 2 if anchor == 'middle' else x + pad
                 self.text(tx, cy, ln, size, weight, color, anchor, mono)
@@ -58,31 +58,41 @@ class Svg:
         tmp = Svg(0, 0)
         endy = tmp.block(x, 0, w, lines, anchor, pad)
         th = endy
+        if th + 6 > h:
+            print('OVERFLOW %s: need %d, have %d' % (ascii(lines[0][0][:30]), th + 6, h))
         top = y + (h - th) / 2 if valign == 'middle' else y + 8
         self.block(x, top, w, lines, anchor, pad)
 
-    def arrow(self, pts, color='#44524b', sw=2.4, dash=None, head=True):
+    def arrow(self, pts, color='#44524b', sw=2.4, dash=None, head=True, both=False):
         d = ' stroke-dasharray="%s"' % dash if dash else ''
         p = ' '.join('%g,%g' % q for q in pts)
         m = ' marker-end="url(#ah-%s)"' % color.strip('#') if head else ''
+        m += ' marker-start="url(#ah-%s)"' % color.strip('#') if both else ''
         self.add('<polyline points="%s" fill="none" stroke="%s" stroke-width="%g"%s%s/>' % (p, color, sw, d, m))
         self._markers = getattr(self, '_markers', set()) | {color}
 
-    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff'):
-        lines = wrap(text, width - 12, size)
+    def label(self, cx, cy, text, width, size=22, color='#33413a', bg='#fff', pos='on', weight=400, italic=True):
+        lines = wrap(text, width - 12, size, weight=weight)
         h = len(lines) * size * 1.2 + 10
+        # pos='above'/'below': đặt nhãn sát trên/dưới đường mũi tên để thân mũi tên không bị che
+        if pos == 'above':
+            cy -= h / 2 + 4
+        elif pos == 'below':
+            cy += h / 2 + 4
+        elif pos == 'top':
+            cy += h / 2
         self.later.append('<rect x="%g" y="%g" width="%g" height="%g" rx="6" fill="%s" opacity="0.94"/>'
                  % (cx - width / 2, cy - h / 2, width, h, bg))
         y = cy - h / 2 + 5
         for ln in lines:
             y += size * 1.2
             n0 = len(self.parts)
-            self.text(cx, y - size * 0.25, ln, size, 400, color, 'middle', False, True)
+            self.text(cx, y - size * 0.25, ln, size, weight, color, 'middle', False, italic)
             self.later.append(self.parts.pop())
 
     def svg(self):
         defs = ''.join('<marker id="ah-%s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="%s"/></marker>'
-                       % (c.strip('#'), c) for c in getattr(self, '_markers', set()))
+                       % (c.strip('#'), c) for c in sorted(getattr(self, '_markers', set())))
         return ('<svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%%;height:auto" width="%d" height="%d" viewBox="0 0 %d %d"><defs>%s</defs>%s</svg>'
                 % (self.w, self.h, self.w, self.h, defs, '\n'.join(self.parts + self.later)))
 

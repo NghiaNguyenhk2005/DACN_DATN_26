@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- Sinh tự động; cỡ chữ in ra (pt) = px x 16 / 1420 x 28,45 -> chữ 22px ~ 7pt. -->
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; padding:30px 40px; width:1420px; background:#f4f6f5;
+       font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  h1{font-size:34px; margin:0 0 6px; font-weight:800;}
+  .sub{color:#4d5c55; font-size:22px; margin:0 0 18px; line-height:1.35;}
+  .stage{background:#fff; border:1px solid #c7d1cb; border-radius:18px; padding:20px 0;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:16px; font-size:22px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:10px;}
+  .sw{width:34px; height:24px; border-radius:6px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:46px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:10px; font-size:22px; color:#4d5c55;}
+</style>
+</head>
+<body>
+  
+  <div class="stage"><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="1340" height="1500" viewBox="0 0 1340 1500"><defs><marker id="ah-44524b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#44524b"/></marker><marker id="ah-6b4fa0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b4fa0"/></marker></defs><rect x="6" y="10" width="155.5" height="110" rx="22" fill="#1f5f3a" stroke="#12351f" stroke-width="2"/>
+<text x="83.75" y="46.61" font-size="23" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Khách lẻ</text>
+<text x="83.75" y="78.57" font-size="22" font-weight="400" fill="#e3f1e8" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">ứng dụng mua</text>
+<text x="83.75" y="104.53" font-size="22" font-weight="400" fill="#e3f1e8" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">hàng</text>
+<line x1="83.75" y1="120" x2="83.75" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="173.5" y="10" width="155.5" height="110" rx="12" fill="#ffffff" stroke="#c98a1a" stroke-width="2"/>
+<text x="251.25" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Bán lẻ</text>
+<text x="251.25" y="91.55" font-size="22" font-weight="400" fill="#c98a1a" text-anchor="middle" font-family="Consolas,'Courier New',monospace">retail</text>
+<line x1="251.25" y1="120" x2="251.25" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="341" y="10" width="155.5" height="110" rx="12" fill="#ffffff" stroke="#1a5fa8" stroke-width="2"/>
+<text x="418.75" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Tồn kho</text>
+<text x="418.75" y="91.55" font-size="22" font-weight="400" fill="#1a5fa8" text-anchor="middle" font-family="Consolas,'Courier New',monospace">inventory</text>
+<line x1="418.75" y1="120" x2="418.75" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="508.5" y="10" width="155.5" height="110" rx="12" fill="#ffffff" stroke="#c98a1a" stroke-width="2"/>
+<text x="586.25" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Thanh toán</text>
+<text x="586.25" y="91.55" font-size="22" font-weight="400" fill="#c98a1a" text-anchor="middle" font-family="Consolas,'Courier New',monospace">payment</text>
+<line x1="586.25" y1="120" x2="586.25" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="676" y="10" width="155.5" height="110" rx="12" fill="#e4e7e5" stroke="#3d4a43" stroke-width="2"/>
+<text x="753.75" y="46.02" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Cổng thanh</text>
+<text x="753.75" y="73.16" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">toán</text>
+<text x="753.75" y="105.12" font-size="22" font-weight="400" fill="#4d5c55" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">VNPay</text>
+<line x1="753.75" y1="120" x2="753.75" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="843.5" y="10" width="155.5" height="110" rx="12" fill="#ffffff" stroke="#c23b3b" stroke-width="2"/>
+<text x="921.25" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Giao hàng</text>
+<text x="921.25" y="91.55" font-size="22" font-weight="400" fill="#c23b3b" text-anchor="middle" font-family="Consolas,'Courier New',monospace">fulfillment</text>
+<line x1="921.25" y1="120" x2="921.25" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="1011" y="10" width="155.5" height="110" rx="12" fill="#e4e7e5" stroke="#3d4a43" stroke-width="2"/>
+<text x="1088.75" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">3PL</text>
+<text x="1088.75" y="91.55" font-size="22" font-weight="400" fill="#4d5c55" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">GHN</text>
+<line x1="1088.75" y1="120" x2="1088.75" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<rect x="1178.5" y="10" width="155.5" height="110" rx="12" fill="#ffffff" stroke="#1f8a4c" stroke-width="2"/>
+<text x="1256.25" y="59.59" font-size="23" font-weight="700" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Thông báo</text>
+<text x="1256.25" y="91.55" font-size="22" font-weight="400" fill="#1f8a4c" text-anchor="middle" font-family="Consolas,'Courier New',monospace">notification</text>
+<line x1="1256.25" y1="120" x2="1256.25" y2="1490" stroke="#9aa39e" stroke-width="2" stroke-dasharray="6 6"/>
+<polyline points="83.75,206 251.25,206" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)" marker-start="url(#ah-44524b)"/>
+<polyline points="251.25,276 418.75,276" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)" marker-start="url(#ah-44524b)"/>
+<polyline points="251.25,346 1256.25,346" fill="none" stroke="#6b4fa0" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#ah-6b4fa0)"/>
+<polyline points="251.25,416 586.25,416" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)" marker-start="url(#ah-44524b)"/>
+<polyline points="586.25,486 753.75,486" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)" marker-start="url(#ah-44524b)"/>
+<polyline points="83.75,556 753.75,556" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<polyline points="753.75,626 586.25,626" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<polyline points="586.25,696 251.25,696" fill="none" stroke="#6b4fa0" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#ah-6b4fa0)"/>
+<polyline points="586.25,766 1256.25,766" fill="none" stroke="#6b4fa0" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#ah-6b4fa0)"/>
+<polyline points="251.25,836 418.75,836" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<polyline points="251.25,906 921.25,906" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<rect x="721.25" y="924" width="400" height="54" rx="8" fill="#fbe9e9" stroke="#c23b3b" stroke-width="2"/>
+<text x="921.25" y="960.98" font-size="22" font-weight="400" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">12. NV kho đóng gói, in tem QR</text>
+<rect x="721.25" y="994" width="400" height="54" rx="8" fill="#fbe9e9" stroke="#c23b3b" stroke-width="2"/>
+<text x="921.25" y="1030.98" font-size="22" font-weight="400" fill="#16241e" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">13. Sau giờ chốt: xếp lên chuyến</text>
+<polyline points="921.25,1116 1088.75,1116" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)" marker-start="url(#ah-44524b)"/>
+<polyline points="1088.75,1186 921.25,1186" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<polyline points="921.25,1256 251.25,1256" fill="none" stroke="#6b4fa0" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#ah-6b4fa0)"/>
+<polyline points="921.25,1326 1256.25,1326" fill="none" stroke="#6b4fa0" stroke-width="2.4" stroke-dasharray="9 6" marker-end="url(#ah-6b4fa0)"/>
+<polyline points="1256.25,1396 83.75,1396" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<polyline points="251.25,1466 586.25,1466" fill="none" stroke="#44524b" stroke-width="2.4" marker-end="url(#ah-44524b)"/>
+<rect x="4" y="139.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="169" y="165.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">1. Đặt đơn (địa chỉ, khung</text>
+<text x="169" y="191.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">giờ); nhận mã đơn</text>
+<rect x="170" y="209.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="335" y="235.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">2. Giữ chỗ 15 phút, khóa</text>
+<text x="335" y="261.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">dòng tồn; kết quả</text>
+<rect x="493.75" y="305.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="753.75" y="331.5" font-size="22" font-weight="400" fill="#6b4fa0" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">3. OrderPlaced</text>
+<rect x="253.75" y="349.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="418.75" y="375.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">4. Tạo giao dịch; đường dẫn</text>
+<text x="418.75" y="401.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">thanh toán</text>
+<rect x="505" y="419.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="670" y="445.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">5. Lệnh thanh toán; mã giao</text>
+<text x="670" y="471.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">dịch</text>
+<rect x="158.75" y="515.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="418.75" y="541.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">6. Khách thanh toán trên trang của cổng</text>
+<rect x="505" y="585.6" width="330" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="670" y="611.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">7. Webhook kết quả</text>
+<rect x="253.75" y="655.6" width="330" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="418.75" y="681.5" font-size="22" font-weight="400" fill="#6b4fa0" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">8. PaymentSucceeded</text>
+<rect x="661.25" y="725.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="921.25" y="751.5" font-size="22" font-weight="400" fill="#6b4fa0" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">9. PaymentSucceeded</text>
+<rect x="170" y="769.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="335" y="795.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">10. Chuyển giữ chỗ thành trừ</text>
+<text x="335" y="821.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">tồn, ghi sổ xuất</text>
+<rect x="326.25" y="865.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="586.25" y="891.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">11. Tạo giao hàng cho đơn đã thanh toán</text>
+<rect x="840" y="1049.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="1005" y="1075.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">14. Tạo vận đơn chặng cuối;</text>
+<text x="1005" y="1101.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">mã vận đơn</text>
+<rect x="840" y="1119.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="1005" y="1145.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">15. Webhook: đã nhận, đang</text>
+<text x="1005" y="1171.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">giao, đã giao</text>
+<rect x="326.25" y="1215.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="586.25" y="1241.5" font-size="22" font-weight="400" fill="#6b4fa0" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">16. ShipmentStatusChanged</text>
+<rect x="923.75" y="1285.6" width="330" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="1088.75" y="1311.5" font-size="22" font-weight="400" fill="#6b4fa0" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">17. ShipmentStatusChanged</text>
+<rect x="410" y="1355.6" width="520" height="36.4" rx="6" fill="#fff" opacity="0.94"/>
+<text x="670" y="1381.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">18. Thông báo đẩy, email ở mỗi trạng thái</text>
+<rect x="253.75" y="1399.2" width="330" height="62.8" rx="6" fill="#fff" opacity="0.94"/>
+<text x="418.75" y="1425.1" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">19. Đơn hoàn tất: phát hành</text>
+<text x="418.75" y="1451.5" font-size="22" font-weight="400" fill="#33413a" text-anchor="middle" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">HĐĐT giả lập</text></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#1f5f3a;border-color:#12351f;border-radius:14px"></i>Người dùng</span><span><i class="sw" style="background:#fff;border-color:#c98a1a"></i>Mô-đun của ứng dụng lõi</span><span><i class="sw" style="background:#e4e7e5;border-color:#3d4a43"></i>Hệ thống ngoài</span><span><svg width="58" height="14" viewBox="0 0 58 14"><line x1="2" y1="7" x2="46" y2="7" stroke="#44524b" stroke-width="3"/><path d="M44,1 L57,7 L44,13 z" fill="#44524b"/></svg>Gọi trực tiếp</span><span><svg width="58" height="14" viewBox="0 0 58 14"><line x1="12" y1="7" x2="46" y2="7" stroke="#44524b" stroke-width="3"/><path d="M44,1 L57,7 L44,13 z" fill="#44524b"/><path d="M14,1 L1,7 L14,13 z" fill="#44524b"/></svg>Gọi và nhận kết quả</span><span><svg width="58" height="14" viewBox="0 0 58 14"><line x1="2" y1="7" x2="46" y2="7" stroke="#6b4fa0" stroke-width="3" stroke-dasharray="7 5"/><path d="M44,1 L57,7 L44,13 z" fill="#6b4fa0"/></svg>Sự kiện qua Redis, mỗi bên nhận một mũi tên</span></div>
+  <div class="note">Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9.</div>
+</body>
+</html>
