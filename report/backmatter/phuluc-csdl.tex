@@ -34,8 +34,8 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{users}} --- Tài khoản dùng chung cho mọi nhóm người dùng; vai trò nằm ở user\_roles} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{full\_\allowbreak{}name} & \texttt{varchar}; bắt buộc &  \\
-\texttt{email} & \texttt{varchar}; duy nhất & Một trong email hoặc số điện thoại là bắt buộc (FR1.1) \\
-\texttt{phone} & \texttt{varchar}; duy nhất & Kênh nhận OTP (FR1.2) \\
+\texttt{email} & \texttt{varchar}; duy nhất & Một trong email hoặc số điện thoại là bắt buộc (FR1.1); kênh nhận OTP (FR1.2), nên bản hiện thực bắt buộc email \\
+\texttt{phone} & \texttt{varchar}; duy nhất & Liên hệ, giao hàng; nhận OTP qua SMS chỉ thiết kế \\
 \texttt{email\_\allowbreak{}verified\_\allowbreak{}at} & \texttt{timestamp} &  \\
 \texttt{phone\_\allowbreak{}verified\_\allowbreak{}at} & \texttt{timestamp} &  \\
 \texttt{password\_\allowbreak{}hash} & \texttt{varchar} & Argon2id (NFR3.3); trống khi chỉ đăng nhập bằng mạng xã hội \\
