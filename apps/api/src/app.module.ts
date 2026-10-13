@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { DevController } from "./dev/dev.controller";
-import { HealthController } from "./health/health.controller";
-import { MockStore } from "./store/mock-store";
+import { CoreModule } from "./core/core.module";
+import { IntegrationsModule } from "./integrations/integrations.module";
+import { BUSINESS_MODULES } from "./modules";
+import { SystemModule } from "./system/system.module";
 
 @Module({
-  controllers: [HealthController, DevController],
-  providers: [MockStore],
+  imports: [CoreModule, IntegrationsModule, SystemModule, ...BUSINESS_MODULES],
 })
 export class AppModule {}

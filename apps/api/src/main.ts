@@ -1,17 +1,16 @@
 import "reflect-metadata";
+import { existsSync } from "node:fs";
 import { NestFactory } from "@nestjs/core";
-import { SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
-import { loadContractDocument } from "./contract-document";
+import { configureApp } from "./app.setup";
+import { APP_CONFIG, type AppConfig } from "./core/app-config";
+
+if (existsSync(".env")) process.loadEnvFile(".env");
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix("api");
-  app.enableCors({
-    origin: (process.env.CORS_ORIGINS ?? "http://localhost:3000,http://localhost:5173").split(","),
-  });
-  SwaggerModule.setup("docs", app, loadContractDocument());
-  await app.listen(Number(process.env.PORT ?? 4000));
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  configureApp(app);
+  await app.listen(app.get<AppConfig>(APP_CONFIG).port);
 }
 
 void bootstrap();
