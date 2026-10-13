@@ -242,3 +242,30 @@ Hai phương án còn lại:
 **Cập nhật 2026-10-13:** user chọn A; đã ghi vào `DECISIONS.md` ("Thư viện giao diện: shadcn/ui cho shop, Ant
 Design 5 cho admin").
 Status: resolved
+
+### Nâng NestJS 12 + TypeScript 6 sau demo 21/10 — Claude — 2026-10-13
+Đang dùng Nest 11 + TS 5.9.3 vì openapi-typescript 7.13 chỉ nhận TS `^5`, còn toolchain Nest 12 đòi TS ≥ 6 và Node
+≥ 22.22.3. Đã thử Nest 12.1.1 + TS 6.0.3 trên bản clone ngày 13/10: generate, lint, typecheck, build, Swagger đủ
+thao tác đều qua, kiểu sinh ra giống hệt bản TS 5. Phải dùng 2 cách lách: thêm `ignoreDeprecations: "6.0"` vào
+tsconfig của `contract`, `mock-data` (tsup báo TS5101 khi sinh `.d.ts`), và chấp nhận openapi-typescript vi phạm peer.
+Làm sau 21/10: kiểm openapi-typescript đã nhận TS 6 chưa; cả nhóm nâng Node lên 22.23 trở lên; chạy
+`nest upgrade --dry-run` rồi `nest upgrade`.
+Status: open
+
+### Dữ liệu cho việc duyệt sản phẩm, hồ sơ, chứng nhận trong hợp đồng — Claude — 2026-10-13
+`ReviewTaskDetail` hiện chỉ có chi tiết cho `taskType = batch`. MVP có cả duyệt sản phẩm (FR4.1), hồ sơ nhà cung cấp
+(FR2) và chứng nhận (FR3), nên hợp đồng phải mô tả dữ liệu cho từng loại. BE1 chốt khi rà phần nguồn cung của
+`openapi.yaml` ở M1 (15/10).
+Status: open
+
+### Nối SonarQube Cloud vào CI — Claude — 2026-10-13
+Chương 7 đo chất lượng mã bằng SonarQube; CI hiện chưa có bước này. Cần user tạo tổ chức, dự án trên SonarQube Cloud
+và thêm secret `SONAR_TOKEN` vào repo GitHub; sau đó thêm job phân tích vào `.github/workflows/ci.yml`. Kế hoạch xếp
+ở tuần 5.
+Status: open
+
+### Rà phạm vi MVP theo tốc độ thật ở mốc 21/10 — Claude — 2026-10-13
+Sau prototype còn khoảng 10 tuần cho 13 mô-đun, 3 tính năng AI, bán sỉ, PWA ngoại tuyến với 3 người. Ở mốc 21/10:
+rà bốn điều kiện giữ mã nguồn (`MVP.md` mục 6), so khối lượng đã làm trong tuần prototype với phần còn lại, và quyết
+định cắt sớm nếu cần (thứ tự cắt theo rủi ro tiến độ trong `report/backmatter/kehoach.tex`).
+Status: open

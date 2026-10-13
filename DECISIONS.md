@@ -871,6 +871,9 @@ lẫn mã, và mục 5.2 đã chốt monorepo.
 **Đánh đổi:** thuế suất lấy từ bài phân tích của Tạp chí Kinh tế Tài chính và văn bản được dẫn trong đó, chưa đối chiếu
 nguyên văn Nghị định 359/2025; hàng đã chế biến (một phần hàng khô, sản phẩm OCOP) chịu thuế suất khác và chưa mô
 hình ở prototype.
+SỬA 2026-10-13 (cùng ngày): mọi đường dẫn nằm dưới tiền tố `/api` (khai ở `servers`), nội bộ ở `/api/admin`;
+`POST /auth/otp` chỉ nhận email vì SMS chỉ thiết kế; thêm `GET /health` (40 thao tác) — xem mục "Chuẩn bị prototype
+làm nền MVP".
 
 ### Thư viện giao diện: shadcn/ui cho shop, Ant Design 5 cho admin — 2026-10-13
 **Quyết định**
@@ -915,3 +918,40 @@ antd đã lên v6, nâng bản phụ thuộc Refine.
 không có `minimumReleaseAge` (có từ pnpm 10.16), nên quy tắc 2 tuần chỉ áp cho gói trực tiếp, gói bắc cầu theo
 lockfile. Lên Nest 12 về sau phải kéo cả workspace lên TS 6, chờ openapi-typescript nhận TS 6. Bundle admin 1,2 MB
 (antd chưa tách chunk), chấp nhận cho ứng dụng nội bộ ở prototype.
+SỬA 2026-10-13 (cùng ngày): `operation-summary` trả về mức lỗi sau khi bổ sung đủ `summary`; `MockStore` dùng
+chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm Đồng — xem mục "Chuẩn bị prototype làm nền MVP".
+
+### Chuẩn bị prototype làm nền MVP — 2026-10-13
+**Quyết định** (user duyệt theo đề xuất)
+- Prototype là nền của MVP, không viết lại. Ở mốc 21/10 rà bốn điều kiện (`MVP.md` mục 6): code nghiệp vụ đi qua
+  repository; luật nghiệp vụ có test; lối tắt demo chỉ nằm sau `DEMO_MODE`; API và hai ứng dụng khớp hợp đồng. Cùng
+  mốc đó so tốc độ thật với khối lượng còn lại để cắt phạm vi sớm nếu cần.
+- **OTP chỉ gửi qua email.** FR1.2 và quy trình đăng ký ở Chương 4 từng ghi "qua số điện thoại hoặc email" trong khi
+  SMS chỉ thiết kế, nên MVP không gửi được OTP tới số điện thoại. Số điện thoại khai để liên hệ, giao hàng, chưa xác
+  minh. Đã sửa Chương 4, Phụ lục T, note `identity.users` (Phụ lục K sinh lại) và `POST /auth/otp`.
+- **Tiền tố `/api` cho mọi đường dẫn, ứng dụng nội bộ gọi `/api/admin`.** Báo cáo (bảng container, hình C4) ghi
+  `/api` và `/staff`, hợp đồng dùng `/admin` không tiền tố. Chọn đổi `servers` của hợp đồng + `setGlobalPrefix`
+  (2 dòng) thay cho đổi tên 13 đường dẫn; báo cáo và hai hình C4 đổi `/staff` thành `/api/admin`.
+- **Dữ liệu demo theo vùng thí điểm của báo cáo** (Lâm Đồng → TP.HCM): dâu tây Đà Lạt thay xoài cát Hòa Lộc, để
+  kịch bản demo khớp nguồn cung và luồng giao ba chặng. Dữ liệu giả không dùng thông tin người thật.
+- **Xác thực hai lớp của nội bộ dùng TOTP** (cột `totp_secret_enc` đã có), không phụ thuộc SMS; prototype thay bằng
+  OTP cố định.
+- **Nền `apps/api`:**
+  - Kiểm dữ liệu vào, và cả phản hồi khi không phải production, theo `openapi.yaml` bằng express-openapi-validator
+    5.6.2 (chạy được với OpenAPI 3.1). Đường dẫn ngoài hợp đồng trả 404 `NOT_IN_CONTRACT`; có trong hợp đồng mà chưa
+    làm trả 501 `NOT_IMPLEMENTED`.
+  - `AuthGuard` đọc `security` và `x-roles` thẳng từ hợp đồng, không có decorator vai trò riêng, nên quyền chỉ khai
+    một nơi. JWT ký thật (`@nestjs/jwt` 11.0.2, `JWT_SECRET`).
+  - Lỗi theo RFC 9457 (`ProblemException` kèm `code`); `Idempotency-Key` cho POST, giữ trong bộ nhớ.
+  - Khung đủ 13 mô-đun theo `tab:module-io`; `catalog` là mẫu controller → service → repository. Dịch vụ ngoài sau
+    interface (`OtpSender`, `PaymentGateway`) kèm bản giả. Cấu hình qua biến môi trường (`.env.example`).
+  - Test e2e bằng jest 30.5.2 + supertest 7.3.0, chạy trong CI (`pnpm test`).
+- Giữ Nest 11 tới demo; đợt nâng 12 xét sau 21/10 (`NOTES.md`). Ghi chú phát hành Nest 12 cho biết app CommonJS vẫn
+  chạy và có `nest upgrade`, nên nâng muộn không đắt.
+- `ReviewTaskDetail` thiếu dữ liệu cho việc duyệt sản phẩm, hồ sơ nhà cung cấp, chứng nhận: phải chốt ở M1 (15/10),
+  không để sau, vì MVP có cả ba loại duyệt.
+
+**Đánh đổi:** kiểm phản hồi theo hợp đồng làm endpoint trả sai schema báo 500 ngay khi dev — chủ ý để lộ lệch sớm,
+tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
+đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
+build lại sau các sửa đổi báo cáo.
