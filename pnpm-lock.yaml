@@ -43,6 +43,28 @@ importers:
         specifier: 8.71.0
         version: 8.71.0(eslint@9.39.5)(typescript@5.9.3)
 
+  packages/mock-data:
+    dependencies:
+      '@farmery/contract':
+        specifier: workspace:*
+        version: link:../contract
+    devDependencies:
+      '@eslint/js':
+        specifier: 9.39.5
+        version: 9.39.5
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5
+      tsup:
+        specifier: 8.5.1
+        version: 8.5.1(typescript@5.9.3)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.71.0
+        version: 8.71.0(eslint@9.39.5)(typescript@5.9.3)
+
 packages:
 
   '@babel/code-frame@7.29.7':
