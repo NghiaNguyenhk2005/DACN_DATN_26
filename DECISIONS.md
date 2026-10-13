@@ -821,3 +821,18 @@ SỬA 2026-10-08 (cùng ngày, sau góp ý của user "activity chưa đẹp, vi
 
 **Đánh đổi:** báo cáo dài thêm khoảng 25 trang ở phụ lục; nếu cần rút, lọc bớt cột hiển nhiên (`id`,
 `created_at`) trong `gen_erd.py` thay vì sửa tay `phuluc-csdl.tex`.
+
+### Tách báo cáo vào `report/`, gốc repo dành cho mã nguồn — 2026-10-13
+**Quyết định**
+- Toàn bộ báo cáo LaTeX (`main.tex`, `chapters/`, `backmatter/`, `frontmatter/`, `image/`, `tools/`,
+  `references.bib`, `schema.dbml`, `package.json` Playwright, `_archive-old-tex/`, `prism-uploads/`) chuyển vào
+  `report/`. Build và sinh hình chạy trong `report/`; đường dẫn nội bộ của báo cáo không đổi.
+- Gốc repo giữ tài liệu dự án dùng chung (`README.md`, `INDEX.md`, `DECISIONS.md`, `NOTES.md`, `MVP.md`) và dành
+  chỗ cho monorepo pnpm + Turborepo (`apps/`, `packages/`) của giai đoạn prototype.
+- `report/package.json` đứng riêng (npm), không đưa vào pnpm workspace, để tooling báo cáo không kéo theo
+  dependency của mã nguồn và ngược lại.
+- `slide-pack/`, `review/` (gitignore, bản làm việc cục bộ) giữ ở gốc.
+
+**Đánh đổi:** một commit rename lớn — ai còn thay đổi báo cáo chưa gộp phải rebase; diff qua mốc này cần
+`git diff -M`. Chọn cùng một repo thay vì tách repo vì `MVP.md`, `DECISIONS.md` là nguồn chung của cả báo cáo
+lẫn mã, và mục 5.2 đã chốt monorepo.

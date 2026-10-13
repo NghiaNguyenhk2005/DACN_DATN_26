@@ -1,31 +1,45 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ đầu–cuối: hai ứng dụng, sáu vai trò nội bộ,
-13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML, sitemap; thân báo cáo 125 trang). Trước đó:
-2026-10-01 (sơ đồ C4, sitemap, quy ước bảng, Phụ lục P–T, MVP.md; thân 108 trang).
+Cập nhật lần cuối: 2026-10-13 (tách báo cáo LaTeX vào `report/`, gốc repo dành cho monorepo mã nguồn; lược đồ
+CSDL 13 schema, ERD và Phụ lục K sinh từ `schema.dbml`). Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
+đầu–cuối: hai ứng dụng, sáu vai trò nội bộ, 13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML,
+sitemap; thân báo cáo 125 trang).
 
 ## Gốc dự án
+
+Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã nguồn; báo cáo nằm trọn trong `report/`; mã nguồn
+(monorepo pnpm + Turborepo: `apps/`, `packages/`) sẽ đặt thẳng ở gốc.
+
+| File | Vai trò |
+|---|---|
+| `README.md` | Giới thiệu ngắn và bố cục repo |
+| `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
+| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
+| `NOTES.md` | Việc đang mở, chưa chốt |
+| `INDEX.md` | File này |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`, `slide-pack/`, `review/` |
+| `report/` | Toàn bộ báo cáo LaTeX — xem mục dưới |
+
+## `report/` — Báo cáo
+
+Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `tools/`…) tính từ `report/`.
 
 | File | Vai trò |
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 237 trang (thân báo cáo Chương 1–8 chiếm 125 trang) |
-| `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
-| `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau |
-| `NOTES.md` | Việc đang mở, chưa chốt |
-| `INDEX.md` | File này |
-| `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`) |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`, `slide-pack/`, `review/` |
+| `main.pdf` | Bản build gần nhất, 260 trang (thân báo cáo Chương 1–8 chiếm 125 trang) |
+| `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
 | `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo |
+| `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo |
 
-**Quy trình build:** `pdflatex` → **`biber`** (không phải `bibtex` — dự án dùng `biblatex` với `backend=biber`) →
+**Quy trình build** (chạy trong `report/`): `pdflatex` → **`biber`** (không phải `bibtex` — dự án dùng `biblatex` với `backend=biber`) →
 `pdflatex` ×2. Không build trong lúc LaTeX Workshop của VS Code đang tự build: hai tiến trình ghi chồng làm
 `main.aux` hỏng (log cụt, mọi tham chiếu undefined); gặp thì xoá `main.aux`, `.toc`, `.lof`, `.lot`, `.out`,
 `.bcf`, `.run.xml` rồi build lại đủ bốn bước.
 
-## `chapters/` — Nội dung chính (8 chương)
+## `report/chapters/` — Nội dung chính (8 chương)
 
 | File | Nội dung | Trạng thái |
 |---|---|---|
@@ -38,7 +52,7 @@ Cập nhật lần cuối: 2026-10-08 (phiên siết phạm vi theo trục bán 
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `backmatter/` — Phụ lục A–V
+## `report/backmatter/` — Phụ lục A–V
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ. Phụ lục mới nối đuôi (U, V)
 thay vì đánh lại chữ cái.
@@ -61,7 +75,7 @@ thay vì đánh lại chữ cái.
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
-## `frontmatter/` — Phần mở đầu
+## `report/frontmatter/` — Phần mở đầu
 
 | File | Trạng thái |
 |---|---|
@@ -71,7 +85,7 @@ thay vì đánh lại chữ cái.
 | `danhmuc-tuvietat.tex` | Xong |
 | `phieunhiemvu.tex` | Không còn được `\input` từ `main.tex`; giữ phòng khi dùng lại |
 
-## `tools/` — Sinh hình
+## `report/tools/` — Sinh hình
 
 | File | Vai trò |
 |---|---|
@@ -84,7 +98,7 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
-Quy trình sửa hình: sửa bộ sinh → `python tools/diagrams/gen_c4.py` (hoặc `gen_usecase.py`, `gen_sitemap.py`,
+Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python tools/diagrams/gen_c4.py` (hoặc `gen_usecase.py`, `gen_sitemap.py`,
 `gen_activity.py`) → `npm run shot` → build lại PDF. Không sửa trực tiếp PNG.
 
 **Cỡ chữ trong hình:** ảnh luôn bị ép về `\textwidth` = 16 cm và bị chặn chiều cao bởi `adjustbox`.

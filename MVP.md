@@ -79,6 +79,6 @@ NFR7.3: ứng dụng mua hàng là PWA (cài được, thông báo đẩy, ghi n
 
 ## 5. Việc cần làm theo tài liệu này
 
-- Lịch trình (`backmatter/kehoach.tex`) xếp việc theo cột "Thuộc MVP"; các mục để sau MVP không có tuần riêng.
+- Lịch trình (`report/backmatter/kehoach.tex`) xếp việc theo cột "Thuộc MVP"; các mục để sau MVP không có tuần riêng.
 - Kiểm thử ở Chương 7 chỉ đo trên phần MVP.
 - Khi chuyển một mục giữa hai cột, sửa file này, sửa đánh dấu *(chỉ thiết kế)* ở mục 4.3 nếu cần, và ghi một dòng vào `DECISIONS.md`.
