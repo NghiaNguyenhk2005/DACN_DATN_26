@@ -239,4 +239,6 @@ Hai phương án còn lại:
 - A. shadcn/ui cho shop + Ant Design 5 cho admin: admin nhanh nhất (bảng, form, AuthPage dựng sẵn); hai hệ thiết kế.
 - B. shadcn/ui cho cả hai (Tailwind dùng chung qua `packages/ui`): một bộ thành phần cho một người FE; admin phải ráp
   tay nhiều hơn.
-Status: open
+**Cập nhật 2026-10-13:** user chọn A; đã ghi vào `DECISIONS.md` ("Thư viện giao diện: shadcn/ui cho shop, Ant
+Design 5 cho admin").
+Status: resolved

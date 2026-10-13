@@ -871,3 +871,16 @@ lẫn mã, và mục 5.2 đã chốt monorepo.
 **Đánh đổi:** thuế suất lấy từ bài phân tích của Tạp chí Kinh tế Tài chính và văn bản được dẫn trong đó, chưa đối chiếu
 nguyên văn Nghị định 359/2025; hàng đã chế biến (một phần hàng khô, sản phẩm OCOP) chịu thuế suất khác và chưa mô
 hình ở prototype.
+
+### Thư viện giao diện: shadcn/ui cho shop, Ant Design 5 cho admin — 2026-10-13
+**Quyết định**
+- Ứng dụng mua hàng (Next.js App Router): shadcn/ui + Tailwind, hợp với Server Components.
+- Ứng dụng nội bộ (Refine): Ant Design 5 qua `@refinedev/antd` — tích hợp đầy đủ nhất (bảng, form, trang đăng nhập,
+  Inferencer); hai thành viên BE tự dựng được màn Kho, Cấu hình. Mẫu tham khảo: Refine Finefoods.
+- FE chỉnh token của antd (màu chính, bo góc, font) theo bảng màu của shop để hai ứng dụng không lệch quá xa; bảng
+  trên màn hẹp cuộn ngang hoặc ẩn cột phụ (NFR7.3).
+- Loại Mantine, Chakra (gói Refine còn bám Mantine v5, Chakra v2 tại 13/10) và MUI cho shop (phải `use client`
+  nhiều chỗ). Phương án shadcn/ui cho cả hai bị loại vì admin phải ráp tay nhiều hơn trong 8 ngày.
+
+**Đánh đổi:** hai hệ thiết kế, FE phải nắm cả Tailwind lẫn API của antd; `@refinedev/antd` cần antd v5 trong khi
+antd đã lên v6, nâng bản phụ thuộc Refine.
