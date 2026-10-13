@@ -22,8 +22,10 @@ info:
     - Vai trò được phép gọi ghi ở `x-roles`; không có `x-roles` nghĩa là chỉ cần đăng nhập
       (hoặc công khai nếu `security: []`).
     - Prototype giữ dữ liệu trong bộ nhớ; `POST /dev/reset` đưa về dữ liệu gốc.
+    - Mọi đường dẫn nằm dưới tiền tố `/api` (khai ở `servers`); thao tác của ứng dụng nội bộ
+      nằm dưới `/api/admin`. API kiểm dữ liệu vào, ra theo chính file này và đọc `x-roles` để phân quyền.
 servers:
-  - url: http://localhost:4000
+  - url: http://localhost:4000/api
     description: apps/api chạy local
 tags:
   - name: Public

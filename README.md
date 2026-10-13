@@ -28,7 +28,7 @@ pnpm dev          # chạy đồng thời 3 app
 |---|---|
 | Ứng dụng mua hàng (`apps/shop`) | http://localhost:3000 |
 | Ứng dụng nội bộ (`apps/admin`) | http://localhost:5173 |
-| API (`apps/api`) | http://localhost:4000 — Swagger ở `/docs`, `GET /health`, `POST /dev/reset` |
+| API (`apps/api`) | http://localhost:4000/api — Swagger ở http://localhost:4000/docs; `GET /api/health`, `POST /api/dev/reset` |
 
 Các lệnh khác (chạy từ gốc, giống CI): `pnpm lint:spec` (kiểm `openapi.yaml`), `pnpm generate` (sinh kiểu từ hợp đồng),
 `pnpm lint`, `pnpm typecheck`, `pnpm build`. Chạy riêng một gói: `pnpm --filter @farmery/api dev`.

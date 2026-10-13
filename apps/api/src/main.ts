@@ -6,6 +6,7 @@ import { loadContractDocument } from "./contract-document";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix("api");
   app.enableCors({
     origin: (process.env.CORS_ORIGINS ?? "http://localhost:3000,http://localhost:5173").split(","),
   });
