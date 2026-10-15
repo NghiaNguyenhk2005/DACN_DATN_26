@@ -31,7 +31,6 @@ tags:
   - name: Public
     description: Khách vãng lai, không cần đăng nhập
   - name: Auth
-    description: Xác thực, phân quyền và phiên đăng nhập
   - name: Buyer
     description: Khách lẻ (buyer_retail)
   - name: Seller
@@ -41,11 +40,9 @@ tags:
   - name: Operations
     description: Vận hành, kho, quản trị
   - name: Media
-    description: Tải lên và quản lý ảnh chứng từ, sản phẩm
   - name: System
     description: Theo dõi tình trạng dịch vụ
   - name: Dev
-    description: Công cụ hỗ trợ môi trường phát triển và demo prototype
 security:
   - bearerAuth: []
 
@@ -1451,45 +1448,6 @@ components:
                 certifications:
                   type: array
                   items: { $ref: '#/components/schemas/Certification' }
-            product:
-              description: Có khi taskType = product
-              type: object
-              required: [product, supplier]
-              properties:
-                product:
-                  type: object
-                  required: [id, name, categoryId, categoryName, unit, status]
-                  properties:
-                    id: { $ref: '#/components/schemas/Id' }
-                    name: { type: string }
-                    categoryId: { $ref: '#/components/schemas/Id' }
-                    categoryName: { type: string }
-                    unit: { type: string }
-                    description: { type: [string, 'null'] }
-                    imageUrls:
-                      type: array
-                      items: { type: string, format: uri }
-                    referenceRetailPrice: { type: [integer, 'null'] }
-                    seasonality: { type: [string, 'null'] }
-                    status: { $ref: '#/components/schemas/ReviewStatus' }
-                supplier: { $ref: '#/components/schemas/SupplierRef' }
-            supplierProfile:
-              description: Có khi taskType = supplier_profile
-              type: object
-              required: [supplier, profile]
-              properties:
-                supplier: { $ref: '#/components/schemas/SupplierRef' }
-                profile: { $ref: '#/components/schemas/SupplierProfile' }
-                taxCode: { type: string }
-                licenseUrl: { type: [string, 'null'], format: uri }
-            certification:
-              description: Có khi taskType = certification
-              type: object
-              required: [supplier, certification]
-              properties:
-                supplier: { $ref: '#/components/schemas/SupplierRef' }
-                certification: { $ref: '#/components/schemas/Certification' }
-                documentUrl: { type: [string, 'null'], format: uri }
 
     # ------------------------------------------------------------ tồn kho, cấu hình
     StockHolding:
