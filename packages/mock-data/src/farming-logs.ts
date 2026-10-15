@@ -1,0 +1,163 @@
+import type { Schema } from "@farmery/contract";
+
+export const farmingLogs: Schema<"FarmingLog">[] = [
+  // Nhật ký lô Dâu tây Hana Đà Lạt (batchId: 1001) - Kịch bản trọng tâm demo
+  {
+    id: "5001",
+    batchId: "1001",
+    activityDate: "2026-08-01",
+    activity: "planting",
+    description: "Xuống giống cây mô dâu tây Hana F1 Nhật Bản trên giàn treo cao 1.2m, sử dụng giá thể xơ dừa phối trộn phân trùn quế đã ủ hoai vi sinh.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-08-01T08:30:00Z",
+  },
+  {
+    id: "5002",
+    batchId: "1001",
+    activityDate: "2026-08-20",
+    activity: "care",
+    description: "Tỉa nhánh phụ và hoa bói đợt đầu để tập trung dinh dưỡng cho thân chính; điều chỉnh hệ thống tưới nhỏ giọt EC = 1.2 mS/cm, pH = 5.8.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-08-20T09:15:00Z",
+  },
+  {
+    id: "5003",
+    batchId: "1001",
+    activityDate: "2026-09-10",
+    activity: "treatment",
+    description: "Phun chế phẩm sinh học Trichoderma và tinh dầu thảo mộc neem oil phòng ngừa bọ trĩ và nấm phấn trắng trong mùa mưa Đà Lạt.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-09-10T10:00:00Z",
+  },
+  {
+    id: "5004",
+    batchId: "1001",
+    activityDate: "2026-10-01",
+    activity: "care",
+    description: "Bao trái bằng màng bảo vệ thoáng khí, duy trì nhiệt độ nhà màng ban ngày 22°C và ban đêm 16°C để quả tích lũy lượng đường tự nhiên cao.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-10-01T08:00:00Z",
+  },
+  {
+    id: "5005",
+    batchId: "1001",
+    activityDate: "2026-10-14",
+    activity: "harvest",
+    description: "Thu hoạch đợt 1 lúc sáng sớm 5:30 - 7:30 khi sương tan; phân loại độ ngọt Brix > 11, đóng hộp xốp thông hơi 500g đạt chuẩn VietGAP.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1543528176-61b239494933?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-10-14T07:45:00Z",
+  },
+
+  // Nhật ký lô Cà chua bi Cherry (batchId: 1003)
+  {
+    id: "5006",
+    batchId: "1003",
+    activityDate: "2026-08-15",
+    activity: "planting",
+    description: "Gieo cây con giống Cherry đỏ chịu nhiệt trong giá thể xơ dừa khử khuẩn nhà màng Đơn Dương.",
+    imageUrls: [],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "202",
+      displayName: "Trần Thị Mai (Kỹ thuật HTX Đơn Dương)",
+      onBehalf: false,
+    },
+    createdAt: "2026-08-15T08:00:00Z",
+  },
+  {
+    id: "5007",
+    batchId: "1003",
+    activityDate: "2026-10-14",
+    activity: "harvest",
+    description: "Thu hái chọn lọc những chùm cà chua đỏ mọng đạt độ chín 90%, đóng hộp 500g có dán tem mã QR truy xuất.",
+    imageUrls: [],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "202",
+      displayName: "Trần Thị Mai (Kỹ thuật HTX Đơn Dương)",
+      onBehalf: false,
+    },
+    createdAt: "2026-10-14T08:30:00Z",
+  },
+
+  // Nhật ký lô Xà lách Romaine (batchId: 1005)
+  {
+    id: "5008",
+    batchId: "1005",
+    activityDate: "2026-09-01",
+    activity: "planting",
+    description: "Đưa cây con 12 ngày tuổi lên máng thủy canh hồi lưu NFT, kiểm soát dung dịch dinh dưỡng hữu cơ.",
+    imageUrls: [],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "202",
+      displayName: "Trần Thị Mai (Kỹ thuật HTX Đơn Dương)",
+      onBehalf: false,
+    },
+    createdAt: "2026-09-01T07:00:00Z",
+  },
+  {
+    id: "5009",
+    batchId: "1005",
+    activityDate: "2026-10-14",
+    activity: "harvest",
+    description: "Thu hoạch sáng sớm, cắt gốc giữ lại rễ giữ ẩm, đóng gói túi màng breathable 300g.",
+    imageUrls: [],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "202",
+      displayName: "Trần Thị Mai (Kỹ thuật HTX Đơn Dương)",
+      onBehalf: false,
+    },
+    createdAt: "2026-10-14T06:30:00Z",
+  },
+];
