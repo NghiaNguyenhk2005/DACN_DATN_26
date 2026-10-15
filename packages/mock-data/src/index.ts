@@ -1,24 +1,55 @@
 import type { Schema } from "@farmery/contract";
+import { categories } from "./categories";
+import { suppliers, suppliersData } from "./suppliers";
+import { products } from "./products";
+import { batches } from "./batches";
+import { farmingLogs } from "./farming-logs";
 
-// Dữ liệu giả theo vùng thí điểm của báo cáo: nguồn cung Lâm Đồng, giao TP.HCM. Không dùng thông tin người thật.
-export const categories: Schema<"Category">[] = [
-  {
-    id: "1",
-    name: "Trái cây",
-    isLeaf: false,
-    children: [{ id: "11", name: "Dâu tây", isLeaf: true, children: [] }],
-  },
-];
+export { categories } from "./categories";
+export { suppliers, suppliersData } from "./suppliers";
+export { products } from "./products";
+export { batches } from "./batches";
+export { farmingLogs } from "./farming-logs";
 
-export const suppliers: Schema<"SupplierRef">[] = [
-  { id: "101", displayName: "HTX Dâu tây Đà Lạt", growingRegion: "Đà Lạt, Lâm Đồng" },
-];
+export const supplierProfiles: Schema<"SupplierProfile">[] = suppliersData.map((s) => ({
+  id: s.id,
+  displayName: s.displayName,
+  growingRegion: s.growingRegion,
+  description: s.description,
+  avatarUrl: s.avatarUrl,
+  growingAreaCode: s.growingAreaCode,
+  reputationScore: s.reputationScore,
+  certifications: s.certifications,
+  products: products
+    .filter((p) => p.supplier.id === s.id)
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      imageUrl: p.imageUrl,
+      categoryName: p.categoryName,
+      supplier: p.supplier,
+      certifications: p.certifications,
+      inSeason: p.inSeason,
+      listing: p.listing,
+    })),
+}));
 
 export interface Seed {
   categories: Schema<"Category">[];
   suppliers: Schema<"SupplierRef">[];
+  supplierProfiles: Schema<"SupplierProfile">[];
+  products: Schema<"ProductDetail">[];
+  batches: Schema<"Batch">[];
+  farmingLogs: Schema<"FarmingLog">[];
 }
 
 export function createSeed(): Seed {
-  return structuredClone({ categories, suppliers });
+  return structuredClone({
+    categories,
+    suppliers,
+    supplierProfiles,
+    products,
+    batches,
+    farmingLogs,
+  });
 }
