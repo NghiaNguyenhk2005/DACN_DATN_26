@@ -1009,3 +1009,7 @@ bộ lọc đầy đủ. Trang chi tiết lấy lô đang bán có hạn dùng s
 tối đa ba ảnh nhỏ (thiết kế không có). Đầu trang bản điện thoại ở trang danh mục, chi tiết gọn một hàng (kính lúp thay
 ô tìm kiếm) theo "Farmery Mobile". Hàng [Bộ lọc][Sắp xếp] bản điện thoại thành [Bộ lọc][Còn hàng]. Link Đăng nhập,
 Giỏ hàng ở đầu trang giữ lại dù trang chưa có (làm ở phiên 17/10).
+SỬA 2026-10-17 (lần 2): danh sách vùng trồng **[tạm — prototype]** đổi sang địa giới cấp xã mới (Nghị quyết
+1671/NQ-UBTVQH15, hiệu lực 1/7/2025): Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh, thay cho tên huyện đã bỏ (Đơn Dương,
+Lạc Dương, Đức Trọng cũ). `growingRegion` trong `mock-data` do BE1 đổi theo (`NOTES.md`). `NOTES.md` của repo này được
+commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với quy ước chung không commit ghi chú nội bộ (user chốt).
