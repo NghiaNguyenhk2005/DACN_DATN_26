@@ -1001,3 +1001,15 @@ thay ở MVP; mục không đánh dấu là cách làm giữ lâu dài.
 `openapi.yaml` riêng. Mọi trang gọi API đều dựng theo từng request, không tận dụng cache tĩnh — chấp nhận ở prototype.
 Ghi chú đính chính không có giá trị cũ → mới, ngày sửa, người sửa như thiết kế vì `PublicFarmingLog` không có các
 trường này.
+SỬA 2026-10-17: bổ sung khi dựng trang (PR trang chủ–tìm kiếm, chi tiết–truy xuất). **[tạm — prototype]** Danh mục cha
+hiện thành từng khối theo danh mục con, vì `GET /products?categoryId=` của API chưa gồm danh mục con; danh mục lá có
+bộ lọc đầy đủ. Trang chi tiết lấy lô đang bán có hạn dùng sớm nhất cho ô thông tin lô và tab nhật ký (nhật ký qua
+`GET /public/trace/{traceCode}` của lô đó, ảnh nhà cung cấp qua `GET /suppliers/{id}`); ô "Đóng gói" của thiết kế
+đổi thành "Hạn dùng", bỏ "đã bán" và dấu xác minh nhà cung cấp vì hợp đồng không có. Dòng nhật ký có ảnh thì hiện
+tối đa ba ảnh nhỏ (thiết kế không có). Đầu trang bản điện thoại ở trang danh mục, chi tiết gọn một hàng (kính lúp thay
+ô tìm kiếm) theo "Farmery Mobile". Hàng [Bộ lọc][Sắp xếp] bản điện thoại thành [Bộ lọc][Còn hàng]. Link Đăng nhập,
+Giỏ hàng ở đầu trang giữ lại dù trang chưa có (làm ở phiên 17/10).
+SỬA 2026-10-17 (lần 2): danh sách vùng trồng **[tạm — prototype]** đổi sang địa giới cấp xã mới (Nghị quyết
+1671/NQ-UBTVQH15, hiệu lực 1/7/2025): Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh, thay cho tên huyện đã bỏ (Đơn Dương,
+Lạc Dương, Đức Trọng cũ). `growingRegion` trong `mock-data` do BE1 đổi theo (`NOTES.md`). `NOTES.md` của repo này được
+commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với quy ước chung không commit ghi chú nội bộ (user chốt).

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Lora } from "next/font/google";
+import { NavigationTracker } from "@/components/farmery/back-button";
 import "./globals.css";
 
 const beVietnam = Be_Vietnam_Pro({
@@ -24,7 +25,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="vi" className={`${beVietnam.variable} ${lora.variable} h-full`}>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <NavigationTracker />
+        {children}
+      </body>
     </html>
   );
 }

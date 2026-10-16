@@ -7,8 +7,8 @@ type CertType = Schema<"CertType">;
 
 export const CERT_OPTIONS = Object.keys(CERT_LABELS) as CertType[];
 
-// Hợp đồng chưa có danh sách vùng trồng; API khớp `region` kiểu chứa chuỗi, bỏ dấu với growingRegion.
-export const REGION_OPTIONS = ["Đà Lạt", "Đơn Dương", "Lạc Dương", "Đức Trọng"];
+// Vùng theo địa giới cấp xã từ 1/7/2025; API khớp `region` kiểu chứa chuỗi, bỏ dấu với growingRegion.
+export const REGION_OPTIONS = ["Đà Lạt", "Lang Biang", "Đơn Dương", "Hiệp Thạnh"];
 
 /** Bộ lọc đọc từ URL; tên tham số trùng tên tham số của GET /products. */
 export interface Filters {
