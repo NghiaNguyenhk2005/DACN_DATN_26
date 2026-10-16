@@ -16,7 +16,7 @@ export function ApiStatus() {
       .catch(() => setState({ kind: "down" }));
   }, []);
 
-  if (state.kind === "loading") return <span className="text-muted-foreground">API: đang kiểm tra…</span>;
-  if (state.kind === "down") return <span className="text-destructive">API: chưa chạy</span>;
-  return <span className="text-muted-foreground">API: {state.health.status}</span>;
+  if (state.kind === "loading") return <span>API: đang kiểm tra…</span>;
+  if (state.kind === "down") return <span className="text-danger-line">API: chưa kết nối được</span>;
+  return <span>API: {state.health.status}</span>;
 }

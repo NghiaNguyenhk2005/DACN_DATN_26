@@ -955,3 +955,49 @@ chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm �
 tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
 đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
 build lại sau các sửa đổi báo cáo.
+
+### Giao diện công khai `apps/shop`: token, route, dữ liệu — 2026-10-16
+**Quyết định** (user chốt theo đề xuất). Đánh dấu **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10, phải
+thay ở MVP; mục không đánh dấu là cách làm giữ lâu dài.
+- Giao diện theo gói handoff Claude Design (`design_handoff_farmery_nextjs`, nằm ngoài repo): lấy nguyên token màu,
+  thang chữ, bo góc, khoảng cách, breakpoint, logo SVG và bố cục 390px. Font Be Vietnam Pro (UI) + Lora (tiêu đề).
+  Chỉ có bản sáng, bỏ khối `.dark` của shadcn. Component của gói chỉ là điểm khởi đầu, chép vào
+  `src/components/farmery/` rồi sửa theo hợp đồng; bỏ `lib/types.ts` của gói, kiểu lấy từ `Schema<K>`.
+- shadcn style base-nova (Base UI, prop `render` thay `asChild`); thêm `checkbox`, `tabs`, `sheet`, `switch`,
+  `skeleton` bằng `shadcn@4.21.0`, không kéo gói npm mới. Thêm `qrcode.react` 4.2.0 (phát hành 11/12/2024, peer
+  React `^19`, không có phụ thuộc).
+- Route: `(cua-hang)/` (trang chủ, `danh-muc/[slug]`, `san-pham/[slug]`, `tim-kiem`) dùng chung đầu/chân trang;
+  `truy-xuat/[ma]` có layout gọn riêng và `not-found.tsx`. Hợp đồng không có slug nên đường dẫn dạng `ten-<id>`
+  (vd `/san-pham/dau-tay-hana-da-lat-hop-500g-1`): chỉ đọc số id ở cuối, phần chữ để dễ đọc. Trang truy xuất tra
+  theo `traceCode` (`TRC-...`), không theo mã `FRM-...` của bản thiết kế.
+- Dữ liệu: trang công khai là Server Component, gọi API qua `src/lib/data/` (chỉ chạy phía máy chủ, client có kiểu
+  của `@farmery/contract`); 404 → `notFound()`, mất kết nối/5xx → `error.tsx` báo lỗi rõ ràng. Mọi trang gọi API
+  dùng `await connection()` để không bị dựng tĩnh lúc build và để trạng thái thu hồi có hiệu lực ngay. "Xem thêm"
+  theo `nextCursor` qua Server Action.
+- Lớp dữ liệu tạm đọc `@farmery/mock-data` khi API trả 501 đã được duyệt nhưng **không làm**: PR #26 của BE1 (16/10)
+  đã làm đủ năm thao tác công khai, không còn thao tác nào trả 501. Shop không phụ thuộc `mock-data`.
+- Theo giới hạn của hợp đồng: bộ lọc chứng nhận, vùng trồng mỗi nhóm chọn một (`cert`, `region` chỉ nhận một giá
+  trị); bỏ số đếm theo bộ lọc, tổng số, sắp xếp, phân trang số; thêm nút gạt "Còn hàng" (`inStock`). Chứng nhận dùng
+  trường `valid` của API, không tự tính từ ngày hết hạn. Thu hồi theo `recall.recalled`.
+- Nhật ký đính chính: dòng `superseded` giữ nguyên, chữ mờ, huy hiệu "Đã được đính chính"; dòng `isCorrection` có
+  huy hiệu "Bản đính chính" và câu ghi chú chung. Không xoá dòng cũ.
+- Màu warning/danger/cta-hover dùng như gói đề xuất; nút "Quét" ở ô tra nguồn gốc ẩn.
+- **[tạm — prototype]** Danh sách vùng trồng của bộ lọc là hằng số (Đà Lạt, Đơn Dương, Lạc Dương, Đức Trọng) ở
+  `src/lib/filters.ts`; API khớp `region` kiểu chứa chuỗi, bỏ dấu. MVP: lấy từ dữ liệu vùng trồng thật.
+- **[tạm — prototype]** Link tới trang chưa làm (mở gian hàng, tra cứu đơn, trợ giúp, liên hệ, gian hàng nhà cung
+  cấp, nút "Liên hệ hỗ trợ" khi thu hồi) đang ẩn; hiện lại khi có trang.
+- **[tạm — prototype]** Nút Thêm, Thêm vào giỏ, Mua ngay đúng vị trí thiết kế nhưng chưa gắn hành động (nối giỏ hàng
+  ở phiên sau).
+- **[tạm — prototype]** Nội dung theo tham số demo gõ cứng trong component: "Giao tại TP.HCM · Miễn phí giao từ
+  300.000₫ · Đặt trước 16:00", thanh toán trực tuyến hoặc COD tới 1.000.000₫, hoàn tiền phần hư hỏng trong 24 giờ.
+  MVP: đọc từ cấu hình hệ thống. Nhãn bộ lọc giá là "Khoảng giá" (đơn vị bán khác nhau), không phải "Giá mỗi kg".
+- **[tạm — prototype]** Ảnh lấy từ trang web ngoài theo `mock-data`; `images.remotePatterns` liệt kê đúng các host
+  đang dùng, ảnh lỗi hoặc host lạ hiện ô thay thế thay vì vỡ trang. Ảnh hero trang chủ là ảnh sản phẩm vào mùa đầu
+  tiên API trả về. MVP: ảnh tự lưu (MinIO) và ảnh hero riêng.
+- **[tạm — prototype]** QR ở tab nhật ký của trang chi tiết dựng từ host của request + `/truy-xuat/{traceCode}`
+  (`ProductDetail` không có `traceUrl`). MVP: dùng tên miền cấu hình.
+
+**Đánh đổi:** chọn một giá trị mỗi nhóm lọc lệch thiết kế (cho chọn nhiều); đổi sang mảng phải qua PR sửa
+`openapi.yaml` riêng. Mọi trang gọi API đều dựng theo từng request, không tận dụng cache tĩnh — chấp nhận ở prototype.
+Ghi chú đính chính không có giá trị cũ → mới, ngày sửa, người sửa như thiết kế vì `PublicFarmingLog` không có các
+trường này.
