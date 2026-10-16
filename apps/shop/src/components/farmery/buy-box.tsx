@@ -4,11 +4,12 @@ import { useState } from "react";
 import { CreditCard, Minus, Plus, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatVnd } from "@/lib/format";
+import { FeedbackText, useAddToCart } from "./add-to-cart";
 import { SafeImage } from "./safe-image";
 
 interface Props {
   /** null khi chưa có tin bán đang mở */
-  listing: { unitPrice: number; saleUnit: string; available: number } | null;
+  listing: { id: string; unitPrice: number; saleUnit: string; available: number } | null;
   seller: { name: string; region: string; avatarUrl?: string | null };
 }
 
@@ -42,13 +43,15 @@ function Qty({ qty, setQty, max, className = "" }: { qty: number; setQty: (n: nu
 
 /**
  * Khung mua. ≥lg: thẻ cột phải 300px; <lg: thanh dính đáy [số lượng] [giỏ] [Mua ngay + tạm tính] (trang chừa pb-28).
- * Nút Mua ngay, Thêm vào giỏ đúng vị trí thiết kế, chưa nối giỏ hàng.
+ * Thêm vào giỏ ở lại trang; Mua ngay thêm vào giỏ rồi sang /thanh-toan.
  */
 export function BuyBox({ listing, seller }: Props) {
   const [qty, setQty] = useState(1);
   const max = listing ? Math.max(1, Math.floor(listing.available)) : 1;
   const soldOut = !listing || listing.available <= 0;
   const total = listing ? listing.unitPrice * qty : 0;
+  const { add, pending, feedback } = useAddToCart();
+  const buy = (buyNow: boolean) => listing && add(listing.id, qty, buyNow);
 
   return (
     <>
@@ -77,18 +80,21 @@ export function BuyBox({ listing, seller }: Props) {
           )}
           <div className="flex flex-col gap-[9px]">
             <Button
-              disabled={soldOut}
+              disabled={soldOut || pending}
+              onClick={() => buy(true)}
               className="h-auto rounded-btn bg-cta py-3 text-title font-semibold text-white hover:bg-cta-hover"
             >
               {soldOut ? "Tạm hết hàng" : "Mua ngay"}
             </Button>
             <Button
               variant="outline"
-              disabled={soldOut}
+              disabled={soldOut || pending}
+              onClick={() => buy(false)}
               className="h-auto rounded-btn border-[1.5px] border-primary py-3 text-title font-semibold text-primary hover:bg-surface hover:text-primary"
             >
-              Thêm vào giỏ
+              {pending ? "Đang xử lý…" : "Thêm vào giỏ"}
             </Button>
+            <FeedbackText feedback={feedback} className="min-h-4 text-center" />
           </div>
         </div>
         <ul className="flex flex-col gap-[11px] rounded-card border border-line px-[18px] py-4 text-caption leading-[1.5] text-ink-2">
@@ -108,17 +114,25 @@ export function BuyBox({ listing, seller }: Props) {
       </aside>
 
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-2.5 border-t border-border bg-background px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
+        {feedback && (
+          <FeedbackText
+            feedback={feedback}
+            className="absolute inset-x-0 bottom-full border-t border-border bg-background px-4 py-2 text-center text-small"
+          />
+        )}
         {listing && <Qty qty={qty} setQty={setQty} max={max} className="h-[46px]" />}
         <Button
           variant="outline"
-          disabled={soldOut}
+          disabled={soldOut || pending}
+          onClick={() => buy(false)}
           aria-label="Thêm vào giỏ"
           className="size-[46px] rounded-btn border-[1.5px] border-primary p-0 text-primary hover:bg-surface"
         >
           <ShoppingBag className="size-[22px]" />
         </Button>
         <Button
-          disabled={soldOut}
+          disabled={soldOut || pending}
+          onClick={() => buy(true)}
           className="h-[46px] flex-1 flex-col gap-0 rounded-btn bg-cta leading-[1.15] text-white hover:bg-cta-hover"
         >
           <span className="text-title font-semibold">{soldOut ? "Tạm hết hàng" : "Mua ngay"}</span>

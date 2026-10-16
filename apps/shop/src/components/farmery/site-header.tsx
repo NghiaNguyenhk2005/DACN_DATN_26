@@ -1,16 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { getHeaderAccount } from "@/lib/data/account";
 import { BackButton } from "./back-button";
 import { HeaderActions } from "./header-actions";
 import { Logo } from "./logo";
 import { SearchBox } from "./search-box";
 
 /**
- * Desktop: logo | ô tìm kiếm (max 520px) | Đăng nhập | Giỏ hàng.
+ * Desktop: logo | ô tìm kiếm (max 520px) | tài khoản | giỏ (tên, số món tải riêng trong Suspense).
  * Mobile (<md): hàng 1 = [quay lại] logo … tài khoản, giỏ; hàng 2 = ô tìm kiếm cao 44px.
  * Trang danh mục, chi tiết ở mobile chỉ còn hàng 1 (kính lúp thay ô tìm kiếm).
  */
-export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
+export function SiteHeader() {
   return (
     <header className="border-b border-line bg-background">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3 md:flex-nowrap md:px-12 md:py-4">
@@ -28,8 +29,15 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
           <SearchBox />
         </Suspense>
 
-        <HeaderActions cartCount={cartCount} />
+        <Suspense fallback={<HeaderActions />}>
+          <HeaderAccount />
+        </Suspense>
       </div>
     </header>
   );
+}
+
+async function HeaderAccount() {
+  const account = await getHeaderAccount();
+  return <HeaderActions displayName={account?.displayName} cartCount={account?.cartCount} />;
 }

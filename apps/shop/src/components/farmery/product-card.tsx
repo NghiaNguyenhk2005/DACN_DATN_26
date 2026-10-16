@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { Leaf } from "lucide-react";
 import type { Schema } from "@farmery/contract";
-import { Button } from "@/components/ui/button";
 import { formatVnd } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
 import { productHref } from "@/lib/slug";
+import { AddToCartButton } from "./add-to-cart";
 import { SafeImage } from "./safe-image";
 
 /**
  * Thẻ sản phẩm. Viền 1.5px #d5ddd0, bo 12px, không đổ bóng.
- * Ảnh: cao 150px (desktop) / 120px (mobile). Nút Thêm giữ đúng vị trí, chưa nối giỏ hàng.
+ * Ảnh: cao 150px (desktop) / 120px (mobile). Nút Thêm thêm 1 đơn vị bán vào giỏ.
  */
 export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) {
   const href = productHref(p);
@@ -55,16 +55,12 @@ export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) 
           )}
         </p>
         {p.listing && soldOut && <p className="text-micro font-semibold text-danger">Hết hàng</p>}
-        <div className="mt-auto pt-2 md:flex md:justify-end md:pt-[9px]">
-          <Button
-            type="button"
-            variant="outline"
+        <div className="mt-auto pt-2 md:flex md:flex-col md:items-end md:pt-[9px]">
+          <AddToCartButton
+            listingId={p.listing?.id ?? ""}
             disabled={soldOut}
-            className="h-10 w-full rounded-[7px] border-chip bg-transparent px-[11px] text-[13px] font-semibold text-primary hover:bg-surface hover:text-primary md:h-auto md:w-auto md:py-1.5 md:text-[12px]"
-          >
-            <span className="md:hidden">Thêm vào giỏ</span>
-            <span className="hidden md:inline">Thêm</span>
-          </Button>
+            className="h-10 w-full rounded-[7px] border-chip bg-transparent px-[11px] text-[13px] font-semibold text-primary hover:bg-surface hover:text-primary md:h-auto md:min-h-8 md:w-auto md:py-1.5 md:text-[12px]"
+          />
         </div>
       </div>
     </article>
