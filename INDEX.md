@@ -19,7 +19,7 @@ Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã 
 | `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau. Mục 6: phần giả lập ở prototype và bản thật ở MVP, bốn điều kiện rà ở mốc 21/10 |
 | `NOTES.md` | Việc đang mở, chưa chốt |
 | `INDEX.md` | File này |
-| `.gitignore` | `node_modules/`, artifact build LaTeX, `PHASE*-PLAN.md`/`.html`, `slide-pack/`, `review/`; build của monorepo (`.turbo/`, `dist/`, `.next/`, kiểu sinh trong `packages/contract/src/generated/`) |
+| `.gitignore` | `node_modules/`, artifact build LaTeX, `*-PLAN.md`/`.html` (file kế hoạch tạm), `slide-pack/`, `review/`; build của monorepo (`.turbo/`, `dist/`, `.next/`, kiểu sinh trong `packages/contract/src/generated/`) |
 | `.gitattributes` | `* text=auto eol=lf` — mọi file văn bản lưu LF kể cả trên Windows |
 | `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml` | Gốc workspace pnpm (`apps/*`, `packages/*`; `report/` đứng ngoài). Ghim `packageManager: pnpm@9.15.9`, Node `>=22.12 <23`; script gốc gọi turbo: `dev`, `build`, `lint`, `lint:spec`, `generate`, `typecheck`, `test` |
 | `turbo.json` | Đồ thị tác vụ: `build`/`typecheck`/`lint`/`test` chờ `^build` và `generate`; `dev` chờ `^build` rồi chạy song song 3 app; `agentGuidance: false` để turbo không tự ghi `AGENTS.md` ở gốc |
