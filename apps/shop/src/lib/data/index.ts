@@ -1,7 +1,9 @@
 import "server-only";
+import { cache } from "react";
 import { connection } from "next/server";
-import { createApiClient, type paths, type Schema } from "@farmery/contract";
+import { createApiClient, type Schema } from "@farmery/contract";
 import { API_URL } from "@/lib/api";
+import type { ProductQuery } from "@/lib/filters";
 
 // Lớp dữ liệu cho Server Components: mọi trang công khai gọi API qua đây, không gọi thẳng client.
 const api = createApiClient({ baseUrl: API_URL });
@@ -42,10 +44,10 @@ async function optional<T>(call: () => Promise<Sent<T>>): Promise<T | null> {
   throw new ApiUnavailableError(response.status);
 }
 
-export type ProductQuery = NonNullable<paths["/products"]["get"]["parameters"]["query"]>;
 export type ProductPage = { items: Schema<"ProductCard">[]; nextCursor: string | null };
 
-export const getCategories = (): Promise<Schema<"Category">[]> => required(() => api.GET("/categories"));
+// Layout và trang danh mục cùng cần cây danh mục: gộp thành một lần gọi trong mỗi request.
+export const getCategories = cache((): Promise<Schema<"Category">[]> => required(() => api.GET("/categories")));
 
 export const searchProducts = (query: ProductQuery): Promise<ProductPage> =>
   required(() => api.GET("/products", { params: { query } }));
