@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { ShoppingBag, User } from "lucide-react";
 import { BackButton } from "./back-button";
+import { HeaderActions } from "./header-actions";
 import { Logo } from "./logo";
 import { SearchBox } from "./search-box";
 
 /**
  * Desktop: logo | ô tìm kiếm (max 520px) | Đăng nhập | Giỏ hàng.
  * Mobile (<md): hàng 1 = [quay lại] logo … tài khoản, giỏ; hàng 2 = ô tìm kiếm cao 44px.
+ * Trang danh mục, chi tiết ở mobile chỉ còn hàng 1 (kính lúp thay ô tìm kiếm).
  */
 export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
   return (
@@ -27,28 +28,7 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
           <SearchBox />
         </Suspense>
 
-        <div className="flex items-center gap-1 md:ml-auto md:gap-5">
-          <Link
-            href="/dang-nhap"
-            className="flex min-h-11 min-w-11 items-center justify-center gap-[7px] text-title font-medium text-ink-2 md:min-w-0"
-          >
-            <User className="size-6 md:size-[19px]" aria-hidden />
-            <span className="hidden md:inline">Đăng nhập</span>
-            <span className="sr-only md:hidden">Đăng nhập</span>
-          </Link>
-          <Link
-            href="/gio-hang"
-            className="relative flex min-h-11 min-w-11 items-center justify-center md:min-w-0"
-            aria-label={`Giỏ hàng, ${cartCount} sản phẩm`}
-          >
-            <ShoppingBag className="size-6 text-primary md:size-[21px]" aria-hidden />
-            {cartCount > 0 && (
-              <span className="absolute right-0 top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-cta px-1 text-[10px] font-bold text-white md:-right-2 md:-top-1.5">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-        </div>
+        <HeaderActions cartCount={cartCount} />
       </div>
     </header>
   );
