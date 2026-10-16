@@ -1013,3 +1013,36 @@ SỬA 2026-10-17 (lần 2): danh sách vùng trồng **[tạm — prototype]** �
 1671/NQ-UBTVQH15, hiệu lực 1/7/2025): Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh, thay cho tên huyện đã bỏ (Đơn Dương,
 Lạc Dương, Đức Trọng cũ). `growingRegion` trong `mock-data` do BE1 đổi theo (`NOTES.md`). `NOTES.md` của repo này được
 commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với quy ước chung không commit ghi chú nội bộ (user chốt).
+
+### Luồng khách lẻ `apps/shop`: đăng nhập, giỏ hàng, thanh toán — 2026-10-17
+**Quyết định** (user chốt theo đề xuất). **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10.
+- **Phiên:** JWT của API nằm trong cookie httpOnly `farmery_token` (SameSite=Lax, 8 giờ khớp hạn JWT). Server Action
+  đăng nhập đặt cookie, đăng xuất xoá. `Secure` chỉ bật khi trang chạy https, để demo trên điện thoại qua
+  `http://<IP LAN>` vẫn giữ được phiên. Mọi lời gọi cần token chạy phía máy chủ: đọc qua `src/lib/data/account.ts`,
+  ghi qua Server Action. Client Component không bao giờ cầm token, trình duyệt không gọi thẳng API có token.
+- **Bảo vệ trang:** `src/proxy.ts` kiểm nhanh có cookie hay không cho `/gio-hang`, `/thanh-toan`, `/don-hang/*`.
+  Kiểm thật nằm ở `requireViewer()`: trang gọi `GET /me`, 401 thì chuyển `/dang-nhap?next=…`. Server Action tự
+  kiểm lại theo cách đó.
+- **Chưa đăng nhập mà bấm Thêm hoặc Mua ngay:** chuyển `/dang-nhap?next=…&them=<listingId>:<số lượng>`. Đăng nhập
+  xong, action tự thêm vào giỏ rồi quay lại trang cũ; Mua ngay thì sang `/thanh-toan`. Thêm không được thì sang
+  `/gio-hang?loi=<mã>` kèm câu báo lỗi.
+- **Thêm vào giỏ cộng dồn:** `PUT /cart/items/{id}` đặt số lượng tuyệt đối, nên action đọc giỏ rồi đặt lại bằng số
+  cũ cộng số mới (hai lời gọi).
+- **Thanh toán:** địa chỉ đang chọn nằm trên URL (`?dia-chi=`) để Server Component lấy báo giá. Mọi số tiền lấy từ
+  `POST /checkout/quote`. COD bị khoá kèm `codReason`; khung giờ có `available: false` bị khoá. `Idempotency-Key`
+  sinh phía máy chủ mỗi lần mở trang, vì `crypto.randomUUID` của trình duyệt chỉ có trong secure context.
+- **COD và đếm ngược làm đúng theo hợp đồng:** đơn COD hợp lệ sang `paid`, vào màn "Đặt hàng thành công". Đồng hồ
+  giữ chỗ chỉ có ở đơn trả trước, tại `/don-hang/[ma]` (trang đơn hàng ngày 18/10 dùng lại route này). Bước 4 của
+  kịch bản demo: cho thấy COD đang mở với đơn dưới ngưỡng, rồi chọn trả trước để thấy đồng hồ.
+- **Đồng hồ** đếm tới `reserveExpiresAt`, bù lệch theo header `Date` của phản hồi `GET /orders/{id}`. Hết giờ thì
+  tải lại trang. Đơn trả trước chưa từng `paid`, bị huỷ từ lúc hết hạn trở đi, hiện "Đã hết thời gian giữ chỗ".
+- **API trả 501:** hiện "Chức năng đang được hoàn thiện", không dựng dữ liệu giả trong shop. Luồng được kiểm bằng
+  server giả theo hợp đồng nằm ngoài repo, không commit; chạy lại trên API thật khi BE2 xong.
+- Thêm `dropdown-menu` của shadcn (Base UI, không thêm gói npm) cho menu tài khoản ở đầu trang.
+- **[tạm — prototype]** Màn nhập OTP hiện `devCode` khi API trả về (chỉ có khi bật `DEMO_MODE`).
+- **[tạm — prototype]** Ô tỉnh/thành của form địa chỉ điền sẵn "TP. Hồ Chí Minh" (vùng giao thí điểm). MVP: chọn
+  từ danh mục đơn vị hành chính.
+
+**Đánh đổi:** thao tác có token phải đi thêm một chặng qua máy chủ Next; đổi lại token không lộ khi bị XSS và Server
+Component dựng được tên, giỏ. Đổi địa chỉ là một lần điều hướng (báo giá lại phía máy chủ), không gọi báo giá từ
+client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lại `reserveExpiresAt` sau khi tự huỷ (`NOTES.md`).
