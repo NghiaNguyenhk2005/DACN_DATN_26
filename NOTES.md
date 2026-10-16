@@ -329,3 +329,44 @@ Status: open
 Cần thay bằng ảnh nhóm tự có trước demo. Đổi host thì báo FE cập nhật `image-hosts.ts` cùng lúc: host lạ vẫn hiện
 được ảnh nhưng bỏ qua tối ưu ảnh của Next (không nén, không đổi cỡ).
 Status: open
+
+### BE2: cả 13 thao tác của luồng khách lẻ còn trả 501 — Claude — 2026-10-17
+Gọi thử ngày 17/10 trên `develop`: `POST /auth/otp`, `/auth/login`, `GET /me`, `GET`/`POST /me/addresses`,
+`GET /cart`, `PUT`/`DELETE /cart/items/{id}`, `POST /checkout/quote`, `POST /orders`, `GET /orders/{id}`,
+`POST /orders/{id}/pay`, `/cancel` đều trả 501 (mô-đun `identity`, `retail`, `payment` còn rỗng). Shop đã dựng
+xong theo hợp đồng và hiện "Chức năng đang được hoàn thiện" khi gặp 501. M2 (tối 18/10) cần các thao tác này chạy
+trên API thật; khi BE2 push, FE chạy lại kịch bản kiểm thử trên API thật.
+Status: open
+
+### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
+`mock-data` chưa có người dùng nào, trong khi hợp đồng cho `POST /auth/otp` trả 404 với email lạ, nên chưa ai đăng
+nhập được. Đề xuất có sẵn tài khoản `buyer_retail` email `khachle@example.com` (đúng ví dụ trong hợp đồng; kịch
+bản kiểm thử của FE dùng email này) cùng một địa chỉ mặc định ở TP.HCM để demo chọn địa chỉ. Dùng tên giả, không
+dùng thông tin người thật.
+Status: open
+
+### Hợp đồng: thao tác cần đăng nhập không khai phản hồi 401/403 — Claude — 2026-10-17
+Chỉ `/auth/login` và `/me` khai 401. Khi chạy server giả có bộ kiểm phản hồi theo `openapi.yaml`, `GET /cart`
+không có token trả 401 thì bộ kiểm báo "no schema defined for status code '401'". API thật dùng cùng bộ kiểm
+(`VALIDATE_RESPONSES`) nên nhiều khả năng 401 `UNAUTHENTICATED` và 403 `FORBIDDEN_ROLE` của `AuthGuard` sẽ thành
+500 `RESPONSE_CONTRACT_MISMATCH`. BE2 kiểm bằng một test e2e gọi `GET /cart` không có token. Nếu đúng như vậy, đề
+xuất thêm `401`/`403` (`Unauthorized`, `Forbidden`) cho mọi thao tác có `security`, qua PR sửa hợp đồng riêng.
+Shop hiện coi 500 là lỗi máy chủ nên vẫn báo được, nhưng không chuyển được sang trang đăng nhập khi token hết hạn.
+Status: open
+
+### Hợp đồng: OTP sai chưa có mã lỗi riêng — Claude — 2026-10-17
+`POST /auth/login` chỉ khai 401 chung. Đề xuất thêm `OTP_INVALID`, `OTP_EXPIRED` vào danh sách `Problem.code` (PR
+sửa hợp đồng riêng) để báo "mã sai" khác "mã hết hạn". Hiện shop báo chung "Mã OTP không đúng hoặc đã hết hạn".
+Status: open
+
+### BE2: hành vi API mà shop đang dựa vào — Claude — 2026-10-17
+- `PUT /cart/items/{id}` đặt số lượng tuyệt đối (shop tự cộng dồn khi bấm Thêm); vượt lượng còn bán trả 422
+  `CART_QTY_EXCEEDS_STOCK`.
+- `POST /checkout/quote` trả 422 khi giỏ trống hoặc địa chỉ không thuộc người dùng; `codReason` là câu tiếng Việt
+  hiển thị thẳng cho khách (vd "Đơn trên 1.000.000₫ chỉ nhận thanh toán trước.").
+- `POST /orders` nhận đúng cặp `deliveryDate` + `deliverySlot` lấy từ `deliverySlots` của báo giá.
+- Đơn trả trước quá hạn bị tự huỷ thì **giữ nguyên** `reserveExpiresAt` và thêm sự kiện `cancelled` vào
+  `timeline`: shop dựa vào việc huỷ xảy ra từ lúc `reserveExpiresAt` trở đi để báo "Đã hết thời gian giữ chỗ". Nếu
+  trường này về null thì shop chỉ báo được "Đơn đã huỷ".
+- Phản hồi có header `Date` (Express bật sẵn): đồng hồ giữ chỗ dùng nó để bù lệch giờ máy người xem.
+Status: open
