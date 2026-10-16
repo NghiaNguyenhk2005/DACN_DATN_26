@@ -16,11 +16,16 @@ export class ApiUnavailableError extends Error {
     super(status ? `API trả mã ${status}` : "Không kết nối được API", options);
     this.name = "ApiUnavailableError";
   }
+
+  /** API có thao tác này trong hợp đồng nhưng chưa làm (501 NOT_IMPLEMENTED). */
+  get notImplemented() {
+    return this.status === 501;
+  }
 }
 
-type Sent<T> = { data?: T; response: Response };
+export type Sent<T> = { data?: T; error?: unknown; response: Response };
 
-async function send<T>(call: () => Promise<Sent<T>>): Promise<Sent<T>> {
+export async function send<T>(call: () => Promise<Sent<T>>): Promise<Sent<T>> {
   // Dựng theo từng request: không dựng tĩnh lúc build, trạng thái thu hồi có hiệu lực ngay.
   await connection();
   try {
