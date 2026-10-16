@@ -269,3 +269,63 @@ Sau prototype còn khoảng 10 tuần cho 13 mô-đun, 3 tính năng AI, bán s�
 rà bốn điều kiện giữ mã nguồn (`MVP.md` mục 6), so khối lượng đã làm trong tuần prototype với phần còn lại, và quyết
 định cắt sớm nếu cần (thứ tự cắt theo rủi ro tiến độ trong `report/backmatter/kehoach.tex`).
 Status: open
+
+### BE1: lọc theo danh mục cha gồm cả danh mục con — Claude — 2026-10-16
+`GET /products?categoryId=<danh mục cha>` trả rỗng vì API so khớp đúng `categoryId`
+(`in-memory-product.repository.ts`, bước lọc categoryId). Thanh danh mục của shop dùng 5 danh mục gốc; shop đang
+lách bằng cách hiện từng khối danh mục con. Đề xuất: lọc theo danh mục cha thì gồm mọi danh mục con, ghi rõ vào mô tả
+tham số `categoryId` trong `openapi.yaml` (PR sửa hợp đồng riêng). Làm xong thì shop bỏ được khối lách ở
+`danh-muc/[slug]/page.tsx`.
+Status: open
+
+### BE1: dữ liệu demo cho lô thu hồi và nhật ký đính chính — Claude — 2026-10-16
+`mock-data` chưa có lô nào có `recalledAt`, chưa có nhật ký nào có `supersedesId`, nên hai trạng thái này của trang
+truy xuất chưa demo được (FE mới kiểm qua proxy tạm). Đề xuất:
+- Đính chính ở lô `TRC-DTDL-2610-01`: thêm một nhật ký mới có `supersedesId` trỏ tới dòng cũ, **và** đặt
+  `superseded: true` cho chính dòng cũ — API đọc `superseded` từ dòng cũ, `isCorrection` từ `supersedesId` của dòng
+  mới (`catalog.service.ts`), thiếu một trong hai thì trang hiện sai.
+- Thu hồi ở **một lô khác** (vd `TRC-DTNZ-2610-02`), không dùng `TRC-DTDL-2610-01` — đó là lô của kịch bản demo chính,
+  thu hồi sẽ ẩn "Xem sản phẩm" và đổi huy hiệu thành "Lô đã thu hồi".
+- Lý do thu hồi hiện lấy từ `batch.rejectReason` (trường lý do từ chối duyệt), hợp đồng `Batch` không có trường lý do
+  thu hồi. Đề xuất thêm `recallReason` vào `Batch` (PR sửa hợp đồng riêng); trước đó nếu điền dữ liệu demo thì ghi
+  rõ là dùng tạm `rejectReason`.
+Status: open
+
+### BE1: tìm gần đúng quá rộng — Claude — 2026-10-16
+`q=dau tay` trả 14 sản phẩm, gồm cả trà Ô Long, khoai tây (dâu tây vẫn đứng đầu). Nguyên nhân ở
+`vietnamese-search.util.ts`: từ khoá ≤ 4 ký tự được sai 1 ký tự (Levenshtein), và khớp `includes` hai chiều
+(`qToken.includes(tToken)`) nên mọi từ ngắn trong mô tả cũng khớp. Phần lớn âm tiết tiếng Việt chỉ 2–4 ký tự: "dau"
+khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so gần đúng với từ dưới 4 ký tự, bỏ chiều
+`qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
+Status: open
+
+### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
+Từ 1/7/2025 không còn cấp huyện (Nghị quyết 1671/NQ-UBTVQH15 sắp xếp cấp xã tỉnh Lâm Đồng), nhưng `growingRegion`
+trong `mock-data` còn ghi "Huyện …", "TP. Đà Lạt". User chốt đổi sang địa giới mới ngay. Đề xuất sửa
+`suppliers.ts` (đã đối chiếu toàn văn nghị quyết, số khoản thuộc Điều 1):
+- 101: "Phường 8, TP. Đà Lạt" → "Phường Lâm Viên - Đà Lạt, Lâm Đồng" (khoản 101)
+- 102: "Thị trấn Thạnh Mỹ, Huyện Đơn Dương" → "Xã Đơn Dương, Lâm Đồng" (khoản 2)
+- 103: "Thị trấn Lạc Dương, Huyện Lạc Dương" → "Phường Lang Biang - Đà Lạt, Lâm Đồng" (khoản 103)
+- 104: "Xã Xuân Trường, TP. Đà Lạt" → "Phường Xuân Trường - Đà Lạt, Lâm Đồng" (khoản 102)
+- 105: "Xã Hiệp An, Huyện Đức Trọng" → "Xã Hiệp Thạnh, Lâm Đồng" (khoản 6)
+Bộ lọc vùng của shop đã đổi theo: Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh (khớp chứa chuỗi, bỏ dấu). Trước khi BE1
+sửa xong, "Lang Biang" và "Hiệp Thạnh" trả rỗng. Về lâu dài: so chuỗi trên địa chỉ đầy đủ dễ vỡ khi địa giới đổi tiếp
+— đề xuất hợp đồng có trường vùng trồng có cấu trúc (mã đơn vị hành chính hoặc danh mục vùng), sửa qua PR riêng.
+Status: open
+
+### BE1: `traceUrl` gõ cứng localhost — Claude — 2026-10-16
+`batches.ts` ghi `traceUrl: "http://localhost:3000/truy-xuat/..."`, trong khi hợp đồng mô tả đây là đường dẫn in vào
+QR. Màn duyệt lô của admin hiện QR theo trường này thì điện thoại quét không mở được. Đề xuất: API dựng `traceUrl`
+từ biến môi trường địa chỉ công khai của shop (vd `SHOP_PUBLIC_URL`). Shop hiện dựng QR từ host của request (đánh
+dấu tạm ở `DECISIONS.md`), nên hai nguồn QR phải thống nhất khi có biến này.
+Status: open
+
+### BE1: ảnh dữ liệu demo lấy từ trang ngoài — Claude — 2026-10-16
+Ảnh trong `mock-data` lấy từ 17 host ngoài (liệt kê ở `apps/shop/src/lib/image-hosts.ts`), trong đó:
+- `images.unsplash.com`: ảnh nhật ký không liên quan (lô `TRC-DTDL-2610-01` có ảnh cà chua, hoa hướng dương);
+- `encrypted-tbn0.gstatic.com`: ảnh thu nhỏ của Google;
+- `scontent.fsgn2-8.fna.fbcdn.net`: link có chữ ký, sẽ hết hạn;
+- `k-gardennongsandalat.com` (cà chua bi Cherry): không phản hồi, shop hiện ô thay thế sau khi tải lỗi.
+Cần thay bằng ảnh nhóm tự có trước demo. Đổi host thì báo FE cập nhật `image-hosts.ts` cùng lúc: host lạ vẫn hiện
+được ảnh nhưng bỏ qua tối ưu ảnh của Next (không nén, không đổi cỡ).
+Status: open
