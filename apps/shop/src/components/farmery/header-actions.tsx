@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, LogOut, Search, ShoppingBag, User } from "lucide-react";
+import { ChevronDown, Factory, LogOut, Search, ShoppingBag, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +63,12 @@ function AccountMenu({ displayName, compact }: { displayName: string; compact: b
           <ShoppingBag className="size-[18px]" aria-hidden /> Giỏ hàng
         </DropdownMenuItem>
         <DropdownMenuItem
+          render={<Link href="/nha-cung-cap" />}
+          className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
+        >
+          <Factory className="size-[18px]" aria-hidden /> Khu nhà cung cấp
+        </DropdownMenuItem>
+        <DropdownMenuItem
           disabled={pending}
           onClick={() => startTransition(() => logout())}
           className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
@@ -78,6 +84,13 @@ export function HeaderActions({ displayName, cartCount = 0 }: { displayName?: st
   const compact = useCompactHeader();
   return (
     <div className="flex items-center gap-1 md:ml-auto md:gap-5">
+      <Link
+        href="/nha-cung-cap"
+        className="hidden items-center gap-1.5 rounded-btn bg-leaf-soft/60 px-3 py-1.5 text-title font-medium text-primary transition-colors hover:bg-leaf-soft lg:inline-flex"
+      >
+        <Factory className="size-4" aria-hidden />
+        <span>Khu nhà cung cấp</span>
+      </Link>
       {compact && (
         <Link href="/tim-kiem" aria-label="Tìm kiếm" className="grid size-11 place-items-center text-ink-2 md:hidden">
           <Search className="size-[22px]" aria-hidden />

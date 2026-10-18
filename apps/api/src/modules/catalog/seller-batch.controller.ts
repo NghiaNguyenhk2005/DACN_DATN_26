@@ -16,6 +16,11 @@ import type { Batch, FarmingLog } from "./batch.repository";
 export class SellerBatchController {
   constructor(private readonly catalog: CatalogService) {}
 
+  @Get("seller/products")
+  listSellerProducts(): Promise<Schema<"SellerProduct">[]> {
+    return this.catalog.listSellerProducts();
+  }
+
   @Get("seller/batches")
   listSellerBatches(
     @Query("productId") productId?: string,
