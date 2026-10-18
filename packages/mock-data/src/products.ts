@@ -577,9 +577,9 @@ export const products: ProductSeedItem[] = [
     name: "Chanh dây tím Lạc Dương ngọt thanh (Kg)",
     categoryId: "13",
     categoryName: "Chanh dây & Quả mọng",
-    imageUrl: "https://nongid.vn/_next/image?url=https%3A%2F%2Fadmin.nongid.vn%2Fwebui%2Fjpgid.jsp%3Fid%3D1001092&w=500&q=75",
+    imageUrl: "https://nongid.vn/_next/image?url=https%3A%2F%2Fadmin.nongid.vn%2Fwebui%2Fjpgid.jsp%3Fid%3D1001092&w=2048&q=75",
     imageUrls: [
-      "https://nongid.vn/_next/image?url=https%3A%2F%2Fadmin.nongid.vn%2Fwebui%2Fjpgid.jsp%3Fid%3D1001092&w=800&q=75",
+      "https://nongid.vn/_next/image?url=https%3A%2F%2Fadmin.nongid.vn%2Fwebui%2Fjpgid.jsp%3Fid%3D1001092&w=2048&q=75",
     ],
     description: "Chanh dây vỏ tím đậm, ruột vàng óng ả đầy đặn, hương thơm ngào ngạt quyến rũ, vị chua ngọt cân bằng giải nhiệt.",
     unit: "kg",

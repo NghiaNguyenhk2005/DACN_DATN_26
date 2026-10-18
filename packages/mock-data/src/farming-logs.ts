@@ -160,4 +160,22 @@ export const farmingLogs: Schema<"FarmingLog">[] = [
     },
     createdAt: "2026-10-14T06:30:00Z",
   },
+  {
+    id: "5010",
+    batchId: "1016",
+    activityDate: "2026-09-01",
+    activity: "planting",
+    description: "Xuống giống dâu tây Hana đợt mới trong nhà màng công nghệ cao, giá thể phối trộn xơ dừa vi sinh.",
+    imageUrls: [
+      "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=600",
+    ],
+    supersedesId: null,
+    superseded: false,
+    enteredBy: {
+      userId: "201",
+      displayName: "Nguyễn Văn Nông (Kỹ thuật HTX Dâu tây)",
+      onBehalf: false,
+    },
+    createdAt: "2026-09-01T08:00:00Z",
+  },
 ];
