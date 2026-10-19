@@ -132,6 +132,18 @@ export class CatalogService {
     return this.batches.findFarmingLogsByBatchId(batchId);
   }
 
+  async listSellerProducts(): Promise<Schema<"SellerProduct">[]> {
+    const products = await this.products.findBySupplierId("101");
+    return products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      categoryId: "1",
+      unit: "kg",
+      status: "approved" as const,
+      imageUrl: p.imageUrl,
+    }));
+  }
+
   listSellerBatches(filter: BatchFilter): Promise<Batch[]> {
     return this.batches.findBatches(filter);
   }

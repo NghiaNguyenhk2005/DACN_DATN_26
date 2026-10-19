@@ -53,6 +53,18 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
         .auth(sellerToken, { type: "bearer" })
         .expect(403);
     });
+
+    it("lấy danh sách sản phẩm của nhà cung cấp (GET /api/seller/products)", async () => {
+      const res = await request(app.getHttpServer())
+        .get("/api/seller/products")
+        .auth(sellerToken, { type: "bearer" })
+        .expect(200);
+
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThan(0);
+      expect(res.body[0].id).toBeDefined();
+      expect(res.body[0].name).toBeDefined();
+    });
   });
 
   describe("2. Nhà cung cấp tạo lô hàng (POST /api/seller/batches)", () => {
