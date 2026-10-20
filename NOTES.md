@@ -409,7 +409,9 @@ Status: open
 - Đầu khu gõ cứng tên HTX, "Đã xác thực VietGAP", mã vùng trồng; nút "Khu nhà cung cấp" ở đầu trang hiện với mọi người
   dùng.
 FE sửa ở nhánh riêng, giữ nguyên giao diện.
-Status: open
+**Cập nhật 2026-10-21:** đã sửa ở nhánh `feat/fe-sua-khu-nha-cung-cap` — xem `DECISIONS.md` ("Khu nhà cung cấp
+`apps/shop`...").
+Status: resolved
 
 ### API: `POST /auth/otp`, `/auth/login` trả 201 nên đăng nhập hỏng — Claude — 2026-10-21
 Hai thao tác thiếu `@HttpCode(200)`, Nest mặc định trả 201 cho POST, hợp đồng khai 200 → bộ kiểm phản hồi đổi

@@ -1072,3 +1072,15 @@ client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lạ
 **Đánh đổi:** tổng giả làm bảng không hiện được tổng số trang; đi thẳng tới trang N phải tải lần lượt các trang
 trước. Vai trò hiển thị menu đọc từ bản `Me` đã lưu, có thể cũ tới lần làm mới kế tiếp, nhưng API vẫn chặn nên không
 lộ quyền.
+
+### Khu nhà cung cấp `apps/shop`: theo đúng cách làm của luồng khách lẻ — 2026-10-21
+**Quyết định** (Prompt 2 của phân công 21/10; giữ nguyên giao diện BE1 dựng ở PR #31, #32).
+- `/nha-cung-cap/*` vào `proxy.ts` như `/gio-hang`; layout gọi `requireViewer()` và chỉ mở cho tài khoản có vai trò
+  `seller` kèm `supplierId` (`isSeller`), tài khoản khác thấy khối "Khu dành cho nhà cung cấp", không chuyển trang.
+- Bỏ dữ liệu dự phòng gõ cứng và nhánh gọi API không token trong `lib/data/seller.ts`: đọc qua `read()` của
+  `account.ts`, ghi qua `mutate()`; 401 về đăng nhập, lô không có (404) → `not-found.tsx` riêng, lỗi khác →
+  `error.tsx`.
+- Đầu khu lấy tên, vùng trồng, mã vùng trồng, chứng nhận còn hiệu lực từ `GET /me` + `GET /suppliers/{id}`; bỏ các
+  câu khẳng định không có trong dữ liệu ("Đã xác thực VietGAP", "từ 2024", "kết quả xét nghiệm"...).
+- QR ở trang chi tiết lô in `batch.traceUrl` của API (bản cũ ghép từ `window.location`, lệch giữa máy chủ và trình
+  duyệt). Nút "Khu nhà cung cấp" ở đầu trang chỉ hiện với tài khoản nhà cung cấp.
