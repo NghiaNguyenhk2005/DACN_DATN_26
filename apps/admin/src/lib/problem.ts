@@ -6,6 +6,7 @@ const MESSAGES: Record<string, string> = {
   FORBIDDEN_ROLE: "Tài khoản của bạn không có quyền thực hiện thao tác này.",
   TASK_ALREADY_DECIDED: "Việc duyệt này đã có quyết định trước đó.",
   CONFLICT: "Việc duyệt này đã có quyết định trước đó.",
+  ORDER_TRANSITION_INVALID: "Đơn ở trạng thái này không chuyển bước được. Tải lại để xem trạng thái mới nhất.",
   NOT_FOUND: "Không tìm thấy dữ liệu yêu cầu.",
   VALIDATION_FAILED: "Thông tin chưa hợp lệ, vui lòng kiểm tra lại.",
   NOT_IMPLEMENTED: "Chức năng đang được hoàn thiện phía máy chủ.",

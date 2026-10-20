@@ -34,6 +34,17 @@ const resources: Record<string, ResourceHandlers> = {
         "Không tải được việc duyệt.",
       ),
   },
+  orders: {
+    list: ({ filters, cursor, limit }) =>
+      unwrap(
+        api.GET("/admin/orders", {
+          params: { query: { status: filters.status as Schema<"OrderStatus"> | undefined, cursor, limit } },
+        }),
+        "Không tải được danh sách đơn.",
+      ),
+    one: (orderId) =>
+      unwrap(api.GET("/admin/orders/{orderId}", { params: { path: { orderId } } }), "Không tải được đơn hàng."),
+  },
 };
 
 function handlersFor(resource: string): ResourceHandlers {

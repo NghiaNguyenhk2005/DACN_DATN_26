@@ -59,6 +59,11 @@ export async function getQuote(addressId: string): Promise<ActionResult<Schema<"
   throw new ApiUnavailableError(response.status);
 }
 
+export type OrderPage = { items: Schema<"OrderSummary">[]; nextCursor: string | null };
+
+export const getMyOrders = (cursor?: string): Promise<OrderPage> =>
+  read((api) => api.GET("/orders", { params: { query: { cursor, limit: 20 } } }));
+
 /** Đơn kèm giờ của API lúc trả (header Date) để đồng hồ giữ chỗ không lệch theo máy người xem. */
 export async function getOrder(orderId: string): Promise<{ order: Schema<"OrderDetail">; apiNow: number } | null> {
   const api = await authedClient();

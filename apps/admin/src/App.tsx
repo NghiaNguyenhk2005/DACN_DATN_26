@@ -1,4 +1,4 @@
-import { AuditOutlined, DashboardOutlined } from "@ant-design/icons";
+import { AuditOutlined, DashboardOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { ErrorComponent, ThemedLayout, ThemedTitle, useNotificationProvider } from "@refinedev/antd";
 import { Authenticated, CanAccess, Refine } from "@refinedev/core";
 import routerProvider, {
@@ -12,6 +12,8 @@ import viVN from "antd/locale/vi_VN";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { DashboardPage } from "./pages/dashboard";
 import { LoginPage } from "./pages/login";
+import { OrderList } from "./pages/orders/list";
+import { OrderShow } from "./pages/orders/show";
 import { ReviewTaskList } from "./pages/review-tasks/list";
 import { ReviewTaskShow } from "./pages/review-tasks/show";
 import { accessControlProvider } from "./providers/access-control-provider";
@@ -46,6 +48,16 @@ export function App() {
                 show: "/kiem-duyet/:id",
                 meta: { label: "Kiểm duyệt", icon: <AuditOutlined />, roles: ["staff_moderation"] },
               },
+              {
+                name: "orders",
+                list: "/van-hanh",
+                show: "/van-hanh/:id",
+                meta: {
+                  label: "Vận hành đơn",
+                  icon: <ShoppingCartOutlined />,
+                  roles: ["staff_operations", "staff_warehouse"],
+                },
+              },
             ]}
             options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, disableTelemetry: true }}
           >
@@ -67,6 +79,10 @@ export function App() {
                 <Route path="/kiem-duyet">
                   <Route index element={<ReviewTaskList />} />
                   <Route path=":id" element={<ReviewTaskShow />} />
+                </Route>
+                <Route path="/van-hanh">
+                  <Route index element={<OrderList />} />
+                  <Route path=":id" element={<OrderShow />} />
                 </Route>
                 <Route path="*" element={<ErrorComponent />} />
               </Route>

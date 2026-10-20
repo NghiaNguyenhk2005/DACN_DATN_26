@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Factory, LogOut, Search, ShoppingBag, User } from "lucide-react";
+import { ChevronDown, Factory, LogOut, ReceiptText, Search, ShoppingBag, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,6 +61,12 @@ function AccountMenu({ displayName, compact, isSeller }: { displayName: string; 
           className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
         >
           <ShoppingBag className="size-[18px]" aria-hidden /> Giỏ hàng
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          render={<Link href="/don-hang" />}
+          className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
+        >
+          <ReceiptText className="size-[18px]" aria-hidden /> Đơn hàng
         </DropdownMenuItem>
         {isSeller && (
           <DropdownMenuItem
