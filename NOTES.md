@@ -318,6 +318,9 @@ Status: open
 QR. Màn duyệt lô của admin hiện QR theo trường này thì điện thoại quét không mở được. Đề xuất: API dựng `traceUrl`
 từ biến môi trường địa chỉ công khai của shop (vd `SHOP_PUBLIC_URL`). Shop hiện dựng QR từ host của request (đánh
 dấu tạm ở `DECISIONS.md`), nên hai nguồn QR phải thống nhất khi có biến này.
+**Cập nhật 2026-10-21:** lô duyệt qua `/admin/review-tasks/{id}/approve` (PR #30) dựng `traceUrl` từ phần tử đầu của
+`CORS_ORIGINS` — sửa được một phần, nhưng ghép nghĩa hai cấu hình khác nhau; lô sẵn trong `batches.ts` vẫn ghi
+localhost. Vẫn đề xuất biến riêng `SHOP_PUBLIC_URL`.
 Status: open
 
 ### BE1: ảnh dữ liệu demo lấy từ trang ngoài — Claude — 2026-10-16
@@ -336,6 +339,8 @@ Gọi thử ngày 17/10 trên `develop`: `POST /auth/otp`, `/auth/login`, `GET /
 `POST /orders/{id}/pay`, `/cancel` đều trả 501 (mô-đun `identity`, `retail`, `payment` còn rỗng). Shop đã dựng
 xong theo hợp đồng và hiện "Chức năng đang được hoàn thiện" khi gặp 501. M2 (tối 18/10) cần các thao tác này chạy
 trên API thật; khi BE2 push, FE chạy lại kịch bản kiểm thử trên API thật.
+**Cập nhật 2026-10-21:** `POST /auth/otp`, `/auth/login`, `GET /me` đã chạy (BE1 làm tạm ở mô-đun `identity`, xem mục
+"identity bản tạm" bên dưới). 10 thao tác còn lại vẫn 501; `retail`, `payment`, `inventory`, `fulfillment` còn rỗng.
 Status: open
 
 ### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
@@ -343,6 +348,8 @@ Status: open
 nhập được. Đề xuất có sẵn tài khoản `buyer_retail` email `khachle@example.com` (đúng ví dụ trong hợp đồng; kịch
 bản kiểm thử của FE dùng email này) cùng một địa chỉ mặc định ở TP.HCM để demo chọn địa chỉ. Dùng tên giả, không
 dùng thông tin người thật.
+**Cập nhật 2026-10-21:** đăng nhập được với mọi email nhờ bản tạm của `identity`, nhưng chưa có tài khoản riêng cho
+khách lẻ — xem mục "identity bản tạm" bên dưới.
 Status: open
 
 ### Hợp đồng: thao tác cần đăng nhập không khai phản hồi 401/403 — Claude — 2026-10-17
@@ -369,4 +376,49 @@ Status: open
   `timeline`: shop dựa vào việc huỷ xảy ra từ lúc `reserveExpiresAt` trở đi để báo "Đã hết thời gian giữ chỗ". Nếu
   trường này về null thì shop chỉ báo được "Đơn đã huỷ".
 - Phản hồi có header `Date` (Express bật sẵn): đồng hồ giữ chỗ dùng nó để bù lệch giờ máy người xem.
+Status: open
+
+### identity bản tạm: tài khoản, vai trò theo quy tắc email — Claude — 2026-10-21
+PR #30 (BE1) thêm `POST /auth/otp`, `/auth/login`, `GET /me` ở `identity.service.ts` để demo bước 1–2, nhưng lệch hợp
+đồng và kịch bản:
+- Email lạ không trả 404 (hợp đồng có); email chứa "admin"/"staff" thành cán bộ (`staff_moderation`,
+  `platform_owner`), mọi email khác thành cùng một người dùng `seller` + `buyer_retail` (id 201, nhà cung cấp 101) —
+  khách lẻ và nhà cung cấp là một tài khoản.
+- `GET /me` trả bản cố định theo id, email không khớp email đã đăng nhập.
+- Không tài khoản nào có `staff_operations`, `staff_warehouse` → bước 5–6 gọi `/admin/orders`, `/admin/inventory`
+  sẽ bị 403.
+Đề xuất: BE2 (chủ mô-đun `identity` theo phân công) chuyển tài khoản giả sang `mock-data`, mỗi vai trò một tài khoản
+(gồm `khachle@example.com`), email lạ 404, `GET /me` đọc theo token; báo BE1 vì `/seller/*` cần `supplierId` qua
+`IdentityService`.
+Status: open
+
+### BE1: `/seller/*` chưa theo nhà cung cấp đang đăng nhập — Claude — 2026-10-21
+`catalog.service.ts`: `listSellerProducts` gõ cứng nhà cung cấp `"101"`, `categoryId: "1"`, `unit: "kg"`;
+`listSellerBatches`, `getSellerBatch`, `createBatch`, nhật ký không kiểm lô có thuộc nhà cung cấp của người gọi. Ảnh
+nhật ký dựng `http://localhost:4000/api/media/...` gõ cứng; id lô, nhật ký, `challengeId` dùng `Date.now()` nên có
+thể trùng khi gọi liền nhau. Đề xuất: lấy `supplierId` qua `IdentityService`, lô của nhà cung cấp khác trả 404,
+`SellerProduct` lấy danh mục, đơn vị thật; id sinh bằng bộ đếm hoặc `randomUUID`.
+Status: open
+
+### Khu nhà cung cấp trong shop lệch quyết định của shop — Claude — 2026-10-21
+`/nha-cung-cap` (PR #31, #32, BE1 dựng) chạy được với API thật nhưng:
+- Không bảo vệ trang: `proxy.ts` không chặn, trang không gọi `requireViewer()`; chưa đăng nhập vẫn mở được, lời gọi
+  rơi về client không token.
+- `src/lib/data/seller.ts` có `FALLBACK_PRODUCTS`, `FALLBACK_BATCHES` gõ cứng, nuốt mọi lỗi (kể cả 401) thành dữ liệu
+  giả — trái quyết định "không dựng dữ liệu giả trong shop" (`DECISIONS.md`, 16/10 và 17/10).
+- Đầu khu gõ cứng tên HTX, "Đã xác thực VietGAP", mã vùng trồng; nút "Khu nhà cung cấp" ở đầu trang hiện với mọi người
+  dùng.
+FE sửa ở nhánh riêng, giữ nguyên giao diện.
+Status: open
+
+### API: `POST /auth/otp`, `/auth/login` trả 201 nên đăng nhập hỏng — Claude — 2026-10-21
+Hai thao tác thiếu `@HttpCode(200)`, Nest mặc định trả 201 cho POST, hợp đồng khai 200 → bộ kiểm phản hồi đổi
+thành 500 `RESPONSE_CONTRACT_MISMATCH`; trên API thật không ai đăng nhập được (shop lẫn admin). Test không bắt được
+vì test e2e tự ký token. Đã sửa ở nhánh `feat/fe-admin-kiem-duyet` kèm `apps/api/test/auth.e2e-spec.ts`.
+Status: resolved
+
+### BE1: mã lô sinh ra giữ chữ "Đ" — Claude — 2026-10-21
+`createBatch` lấy chữ đầu tên sản phẩm sau khi bỏ dấu bằng NFD, nhưng "Đ" không tách dấu được: "Dâu tây Hana Đà Lạt"
+→ `DTHĐ-2610-03`, mã truy xuất `TRC-DTHĐ-2610-03` nằm trong URL của QR. Đề xuất đổi "Đ/đ" → "D" trước khi lấy chữ
+đầu (như `vietnamese-search.util.ts`).
 Status: open
