@@ -1046,3 +1046,29 @@ commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với
 **Đánh đổi:** thao tác có token phải đi thêm một chặng qua máy chủ Next; đổi lại token không lộ khi bị XSS và Server
 Component dựng được tên, giỏ. Đổi địa chỉ là một lần điều hướng (báo giá lại phía máy chủ), không gọi báo giá từ
 client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lại `reserveExpiresAt` sau khi tự huỷ (`NOTES.md`).
+
+### Ứng dụng nội bộ `apps/admin`: đăng nhập, menu theo vai trò, Kiểm duyệt — 2026-10-21
+**Quyết định** (làm theo Prompt 1 của phân công 21/10). **[tạm — prototype]** là lối tắt chỉ dùng tới demo.
+- **Đăng nhập** hai bước ở màn riêng (`src/pages/login`), thay `AuthPage` dựng sẵn của Refine vốn chỉ có email + mật
+  khẩu: `POST /auth/otp` → `POST /auth/login`. Tài khoản không có vai trò `staff_*` hay `platform_owner` bị từ chối
+  ngay ở bước đăng nhập. Token và bản `Me` lưu `localStorage`; `GET /me` làm mới vai trò mỗi lần Refine đọc danh tính;
+  API trả 401 thì xoá phiên, về `/login`.
+- **Quyền theo hợp đồng:** mỗi resource khai `meta.roles` chép từ `x-roles` của thao tác chính;
+  `accessControlProvider` ẩn mục menu và chặn vào thẳng URL (màn 403). API vẫn là nơi kiểm thật.
+- **`dataProvider`** ánh xạ từng resource tới thao tác của hợp đồng qua client `@farmery/contract`, resource chưa
+  khai trả "Chức năng đang được hoàn thiện". Bảng antd phân trang theo số trang, API theo cursor: provider nhớ cursor
+  đầu mỗi trang theo bộ lọc và báo tổng giả (`trang × cỡ + 1` khi còn trang sau) để bảng hiện nút trang sau; bảng
+  dùng phân trang `simple`.
+- **Kiểm duyệt:** hàng đợi `/kiem-duyet` (mặc định lọc "Chờ duyệt", lọc loại việc, hạn xử lý quá hạn tô đỏ), chi tiết
+  `/kiem-duyet/:id` hiện lô, chứng nhận của nhà cung cấp, nhật ký (dòng bị đính chính gạch ngang, dòng đính chính có
+  nhãn). Duyệt qua hộp xác nhận; từ chối bắt buộc lý do 5–1000 ký tự như hợp đồng. Duyệt xong hiện QR dựng từ
+  `batch.traceUrl` của API (`qrcode.react` 4.2.0, cùng bản shop). Chỉ hiển thị chi tiết cho việc duyệt lô; loại khác
+  hiện thông báo chưa hỗ trợ.
+- Dịch các chữ dựng sẵn của Refine sang tiếng Việt bằng `i18nProvider` tối giản.
+- **[tạm — prototype]** Màn đăng nhập hiện `devCode` khi API trả về (chỉ có khi bật `DEMO_MODE`).
+- **[tạm — prototype]** Token nằm ở `localStorage` (ứng dụng SPA, không có máy chủ riêng để giữ cookie httpOnly như
+  shop). MVP: cookie httpOnly qua API hoặc BFF, kèm TOTP cho nhân sự nội bộ.
+
+**Đánh đổi:** tổng giả làm bảng không hiện được tổng số trang; đi thẳng tới trang N phải tải lần lượt các trang
+trước. Vai trò hiển thị menu đọc từ bản `Me` đã lưu, có thể cũ tới lần làm mới kế tiếp, nhưng API vẫn chặn nên không
+lộ quyền.
