@@ -102,8 +102,15 @@ export async function appendFarmingLogAction(
   if (!description) return { ok: false, message: "Vui lòng nhập mô tả hoạt động." };
 
   try {
-    const client = await getClient();
-    const { data, error, response } = await client.POST("/seller/batches/{batchId}/logs", {
+    const authed = await authedClient();
+    if (!authed) {
+      return {
+        ok: false,
+        message: "Vui lòng đăng nhập với tài khoản Nhà cung cấp để ghi nhật ký canh tác.",
+      };
+    }
+
+    const { data, error, response } = await authed.POST("/seller/batches/{batchId}/logs", {
       params: { path: { batchId } },
       body: {
         activityDate,

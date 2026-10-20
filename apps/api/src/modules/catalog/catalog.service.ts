@@ -254,7 +254,7 @@ export class CatalogService {
     if (input.activityDate > today) {
       throw new ProblemException(
         HttpStatus.UNPROCESSABLE_ENTITY,
-        "VALIDATION_FAILED",
+        "BATCH_DATE_INVALID",
         "Ngày hoạt động (activityDate) không được ở tương lai",
       );
     }
@@ -264,7 +264,7 @@ export class CatalogService {
       if (!oldLog || oldLog.batchId !== batchId) {
         throw new ProblemException(
           HttpStatus.UNPROCESSABLE_ENTITY,
-          "VALIDATION_FAILED",
+          "LOG_SUPERSEDES_INVALID",
           "Bản ghi nhật ký cần đính chính không tồn tại hoặc không thuộc cùng lô hàng",
         );
       }

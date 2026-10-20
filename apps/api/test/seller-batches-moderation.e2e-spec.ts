@@ -239,7 +239,7 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
     });
 
     it("từ chối khi ngày hoạt động ở tương lai (422)", async () => {
-      await request(app.getHttpServer())
+      const res = await request(app.getHttpServer())
         .post("/api/seller/batches/1016/logs")
         .auth(sellerToken, { type: "bearer" })
         .send({
@@ -247,6 +247,23 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
           activity: "harvest",
         })
         .expect(422);
+
+      expect(res.body.code).toBe("BATCH_DATE_INVALID");
+    });
+
+    it("từ chối khi supersedesId trỏ tới bản ghi không tồn tại hoặc sai lô (422)", async () => {
+      const res = await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .send({
+          activityDate: "2026-10-10",
+          activity: "care",
+          description: "Đính chính cho id giả",
+          supersedesId: "999999",
+        })
+        .expect(422);
+
+      expect(res.body.code).toBe("LOG_SUPERSEDES_INVALID");
     });
   });
 
