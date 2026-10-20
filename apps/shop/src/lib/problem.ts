@@ -11,6 +11,8 @@ const MESSAGES: Record<string, string> = {
   RESERVATION_EXPIRED: "Đã hết 15 phút giữ chỗ, đơn đã tự huỷ. Vui lòng đặt lại.",
   ORDER_NOT_CANCELLABLE: "Đơn đã qua bước có thể huỷ.",
   FORBIDDEN_ROLE: "Tài khoản này không dùng được chức năng mua hàng.",
+  BATCH_DATE_INVALID: "Ngày khai báo chưa hợp lệ (không được ở tương lai, hạn dùng phải sau ngày thu hoạch).",
+  LOG_SUPERSEDES_INVALID: "Mục nhật ký cần đính chính không tồn tại hoặc không thuộc lô này.",
   VALIDATION_FAILED: "Thông tin chưa hợp lệ, vui lòng kiểm tra lại.",
   NOT_IMPLEMENTED: "Chức năng này đang được hoàn thiện phía máy chủ. Vui lòng thử lại sau.",
 };

@@ -19,3 +19,20 @@ export const formatSlot = (slot: string) => slot.replace(/^0/, "").replace(/-0?/
 
 /** Số lượng theo đơn vị bán: 1,5 / 2 */
 export const formatQty = (n: number) => n.toLocaleString("vi-VN");
+
+/** Thời điểm ISO → "14:05 18/10" theo giờ Việt Nam. */
+export const formatTimeVi = (iso: string) => {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(new Date(iso))
+      .map((p) => [p.type, p.value]),
+  );
+  return `${parts.hour}:${parts.minute} ${parts.day}/${parts.month}`;
+};
