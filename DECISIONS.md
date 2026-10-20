@@ -1046,3 +1046,17 @@ commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với
 **Đánh đổi:** thao tác có token phải đi thêm một chặng qua máy chủ Next; đổi lại token không lộ khi bị XSS và Server
 Component dựng được tên, giỏ. Đổi địa chỉ là một lần điều hướng (báo giá lại phía máy chủ), không gọi báo giá từ
 client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lại `reserveExpiresAt` sau khi tự huỷ (`NOTES.md`).
+
+### Test e2e trên trình duyệt bằng Playwright, gói riêng `apps/e2e` — 2026-10-21
+**Quyết định:**
+- Gói `@farmery/e2e` (`@playwright/test` 1.63.0, cùng bản với `report/`), chỉ Chromium. Hai project `shop`, `admin`
+  theo `baseURL`; spec đặt ở `tests/shop/`, `tests/admin/`, đặt tên theo màn (vd `dang-nhap.spec.ts`).
+- `webServer` bật api + shop + admin ở cổng mặc định; ngoài CI thì dùng lại server đang chạy. Không dùng cổng riêng
+  cho e2e vì Next 16 khoá `.next/dev`, không chạy được hai `next dev` trong cùng `apps/shop`.
+- API giữ dữ liệu trong bộ nhớ nên chạy một worker, tuần tự; `globalSetup` gọi `POST /api/dev/reset` (cần
+  `DEMO_MODE`). Đăng nhập trong test đọc `devCode` hiện trên màn, không gõ cứng.
+- Script là `e2e`, không phải `test`: `pnpm test` và CI hiện tại không chạy trình duyệt; `typecheck` của gói vẫn
+  chạy trong CI. Script gốc `pnpm e2e` build contract + mock-data qua turbo rồi gọi Playwright.
+**Đánh đổi:** dùng lại server đang chạy nhanh hơn nhưng phụ thuộc cấu hình của server đó: shop/admin đang trỏ API
+khác (vd server giả cổng 4100) thì mọi bước gọi API trong test báo "Không kết nối được máy chủ". Chưa thêm bước e2e
+vào CI.
