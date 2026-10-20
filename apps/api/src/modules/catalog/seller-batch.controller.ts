@@ -20,6 +20,11 @@ export class SellerBatchController {
     return this.catalog.listSellerProducts();
   }
 
+  @Get("seller/products")
+  listSellerProducts(): Promise<Schema<"SellerProduct">[]> {
+    return this.catalog.listSellerProducts();
+  }
+
   @Get("seller/batches")
   listSellerBatches(
     @Query("productId") productId?: string,
