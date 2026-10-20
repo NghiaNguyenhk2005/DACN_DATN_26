@@ -11,5 +11,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/gio-hang", "/thanh-toan", "/don-hang/:path*"],
+  matcher: ["/gio-hang", "/thanh-toan", "/don-hang/:path*", "/nha-cung-cap/:path*"],
 };

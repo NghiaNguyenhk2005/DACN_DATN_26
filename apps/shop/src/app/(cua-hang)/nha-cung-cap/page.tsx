@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getSellerProducts, getSellerBatches } from "@/lib/data/seller";
+import { REVIEW_STATUS_LABELS } from "@/lib/labels";
 
 export default async function SellerProductsPage() {
   const [products, batches] = await Promise.all([
@@ -24,7 +25,6 @@ export default async function SellerProductsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Khối Thẻ Thống kê nhanh KPI */}
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
           <div className="flex items-center justify-between text-subtle">
@@ -71,7 +71,6 @@ export default async function SellerProductsPage() {
         </div>
       </section>
 
-      {/* Danh sách sản phẩm của nhà cung cấp */}
       <section className="rounded-2xl border border-line bg-surface p-6 shadow-2xs">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -79,7 +78,7 @@ export default async function SellerProductsPage() {
               Danh mục sản phẩm đã đăng ký
             </h2>
             <p className="text-small text-ink-2">
-              Các mặt hàng nông sản đã qua kiểm định đạt chuẩn VietGAP được phép tạo lô hàng xuất xưởng.
+              Mặt hàng đã được duyệt dùng để khai báo lô thu hoạch.
             </p>
           </div>
           <Link
@@ -121,9 +120,15 @@ export default async function SellerProductsPage() {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 rounded bg-leaf-soft px-2 py-0.5 text-micro font-semibold text-primary">
-                          <CheckCircle2 className="size-3" /> Đã duyệt
-                        </span>
+                        {product.status === "approved" ? (
+                          <span className="inline-flex items-center gap-1 rounded bg-leaf-soft px-2 py-0.5 text-micro font-semibold text-primary">
+                            <CheckCircle2 className="size-3" /> Đã duyệt
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded bg-surface-2 px-2 py-0.5 text-micro font-semibold text-ink-2">
+                            {REVIEW_STATUS_LABELS[product.status]}
+                          </span>
+                        )}
                         <span className="text-micro text-subtle">ID #{product.id}</span>
                       </div>
                       <h3 className="mt-1 line-clamp-1 font-heading text-title font-bold text-ink">
@@ -163,7 +168,6 @@ export default async function SellerProductsPage() {
         </div>
       </section>
 
-      {/* Khối Hướng dẫn quy trình quản lý lô & Truy xuất QR */}
       <section className="overflow-hidden rounded-2xl border border-leaf-soft bg-gradient-to-r from-leaf-soft/30 to-surface p-6">
         <div className="flex items-center gap-2 text-primary">
           <Sparkles className="size-5" />
@@ -192,7 +196,7 @@ export default async function SellerProductsPage() {
               Kiểm duyệt & Cấp mã QR
             </h4>
             <p className="mt-1 text-caption text-ink-2">
-              Hệ thống xác minh chỉ số an toàn, sinh mã định danh và cấp mã QR tem nhãn truy xuất nguồn gốc.
+              Kiểm duyệt viên xem lô, nhật ký và chứng nhận; duyệt xong hệ thống sinh mã QR truy xuất cho lô.
             </p>
           </div>
 

@@ -15,13 +15,16 @@ export async function authedClient(): Promise<ApiClient | null> {
   return token ? createApiClient({ baseUrl: API_URL, getToken: () => token }) : null;
 }
 
-async function read<T>(call: (api: ApiClient) => Promise<Sent<T>>): Promise<T> {
+export async function read<T>(call: (api: ApiClient) => Promise<Sent<T>>): Promise<T> {
   const api = await authedClient();
   if (!api) throw new ApiUnavailableError(401);
   const { data, response } = await send(() => call(api));
   if (data === undefined) throw new ApiUnavailableError(response.status);
   return data;
 }
+
+/** Tài khoản nhà cung cấp: có vai trò `seller` và gắn với một nhà cung cấp. */
+export const isSeller = (viewer: Schema<"Me">) => viewer.roles.includes("seller") && Boolean(viewer.supplierId);
 
 /** Người dùng của phiên hiện tại; null khi chưa đăng nhập hoặc token hết hạn. */
 export const getViewer = cache(async (): Promise<Schema<"Me"> | null> => {
@@ -105,12 +108,12 @@ export async function addToCartWith(
 }
 
 /** Tên và số món trong giỏ cho đầu trang; lỗi API không làm hỏng đầu trang (coi như chưa đăng nhập). */
-export async function getHeaderAccount(): Promise<{ displayName: string; cartCount: number } | null> {
+export async function getHeaderAccount(): Promise<{ displayName: string; cartCount: number; isSeller: boolean } | null> {
   try {
     const viewer = await getViewer();
     if (!viewer) return null;
     const cart = viewer.roles.includes("buyer_retail") ? await getCart().catch(() => null) : null;
-    return { displayName: viewer.displayName, cartCount: cart?.items.length ?? 0 };
+    return { displayName: viewer.displayName, cartCount: cart?.items.length ?? 0, isSeller: isSeller(viewer) };
   } catch {
     return null;
   }

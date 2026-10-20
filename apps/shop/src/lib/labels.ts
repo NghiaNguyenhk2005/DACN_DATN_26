@@ -15,3 +15,11 @@ export const ACTIVITY_LABELS: Record<Schema<"FarmingActivity">, string> = {
   harvest: "Thu hoạch",
   other: "Công việc khác",
 };
+
+export const REVIEW_STATUS_LABELS: Record<Schema<"ReviewStatus">, string> = {
+  draft: "Nháp",
+  pending_review: "Chờ duyệt",
+  approved: "Đã duyệt",
+  rejected: "Từ chối",
+  hidden: "Đã ẩn",
+};

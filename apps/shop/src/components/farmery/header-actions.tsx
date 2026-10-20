@@ -37,7 +37,7 @@ function LoginLink({ compact }: { compact: boolean }) {
   );
 }
 
-function AccountMenu({ displayName, compact }: { displayName: string; compact: boolean }) {
+function AccountMenu({ displayName, compact, isSeller }: { displayName: string; compact: boolean; isSeller: boolean }) {
   const [pending, startTransition] = useTransition();
   return (
     <DropdownMenu>
@@ -62,12 +62,14 @@ function AccountMenu({ displayName, compact }: { displayName: string; compact: b
         >
           <ShoppingBag className="size-[18px]" aria-hidden /> Giỏ hàng
         </DropdownMenuItem>
-        <DropdownMenuItem
-          render={<Link href="/nha-cung-cap" />}
-          className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
-        >
-          <Factory className="size-[18px]" aria-hidden /> Khu nhà cung cấp
-        </DropdownMenuItem>
+        {isSeller && (
+          <DropdownMenuItem
+            render={<Link href="/nha-cung-cap" />}
+            className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
+          >
+            <Factory className="size-[18px]" aria-hidden /> Khu nhà cung cấp
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           disabled={pending}
           onClick={() => startTransition(() => logout())}
@@ -80,23 +82,33 @@ function AccountMenu({ displayName, compact }: { displayName: string; compact: b
   );
 }
 
-export function HeaderActions({ displayName, cartCount = 0 }: { displayName?: string | null; cartCount?: number }) {
+export function HeaderActions({
+  displayName,
+  cartCount = 0,
+  isSeller = false,
+}: {
+  displayName?: string | null;
+  cartCount?: number;
+  isSeller?: boolean;
+}) {
   const compact = useCompactHeader();
   return (
     <div className="flex items-center gap-1 md:ml-auto md:gap-5">
-      <Link
-        href="/nha-cung-cap"
-        className="hidden items-center gap-1.5 rounded-btn bg-leaf-soft/60 px-3 py-1.5 text-title font-medium text-primary transition-colors hover:bg-leaf-soft lg:inline-flex"
+      {isSeller && (
+        <Link
+          href="/nha-cung-cap"
+          className="hidden items-center gap-1.5 rounded-btn bg-leaf-soft/60 px-3 py-1.5 text-title font-medium text-primary transition-colors hover:bg-leaf-soft lg:inline-flex"
       >
-        <Factory className="size-4" aria-hidden />
-        <span>Khu nhà cung cấp</span>
-      </Link>
+          <Factory className="size-4" aria-hidden />
+          <span>Khu nhà cung cấp</span>
+        </Link>
+      )}
       {compact && (
         <Link href="/tim-kiem" aria-label="Tìm kiếm" className="grid size-11 place-items-center text-ink-2 md:hidden">
           <Search className="size-[22px]" aria-hidden />
         </Link>
       )}
-      {displayName ? <AccountMenu displayName={displayName} compact={compact} /> : <LoginLink compact={compact} />}
+      {displayName ? <AccountMenu displayName={displayName} compact={compact} isSeller={isSeller} /> : <LoginLink compact={compact} />}
       <Link
         href="/gio-hang"
         className="relative flex min-h-11 min-w-11 items-center justify-center md:min-w-0"
