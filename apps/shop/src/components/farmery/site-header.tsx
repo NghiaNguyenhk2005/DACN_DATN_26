@@ -39,5 +39,5 @@ export function SiteHeader() {
 
 async function HeaderAccount() {
   const account = await getHeaderAccount();
-  return <HeaderActions displayName={account?.displayName} cartCount={account?.cartCount} />;
+  return <HeaderActions displayName={account?.displayName} cartCount={account?.cartCount} isSeller={account?.isSeller} />;
 }

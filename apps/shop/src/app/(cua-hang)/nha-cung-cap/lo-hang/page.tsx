@@ -12,6 +12,7 @@ import {
   Scale,
 } from "lucide-react";
 import { getSellerBatches, getSellerProducts } from "@/lib/data/seller";
+import { formatDateVi } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 interface PageProps {
@@ -39,7 +40,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      {/* Thanh tiêu đề & nút hành động */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="font-heading text-h2 font-bold text-ink">
@@ -59,7 +59,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
         </Link>
       </div>
 
-      {/* Thanh bộ lọc trạng thái và sản phẩm */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3 shadow-2xs">
         <div className="flex flex-wrap items-center gap-1.5">
           {statusFilters.map((tab) => {
@@ -104,7 +103,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
         )}
       </div>
 
-      {/* Danh sách các lô */}
       {batches.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line bg-surface py-12 text-center">
           <Layers className="size-12 text-subtle" />
@@ -135,7 +133,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
                 className="flex flex-col justify-between rounded-xl border border-line bg-card p-5 shadow-2xs transition-all hover:border-line-strong hover:shadow-xs"
               >
                 <div className="space-y-3">
-                  {/* Header thẻ lô: Mã lô và Trạng thái */}
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <span className="font-mono text-title font-bold tracking-tight text-ink">
@@ -163,20 +160,19 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
                     )}
                   </div>
 
-                  {/* Thông tin chi tiết */}
                   <div className="space-y-1.5 border-t border-line/60 pt-3 text-caption text-ink-2">
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 text-subtle">
                         <Calendar className="size-3.5" /> Thu hoạch:
                       </span>
-                      <span className="font-medium text-ink">{batch.harvestDate}</span>
+                      <span className="font-medium text-ink">{formatDateVi(batch.harvestDate)}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 text-subtle">
                         <Clock className="size-3.5" /> Hạn dùng:
                       </span>
-                      <span className="font-medium text-ink">{batch.bestBefore}</span>
+                      <span className="font-medium text-ink">{formatDateVi(batch.bestBefore)}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -187,7 +183,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
                     </div>
                   </div>
 
-                  {/* Thông tin kiểm duyệt / Lý do từ chối */}
                   {isRejected && batch.rejectReason && (
                     <div className="rounded-lg bg-danger-soft/60 p-2.5 text-caption text-danger">
                       <strong>Lý do từ chối:</strong> {batch.rejectReason}
@@ -204,7 +199,6 @@ export default async function SellerBatchesPage({ searchParams }: PageProps) {
                   )}
                 </div>
 
-                {/* Footer nút chuyển hướng */}
                 <div className="mt-4 flex items-center justify-between border-t border-line/60 pt-3">
                   <Link
                     href={`/nha-cung-cap/lo-hang/${batch.id}`}
