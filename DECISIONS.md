@@ -1084,3 +1084,16 @@ lộ quyền.
   câu khẳng định không có trong dữ liệu ("Đã xác thực VietGAP", "từ 2024", "kết quả xét nghiệm"...).
 - QR ở trang chi tiết lô in `batch.traceUrl` của API (bản cũ ghép từ `window.location`, lệch giữa máy chủ và trình
   duyệt). Nút "Khu nhà cung cấp" ở đầu trang chỉ hiện với tài khoản nhà cung cấp.
+
+### Đơn hàng của khách và màn Vận hành đơn — 2026-10-21
+**Quyết định** (Prompt 3 của phân công 21/10; dựng theo hợp đồng trong lúc API phần giao dịch còn trả 501).
+- Shop: `/don-hang` liệt kê đơn (`GET /orders`, "Xem đơn cũ hơn" theo `nextCursor` trên URL `?sau=`), link "Đơn hàng"
+  trong menu tài khoản. `/don-hang/[ma]` thêm "Hành trình đơn hàng" tám bước: bước đã qua lấy giờ và ghi chú từ
+  `timeline`; khiếu nại, hoàn hàng hiện thành dải cảnh báo; đơn huỷ giữ khối báo huỷ cũ, không hiện dòng thời gian.
+  Thanh bước mua hàng chỉ hiện ngay sau khi đặt (chờ thanh toán hoặc `paid`), đơn cũ có link về danh sách.
+- Đơn còn đang chạy (`paid` → `delivered`, `disputed`) tự hỏi lại API mỗi 5 giây bằng `router.refresh()` theo kế
+  hoạch prototype (SSE để giai đoạn 2); dừng hỏi khi tab bị ẩn.
+- Admin: resource "Vận hành đơn" (`/van-hanh`, vai trò `staff_operations`, `staff_warehouse` theo `x-roles`), lọc
+  theo trạng thái, chi tiết đơn có tám bước, hàng trong đơn, nhật ký trạng thái kèm nguồn. Nút chỉ hiện đúng bước kế
+  tiếp hợp đồng cho phép (không cho `placed`, `completed` và các nhánh), ghi chú không bắt buộc tối đa 500 ký tự.
+- Kiểm bằng server giả theo hợp đồng nằm ngoài repo (không commit), chuyển các thao tác khác sang API thật.
