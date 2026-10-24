@@ -1,25 +1,37 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
-import { IdentityService } from "./identity.service";
 import { CurrentUser } from "../../core/current-user.decorator";
 import type { AuthUser } from "../../core/token.service";
+import { IdentityService } from "./identity.service";
 
 @Controller()
 export class IdentityController {
-  constructor(private readonly identityService: IdentityService) {}
+  constructor(private readonly identity: IdentityService) {}
 
   @Post("auth/otp")
-  requestOtp(@Body() body: { email: string }) {
-    return this.identityService.requestOtp(body.email);
+  @HttpCode(HttpStatus.OK)
+  requestOtp(@Body() body: { email: string }): Promise<{ challengeId: string; expiresAt: string; devCode?: string }> {
+    return this.identity.requestOtp(body.email);
   }
 
   @Post("auth/login")
-  login(@Body() body: { challengeId: string; code: string }) {
-    return this.identityService.login(body.challengeId, body.code);
+  @HttpCode(HttpStatus.OK)
+  login(@Body() body: { challengeId: string; code: string }): Promise<{ accessToken: string; user: Schema<"Me"> }> {
+    return this.identity.login(body.challengeId, body.code);
   }
 
   @Get("me")
-  getMe(@CurrentUser() user?: AuthUser): Schema<"Me"> {
-    return this.identityService.getMe(user?.id);
+  getMe(@CurrentUser() user?: AuthUser): Promise<Schema<"Me">> {
+    return this.identity.getMe(user?.id);
+  }
+
+  @Get("me/addresses")
+  listAddresses(@CurrentUser() user: AuthUser): Promise<Schema<"Address">[]> {
+    return this.identity.listAddresses(user.id);
+  }
+
+  @Post("me/addresses")
+  createAddress(@CurrentUser() user: AuthUser, @Body() body: Schema<"AddressInput">): Promise<Schema<"Address">> {
+    return this.identity.createAddress(user.id, body);
   }
 }
