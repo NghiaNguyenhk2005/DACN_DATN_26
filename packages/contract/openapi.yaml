@@ -325,7 +325,9 @@ paths:
       summary: Tính tiền trước khi xác nhận (FR5.2, FR8.2)
       description: |
         Trả tiền hàng, thuế, cước giao, khung giờ còn nhận đơn và việc COD có được phép hay không.
-        COD chỉ mở khi tổng tiền ≤ `cod_max_amount` và tài khoản chưa từng từ chối nhận COD (FR7.1).
+        COD chỉ mở khi tổng tiền ≤ `codMaxAmount` và tài khoản chưa từng từ chối nhận COD (FR7.1).
+        Khung giờ: ba ngày liền từ hôm nay (giờ Việt Nam) × `deliverySlots`; hôm nay hết nhận sau `cutoffTime`.
+        422 `CART_EMPTY` khi giỏ rỗng, 422 `ADDRESS_NOT_FOUND` khi địa chỉ không thuộc người gọi.
       x-roles: [buyer_retail]
       requestBody:
         required: true
@@ -374,7 +376,10 @@ paths:
       description: |
         Khóa dòng tồn theo FEFO và giữ chỗ. Đơn `prepaid` ở trạng thái `placed`, giữ chỗ tới
         `reserveExpiresAt` (15 phút), quá hạn chưa thanh toán thì tự hủy. Đơn `cod` hợp lệ chuyển
-        thẳng sang `paid`. Giỏ được làm rỗng khi đặt thành công.
+        thẳng sang `paid`. Giỏ được làm rỗng khi đặt thành công. Một tin bán có thể tách thành nhiều
+        `OrderItem` khi FEFO phải lấy từ hơn một lô.
+        409 `STOCK_CONFLICT` khi hết hàng lúc đặt; 422: `CART_EMPTY`, `ADDRESS_NOT_FOUND`,
+        `SLOT_UNAVAILABLE` (khung giờ không nằm trong `quote` hoặc đã qua giờ chốt), `COD_NOT_ALLOWED`.
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
@@ -425,7 +430,10 @@ paths:
       tags: [Buyer]
       operationId: payOrder
       summary: Thanh toán giả lập cho đơn trả trước
-      description: Thay cho cổng thanh toán ở prototype. `placed` → `paid`; quá hạn giữ chỗ trả 409 `RESERVATION_EXPIRED`.
+      description: |
+        Thay cho cổng thanh toán ở prototype. `placed` → `paid` và đổi phần giữ chỗ thành trừ tồn.
+        Quá hạn giữ chỗ trả 409 `RESERVATION_EXPIRED` (đơn đã bị tự hủy); đơn không còn ở `placed`
+        (đã trả, COD, đã hủy) trả 409 `ORDER_NOT_PAYABLE`; cổng từ chối trả 409 `PAYMENT_FAILED`.
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/OrderId'
@@ -724,6 +732,8 @@ paths:
         Ở hệ thống thật một số bước do webhook 3PL đẩy; prototype cho nhân viên bấm thay.
         Đơn `placed`, `completed`, `cancelled`, `returned`, `disputed` trả 409 `ORDER_TRANSITION_INVALID`.
         Mỗi lần chuyển ghi một `OrderStatusEvent` có `source: staff`.
+        Ai được chuyển bước nào: `staff_operations` chuyển được mọi bước; `staff_warehouse` chỉ các bước phía kho
+        (paid → packing → on_trip → handed_to_3pl), bước khác trả 403 `FORBIDDEN_ROLE`.
       x-roles: [staff_operations, staff_warehouse]
       parameters:
         - $ref: '#/components/parameters/OrderId'
@@ -741,6 +751,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/OrderDetail' }
+        '403': { $ref: '#/components/responses/Forbidden' }
         '409': { $ref: '#/components/responses/Conflict' }
 
   /admin/inventory/holdings:
@@ -973,9 +984,10 @@ components:
         code:
           type: string
           description: |
-            Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, STOCK_CONFLICT,
-            COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_CANCELLABLE,
-            ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED, BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID
+            Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, CART_EMPTY, ADDRESS_NOT_FOUND,
+            STOCK_CONFLICT, COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_PAYABLE,
+            PAYMENT_FAILED, ORDER_NOT_CANCELLABLE, ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED,
+            BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID
         errors:
           type: array
           items:
@@ -1512,27 +1524,37 @@ components:
       properties:
         id: { $ref: '#/components/schemas/Id' }
         movementType: { $ref: '#/components/schemas/MovementType' }
-        quantity: { type: number, description: 'Dương là tăng, âm là giảm' }
-        sourceType: { type: string, examples: ['retail_order'] }
+        quantity:
+          type: number
+          description: |
+            Dương là tăng, âm là giảm. `reserve`, `release` tính theo lượng còn bán được (tồn − đang giữ chỗ);
+            các loại còn lại (`open_from_batch`, `retail_out`, `return_in`, ...) tính theo tồn thực `qtyOnHand`.
+        sourceType: { type: string, examples: ['retail_order', 'batch'] }
         sourceId: { $ref: '#/components/schemas/Id' }
         reason: { type: [string, 'null'] }
         createdAt: { type: string, format: date-time }
     PlatformSettings:
       type: object
-      description: operations.platform_settings; PUT chỉ gửi khóa cần đổi. `default` là giá trị nạp sẵn ở prototype
+      description: |
+        operations.platform_settings; PUT chỉ gửi khóa cần đổi (ít nhất một khóa, khóa lạ bị từ chối 400).
+        `default` là giá trị nạp sẵn ở prototype
+      additionalProperties: false
+      minProperties: 1
       properties:
         codMaxAmount: { type: integer, minimum: 0, default: 1000000, description: VND }
-        cutoffTime: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', default: '16:00' }
+        cutoffTime: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]$', default: '16:00' }
         deliverySlots:
           type: array
-          items: { type: string }
+          minItems: 1
+          items: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]$' }
           default: ['08:00-11:00', '14:00-17:00', '18:00-21:00']
         shippingFee: { type: integer, minimum: 0, default: 25000, description: 'VND, đã gồm thuế' }
         freeShippingThreshold: { type: integer, minimum: 0, default: 300000, description: Tiền hàng từ mức này thì miễn phí giao }
-        reservationMinutes: { type: integer, minimum: 1, default: 15 }
+        reservationMinutes: { type: integer, minimum: 1, maximum: 120, default: 15 }
         retailVatPercent:
           type: number
           minimum: 0
+          maximum: 100
           default: 5
           description: |
             Thuế suất GTGT khi Farmery bán nông sản chưa chế biến hoặc chỉ sơ chế thông thường cho cá nhân
