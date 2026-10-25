@@ -17,5 +17,4 @@ export interface Account {
 export abstract class AccountRepository {
   abstract findByEmail(email: string): Promise<Account | null>;
   abstract findById(id: string): Promise<Account | null>;
-  abstract create(account: Omit<Account, "id">): Promise<Account>;
 }

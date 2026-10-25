@@ -7,9 +7,26 @@ interface Row {
   address: Address;
 }
 
+// Khách lẻ mẫu có sẵn một địa chỉ mặc định ở TP.HCM (vùng giao thí điểm) để demo bước chọn địa chỉ. Tên, số giả.
+const SEED_ROWS: Row[] = [
+  {
+    userId: "202",
+    address: {
+      id: "500",
+      label: "Nhà riêng",
+      recipientName: "Trần Minh Anh",
+      phone: "0987654321",
+      addressLine: "12 Nguyễn Thị Minh Khai",
+      ward: "Phường Bến Nghé",
+      province: "TP. Hồ Chí Minh",
+      isDefault: true,
+    },
+  },
+];
+
 @Injectable()
 export class InMemoryAddressRepository extends AddressRepository implements Resettable {
-  private rows: Row[] = [];
+  private rows: Row[] = structuredClone(SEED_ROWS);
   private nextId = 501;
 
   constructor(registry: DemoResetRegistry) {
@@ -18,7 +35,7 @@ export class InMemoryAddressRepository extends AddressRepository implements Rese
   }
 
   reset(): void {
-    this.rows = [];
+    this.rows = structuredClone(SEED_ROWS);
     this.nextId = 501;
   }
 

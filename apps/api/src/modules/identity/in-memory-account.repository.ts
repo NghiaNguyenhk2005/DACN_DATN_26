@@ -3,12 +3,9 @@ import { DemoResetRegistry, type Resettable } from "../../core/demo-reset.regist
 import { AccountRepository, type Account } from "./account.repository";
 import { SEED_ACCOUNTS } from "./seed-accounts";
 
-const FIRST_SELF_REGISTERED_ID = 401;
-
 @Injectable()
 export class InMemoryAccountRepository extends AccountRepository implements Resettable {
   private accounts: Account[] = structuredClone(SEED_ACCOUNTS);
-  private nextId = FIRST_SELF_REGISTERED_ID;
 
   constructor(registry: DemoResetRegistry) {
     super();
@@ -17,7 +14,6 @@ export class InMemoryAccountRepository extends AccountRepository implements Rese
 
   reset(): void {
     this.accounts = structuredClone(SEED_ACCOUNTS);
-    this.nextId = FIRST_SELF_REGISTERED_ID;
   }
 
   async findByEmail(email: string): Promise<Account | null> {
@@ -29,11 +25,5 @@ export class InMemoryAccountRepository extends AccountRepository implements Rese
   async findById(id: string): Promise<Account | null> {
     const found = this.accounts.find((a) => a.id === id);
     return found ? structuredClone(found) : null;
-  }
-
-  async create(account: Omit<Account, "id">): Promise<Account> {
-    const created: Account = { ...structuredClone(account), id: String(this.nextId++) };
-    this.accounts.push(created);
-    return structuredClone(created);
   }
 }

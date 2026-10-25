@@ -63,13 +63,13 @@ describe("Giỏ hàng, tính tiền, đặt đơn giữ chỗ 15 phút", () => {
       await setCart(t, buyer, L227, 5).expect(200); // 1.100.000đ
       const big = await request(t.http()).post("/api/checkout/quote").auth(buyer, { type: "bearer" }).send({ addressId }).expect(200);
       expect(big.body.codAllowed).toBe(false);
-      expect(big.body.codReason).toMatch(/vượt mức/);
+      expect(big.body.codReason).toBe("Đơn trên 1.000.000₫ chỉ nhận thanh toán trước.");
 
       const refuser = await login(t, "khachtuchoi@example.com");
       const addr = await addAddress(t, refuser);
       await setCart(t, refuser, L201, 1).expect(200);
       const q = await request(t.http()).post("/api/checkout/quote").auth(refuser, { type: "bearer" }).send({ addressId: addr }).expect(200);
-      expect(q.body).toMatchObject({ codAllowed: false, codReason: "Tài khoản từng từ chối nhận hàng COD" });
+      expect(q.body).toMatchObject({ codAllowed: false, codReason: "Tài khoản từng từ chối nhận hàng COD nên đơn chỉ nhận thanh toán trước." });
     });
 
     it("khung giờ: ba ngày × ba khung; sau giờ chốt 16:00 hôm nay hết nhận, ngày mai vẫn còn", async () => {
@@ -126,8 +126,9 @@ describe("Giỏ hàng, tính tiền, đặt đơn giữ chỗ 15 phút", () => {
       expect(late.body.code).toBe("RESERVATION_EXPIRED");
 
       const cancelled = (await request(t.http()).get(`/api/orders/${order.id}`).auth(buyer, { type: "bearer" }).expect(200)).body;
-      expect(cancelled).toMatchObject({ status: "cancelled", reserveExpiresAt: null, cancellable: false });
-      expect(cancelled.timeline.at(-1)).toMatchObject({ toStatus: "cancelled", source: "system" });
+      // Giữ nguyên reserveExpiresAt và mốc hủy đúng hạn: shop dựa vào đó để báo "hết thời gian giữ chỗ".
+      expect(cancelled).toMatchObject({ status: "cancelled", reserveExpiresAt: order.reserveExpiresAt, cancellable: false });
+      expect(cancelled.timeline.at(-1)).toMatchObject({ toStatus: "cancelled", source: "system", occurredAt: order.reserveExpiresAt });
       expect(await holdingOf(t, ops, "1001")).toMatchObject({ qtyOnHand: 150, qtyReserved: 0 });
       expect((await request(t.http()).get("/api/products/1").expect(200)).body.listing.available).toBe(150);
     });

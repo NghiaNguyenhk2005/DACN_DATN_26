@@ -1,7 +1,7 @@
 import type { Account } from "./account.repository";
 
 // Mỗi vai trò một tài khoản giả (openapi.yaml, POST /auth/login). Mã OTP của mọi tài khoản là `devCode`.
-// ID 2xx là người dùng ngoài (nhà cung cấp, khách), 3xx là nhân sự nội bộ; 4xx dành cho khách tự đăng ký ở DEMO_MODE.
+// ID 2xx là người dùng ngoài (nhà cung cấp, khách), 3xx là nhân sự nội bộ. Email lạ không đăng nhập được (404).
 export const SEED_ACCOUNTS: Account[] = [
   {
     id: "201",

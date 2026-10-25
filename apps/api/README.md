@@ -65,3 +65,32 @@ Làm theo mô-đun mẫu `src/modules/catalog/` (`GET /api/categories`):
 | 501 | `NOT_IMPLEMENTED` | Có trong hợp đồng nhưng chưa có endpoint |
 | 500 | `RESPONSE_CONTRACT_MISMATCH` | Endpoint trả dữ liệu lệch schema (chỉ khi `VALIDATE_RESPONSES` bật) — sửa code cho khớp, đừng tắt bộ kiểm |
 | 404 | `DEMO_MODE_OFF` | Gọi `/api/dev/reset` khi tắt `DEMO_MODE` |
+
+## Giao dịch và vận hành (BE2)
+
+Mô-đun: `identity` (OTP, tài khoản, địa chỉ), `retail` (giỏ, báo giá, đơn, máy trạng thái, API vận hành đơn),
+`inventory` (dòng tồn theo lô, FEFO, sổ nhập xuất), `payment` (cổng giả lập, COD), `operations` (thêm cấu hình nền tảng).
+Mọi trạng thái đều nằm trong bộ nhớ và được `POST /dev/reset` đưa về ban đầu.
+
+**Tài khoản đăng nhập** (OTP luôn là `123456`; email lạ trả 404): `khachle@example.com` (khách lẻ, có sẵn một địa chỉ ở
+TP.HCM), `khachtuchoi@example.com` (từng từ chối COD), `seller@farmery.vn` hoặc `nongdan@example.com` (nhà cung cấp 101),
+`vanhanh@farmery.vn`, `kho@farmery.vn`, `thumua@farmery.vn`, `hotro@farmery.vn`, `chu@farmery.vn` (mỗi vai trò một người),
+`staff@example.com` / `kiemduyet@farmery.vn` (tài khoản tổng hợp cho dev: kiểm duyệt, vận hành, kho, chủ nền tảng).
+
+**Quy tắc đã chốt**
+- Tồn ban đầu dựng từ lô đã duyệt (tồn của tin bán chia theo số lượng khai báo). Sản phẩm chưa có lô đã duyệt thì
+  chưa có hàng để bán; duyệt lô mới (`approveBatch`) sẽ mở thêm dòng tồn bằng số lượng khai báo.
+- Giữ chỗ theo FEFO (hết hạn trước xuất trước), một tin bán có thể tách thành nhiều dòng đơn khi lấy từ nhiều lô.
+  Đơn trả trước giữ chỗ `reservationMinutes` (mặc định 15). Quá hạn thì tự hủy, nhả tồn, **giữ nguyên `reserveExpiresAt`**
+  và ghi sự kiện `cancelled` đúng mốc hạn. Quét mỗi 10 giây và quét lại mỗi lần đọc/ghi đơn.
+- Thanh toán (hoặc COD hợp lệ) đổi giữ chỗ thành trừ tồn (`retail_out`). Hủy khi `placed` thì nhả (`release`), hủy khi `paid`
+  thì hoàn tồn (`return_in`). Sau đóng gói không hủy được.
+- Sổ nhập xuất: `reserve`/`release` tính theo lượng còn bán được, các loại còn lại theo tồn thực; mới nhất trước.
+- Khung giờ giao: ba ngày liền từ hôm nay (giờ Việt Nam) × `deliverySlots`; hôm nay hết nhận từ `cutoffTime`.
+- Chuyển bước đơn: `staff_operations` đi mọi bước, `staff_warehouse` chỉ `paid → packing → on_trip → handed_to_3pl`
+  (bước khác 403 `FORBIDDEN_ROLE`). Máy trạng thái ở `retail/order-state-machine.ts`; `disputed`/`returned` đã khai nhưng
+  chưa có thao tác nào đi tới.
+- Thời gian lấy từ `Clock` (`core/clock.ts`); test thay bằng đồng hồ chỉnh tay (`test/support.ts`).
+
+**Còn thiếu có chủ ý:** hoàn tiền thật khi hủy đơn đã trả (chỉ đánh dấu `refunded`), hạn dùng của lô không chặn bán,
+khiếu nại/đổi trả (FR8.3), thông báo cho khách.

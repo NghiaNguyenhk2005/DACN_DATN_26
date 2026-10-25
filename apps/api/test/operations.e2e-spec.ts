@@ -178,18 +178,17 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
   });
 
   describe("POST /dev/reset", () => {
-    it("đưa đơn, giỏ, địa chỉ, tồn, cấu hình, tài khoản tự đăng ký về ban đầu", async () => {
+    it("đưa đơn, giỏ, địa chỉ, tồn, cấu hình về ban đầu", async () => {
       await codOrder("201", 3);
       await setCart(t, buyer, "227", 1).expect(200);
       await request(t.http()).put("/api/admin/settings").auth(owner, { type: "bearer" }).send({ shippingFee: 1 }).expect(200);
-      await login(t, "moi-den@example.com");
       expect(await holdingOf(t, ops, "1001")).toMatchObject({ qtyOnHand: 147 });
 
       await request(t.http()).post("/api/dev/reset").expect(204);
 
       expect((await get("/api/admin/orders", ops).expect(200)).body.items).toEqual([]);
       expect((await get("/api/cart", buyer).expect(200)).body.items).toEqual([]);
-      expect((await get("/api/me/addresses", buyer).expect(200)).body).toEqual([]);
+      expect((await get("/api/me/addresses", buyer).expect(200)).body).toEqual([expect.objectContaining({ id: "500" })]);
       expect(await holdingOf(t, ops, "1001")).toMatchObject({ qtyOnHand: 150, qtyReserved: 0 });
       expect((await get("/api/admin/settings", ops).expect(200)).body.shippingFee).toBe(25000);
       // đơn đầu tiên sau reset lại mang số thứ tự 0001

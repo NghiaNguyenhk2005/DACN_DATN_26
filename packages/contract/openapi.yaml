@@ -194,7 +194,8 @@ paths:
       summary: Đăng nhập bằng OTP
       description: |
         Nhân sự nội bộ cũng đăng nhập qua bước này ở prototype (thay cho 2FA thật).
-        Dữ liệu giả có sẵn tài khoản cho từng vai trò.
+        Dữ liệu giả có sẵn tài khoản cho từng vai trò. Sai mã trả 401 `OTP_INVALID`; mã hết hạn (10 phút),
+        đã dùng, không tồn tại hoặc nhập sai quá 5 lần trả 401 `OTP_EXPIRED`.
       security: []
       requestBody:
         required: true
@@ -987,7 +988,7 @@ components:
             Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, CART_EMPTY, ADDRESS_NOT_FOUND,
             STOCK_CONFLICT, COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_PAYABLE,
             PAYMENT_FAILED, ORDER_NOT_CANCELLABLE, ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED,
-            BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID
+            BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID, OTP_INVALID, OTP_EXPIRED
         errors:
           type: array
           items:
@@ -1424,7 +1425,10 @@ components:
             reserveExpiresAt:
               type: [string, 'null']
               format: date-time
-              description: Hạn giữ chỗ 15 phút của đơn trả trước chưa thanh toán; FE đếm ngược theo trường này
+              description: |
+                Hạn giữ chỗ (mặc định 15 phút) của đơn trả trước; FE đếm ngược theo trường này. Đơn quá hạn bị tự hủy
+                vẫn giữ nguyên giá trị này và có sự kiện `cancelled` mang mốc đúng hạn trong `timeline`, để FE phân biệt
+                "hết thời gian giữ chỗ" với khách tự hủy. `null` với đơn COD và đơn đã thanh toán
             timeline:
               type: array
               description: Các mốc đã qua, cũ trước

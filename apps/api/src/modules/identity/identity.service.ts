@@ -26,6 +26,8 @@ interface OtpChallenge {
 @Injectable()
 export class IdentityService implements Resettable {
   private challenges = new Map<string, OtpChallenge>();
+  /** Email vừa dùng để đăng nhập mỗi tài khoản: GET /me trả đúng email đó dù tài khoản có nhiều bí danh. */
+  private loginEmails = new Map<string, string>();
 
   constructor(
     private readonly accounts: AccountRepository,
@@ -41,12 +43,12 @@ export class IdentityService implements Resettable {
 
   reset(): void {
     this.challenges.clear();
+    this.loginEmails.clear();
   }
 
   async requestOtp(rawEmail: string): Promise<{ challengeId: string; expiresAt: string; devCode?: string }> {
     const email = rawEmail.trim().toLowerCase();
-    // Thật: chỉ gửi cho tài khoản đã có. Demo: email lạ tự đăng ký thành khách lẻ ở bước đăng nhập.
-    if (!this.config.demoMode && !(await this.accounts.findByEmail(email))) {
+    if (!(await this.accounts.findByEmail(email))) {
       throw new ProblemException(HttpStatus.NOT_FOUND, "NOT_FOUND", "Không có tài khoản với email này");
     }
 
@@ -67,18 +69,23 @@ export class IdentityService implements Resettable {
     const challenge = this.challenges.get(challengeId);
     if (!challenge || challenge.expiresAt <= this.clock.now().getTime()) {
       this.challenges.delete(challengeId);
-      throw new ProblemException(HttpStatus.UNAUTHORIZED, "UNAUTHENTICATED", "Mã OTP không đúng hoặc đã hết hạn");
+      throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_EXPIRED", "Mã OTP đã hết hạn hoặc không còn hiệu lực, hãy gửi lại mã");
     }
     if (challenge.code !== code) {
       challenge.attemptsLeft -= 1;
-      if (challenge.attemptsLeft <= 0) this.challenges.delete(challengeId);
-      throw new ProblemException(HttpStatus.UNAUTHORIZED, "UNAUTHENTICATED", "Mã OTP không đúng hoặc đã hết hạn");
+      if (challenge.attemptsLeft <= 0) {
+        this.challenges.delete(challengeId);
+        throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_EXPIRED", "Nhập sai quá số lần cho phép, hãy gửi lại mã");
+      }
+      throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_INVALID", "Mã OTP không đúng");
     }
     this.challenges.delete(challengeId); // mỗi mã chỉ dùng một lần
 
-    const account = await this.resolveAccount(challenge.email);
+    const account = await this.accounts.findByEmail(challenge.email);
+    if (!account) throw new ProblemException(HttpStatus.UNAUTHORIZED, "UNAUTHENTICATED", "Tài khoản không còn tồn tại");
+    this.loginEmails.set(account.id, challenge.email);
     const accessToken = await this.tokens.sign({ id: account.id, roles: account.roles });
-    return { accessToken, user: toMe(account) };
+    return { accessToken, user: this.toMe(account) };
   }
 
   async getMe(userId: string | undefined): Promise<Me> {
@@ -86,7 +93,7 @@ export class IdentityService implements Resettable {
     if (!account) {
       throw new ProblemException(HttpStatus.UNAUTHORIZED, "UNAUTHENTICATED", "Tài khoản không còn tồn tại");
     }
-    return toMe(account);
+    return this.toMe(account);
   }
 
   listAddresses(userId: string): Promise<Address[]> {
@@ -110,27 +117,14 @@ export class IdentityService implements Resettable {
     return (await this.accounts.findById(userId))?.refusedCod ?? false;
   }
 
-  private async resolveAccount(email: string): Promise<Account> {
-    const existing = await this.accounts.findByEmail(email);
-    if (existing) return existing;
-    return this.accounts.create({
-      emails: [email],
-      displayName: `Khách lẻ ${email.split("@")[0]}`,
-      phone: null,
-      roles: ["buyer_retail"],
-      supplierId: null,
-      refusedCod: false,
-    });
+  private toMe(account: Account): Me {
+    return {
+      id: account.id,
+      displayName: account.displayName,
+      email: this.loginEmails.get(account.id) ?? account.emails[0] ?? null,
+      phone: account.phone,
+      roles: account.roles,
+      supplierId: account.supplierId,
+    };
   }
-}
-
-function toMe(account: Account): Me {
-  return {
-    id: account.id,
-    displayName: account.displayName,
-    email: account.emails[0] ?? null,
-    phone: account.phone,
-    roles: account.roles,
-    supplierId: account.supplierId,
-  };
 }

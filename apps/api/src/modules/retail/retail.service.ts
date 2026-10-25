@@ -34,6 +34,7 @@ const SWEEP_INTERVAL_MS = 10_000;
 const SLOT_DAYS = 3;
 
 const money = (n: number): number => Math.round(n);
+const vnd = (n: number): string => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}₫`;
 const qty = (n: number): number => Math.round(n * 1000) / 1000;
 
 function problem(status: number, code: string, detail: string): ProblemException {
@@ -150,8 +151,8 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
     const totalAmount = subtotal + shippingFee;
     const refusedCod = await this.identity.hasRefusedCod(userId);
     let codReason: string | null = null;
-    if (totalAmount > cfg.codMaxAmount) codReason = `Đơn vượt mức tối đa cho COD (${cfg.codMaxAmount.toLocaleString("vi-VN")} đ)`;
-    else if (refusedCod) codReason = "Tài khoản từng từ chối nhận hàng COD";
+    if (totalAmount > cfg.codMaxAmount) codReason = `Đơn trên ${vnd(cfg.codMaxAmount)} chỉ nhận thanh toán trước.`;
+    else if (refusedCod) codReason = "Tài khoản từng từ chối nhận hàng COD nên đơn chỉ nhận thanh toán trước.";
 
     const quote: CheckoutQuote = {
       subtotal,
@@ -317,7 +318,6 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
         await this.inventory.returnIn(order.id, "Khách hủy đơn đã thanh toán, hoàn tồn");
         await this.payments.refund(order.id);
       }
-      order.reserveExpiresAt = null;
       order.cancelReason = "buyer_cancelled";
       this.transition(order, "cancelled", "system", "Khách hủy đơn");
       await this.orders.update(order);
@@ -370,9 +370,9 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
     const due = order.status === "placed" && order.reserveExpiresAt !== null && order.reserveExpiresAt <= this.clock.now().toISOString();
     if (!due) return order;
     await this.inventory.release(order.id, "Quá hạn giữ chỗ, tự hủy đơn");
-    order.reserveExpiresAt = null;
+    // Giữ nguyên reserveExpiresAt và ghi sự kiện hủy đúng mốc hạn: shop dựa vào đó để báo "hết thời gian giữ chỗ".
     order.cancelReason = "reservation_expired";
-    this.transition(order, "cancelled", "system", "Quá hạn giữ chỗ, đơn tự hủy");
+    this.transition(order, "cancelled", "system", "Quá hạn giữ chỗ, đơn tự hủy", order.reserveExpiresAt ?? undefined);
     await this.orders.update(order);
     return order;
   }
@@ -397,9 +397,9 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
 
   // ---------------------------------------------------------------- chuyển đổi dữ liệu
 
-  private transition(order: OrderRecord, to: OrderStatus, source: OrderStatusEvent["source"], note: string | null): void {
+  private transition(order: OrderRecord, to: OrderStatus, source: OrderStatusEvent["source"], note: string | null, at?: string): void {
     order.status = to;
-    order.timeline.push({ toStatus: to, source, note, occurredAt: this.clock.now().toISOString() });
+    order.timeline.push({ toStatus: to, source, note, occurredAt: at ?? this.clock.now().toISOString() });
   }
 
   private notFound(orderId: string): ProblemException {
@@ -436,7 +436,7 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
       subtotal: o.subtotal,
       taxAmount: o.taxAmount,
       shippingFee: o.shippingFee,
-      reserveExpiresAt: o.status === "placed" ? o.reserveExpiresAt : null,
+      reserveExpiresAt: o.reserveExpiresAt,
       timeline: o.timeline,
       cancellable: isCancellable(o.status),
     };

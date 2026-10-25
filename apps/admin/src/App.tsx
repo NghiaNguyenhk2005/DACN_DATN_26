@@ -1,4 +1,4 @@
-import { DashboardOutlined } from "@ant-design/icons";
+import { DashboardOutlined, DatabaseOutlined, SettingOutlined } from "@ant-design/icons";
 import { AuthPage, ErrorComponent, ThemedLayout, ThemedTitle, useNotificationProvider } from "@refinedev/antd";
 import { Authenticated, Refine } from "@refinedev/core";
 import routerProvider, {
@@ -11,6 +11,8 @@ import { App as AntdApp, ConfigProvider } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { DashboardPage } from "./pages/dashboard";
+import { InventoryPage } from "./pages/inventory";
+import { SettingsPage } from "./pages/settings";
 import { authProvider } from "./providers/auth-provider";
 import { dataProvider } from "./providers/data-provider";
 import { adminTheme } from "./theme";
@@ -33,6 +35,16 @@ export function App() {
                 list: "/",
                 meta: { label: "Tổng quan", icon: <DashboardOutlined /> },
               },
+              {
+                name: "inventory",
+                list: "/kho",
+                meta: { label: "Kho", icon: <DatabaseOutlined />, roles: ["staff_warehouse", "staff_operations"] },
+              },
+              {
+                name: "settings",
+                list: "/cau-hinh",
+                meta: { label: "Cấu hình", icon: <SettingOutlined />, roles: ["platform_owner", "staff_operations"] },
+              },
             ]}
             options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, disableTelemetry: true }}
           >
@@ -47,6 +59,8 @@ export function App() {
                 }
               >
                 <Route index element={<DashboardPage />} />
+                <Route path="/kho" element={<InventoryPage />} />
+                <Route path="/cau-hinh" element={<SettingsPage />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Route>
               <Route
