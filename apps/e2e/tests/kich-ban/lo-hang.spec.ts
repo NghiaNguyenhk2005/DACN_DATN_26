@@ -11,7 +11,8 @@ async function newPage(browser: Browser): Promise<Page> {
 async function createBatch(seller: Page): Promise<string> {
   await seller.goto(`${SHOP_URL}/nha-cung-cap/lo-hang/tao-moi`);
   await seller.getByRole("button", { name: "Gửi duyệt lô hàng" }).click();
-  await expect(seller).toHaveURL(/\/nha-cung-cap\/lo-hang\/[^/?]+\?thanh-cong=1/);
+  // Server Action + redirect sang trang chưa biên dịch ở chế độ dev có thể quá 5 giây.
+  await expect(seller).toHaveURL(/\/nha-cung-cap\/lo-hang\/[^/?]+\?thanh-cong=1/, { timeout: 15_000 });
   await expect(seller.getByText("Khai báo lô hàng thành công!")).toBeVisible();
   return seller.getByText("Khai báo lô hàng thành công!").locator("xpath=..").locator("strong.font-mono").innerText();
 }

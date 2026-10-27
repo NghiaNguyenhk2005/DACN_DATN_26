@@ -12,6 +12,8 @@ export default defineConfig({
   globalSetup: "./tests/global-setup.ts",
   fullyParallel: false,
   workers: 1,
+  // Server dev biên dịch trang lần đầu khi được gọi nên lần chạy nguội có thể quá 5 giây mặc định.
+  expect: { timeout: 10_000 },
   forbidOnly: CI,
   retries: CI ? 1 : 0,
   reporter: CI ? [["list"], ["html", { open: "never" }]] : [["list"], ["html", { open: "on-failure" }]],
