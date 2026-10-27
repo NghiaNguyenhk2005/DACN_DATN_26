@@ -1122,3 +1122,8 @@ vào CI.
 `d820575`), `pull.rebase` đang `false`; commit kiểu `19/10: …` và hai commit trùng thông điệp (`8bd9d4d`, `124c424`).
 **Đánh đổi:** squash gộp công của nhiều người trong một nhánh chung nên có ngoại lệ merge commit; dùng lại nhánh đã
 squash sẽ xung đột với chính squash commit của nó nên phải xoá nhánh.
+
+SỬA 2026-10-27: bỏ yêu cầu "một người duyệt" (README cũ) và ngoại lệ FE + BE cùng duyệt cho PR chạm `openapi.yaml`: CI xanh là đủ,
+người viết PR tự merge; mọi thành viên đã là collaborator. Quy tắc "không tự merge PR" ở trên chỉ còn áp dụng cho Claude: chỉ
+merge khi người dùng nói rõ. Lý do: nhóm nhỏ, duyệt chéo làm chậm; đánh đổi là không còn chốt kiểm người thứ hai, nên
+PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
