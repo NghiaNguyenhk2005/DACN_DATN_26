@@ -428,3 +428,10 @@ Status: resolved
 → `DTHĐ-2610-03`, mã truy xuất `TRC-DTHĐ-2610-03` nằm trong URL của QR. Đề xuất đổi "Đ/đ" → "D" trước khi lấy chữ
 đầu (như `vietnamese-search.util.ts`).
 Status: open
+
+### Hạ tầng git trên GitHub chưa khớp quy trình trong README — Claude — 2026-10-27
+`develop` và `main` chưa bật branch protection (API trả 404) nên "CI xanh + một người duyệt" mới là lời hứa; repo chưa
+bật tự xoá nhánh sau gộp (còn các nhánh `origin/docs/…`, `origin/feat/…` cũ). `ci.yml` chưa chạy e2e Playwright (cần API
+cổng 4000). Đề xuất: bật protection cho `develop`/`main` (CI xanh, ≥1 review, cấm force-push), bật tự xoá nhánh, đặt
+`git config pull.rebase true`, thêm job e2e riêng không chặn gộp ở bước đầu. Việc trên GitHub do chủ repo bấm.
+Status: open
