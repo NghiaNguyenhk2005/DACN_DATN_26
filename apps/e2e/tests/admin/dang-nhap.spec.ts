@@ -25,6 +25,8 @@ test.describe("Admin — đăng nhập OTP", () => {
     await expect(page).toHaveURL("/");
     await expect(page.getByText("Tổng quan").first()).toBeVisible();
     await expect(page.getByRole("menuitem", { name: /Kiểm duyệt/ })).toBeVisible();
+    await expect(page.locator(".ant-statistic-title", { hasText: "Chờ duyệt" })).toBeVisible();
+    await expect(page.getByText("Gần hạn nhất")).toBeVisible();
   });
 
   test("tài khoản không phải nhân viên bị chặn", async ({ page }) => {
