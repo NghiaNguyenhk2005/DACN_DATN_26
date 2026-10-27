@@ -342,6 +342,10 @@ trên API thật; khi BE2 push, FE chạy lại kịch bản kiểm thử trên 
 **Cập nhật 2026-10-21:** `POST /auth/otp`, `/auth/login`, `GET /me` đã chạy (BE1 làm tạm ở mô-đun `identity`, xem mục
 "identity bản tạm" bên dưới). 10 thao tác còn lại vẫn 501; `retail`, `payment`, `inventory`, `fulfillment` còn rỗng.
 Status: open
+Cập nhật 2026-10-27 (kiểm trên `develop` sau PR #38): mô-đun `identity` chỉ có 3 route là `POST /auth/otp`, `/auth/login`
+và `GET /me`, cả ba chạy (kèm sửa trả 200 đúng hợp đồng); `retail`, `payment` vẫn chỉ có file module. Các thao tác còn
+lại (`/me/addresses`, `/cart*`, `/checkout/quote`, `/orders*`) chưa có handler nên vẫn là 501; đã gọi thử `GET
+/me/addresses` và `GET /cart` đều 501.
 
 ### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
 `mock-data` chưa có người dùng nào, trong khi hợp đồng cho `POST /auth/otp` trả 404 với email lạ, nên chưa ai đăng
