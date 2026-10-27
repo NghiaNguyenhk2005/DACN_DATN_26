@@ -32,6 +32,11 @@ pnpm dev          # chạy đồng thời 3 app
 
 Các lệnh khác (chạy từ gốc, giống CI): `pnpm lint:spec` (kiểm `openapi.yaml`), `pnpm generate` (sinh kiểu từ hợp đồng),
 `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Chạy riêng một gói: `pnpm --filter @farmery/api dev`.
+
+Test e2e trên trình duyệt (Playwright, `apps/e2e`): lần đầu cài trình duyệt bằng
+`pnpm --filter @farmery/e2e exec playwright install chromium`, sau đó `pnpm e2e`. Lệnh tự bật cả 3 app; nếu đang
+`pnpm dev` thì dùng lại server đó, nên các app phải trỏ đúng API ở cổng 4000. Giao diện từng bước:
+`pnpm --filter @farmery/e2e e2e:ui`.
 Đổi cấu hình mặc định: sao `.env.example` của từng app (thành `.env` ở `apps/api`, `.env.local` ở shop và admin).
 
 Viết endpoint cho API: xem [`apps/api/README.md`](apps/api/README.md) (khuôn theo mô-đun mẫu `catalog`, quy tắc, mã lỗi).
