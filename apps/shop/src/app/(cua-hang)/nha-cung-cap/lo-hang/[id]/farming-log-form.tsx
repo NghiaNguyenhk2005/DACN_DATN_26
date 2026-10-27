@@ -183,7 +183,6 @@ export function FarmingLogForm({ batchId, existingLogs }: FarmingLogFormProps) {
             </div>
           </div>
 
-          {/* Gợi ý mẫu mô tả nhanh */}
           <div className="rounded-xl border border-line/60 bg-surface-2/40 p-3">
             <div className="flex items-center justify-between text-micro text-subtle">
               <span>Gợi ý nội dung mẫu cho hoạt động đã chọn:</span>
@@ -219,7 +218,6 @@ export function FarmingLogForm({ batchId, existingLogs }: FarmingLogFormProps) {
             />
           </div>
 
-          {/* Tuỳ chọn đính chính bản ghi cũ (NFR9.1) */}
           {existingLogs.length > 0 && (
             <div className="rounded-xl border border-warning-line/60 bg-warning-soft/30 p-3.5">
               <label className="flex items-center gap-2 text-caption font-medium text-ink cursor-pointer">

@@ -17,7 +17,6 @@ const TABS = [
     label: "Quản lý lô hàng",
     icon: Layers,
     exact: false,
-    // match /nha-cung-cap/lo-hang and /nha-cung-cap/lo-hang/[id] but not /tao-moi
     isActive: (pathname: string) =>
       pathname === "/nha-cung-cap/lo-hang" ||
       (pathname.startsWith("/nha-cung-cap/lo-hang/") && !pathname.endsWith("/tao-moi")),

@@ -37,7 +37,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
 
   return (
     <form action={formAction} className="space-y-6">
-      {/* Thông báo lỗi nếu có */}
       {state && !state.ok && state.message && (
         <div className="flex items-start gap-3 rounded-xl border border-danger-line bg-danger-soft p-4 text-small text-danger-ink">
           <AlertCircle className="mt-0.5 size-5 shrink-0 text-danger" />
@@ -48,7 +47,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
         </div>
       )}
 
-      {/* Trường chọn sản phẩm */}
       <div className="space-y-2">
         <label htmlFor="productId" className="block text-title font-semibold text-ink">
           Sản phẩm nông sản <span className="text-danger">*</span>
@@ -74,7 +72,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
         )}
       </div>
 
-      {/* Cặp trường ngày: Ngày thu hoạch & Hạn dùng tốt nhất */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="harvestDate" className="block text-title font-semibold text-ink">
@@ -114,7 +111,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
         </div>
       </div>
 
-      {/* Sản lượng khai báo */}
       <div className="space-y-2">
         <label htmlFor="declaredQuantity" className="block text-title font-semibold text-ink">
           Sản lượng khai báo ({selectedProduct?.unit ?? "đơn vị"}) <span className="text-danger">*</span>
@@ -137,7 +133,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
         </p>
       </div>
 
-      {/* Hộp giải thích quy trình tự động cấp mã QR */}
       <div className="rounded-xl border border-leaf-soft bg-leaf-soft/30 p-4 text-small text-ink">
         <div className="flex items-start gap-3">
           <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -150,7 +145,6 @@ export function CreateBatchForm({ products, initialProductId }: CreateBatchFormP
         </div>
       </div>
 
-      {/* Nút hành động */}
       <div className="flex items-center justify-end gap-3 border-t border-line/60 pt-5">
         <Link
           href="/nha-cung-cap/lo-hang"
