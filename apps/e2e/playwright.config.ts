@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const CI = !!process.env.CI;
 
 export const API_URL = "http://localhost:4000/api";
-const SHOP_URL = "http://localhost:3000";
-const ADMIN_URL = "http://localhost:5173";
+export const SHOP_URL = "http://localhost:3000";
+export const ADMIN_URL = "http://localhost:5173";
 
 // Tự bật api + shop + admin (dùng lại server đang chạy nếu đã `pnpm dev` ở máy); API giữ dữ liệu trong bộ nhớ nên chạy tuần tự.
 export default defineConfig({
@@ -30,6 +30,12 @@ export default defineConfig({
       name: "admin",
       testDir: "tests/admin",
       use: { ...devices["Desktop Chrome"], baseURL: ADMIN_URL },
+    },
+    {
+      // Kịch bản xuyên shop + admin: không có baseURL, spec dùng SHOP_URL/ADMIN_URL.
+      name: "kich-ban",
+      testDir: "tests/kich-ban",
+      use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: [
