@@ -1110,3 +1110,20 @@ lộ quyền.
 **Đánh đổi:** dùng lại server đang chạy nhanh hơn nhưng phụ thuộc cấu hình của server đó: shop/admin đang trỏ API
 khác (vd server giả cổng 4100) thì mọi bước gọi API trong test báo "Không kết nối được máy chủ". Chưa thêm bước e2e
 vào CI.
+
+### Quy trình git: squash vào develop, đồng bộ bằng rebase, bỏ tiền tố ngày — 2026-10-27
+**Quyết định:**
+- Gộp PR vào `develop` bằng squash (nhánh nhiều người cùng làm: merge commit); `develop` vào `main` bằng merge commit.
+- Đồng bộ nhánh feature với `develop` bằng `git pull --rebase`; không merge `develop` ngược vào nhánh. Xoá nhánh sau khi gộp.
+- Thông điệp commit và tiêu đề PR bằng tiếng Việt, một mục đích, không tiền tố ngày (`19/10: …`), không bắt buộc
+  Conventional Commits.
+- Quy tắc cho Claude: chỉ push nhánh feature, không force-push, không `--no-verify`, không tự merge PR.
+**Bối cảnh:** README đã ghi "rebase mỗi sáng" nhưng log có nhiều merge commit `develop` vào nhánh (`3e919e9`, `670de36`,
+`d820575`), `pull.rebase` đang `false`; commit kiểu `19/10: …` và hai commit trùng thông điệp (`8bd9d4d`, `124c424`).
+**Đánh đổi:** squash gộp công của nhiều người trong một nhánh chung nên có ngoại lệ merge commit; dùng lại nhánh đã
+squash sẽ xung đột với chính squash commit của nó nên phải xoá nhánh.
+
+SỬA 2026-10-27: bỏ yêu cầu "một người duyệt" (README cũ) và ngoại lệ FE + BE cùng duyệt cho PR chạm `openapi.yaml`: CI xanh là đủ,
+người viết PR tự merge; mọi thành viên đã là collaborator. Quy tắc "không tự merge PR" ở trên chỉ còn áp dụng cho Claude: chỉ
+merge khi người dùng nói rõ. Lý do: nhóm nhỏ, duyệt chéo làm chậm; đánh đổi là không còn chốt kiểm người thứ hai, nên
+PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
