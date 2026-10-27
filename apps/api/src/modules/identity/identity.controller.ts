@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { IdentityService } from "./identity.service";
 import { CurrentUser } from "../../core/current-user.decorator";
@@ -9,13 +9,13 @@ export class IdentityController {
   constructor(private readonly identityService: IdentityService) {}
 
   @Post("auth/otp")
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(200)
   requestOtp(@Body() body: { email: string }) {
     return this.identityService.requestOtp(body.email);
   }
 
   @Post("auth/login")
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(200)
   login(@Body() body: { challengeId: string; code: string }) {
     return this.identityService.login(body.challengeId, body.code);
   }
