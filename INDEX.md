@@ -1,6 +1,7 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-10-13 (chuẩn bị prototype làm nền MVP: tiền tố `/api`, nền `apps/api` kiểm hợp đồng,
+Cập nhật lần cuối: 2026-10-21 (khu nhà cung cấp trong shop; endpoint `/seller/*`, `identity`, `operations` của API).
+Trước đó: 2026-10-13 (chuẩn bị prototype làm nền MVP: tiền tố `/api`, nền `apps/api` kiểm hợp đồng,
 13 mô-đun, test e2e; `MVP.md` mục 6; kế hoạch có tuần prototype). Cùng ngày: dựng khung monorepo prototype
 (`apps/shop`, `apps/admin`, `apps/api`, `packages/contract`, `packages/mock-data`, CI); tách báo cáo LaTeX vào `report/`; lược đồ CSDL 13 schema,
 ERD và Phụ lục K sinh từ `schema.dbml`. Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ

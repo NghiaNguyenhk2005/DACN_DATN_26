@@ -3,22 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Schema } from "@farmery/contract";
-import { api } from "@/lib/api";
-import { authedClient } from "@/lib/data/account";
-import { problemMessage } from "@/lib/problem";
-
-async function getClient() {
-  const authed = await authedClient();
-  return authed ?? api;
-}
+import { mutate } from "@/lib/data/account";
+import { loginHref } from "@/lib/session";
 
 export type CreateBatchResult = {
   ok: boolean;
   message?: string;
-  batchId?: string;
 };
 
-/** Server Action: Khai báo lô hàng mới (POST /seller/batches) */
+/** Server Action: khai báo lô mới (POST /seller/batches), xong chuyển sang trang chi tiết lô. */
 export async function createBatchAction(
   _prev: CreateBatchResult | null,
   formData: FormData,
@@ -28,55 +21,23 @@ export async function createBatchAction(
   const bestBefore = String(formData.get("bestBefore") ?? "").trim();
   const declaredQuantity = Number(formData.get("declaredQuantity") ?? 0);
 
-  if (!productId) {
-    return { ok: false, message: "Vui lòng chọn sản phẩm." };
-  }
-  if (!harvestDate) {
-    return { ok: false, message: "Vui lòng chọn ngày thu hoạch." };
-  }
-  if (!bestBefore) {
-    return { ok: false, message: "Vui lòng chọn hạn sử dụng tốt nhất (bestBefore)." };
-  }
-  if (bestBefore <= harvestDate) {
-    return { ok: false, message: "Hạn sử dụng tốt nhất phải sau ngày thu hoạch." };
-  }
-  if (declaredQuantity <= 0 || isNaN(declaredQuantity)) {
-    return { ok: false, message: "Sản lượng khai báo phải lớn hơn 0." };
+  if (!productId) return { ok: false, message: "Vui lòng chọn sản phẩm." };
+  if (!harvestDate) return { ok: false, message: "Vui lòng chọn ngày thu hoạch." };
+  if (!bestBefore) return { ok: false, message: "Vui lòng chọn hạn dùng." };
+  if (bestBefore <= harvestDate) return { ok: false, message: "Hạn dùng phải sau ngày thu hoạch." };
+  if (!(declaredQuantity > 0)) return { ok: false, message: "Sản lượng khai báo phải lớn hơn 0." };
+
+  const res = await mutate(
+    (api) => api.POST("/seller/batches", { body: { productId, harvestDate, bestBefore, declaredQuantity } }),
+    "Không tạo được lô hàng. Vui lòng kiểm tra lại thông tin.",
+  );
+  if (!res.ok) {
+    if (res.code === "UNAUTHENTICATED") redirect(loginHref("/nha-cung-cap/lo-hang/tao-moi"));
+    return { ok: false, message: res.message };
   }
 
-  let createdBatchId = "";
-
-  try {
-    const client = await getClient();
-    const { data, error, response } = await client.POST("/seller/batches", {
-      body: {
-        productId,
-        harvestDate,
-        bestBefore,
-        declaredQuantity,
-      },
-    });
-
-    if (data) {
-      createdBatchId = data.id;
-    } else {
-      const msg = problemMessage(
-        error as Schema<"Problem">,
-        response.status,
-        "Không thể tạo lô hàng. Vui lòng kiểm tra lại thông tin.",
-      );
-      return { ok: false, message: msg };
-    }
-  } catch {
-    return { ok: false, message: "Lỗi kết nối tới máy chủ API khi tạo lô." };
-  }
-
-  revalidatePath("/nha-cung-cap");
-  revalidatePath("/nha-cung-cap/lo-hang");
-  if (createdBatchId) {
-    redirect(`/nha-cung-cap/lo-hang/${createdBatchId}?thanh-cong=1`);
-  }
-  redirect("/nha-cung-cap/lo-hang");
+  revalidatePath("/nha-cung-cap", "layout");
+  redirect(`/nha-cung-cap/lo-hang/${res.data.id}?thanh-cong=1`);
 }
 
 export type AddFarmingLogResult = {
@@ -84,7 +45,7 @@ export type AddFarmingLogResult = {
   message?: string;
 };
 
-/** Server Action: Ghi nhật ký canh tác (chỉ nối thêm / đính chính) */
+/** Server Action: ghi nhật ký canh tác — chỉ nối thêm, đính chính thì trỏ `supersedesId` về dòng cũ. */
 export async function appendFarmingLogAction(
   _prev: AddFarmingLogResult | null,
   formData: FormData,
@@ -97,41 +58,21 @@ export async function appendFarmingLogAction(
 
   if (!batchId) return { ok: false, message: "Thiếu mã lô hàng." };
   if (!activityDate) return { ok: false, message: "Vui lòng chọn ngày thực hiện." };
-  const today = new Date().toISOString().slice(0, 10);
-  if (activityDate > today) return { ok: false, message: "Ngày thực hiện không được ở tương lai." };
   if (!description) return { ok: false, message: "Vui lòng nhập mô tả hoạt động." };
 
-  try {
-    const authed = await authedClient();
-    if (!authed) {
-      return {
-        ok: false,
-        message: "Vui lòng đăng nhập với tài khoản Nhà cung cấp để ghi nhật ký canh tác.",
-      };
-    }
-
-    const { data, error, response } = await authed.POST("/seller/batches/{batchId}/logs", {
-      params: { path: { batchId } },
-      body: {
-        activityDate,
-        activity,
-        description,
-        supersedesId,
-      },
-    });
-
-    if (data) {
-      revalidatePath(`/nha-cung-cap/lo-hang/${batchId}`);
-      return { ok: true, message: "Đã ghi nhật ký canh tác thành công!" };
-    }
-
-    const msg = problemMessage(
-      error as Schema<"Problem">,
-      response.status,
-      "Chưa ghi được nhật ký. Vui lòng thử lại.",
-    );
-    return { ok: false, message: msg };
-  } catch {
-    return { ok: false, message: "Lỗi kết nối tới máy chủ khi ghi nhật ký." };
+  const res = await mutate(
+    (api) =>
+      api.POST("/seller/batches/{batchId}/logs", {
+        params: { path: { batchId } },
+        body: { activityDate, activity, description, supersedesId },
+      }),
+    "Chưa ghi được nhật ký. Vui lòng thử lại.",
+  );
+  if (!res.ok) {
+    if (res.code === "UNAUTHENTICATED") redirect(loginHref(`/nha-cung-cap/lo-hang/${batchId}`));
+    return { ok: false, message: res.message };
   }
+
+  revalidatePath(`/nha-cung-cap/lo-hang/${batchId}`);
+  return { ok: true, message: supersedesId ? "Đã lưu bản đính chính." : "Đã ghi nhật ký canh tác." };
 }

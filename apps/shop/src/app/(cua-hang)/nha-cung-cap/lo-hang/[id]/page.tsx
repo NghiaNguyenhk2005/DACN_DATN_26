@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import type { Schema } from "@farmery/contract";
 import { getSellerBatch, getSellerBatchLogs } from "@/lib/data/seller";
+import { formatDateTimeVi, formatDateVi } from "@/lib/format";
 import { BatchQrCard } from "./batch-qr-card";
 import { FarmingLogForm } from "./farming-log-form";
 
@@ -64,14 +65,9 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
   const { id } = await params;
   const { "thanh-cong": isSuccess } = await searchParams;
 
-  const [batch, logs] = await Promise.all([
-    getSellerBatch(id),
-    getSellerBatchLogs(id),
-  ]);
-
-  if (!batch) {
-    notFound();
-  }
+  const batch = await getSellerBatch(id);
+  if (!batch) notFound();
+  const logs = await getSellerBatchLogs(id);
 
   const isApproved = batch.status === "approved";
   const isPending = batch.status === "pending_review";
@@ -79,7 +75,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb & Quay lại */}
       <div className="flex items-center gap-2">
         <Link
           href="/nha-cung-cap/lo-hang"
@@ -90,7 +85,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
         </Link>
       </div>
 
-      {/* Thông báo tạo thành công nếu có param thanh-cong */}
       {isSuccess && (
         <div className="flex items-start gap-3 rounded-2xl border border-leaf-soft bg-leaf-soft/40 p-4 text-small text-ink">
           <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -103,7 +97,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
         </div>
       )}
 
-      {/* Header Lô hàng */}
       <div className="rounded-2xl border border-line bg-surface p-6 shadow-2xs">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -145,20 +138,19 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
           </Link>
         </div>
 
-        {/* Lưới thông số nhanh */}
         <div className="mt-6 grid grid-cols-2 gap-3 border-t border-line/60 pt-4 sm:grid-cols-4">
           <div className="rounded-lg bg-surface-2/60 p-3">
             <span className="flex items-center gap-1.5 text-micro text-subtle">
               <Calendar className="size-3.5" /> Ngày thu hoạch:
             </span>
-            <p className="mt-1 font-heading text-title font-bold text-ink">{batch.harvestDate}</p>
+            <p className="mt-1 font-heading text-title font-bold text-ink">{formatDateVi(batch.harvestDate)}</p>
           </div>
 
           <div className="rounded-lg bg-surface-2/60 p-3">
             <span className="flex items-center gap-1.5 text-micro text-subtle">
               <Clock className="size-3.5" /> Hạn dùng tốt nhất:
             </span>
-            <p className="mt-1 font-heading text-title font-bold text-ink">{batch.bestBefore}</p>
+            <p className="mt-1 font-heading text-title font-bold text-ink">{formatDateVi(batch.bestBefore)}</p>
           </div>
 
           <div className="rounded-lg bg-surface-2/60 p-3">
@@ -174,17 +166,16 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
             <span className="flex items-center gap-1.5 text-micro text-subtle">
               <ShieldCheck className="size-3.5" /> Trạng thái thu hồi:
             </span>
-            <p className="mt-1 font-heading text-title font-bold text-leaf">
-              {batch.recalledAt ? "Đang thu hồi" : "Bình thường (An toàn)"}
+            <p className={`mt-1 font-heading text-title font-bold ${batch.recalledAt ? "text-danger" : "text-leaf"}`}>
+              {batch.recalledAt ? `Đã thu hồi ${formatDateTimeVi(batch.recalledAt)}` : "Không"}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Khối Trạng thái duyệt & Mã QR */}
-      {isApproved && (
+      {isApproved && batch.traceUrl && (
         <section>
-          <BatchQrCard batch={batch} />
+          <BatchQrCard batch={batch} traceUrl={batch.traceUrl} />
         </section>
       )}
 
@@ -199,7 +190,7 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                 Lô hàng đang trong hàng đợi kiểm duyệt chất lượng
               </h3>
               <p className="text-small text-ink-2">
-                Hệ thống và chuyên viên thẩm định đang rà soát chỉ số nhật ký canh tác và vùng trồng Đà Lạt. Khi được phê duyệt, <strong>mã QR truy xuất nguồn gốc</strong> sẽ được kích hoạt ngay tại đây để nhà cung cấp in tem nhãn.
+                Kiểm duyệt viên đang xem thông tin lô và nhật ký canh tác. Khi lô được duyệt, <strong>mã QR truy xuất nguồn gốc</strong> hiện ngay tại đây để in tem nhãn.
               </p>
             </div>
           </div>
@@ -227,7 +218,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
         </section>
       )}
 
-      {/* Khối Nhật ký canh tác & Ghi chép nối thêm */}
       <section className="space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -241,10 +231,8 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
           </span>
         </div>
 
-        {/* Form thêm nhật ký canh tác */}
         <FarmingLogForm batchId={batch.id} existingLogs={logs} />
 
-        {/* Danh sách nhật ký đã ghi */}
         {logs.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-line bg-surface p-8 text-center text-subtle">
             <Sprout className="mx-auto size-8 text-subtle opacity-60" />
@@ -270,7 +258,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                       : "border-line bg-surface hover:shadow-xs"
                   }`}
                 >
-                  {/* Điểm nối timeline */}
                   <div
                     className={`absolute -left-[30px] top-6 size-3.5 rounded-full border-2 border-surface ${
                       isSuperseded
@@ -281,7 +268,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                     }`}
                   />
 
-                  {/* Header của một mục nhật ký */}
                   <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-line/60 pb-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
@@ -314,12 +300,11 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                       <Calendar className="size-3.5 text-subtle" />
                       <span>Ngày thực hiện:</span>
                       <strong className="font-medium text-ink">
-                        {log.activityDate}
+                        {formatDateVi(log.activityDate)}
                       </strong>
                     </div>
                   </div>
 
-                  {/* Mô tả hoạt động */}
                   <div className="pt-3">
                     <p
                       className={`text-small leading-relaxed whitespace-pre-line ${
@@ -330,7 +315,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                     </p>
                   </div>
 
-                  {/* Ảnh đính kèm nếu có */}
                   {log.imageUrls && log.imageUrls.length > 0 && (
                     <div className="mt-3.5 flex flex-wrap gap-2.5 pt-2">
                       {log.imageUrls.map((url, idx) => (
@@ -350,7 +334,6 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
                     </div>
                   )}
 
-                  {/* Thông tin người nhập */}
                   <div className="mt-3 flex items-center justify-between border-t border-line/40 pt-2.5 text-micro text-subtle">
                     <div className="flex items-center gap-1.5">
                       <UserCheck className="size-3.5 text-primary" />

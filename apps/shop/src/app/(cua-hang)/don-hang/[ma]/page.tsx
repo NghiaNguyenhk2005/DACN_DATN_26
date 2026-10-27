@@ -3,14 +3,28 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CircleCheck, CircleX, PackageCheck, TimerOff } from "lucide-react";
 import type { Schema } from "@farmery/contract";
+import { AutoRefresh } from "@/components/farmery/auto-refresh";
 import { CheckoutSteps } from "@/components/farmery/checkout-steps";
 import { isNotImplemented, NotReadyState } from "@/components/farmery/not-ready-state";
+import { OrderTimeline } from "@/components/farmery/order-timeline";
 import { PaymentPanel } from "@/components/farmery/payment-panel";
 import { getOrder, requireViewer } from "@/lib/data/account";
 import { formatDayVi, formatQty, formatSlot, formatVnd } from "@/lib/format";
+import { ORDER_STATUS_LABELS } from "@/lib/labels";
 import { traceHref } from "@/lib/slug";
 
 export const metadata: Metadata = { title: "Đơn hàng" };
+
+/** Đơn còn đang chạy trên dòng thời gian: trang tự hỏi lại API mỗi 5 giây. */
+const LIVE_STATUSES: readonly Schema<"OrderStatus">[] = [
+  "paid",
+  "packing",
+  "on_trip",
+  "handed_to_3pl",
+  "delivering",
+  "delivered",
+  "disputed",
+];
 
 export default async function OrderPage({ params }: PageProps<"/don-hang/[ma]">) {
   const { ma } = await params;
@@ -27,11 +41,20 @@ export default async function OrderPage({ params }: PageProps<"/don-hang/[ma]">)
 
   const awaitingPayment = order.status === "placed" && order.paymentOption === "prepaid" && !!order.reserveExpiresAt;
 
+  const justOrdered = awaitingPayment || order.status === "paid";
+
   return (
     <div className="pb-10">
-      <CheckoutSteps current={2} />
+      {LIVE_STATUSES.includes(order.status) && <AutoRefresh />}
+      {justOrdered ? (
+        <CheckoutSteps current={2} />
+      ) : (
+        <Link href="/don-hang" className="flex min-h-11 items-center py-3 text-small font-semibold text-primary md:py-4">
+          ← Đơn hàng của tôi
+        </Link>
+      )}
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-8">
-        <div className="min-w-0">
+        <div className="flex min-w-0 flex-col gap-5">
           {awaitingPayment ? (
             <PaymentPanel
               orderId={order.id}
@@ -44,6 +67,7 @@ export default async function OrderPage({ params }: PageProps<"/don-hang/[ma]">)
           ) : (
             <StatusPanel order={order} />
           )}
+          {!awaitingPayment && order.status !== "cancelled" && <OrderTimeline order={order} />}
         </div>
         <OrderSummaryCard order={order} />
       </div>
@@ -85,7 +109,7 @@ function StatusPanel({ order }: { order: Schema<"OrderDetail"> }) {
       ) : (
         <PackageCheck className="mx-auto mb-2 size-10 text-primary" aria-hidden />
       )}
-      <h1 className="mb-1 font-serif text-h1-sm font-bold text-ink">{paid ? "Đặt hàng thành công" : "Đơn đang được xử lý"}</h1>
+      <h1 className="mb-1 font-serif text-h1-sm font-bold text-ink">{paid ? "Đặt hàng thành công" : ORDER_STATUS_LABELS[order.status]}</h1>
       <p className="mb-1 text-small text-ink-2">
         Mã đơn <strong className="text-ink">{order.orderCode}</strong>
       </p>

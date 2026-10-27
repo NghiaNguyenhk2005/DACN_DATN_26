@@ -1047,6 +1047,56 @@ commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với
 Component dựng được tên, giỏ. Đổi địa chỉ là một lần điều hướng (báo giá lại phía máy chủ), không gọi báo giá từ
 client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lại `reserveExpiresAt` sau khi tự huỷ (`NOTES.md`).
 
+### Ứng dụng nội bộ `apps/admin`: đăng nhập, menu theo vai trò, Kiểm duyệt — 2026-10-21
+**Quyết định** (làm theo Prompt 1 của phân công 21/10). **[tạm — prototype]** là lối tắt chỉ dùng tới demo.
+- **Đăng nhập** hai bước ở màn riêng (`src/pages/login`), thay `AuthPage` dựng sẵn của Refine vốn chỉ có email + mật
+  khẩu: `POST /auth/otp` → `POST /auth/login`. Tài khoản không có vai trò `staff_*` hay `platform_owner` bị từ chối
+  ngay ở bước đăng nhập. Token và bản `Me` lưu `localStorage`; `GET /me` làm mới vai trò mỗi lần Refine đọc danh tính;
+  API trả 401 thì xoá phiên, về `/login`.
+- **Quyền theo hợp đồng:** mỗi resource khai `meta.roles` chép từ `x-roles` của thao tác chính;
+  `accessControlProvider` ẩn mục menu và chặn vào thẳng URL (màn 403). API vẫn là nơi kiểm thật.
+- **`dataProvider`** ánh xạ từng resource tới thao tác của hợp đồng qua client `@farmery/contract`, resource chưa
+  khai trả "Chức năng đang được hoàn thiện". Bảng antd phân trang theo số trang, API theo cursor: provider nhớ cursor
+  đầu mỗi trang theo bộ lọc và báo tổng giả (`trang × cỡ + 1` khi còn trang sau) để bảng hiện nút trang sau; bảng
+  dùng phân trang `simple`.
+- **Kiểm duyệt:** hàng đợi `/kiem-duyet` (mặc định lọc "Chờ duyệt", lọc loại việc, hạn xử lý quá hạn tô đỏ), chi tiết
+  `/kiem-duyet/:id` hiện lô, chứng nhận của nhà cung cấp, nhật ký (dòng bị đính chính gạch ngang, dòng đính chính có
+  nhãn). Duyệt qua hộp xác nhận; từ chối bắt buộc lý do 5–1000 ký tự như hợp đồng. Duyệt xong hiện QR dựng từ
+  `batch.traceUrl` của API (`qrcode.react` 4.2.0, cùng bản shop). Chỉ hiển thị chi tiết cho việc duyệt lô; loại khác
+  hiện thông báo chưa hỗ trợ.
+- Dịch các chữ dựng sẵn của Refine sang tiếng Việt bằng `i18nProvider` tối giản.
+- **[tạm — prototype]** Màn đăng nhập hiện `devCode` khi API trả về (chỉ có khi bật `DEMO_MODE`).
+- **[tạm — prototype]** Token nằm ở `localStorage` (ứng dụng SPA, không có máy chủ riêng để giữ cookie httpOnly như
+  shop). MVP: cookie httpOnly qua API hoặc BFF, kèm TOTP cho nhân sự nội bộ.
+
+**Đánh đổi:** tổng giả làm bảng không hiện được tổng số trang; đi thẳng tới trang N phải tải lần lượt các trang
+trước. Vai trò hiển thị menu đọc từ bản `Me` đã lưu, có thể cũ tới lần làm mới kế tiếp, nhưng API vẫn chặn nên không
+lộ quyền.
+
+### Khu nhà cung cấp `apps/shop`: theo đúng cách làm của luồng khách lẻ — 2026-10-21
+**Quyết định** (Prompt 2 của phân công 21/10; giữ nguyên giao diện BE1 dựng ở PR #31, #32).
+- `/nha-cung-cap/*` vào `proxy.ts` như `/gio-hang`; layout gọi `requireViewer()` và chỉ mở cho tài khoản có vai trò
+  `seller` kèm `supplierId` (`isSeller`), tài khoản khác thấy khối "Khu dành cho nhà cung cấp", không chuyển trang.
+- Bỏ dữ liệu dự phòng gõ cứng và nhánh gọi API không token trong `lib/data/seller.ts`: đọc qua `read()` của
+  `account.ts`, ghi qua `mutate()`; 401 về đăng nhập, lô không có (404) → `not-found.tsx` riêng, lỗi khác →
+  `error.tsx`.
+- Đầu khu lấy tên, vùng trồng, mã vùng trồng, chứng nhận còn hiệu lực từ `GET /me` + `GET /suppliers/{id}`; bỏ các
+  câu khẳng định không có trong dữ liệu ("Đã xác thực VietGAP", "từ 2024", "kết quả xét nghiệm"...).
+- QR ở trang chi tiết lô in `batch.traceUrl` của API (bản cũ ghép từ `window.location`, lệch giữa máy chủ và trình
+  duyệt). Nút "Khu nhà cung cấp" ở đầu trang chỉ hiện với tài khoản nhà cung cấp.
+
+### Đơn hàng của khách và màn Vận hành đơn — 2026-10-21
+**Quyết định** (Prompt 3 của phân công 21/10; dựng theo hợp đồng trong lúc API phần giao dịch còn trả 501).
+- Shop: `/don-hang` liệt kê đơn (`GET /orders`, "Xem đơn cũ hơn" theo `nextCursor` trên URL `?sau=`), link "Đơn hàng"
+  trong menu tài khoản. `/don-hang/[ma]` thêm "Hành trình đơn hàng" tám bước: bước đã qua lấy giờ và ghi chú từ
+  `timeline`; khiếu nại, hoàn hàng hiện thành dải cảnh báo; đơn huỷ giữ khối báo huỷ cũ, không hiện dòng thời gian.
+  Thanh bước mua hàng chỉ hiện ngay sau khi đặt (chờ thanh toán hoặc `paid`), đơn cũ có link về danh sách.
+- Đơn còn đang chạy (`paid` → `delivered`, `disputed`) tự hỏi lại API mỗi 5 giây bằng `router.refresh()` theo kế
+  hoạch prototype (SSE để giai đoạn 2); dừng hỏi khi tab bị ẩn.
+- Admin: resource "Vận hành đơn" (`/van-hanh`, vai trò `staff_operations`, `staff_warehouse` theo `x-roles`), lọc
+  theo trạng thái, chi tiết đơn có tám bước, hàng trong đơn, nhật ký trạng thái kèm nguồn. Nút chỉ hiện đúng bước kế
+  tiếp hợp đồng cho phép (không cho `placed`, `completed` và các nhánh), ghi chú không bắt buộc tối đa 500 ký tự.
+- Kiểm bằng server giả theo hợp đồng nằm ngoài repo (không commit), chuyển các thao tác khác sang API thật.
 ### Test e2e trên trình duyệt bằng Playwright, gói riêng `apps/e2e` — 2026-10-21
 **Quyết định:**
 - Gói `@farmery/e2e` (`@playwright/test` 1.63.0, cùng bản với `report/`), chỉ Chromium. Hai project `shop`, `admin`
