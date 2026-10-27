@@ -269,3 +269,158 @@ Sau prototype còn khoảng 10 tuần cho 13 mô-đun, 3 tính năng AI, bán s�
 rà bốn điều kiện giữ mã nguồn (`MVP.md` mục 6), so khối lượng đã làm trong tuần prototype với phần còn lại, và quyết
 định cắt sớm nếu cần (thứ tự cắt theo rủi ro tiến độ trong `report/backmatter/kehoach.tex`).
 Status: open
+
+### BE1: lọc theo danh mục cha gồm cả danh mục con — Claude — 2026-10-16
+`GET /products?categoryId=<danh mục cha>` trả rỗng vì API so khớp đúng `categoryId`
+(`in-memory-product.repository.ts`, bước lọc categoryId). Thanh danh mục của shop dùng 5 danh mục gốc; shop đang
+lách bằng cách hiện từng khối danh mục con. Đề xuất: lọc theo danh mục cha thì gồm mọi danh mục con, ghi rõ vào mô tả
+tham số `categoryId` trong `openapi.yaml` (PR sửa hợp đồng riêng). Làm xong thì shop bỏ được khối lách ở
+`danh-muc/[slug]/page.tsx`.
+Status: open
+
+### BE1: dữ liệu demo cho lô thu hồi và nhật ký đính chính — Claude — 2026-10-16
+`mock-data` chưa có lô nào có `recalledAt`, chưa có nhật ký nào có `supersedesId`, nên hai trạng thái này của trang
+truy xuất chưa demo được (FE mới kiểm qua proxy tạm). Đề xuất:
+- Đính chính ở lô `TRC-DTDL-2610-01`: thêm một nhật ký mới có `supersedesId` trỏ tới dòng cũ, **và** đặt
+  `superseded: true` cho chính dòng cũ — API đọc `superseded` từ dòng cũ, `isCorrection` từ `supersedesId` của dòng
+  mới (`catalog.service.ts`), thiếu một trong hai thì trang hiện sai.
+- Thu hồi ở **một lô khác** (vd `TRC-DTNZ-2610-02`), không dùng `TRC-DTDL-2610-01` — đó là lô của kịch bản demo chính,
+  thu hồi sẽ ẩn "Xem sản phẩm" và đổi huy hiệu thành "Lô đã thu hồi".
+- Lý do thu hồi hiện lấy từ `batch.rejectReason` (trường lý do từ chối duyệt), hợp đồng `Batch` không có trường lý do
+  thu hồi. Đề xuất thêm `recallReason` vào `Batch` (PR sửa hợp đồng riêng); trước đó nếu điền dữ liệu demo thì ghi
+  rõ là dùng tạm `rejectReason`.
+Status: open
+
+### BE1: tìm gần đúng quá rộng — Claude — 2026-10-16
+`q=dau tay` trả 14 sản phẩm, gồm cả trà Ô Long, khoai tây (dâu tây vẫn đứng đầu). Nguyên nhân ở
+`vietnamese-search.util.ts`: từ khoá ≤ 4 ký tự được sai 1 ký tự (Levenshtein), và khớp `includes` hai chiều
+(`qToken.includes(tToken)`) nên mọi từ ngắn trong mô tả cũng khớp. Phần lớn âm tiết tiếng Việt chỉ 2–4 ký tự: "dau"
+khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so gần đúng với từ dưới 4 ký tự, bỏ chiều
+`qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
+Status: open
+
+### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
+Từ 1/7/2025 không còn cấp huyện (Nghị quyết 1671/NQ-UBTVQH15 sắp xếp cấp xã tỉnh Lâm Đồng), nhưng `growingRegion`
+trong `mock-data` còn ghi "Huyện …", "TP. Đà Lạt". User chốt đổi sang địa giới mới ngay. Đề xuất sửa
+`suppliers.ts` (đã đối chiếu toàn văn nghị quyết, số khoản thuộc Điều 1):
+- 101: "Phường 8, TP. Đà Lạt" → "Phường Lâm Viên - Đà Lạt, Lâm Đồng" (khoản 101)
+- 102: "Thị trấn Thạnh Mỹ, Huyện Đơn Dương" → "Xã Đơn Dương, Lâm Đồng" (khoản 2)
+- 103: "Thị trấn Lạc Dương, Huyện Lạc Dương" → "Phường Lang Biang - Đà Lạt, Lâm Đồng" (khoản 103)
+- 104: "Xã Xuân Trường, TP. Đà Lạt" → "Phường Xuân Trường - Đà Lạt, Lâm Đồng" (khoản 102)
+- 105: "Xã Hiệp An, Huyện Đức Trọng" → "Xã Hiệp Thạnh, Lâm Đồng" (khoản 6)
+Bộ lọc vùng của shop đã đổi theo: Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh (khớp chứa chuỗi, bỏ dấu). Trước khi BE1
+sửa xong, "Lang Biang" và "Hiệp Thạnh" trả rỗng. Về lâu dài: so chuỗi trên địa chỉ đầy đủ dễ vỡ khi địa giới đổi tiếp
+— đề xuất hợp đồng có trường vùng trồng có cấu trúc (mã đơn vị hành chính hoặc danh mục vùng), sửa qua PR riêng.
+Status: open
+
+### BE1: `traceUrl` gõ cứng localhost — Claude — 2026-10-16
+`batches.ts` ghi `traceUrl: "http://localhost:3000/truy-xuat/..."`, trong khi hợp đồng mô tả đây là đường dẫn in vào
+QR. Màn duyệt lô của admin hiện QR theo trường này thì điện thoại quét không mở được. Đề xuất: API dựng `traceUrl`
+từ biến môi trường địa chỉ công khai của shop (vd `SHOP_PUBLIC_URL`). Shop hiện dựng QR từ host của request (đánh
+dấu tạm ở `DECISIONS.md`), nên hai nguồn QR phải thống nhất khi có biến này.
+**Cập nhật 2026-10-21:** lô duyệt qua `/admin/review-tasks/{id}/approve` (PR #30) dựng `traceUrl` từ phần tử đầu của
+`CORS_ORIGINS` — sửa được một phần, nhưng ghép nghĩa hai cấu hình khác nhau; lô sẵn trong `batches.ts` vẫn ghi
+localhost. Vẫn đề xuất biến riêng `SHOP_PUBLIC_URL`.
+Status: open
+
+### BE1: ảnh dữ liệu demo lấy từ trang ngoài — Claude — 2026-10-16
+Ảnh trong `mock-data` lấy từ 17 host ngoài (liệt kê ở `apps/shop/src/lib/image-hosts.ts`), trong đó:
+- `images.unsplash.com`: ảnh nhật ký không liên quan (lô `TRC-DTDL-2610-01` có ảnh cà chua, hoa hướng dương);
+- `encrypted-tbn0.gstatic.com`: ảnh thu nhỏ của Google;
+- `scontent.fsgn2-8.fna.fbcdn.net`: link có chữ ký, sẽ hết hạn;
+- `k-gardennongsandalat.com` (cà chua bi Cherry): không phản hồi, shop hiện ô thay thế sau khi tải lỗi.
+Cần thay bằng ảnh nhóm tự có trước demo. Đổi host thì báo FE cập nhật `image-hosts.ts` cùng lúc: host lạ vẫn hiện
+được ảnh nhưng bỏ qua tối ưu ảnh của Next (không nén, không đổi cỡ).
+Status: open
+
+### BE2: cả 13 thao tác của luồng khách lẻ còn trả 501 — Claude — 2026-10-17
+Gọi thử ngày 17/10 trên `develop`: `POST /auth/otp`, `/auth/login`, `GET /me`, `GET`/`POST /me/addresses`,
+`GET /cart`, `PUT`/`DELETE /cart/items/{id}`, `POST /checkout/quote`, `POST /orders`, `GET /orders/{id}`,
+`POST /orders/{id}/pay`, `/cancel` đều trả 501 (mô-đun `identity`, `retail`, `payment` còn rỗng). Shop đã dựng
+xong theo hợp đồng và hiện "Chức năng đang được hoàn thiện" khi gặp 501. M2 (tối 18/10) cần các thao tác này chạy
+trên API thật; khi BE2 push, FE chạy lại kịch bản kiểm thử trên API thật.
+**Cập nhật 2026-10-21:** `POST /auth/otp`, `/auth/login`, `GET /me` đã chạy (BE1 làm tạm ở mô-đun `identity`, xem mục
+"identity bản tạm" bên dưới). 10 thao tác còn lại vẫn 501; `retail`, `payment`, `inventory`, `fulfillment` còn rỗng.
+Status: open
+
+### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
+`mock-data` chưa có người dùng nào, trong khi hợp đồng cho `POST /auth/otp` trả 404 với email lạ, nên chưa ai đăng
+nhập được. Đề xuất có sẵn tài khoản `buyer_retail` email `khachle@example.com` (đúng ví dụ trong hợp đồng; kịch
+bản kiểm thử của FE dùng email này) cùng một địa chỉ mặc định ở TP.HCM để demo chọn địa chỉ. Dùng tên giả, không
+dùng thông tin người thật.
+**Cập nhật 2026-10-21:** đăng nhập được với mọi email nhờ bản tạm của `identity`, nhưng chưa có tài khoản riêng cho
+khách lẻ — xem mục "identity bản tạm" bên dưới.
+Status: open
+
+### Hợp đồng: thao tác cần đăng nhập không khai phản hồi 401/403 — Claude — 2026-10-17
+Chỉ `/auth/login` và `/me` khai 401. Khi chạy server giả có bộ kiểm phản hồi theo `openapi.yaml`, `GET /cart`
+không có token trả 401 thì bộ kiểm báo "no schema defined for status code '401'". API thật dùng cùng bộ kiểm
+(`VALIDATE_RESPONSES`) nên nhiều khả năng 401 `UNAUTHENTICATED` và 403 `FORBIDDEN_ROLE` của `AuthGuard` sẽ thành
+500 `RESPONSE_CONTRACT_MISMATCH`. BE2 kiểm bằng một test e2e gọi `GET /cart` không có token. Nếu đúng như vậy, đề
+xuất thêm `401`/`403` (`Unauthorized`, `Forbidden`) cho mọi thao tác có `security`, qua PR sửa hợp đồng riêng.
+Shop hiện coi 500 là lỗi máy chủ nên vẫn báo được, nhưng không chuyển được sang trang đăng nhập khi token hết hạn.
+Status: open
+
+### Hợp đồng: OTP sai chưa có mã lỗi riêng — Claude — 2026-10-17
+`POST /auth/login` chỉ khai 401 chung. Đề xuất thêm `OTP_INVALID`, `OTP_EXPIRED` vào danh sách `Problem.code` (PR
+sửa hợp đồng riêng) để báo "mã sai" khác "mã hết hạn". Hiện shop báo chung "Mã OTP không đúng hoặc đã hết hạn".
+Status: open
+
+### BE2: hành vi API mà shop đang dựa vào — Claude — 2026-10-17
+- `PUT /cart/items/{id}` đặt số lượng tuyệt đối (shop tự cộng dồn khi bấm Thêm); vượt lượng còn bán trả 422
+  `CART_QTY_EXCEEDS_STOCK`.
+- `POST /checkout/quote` trả 422 khi giỏ trống hoặc địa chỉ không thuộc người dùng; `codReason` là câu tiếng Việt
+  hiển thị thẳng cho khách (vd "Đơn trên 1.000.000₫ chỉ nhận thanh toán trước.").
+- `POST /orders` nhận đúng cặp `deliveryDate` + `deliverySlot` lấy từ `deliverySlots` của báo giá.
+- Đơn trả trước quá hạn bị tự huỷ thì **giữ nguyên** `reserveExpiresAt` và thêm sự kiện `cancelled` vào
+  `timeline`: shop dựa vào việc huỷ xảy ra từ lúc `reserveExpiresAt` trở đi để báo "Đã hết thời gian giữ chỗ". Nếu
+  trường này về null thì shop chỉ báo được "Đơn đã huỷ".
+- Phản hồi có header `Date` (Express bật sẵn): đồng hồ giữ chỗ dùng nó để bù lệch giờ máy người xem.
+Status: open
+
+### identity bản tạm: tài khoản, vai trò theo quy tắc email — Claude — 2026-10-21
+PR #30 (BE1) thêm `POST /auth/otp`, `/auth/login`, `GET /me` ở `identity.service.ts` để demo bước 1–2, nhưng lệch hợp
+đồng và kịch bản:
+- Email lạ không trả 404 (hợp đồng có); email chứa "admin"/"staff" thành cán bộ (`staff_moderation`,
+  `platform_owner`), mọi email khác thành cùng một người dùng `seller` + `buyer_retail` (id 201, nhà cung cấp 101) —
+  khách lẻ và nhà cung cấp là một tài khoản.
+- `GET /me` trả bản cố định theo id, email không khớp email đã đăng nhập.
+- Không tài khoản nào có `staff_operations`, `staff_warehouse` → bước 5–6 gọi `/admin/orders`, `/admin/inventory`
+  sẽ bị 403.
+Đề xuất: BE2 (chủ mô-đun `identity` theo phân công) chuyển tài khoản giả sang `mock-data`, mỗi vai trò một tài khoản
+(gồm `khachle@example.com`), email lạ 404, `GET /me` đọc theo token; báo BE1 vì `/seller/*` cần `supplierId` qua
+`IdentityService`.
+Status: open
+
+### BE1: `/seller/*` chưa theo nhà cung cấp đang đăng nhập — Claude — 2026-10-21
+`catalog.service.ts`: `listSellerProducts` gõ cứng nhà cung cấp `"101"`, `categoryId: "1"`, `unit: "kg"`;
+`listSellerBatches`, `getSellerBatch`, `createBatch`, nhật ký không kiểm lô có thuộc nhà cung cấp của người gọi. Ảnh
+nhật ký dựng `http://localhost:4000/api/media/...` gõ cứng; id lô, nhật ký, `challengeId` dùng `Date.now()` nên có
+thể trùng khi gọi liền nhau. Đề xuất: lấy `supplierId` qua `IdentityService`, lô của nhà cung cấp khác trả 404,
+`SellerProduct` lấy danh mục, đơn vị thật; id sinh bằng bộ đếm hoặc `randomUUID`.
+Status: open
+
+### Khu nhà cung cấp trong shop lệch quyết định của shop — Claude — 2026-10-21
+`/nha-cung-cap` (PR #31, #32, BE1 dựng) chạy được với API thật nhưng:
+- Không bảo vệ trang: `proxy.ts` không chặn, trang không gọi `requireViewer()`; chưa đăng nhập vẫn mở được, lời gọi
+  rơi về client không token.
+- `src/lib/data/seller.ts` có `FALLBACK_PRODUCTS`, `FALLBACK_BATCHES` gõ cứng, nuốt mọi lỗi (kể cả 401) thành dữ liệu
+  giả — trái quyết định "không dựng dữ liệu giả trong shop" (`DECISIONS.md`, 16/10 và 17/10).
+- Đầu khu gõ cứng tên HTX, "Đã xác thực VietGAP", mã vùng trồng; nút "Khu nhà cung cấp" ở đầu trang hiện với mọi người
+  dùng.
+FE sửa ở nhánh riêng, giữ nguyên giao diện.
+**Cập nhật 2026-10-21:** đã sửa ở nhánh `feat/fe-sua-khu-nha-cung-cap` — xem `DECISIONS.md` ("Khu nhà cung cấp
+`apps/shop`...").
+Status: resolved
+
+### API: `POST /auth/otp`, `/auth/login` trả 201 nên đăng nhập hỏng — Claude — 2026-10-21
+Hai thao tác thiếu `@HttpCode(200)`, Nest mặc định trả 201 cho POST, hợp đồng khai 200 → bộ kiểm phản hồi đổi
+thành 500 `RESPONSE_CONTRACT_MISMATCH`; trên API thật không ai đăng nhập được (shop lẫn admin). Test không bắt được
+vì test e2e tự ký token. Đã sửa ở nhánh `feat/fe-admin-kiem-duyet` kèm `apps/api/test/auth.e2e-spec.ts`.
+Status: resolved
+
+### BE1: mã lô sinh ra giữ chữ "Đ" — Claude — 2026-10-21
+`createBatch` lấy chữ đầu tên sản phẩm sau khi bỏ dấu bằng NFD, nhưng "Đ" không tách dấu được: "Dâu tây Hana Đà Lạt"
+→ `DTHĐ-2610-03`, mã truy xuất `TRC-DTHĐ-2610-03` nằm trong URL của QR. Đề xuất đổi "Đ/đ" → "D" trước khi lấy chữ
+đầu (như `vietnamese-search.util.ts`).
+Status: open

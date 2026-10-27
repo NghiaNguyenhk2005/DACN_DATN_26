@@ -955,3 +955,158 @@ chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm �
 tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
 đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
 build lại sau các sửa đổi báo cáo.
+
+### Giao diện công khai `apps/shop`: token, route, dữ liệu — 2026-10-16
+**Quyết định** (user chốt theo đề xuất). Đánh dấu **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10, phải
+thay ở MVP; mục không đánh dấu là cách làm giữ lâu dài.
+- Giao diện theo gói handoff Claude Design (`design_handoff_farmery_nextjs`, nằm ngoài repo): lấy nguyên token màu,
+  thang chữ, bo góc, khoảng cách, breakpoint, logo SVG và bố cục 390px. Font Be Vietnam Pro (UI) + Lora (tiêu đề).
+  Chỉ có bản sáng, bỏ khối `.dark` của shadcn. Component của gói chỉ là điểm khởi đầu, chép vào
+  `src/components/farmery/` rồi sửa theo hợp đồng; bỏ `lib/types.ts` của gói, kiểu lấy từ `Schema<K>`.
+- shadcn style base-nova (Base UI, prop `render` thay `asChild`); thêm `checkbox`, `tabs`, `sheet`, `switch`,
+  `skeleton` bằng `shadcn@4.21.0`, không kéo gói npm mới. Thêm `qrcode.react` 4.2.0 (phát hành 11/12/2024, peer
+  React `^19`, không có phụ thuộc).
+- Route: `(cua-hang)/` (trang chủ, `danh-muc/[slug]`, `san-pham/[slug]`, `tim-kiem`) dùng chung đầu/chân trang;
+  `truy-xuat/[ma]` có layout gọn riêng và `not-found.tsx`. Hợp đồng không có slug nên đường dẫn dạng `ten-<id>`
+  (vd `/san-pham/dau-tay-hana-da-lat-hop-500g-1`): chỉ đọc số id ở cuối, phần chữ để dễ đọc. Trang truy xuất tra
+  theo `traceCode` (`TRC-...`), không theo mã `FRM-...` của bản thiết kế.
+- Dữ liệu: trang công khai là Server Component, gọi API qua `src/lib/data/` (chỉ chạy phía máy chủ, client có kiểu
+  của `@farmery/contract`); 404 → `notFound()`, mất kết nối/5xx → `error.tsx` báo lỗi rõ ràng. Mọi trang gọi API
+  dùng `await connection()` để không bị dựng tĩnh lúc build và để trạng thái thu hồi có hiệu lực ngay. "Xem thêm"
+  theo `nextCursor` qua Server Action.
+- Lớp dữ liệu tạm đọc `@farmery/mock-data` khi API trả 501 đã được duyệt nhưng **không làm**: PR #26 của BE1 (16/10)
+  đã làm đủ năm thao tác công khai, không còn thao tác nào trả 501. Shop không phụ thuộc `mock-data`.
+- Theo giới hạn của hợp đồng: bộ lọc chứng nhận, vùng trồng mỗi nhóm chọn một (`cert`, `region` chỉ nhận một giá
+  trị); bỏ số đếm theo bộ lọc, tổng số, sắp xếp, phân trang số; thêm nút gạt "Còn hàng" (`inStock`). Chứng nhận dùng
+  trường `valid` của API, không tự tính từ ngày hết hạn. Thu hồi theo `recall.recalled`.
+- Nhật ký đính chính: dòng `superseded` giữ nguyên, chữ mờ, huy hiệu "Đã được đính chính"; dòng `isCorrection` có
+  huy hiệu "Bản đính chính" và câu ghi chú chung. Không xoá dòng cũ.
+- Màu warning/danger/cta-hover dùng như gói đề xuất; nút "Quét" ở ô tra nguồn gốc ẩn.
+- **[tạm — prototype]** Danh sách vùng trồng của bộ lọc là hằng số (Đà Lạt, Đơn Dương, Lạc Dương, Đức Trọng) ở
+  `src/lib/filters.ts`; API khớp `region` kiểu chứa chuỗi, bỏ dấu. MVP: lấy từ dữ liệu vùng trồng thật.
+- **[tạm — prototype]** Link tới trang chưa làm (mở gian hàng, tra cứu đơn, trợ giúp, liên hệ, gian hàng nhà cung
+  cấp, nút "Liên hệ hỗ trợ" khi thu hồi) đang ẩn; hiện lại khi có trang.
+- **[tạm — prototype]** Nút Thêm, Thêm vào giỏ, Mua ngay đúng vị trí thiết kế nhưng chưa gắn hành động (nối giỏ hàng
+  ở phiên sau).
+- **[tạm — prototype]** Nội dung theo tham số demo gõ cứng trong component: "Giao tại TP.HCM · Miễn phí giao từ
+  300.000₫ · Đặt trước 16:00", thanh toán trực tuyến hoặc COD tới 1.000.000₫, hoàn tiền phần hư hỏng trong 24 giờ.
+  MVP: đọc từ cấu hình hệ thống. Nhãn bộ lọc giá là "Khoảng giá" (đơn vị bán khác nhau), không phải "Giá mỗi kg".
+- **[tạm — prototype]** Ảnh lấy từ trang web ngoài theo `mock-data`; `images.remotePatterns` liệt kê đúng các host
+  đang dùng, ảnh lỗi hoặc host lạ hiện ô thay thế thay vì vỡ trang. Ảnh hero trang chủ là ảnh sản phẩm vào mùa đầu
+  tiên API trả về. MVP: ảnh tự lưu (MinIO) và ảnh hero riêng.
+- **[tạm — prototype]** QR ở tab nhật ký của trang chi tiết dựng từ host của request + `/truy-xuat/{traceCode}`
+  (`ProductDetail` không có `traceUrl`). MVP: dùng tên miền cấu hình.
+
+**Đánh đổi:** chọn một giá trị mỗi nhóm lọc lệch thiết kế (cho chọn nhiều); đổi sang mảng phải qua PR sửa
+`openapi.yaml` riêng. Mọi trang gọi API đều dựng theo từng request, không tận dụng cache tĩnh — chấp nhận ở prototype.
+Ghi chú đính chính không có giá trị cũ → mới, ngày sửa, người sửa như thiết kế vì `PublicFarmingLog` không có các
+trường này.
+SỬA 2026-10-17: bổ sung khi dựng trang (PR trang chủ–tìm kiếm, chi tiết–truy xuất). **[tạm — prototype]** Danh mục cha
+hiện thành từng khối theo danh mục con, vì `GET /products?categoryId=` của API chưa gồm danh mục con; danh mục lá có
+bộ lọc đầy đủ. Trang chi tiết lấy lô đang bán có hạn dùng sớm nhất cho ô thông tin lô và tab nhật ký (nhật ký qua
+`GET /public/trace/{traceCode}` của lô đó, ảnh nhà cung cấp qua `GET /suppliers/{id}`); ô "Đóng gói" của thiết kế
+đổi thành "Hạn dùng", bỏ "đã bán" và dấu xác minh nhà cung cấp vì hợp đồng không có. Dòng nhật ký có ảnh thì hiện
+tối đa ba ảnh nhỏ (thiết kế không có). Đầu trang bản điện thoại ở trang danh mục, chi tiết gọn một hàng (kính lúp thay
+ô tìm kiếm) theo "Farmery Mobile". Hàng [Bộ lọc][Sắp xếp] bản điện thoại thành [Bộ lọc][Còn hàng]. Link Đăng nhập,
+Giỏ hàng ở đầu trang giữ lại dù trang chưa có (làm ở phiên 17/10).
+SỬA 2026-10-17 (lần 2): danh sách vùng trồng **[tạm — prototype]** đổi sang địa giới cấp xã mới (Nghị quyết
+1671/NQ-UBTVQH15, hiệu lực 1/7/2025): Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh, thay cho tên huyện đã bỏ (Đơn Dương,
+Lạc Dương, Đức Trọng cũ). `growingRegion` trong `mock-data` do BE1 đổi theo (`NOTES.md`). `NOTES.md` của repo này được
+commit cùng mã nguồn để cả nhóm đọc chung — ngoại lệ so với quy ước chung không commit ghi chú nội bộ (user chốt).
+
+### Luồng khách lẻ `apps/shop`: đăng nhập, giỏ hàng, thanh toán — 2026-10-17
+**Quyết định** (user chốt theo đề xuất). **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10.
+- **Phiên:** JWT của API nằm trong cookie httpOnly `farmery_token` (SameSite=Lax, 8 giờ khớp hạn JWT). Server Action
+  đăng nhập đặt cookie, đăng xuất xoá. `Secure` chỉ bật khi trang chạy https, để demo trên điện thoại qua
+  `http://<IP LAN>` vẫn giữ được phiên. Mọi lời gọi cần token chạy phía máy chủ: đọc qua `src/lib/data/account.ts`,
+  ghi qua Server Action. Client Component không bao giờ cầm token, trình duyệt không gọi thẳng API có token.
+- **Bảo vệ trang:** `src/proxy.ts` kiểm nhanh có cookie hay không cho `/gio-hang`, `/thanh-toan`, `/don-hang/*`.
+  Kiểm thật nằm ở `requireViewer()`: trang gọi `GET /me`, 401 thì chuyển `/dang-nhap?next=…`. Server Action tự
+  kiểm lại theo cách đó.
+- **Chưa đăng nhập mà bấm Thêm hoặc Mua ngay:** chuyển `/dang-nhap?next=…&them=<listingId>:<số lượng>`. Đăng nhập
+  xong, action tự thêm vào giỏ rồi quay lại trang cũ; Mua ngay thì sang `/thanh-toan`. Thêm không được thì sang
+  `/gio-hang?loi=<mã>` kèm câu báo lỗi.
+- **Thêm vào giỏ cộng dồn:** `PUT /cart/items/{id}` đặt số lượng tuyệt đối, nên action đọc giỏ rồi đặt lại bằng số
+  cũ cộng số mới (hai lời gọi).
+- **Thanh toán:** địa chỉ đang chọn nằm trên URL (`?dia-chi=`) để Server Component lấy báo giá. Mọi số tiền lấy từ
+  `POST /checkout/quote`. COD bị khoá kèm `codReason`; khung giờ có `available: false` bị khoá. `Idempotency-Key`
+  sinh phía máy chủ mỗi lần mở trang, vì `crypto.randomUUID` của trình duyệt chỉ có trong secure context.
+- **COD và đếm ngược làm đúng theo hợp đồng:** đơn COD hợp lệ sang `paid`, vào màn "Đặt hàng thành công". Đồng hồ
+  giữ chỗ chỉ có ở đơn trả trước, tại `/don-hang/[ma]` (trang đơn hàng ngày 18/10 dùng lại route này). Bước 4 của
+  kịch bản demo: cho thấy COD đang mở với đơn dưới ngưỡng, rồi chọn trả trước để thấy đồng hồ.
+- **Đồng hồ** đếm tới `reserveExpiresAt`, bù lệch theo header `Date` của phản hồi `GET /orders/{id}`. Hết giờ thì
+  tải lại trang. Đơn trả trước chưa từng `paid`, bị huỷ từ lúc hết hạn trở đi, hiện "Đã hết thời gian giữ chỗ".
+- **API trả 501:** hiện "Chức năng đang được hoàn thiện", không dựng dữ liệu giả trong shop. Luồng được kiểm bằng
+  server giả theo hợp đồng nằm ngoài repo, không commit; chạy lại trên API thật khi BE2 xong.
+- Thêm `dropdown-menu` của shadcn (Base UI, không thêm gói npm) cho menu tài khoản ở đầu trang.
+- **[tạm — prototype]** Màn nhập OTP hiện `devCode` khi API trả về (chỉ có khi bật `DEMO_MODE`).
+- **[tạm — prototype]** Ô tỉnh/thành của form địa chỉ điền sẵn "TP. Hồ Chí Minh" (vùng giao thí điểm). MVP: chọn
+  từ danh mục đơn vị hành chính.
+
+**Đánh đổi:** thao tác có token phải đi thêm một chặng qua máy chủ Next; đổi lại token không lộ khi bị XSS và Server
+Component dựng được tên, giỏ. Đổi địa chỉ là một lần điều hướng (báo giá lại phía máy chủ), không gọi báo giá từ
+client. Nhận diện "hết giờ giữ chỗ" dựa vào việc API giữ lại `reserveExpiresAt` sau khi tự huỷ (`NOTES.md`).
+
+### Ứng dụng nội bộ `apps/admin`: đăng nhập, menu theo vai trò, Kiểm duyệt — 2026-10-21
+**Quyết định** (làm theo Prompt 1 của phân công 21/10). **[tạm — prototype]** là lối tắt chỉ dùng tới demo.
+- **Đăng nhập** hai bước ở màn riêng (`src/pages/login`), thay `AuthPage` dựng sẵn của Refine vốn chỉ có email + mật
+  khẩu: `POST /auth/otp` → `POST /auth/login`. Tài khoản không có vai trò `staff_*` hay `platform_owner` bị từ chối
+  ngay ở bước đăng nhập. Token và bản `Me` lưu `localStorage`; `GET /me` làm mới vai trò mỗi lần Refine đọc danh tính;
+  API trả 401 thì xoá phiên, về `/login`.
+- **Quyền theo hợp đồng:** mỗi resource khai `meta.roles` chép từ `x-roles` của thao tác chính;
+  `accessControlProvider` ẩn mục menu và chặn vào thẳng URL (màn 403). API vẫn là nơi kiểm thật.
+- **`dataProvider`** ánh xạ từng resource tới thao tác của hợp đồng qua client `@farmery/contract`, resource chưa
+  khai trả "Chức năng đang được hoàn thiện". Bảng antd phân trang theo số trang, API theo cursor: provider nhớ cursor
+  đầu mỗi trang theo bộ lọc và báo tổng giả (`trang × cỡ + 1` khi còn trang sau) để bảng hiện nút trang sau; bảng
+  dùng phân trang `simple`.
+- **Kiểm duyệt:** hàng đợi `/kiem-duyet` (mặc định lọc "Chờ duyệt", lọc loại việc, hạn xử lý quá hạn tô đỏ), chi tiết
+  `/kiem-duyet/:id` hiện lô, chứng nhận của nhà cung cấp, nhật ký (dòng bị đính chính gạch ngang, dòng đính chính có
+  nhãn). Duyệt qua hộp xác nhận; từ chối bắt buộc lý do 5–1000 ký tự như hợp đồng. Duyệt xong hiện QR dựng từ
+  `batch.traceUrl` của API (`qrcode.react` 4.2.0, cùng bản shop). Chỉ hiển thị chi tiết cho việc duyệt lô; loại khác
+  hiện thông báo chưa hỗ trợ.
+- Dịch các chữ dựng sẵn của Refine sang tiếng Việt bằng `i18nProvider` tối giản.
+- **[tạm — prototype]** Màn đăng nhập hiện `devCode` khi API trả về (chỉ có khi bật `DEMO_MODE`).
+- **[tạm — prototype]** Token nằm ở `localStorage` (ứng dụng SPA, không có máy chủ riêng để giữ cookie httpOnly như
+  shop). MVP: cookie httpOnly qua API hoặc BFF, kèm TOTP cho nhân sự nội bộ.
+
+**Đánh đổi:** tổng giả làm bảng không hiện được tổng số trang; đi thẳng tới trang N phải tải lần lượt các trang
+trước. Vai trò hiển thị menu đọc từ bản `Me` đã lưu, có thể cũ tới lần làm mới kế tiếp, nhưng API vẫn chặn nên không
+lộ quyền.
+
+### Khu nhà cung cấp `apps/shop`: theo đúng cách làm của luồng khách lẻ — 2026-10-21
+**Quyết định** (Prompt 2 của phân công 21/10; giữ nguyên giao diện BE1 dựng ở PR #31, #32).
+- `/nha-cung-cap/*` vào `proxy.ts` như `/gio-hang`; layout gọi `requireViewer()` và chỉ mở cho tài khoản có vai trò
+  `seller` kèm `supplierId` (`isSeller`), tài khoản khác thấy khối "Khu dành cho nhà cung cấp", không chuyển trang.
+- Bỏ dữ liệu dự phòng gõ cứng và nhánh gọi API không token trong `lib/data/seller.ts`: đọc qua `read()` của
+  `account.ts`, ghi qua `mutate()`; 401 về đăng nhập, lô không có (404) → `not-found.tsx` riêng, lỗi khác →
+  `error.tsx`.
+- Đầu khu lấy tên, vùng trồng, mã vùng trồng, chứng nhận còn hiệu lực từ `GET /me` + `GET /suppliers/{id}`; bỏ các
+  câu khẳng định không có trong dữ liệu ("Đã xác thực VietGAP", "từ 2024", "kết quả xét nghiệm"...).
+- QR ở trang chi tiết lô in `batch.traceUrl` của API (bản cũ ghép từ `window.location`, lệch giữa máy chủ và trình
+  duyệt). Nút "Khu nhà cung cấp" ở đầu trang chỉ hiện với tài khoản nhà cung cấp.
+
+### Đơn hàng của khách và màn Vận hành đơn — 2026-10-21
+**Quyết định** (Prompt 3 của phân công 21/10; dựng theo hợp đồng trong lúc API phần giao dịch còn trả 501).
+- Shop: `/don-hang` liệt kê đơn (`GET /orders`, "Xem đơn cũ hơn" theo `nextCursor` trên URL `?sau=`), link "Đơn hàng"
+  trong menu tài khoản. `/don-hang/[ma]` thêm "Hành trình đơn hàng" tám bước: bước đã qua lấy giờ và ghi chú từ
+  `timeline`; khiếu nại, hoàn hàng hiện thành dải cảnh báo; đơn huỷ giữ khối báo huỷ cũ, không hiện dòng thời gian.
+  Thanh bước mua hàng chỉ hiện ngay sau khi đặt (chờ thanh toán hoặc `paid`), đơn cũ có link về danh sách.
+- Đơn còn đang chạy (`paid` → `delivered`, `disputed`) tự hỏi lại API mỗi 5 giây bằng `router.refresh()` theo kế
+  hoạch prototype (SSE để giai đoạn 2); dừng hỏi khi tab bị ẩn.
+- Admin: resource "Vận hành đơn" (`/van-hanh`, vai trò `staff_operations`, `staff_warehouse` theo `x-roles`), lọc
+  theo trạng thái, chi tiết đơn có tám bước, hàng trong đơn, nhật ký trạng thái kèm nguồn. Nút chỉ hiện đúng bước kế
+  tiếp hợp đồng cho phép (không cho `placed`, `completed` và các nhánh), ghi chú không bắt buộc tối đa 500 ký tự.
+- Kiểm bằng server giả theo hợp đồng nằm ngoài repo (không commit), chuyển các thao tác khác sang API thật.
+### Test e2e trên trình duyệt bằng Playwright, gói riêng `apps/e2e` — 2026-10-21
+**Quyết định:**
+- Gói `@farmery/e2e` (`@playwright/test` 1.63.0, cùng bản với `report/`), chỉ Chromium. Hai project `shop`, `admin`
+  theo `baseURL`; spec đặt ở `tests/shop/`, `tests/admin/`, đặt tên theo màn (vd `dang-nhap.spec.ts`).
+- `webServer` bật api + shop + admin ở cổng mặc định; ngoài CI thì dùng lại server đang chạy. Không dùng cổng riêng
+  cho e2e vì Next 16 khoá `.next/dev`, không chạy được hai `next dev` trong cùng `apps/shop`.
+- API giữ dữ liệu trong bộ nhớ nên chạy một worker, tuần tự; `globalSetup` gọi `POST /api/dev/reset` (cần
+  `DEMO_MODE`). Đăng nhập trong test đọc `devCode` hiện trên màn, không gõ cứng.
+- Script là `e2e`, không phải `test`: `pnpm test` và CI hiện tại không chạy trình duyệt; `typecheck` của gói vẫn
+  chạy trong CI. Script gốc `pnpm e2e` build contract + mock-data qua turbo rồi gọi Playwright.
+**Đánh đổi:** dùng lại server đang chạy nhanh hơn nhưng phụ thuộc cấu hình của server đó: shop/admin đang trỏ API
+khác (vd server giả cổng 4100) thì mọi bước gọi API trong test báo "Không kết nối được máy chủ". Chưa thêm bước e2e
+vào CI.
