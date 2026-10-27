@@ -48,7 +48,7 @@ export function DashboardPage() {
   return (
     <Flex vertical gap={16}>
       <Card title="Tổng quan">
-        <Typography.Paragraph>Ứng dụng nội bộ Farmery — chọn mục trong menu theo vai trò của bạn. Màn Kho, Cấu hình sẽ thêm sau.</Typography.Paragraph>
+        <Typography.Paragraph>Ứng dụng nội bộ Farmery — chọn mục trong menu theo vai trò của bạn.</Typography.Paragraph>
         {health === undefined && <Tag>API: đang kiểm tra…</Tag>}
         {health === null && <Tag color="error">API: chưa chạy</Tag>}
         {health && <Tag color="success">API: {health.status}</Tag>}
