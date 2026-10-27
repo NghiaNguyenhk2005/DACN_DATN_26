@@ -46,7 +46,7 @@ Prototype là nền của MVP, không phải bản làm thử: xem `MVP.md` mụ
 
 - `main` chỉ nhận gộp từ `develop` ở các mốc; `develop` là nhánh tích hợp.
 - Mỗi việc một nhánh `feat/<fe|be1|be2>-<việc>`, mỗi PR không quá một ngày công; mỗi sáng đồng bộ với `develop` bằng `git pull --rebase`, không merge `develop` ngược vào nhánh.
-- PR vào `develop` cần CI xanh và một người duyệt (PR chạm `openapi.yaml` cần cả FE lẫn BE duyệt).
+- PR vào `develop` cần CI xanh; người viết PR tự merge, không cần người khác duyệt (kể cả PR chạm `openapi.yaml`, nhưng vẫn báo cả nhóm).
 - Gộp PR vào `develop` bằng squash (một PR một commit; nhánh nhiều người cùng làm thì dùng merge commit); `develop` vào `main` bằng merge commit. Xoá nhánh sau khi gộp, không dùng lại cho việc mới.
 - Một commit một mục đích, thông điệp tiếng Việt, không tiền tố ngày. Tiêu đề PR viết theo cùng quy tắc vì thành thông điệp commit squash.
 - Sau khi chốt hợp đồng (M1, 15/10), mọi thay đổi `packages/contract/openapi.yaml` đi qua PR riêng và báo cả nhóm.
