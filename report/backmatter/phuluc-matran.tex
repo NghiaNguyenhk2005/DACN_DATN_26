@@ -39,7 +39,7 @@ mục~\ref{sec:yeucauphichucnang}.
 \textbf{FR6} & Bán sỉ (RFQ, hợp đồng, giao một đợt) & Must & Medium & \textit{Integration / State Test:} RFQ chuyển trạng thái hợp lệ; xác nhận giao kết lưu đúng mã băm văn bản; giữ chỗ trên dòng tồn của nhà cung cấp. \\
 \textbf{FR7} & Thanh toán, hóa đơn (giả lập) & Must & Medium & \textit{Integration Test (môi trường thử nghiệm):} webhook cập nhật trạng thái, gửi lặp chỉ xử lý một lần; COD chỉ mở khi đủ điều kiện; hóa đơn giả lập sinh khi đơn hoàn tất. \\
 \textbf{FR8} & Giao hàng ba chặng, đổi trả, khiếu nại & Must & Medium & \textit{API Integration / E2E Test:} vận đơn GHN thử nghiệm và webhook trạng thái; chuyến trung chuyển gom đúng đơn trước giờ chốt; yêu cầu quá thời hạn bị chặn; hoàn tiền dưới ngưỡng ghi bút toán hủy. \\
-\textbf{FR9} & Trao đổi theo đơn; yêu thích \textit{(chỉ thiết kế)} & Should & High & \textit{E2E Test:} tin trao đổi gắn đúng đơn hoặc yêu cầu, có ảnh; chỉ khách và nhân viên vận hành xem được. \\
+\textbf{FR9} & Trao đổi theo đơn; yêu thích \textit{(để sau prototype)} & Should & High & \textit{E2E Test:} tin trao đổi gắn đúng đơn hoặc yêu cầu, có ảnh; chỉ khách và nhân viên vận hành xem được. \\
 \textbf{FR10} & Vận hành và quản trị nền tảng & Must & High & \textit{Functional / Security Test:} kiểm duyệt viên duyệt và xử lý vi phạm (hạn chế tài khoản có hiệu lực sau 5 ngày); nhân viên vận hành xử lý khiếu nại, thu hồi lô; quản trị viên đổi cấu hình; mọi thao tác có trong nhật ký. \\
 \textbf{FR11} & Thông báo (web, đẩy, email; SMS \textit{chỉ thiết kế}) & Must & High & \textit{Integration Test:} mỗi lần đơn chuyển trạng thái có thông báo đẩy hoặc email; cảnh báo chứng nhận sắp hết hạn và tồn thấp. \\
 \textbf{FR12.1} & AI sản phẩm tương tự & Should & Medium & \textit{Offline Evaluation:} Precision@5 $\ge 0{,}6$ trên tối thiểu 50 sản phẩm gán nhãn tay. \\
@@ -70,15 +70,19 @@ Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi v
 \endhead
 \bottomrule
 \endfoot
-\textbf{NFR1.1} & Thời gian đáp ứng p95 $< 2$ giây & Must & High & \textit{Load Testing:} Công cụ k6/JMeter mô phỏng truy vấn duyệt web thông thường. \\
+\textbf{NFR1.1} & Thời gian đáp ứng p95 $< 2$ giây; chịu 100 người dùng đồng thời & Must & High & \textit{Load / Stress Testing:} Công cụ k6/JMeter mô phỏng truy vấn duyệt web thông thường; kịch bản k6 tạo 100 CCU tìm kiếm và đặt hàng, tỷ lệ lỗi HTTP $< 1\%$, \texttt{pg\_stat\_statements} chỉ ra truy vấn chậm. \\
 \textbf{NFR1.2} & Tỷ lệ bán vượt tồn kho (Oversell) = 0\% & Must & Medium & \textit{Concurrency Testing:} 50 luồng đồng thời tranh mua 10 sản phẩm cuối cùng; kiểm tra khóa bi quan (Pessimistic lock). \\
 \textbf{NFR2.1} & Kiến trúc mở rộng vai trò không lỗi & Should & High & \textit{Regression Testing:} Chạy lại bộ kiểm thử tự động đạt 100\% PASS khi gắn thêm module mới. \\
-\textbf{NFR2.2} & Chịu tải 100 người dùng đồng thời & Must & Medium & \textit{Stress Testing:} Kịch bản k6 tạo 100 CCU đặt hàng; tỷ lệ lỗi HTTP $< 1\%$; \texttt{pg\_stat\_statements} chỉ ra truy vấn chậm. \\
+\textbf{NFR2.2} & Mở rộng theo chiều ngang \textit{(chỉ thiết kế)} & Could & Medium & \textit{Design Review:} Rà soát máy chủ không giữ trạng thái phiên trong bộ nhớ; không đo trong đồ án. \\
 \textbf{NFR3.1} & Phân quyền RBAC tuyệt đối 100\% & Must & High & \textit{Security Audit Test:} Script gọi tự động 100\% endpoint nhạy cảm bằng tài khoản không có quyền $\rightarrow$ Trả về lỗi 403. \\
 \textbf{NFR3.2} & Mã hóa dữ liệu định danh (PII) & Must & High & \textit{Database Inspection:} Rà soát bảng dữ liệu đảm bảo không lưu số CCCD/MST dưới dạng plaintext. \\
+\textbf{NFR3.6} & Xác thực hai lớp cho nhân sự nội bộ & Must & Medium & \textit{Security / Manual Checklist:} 100\% tài khoản nội bộ phải qua TOTP; đăng nhập chỉ bằng mật khẩu vào \texttt{/api/admin} bị từ chối. \\
 \textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
+\textbf{NFR5.1} & Mã nguồn tách mô-đun theo nghiệp vụ & Must & High & \textit{Manual Checklist / Static Check:} mỗi mô-đun chỉ đọc ghi qua repository của mình, mô-đun khác gọi qua service; kiểm tra phụ thuộc chéo trong CI. \\
+\textbf{NFR5.2} & Tài liệu API theo OpenAPI & Must & High & \textit{Contract Check:} 100\% endpoint thuộc FR1--FR13 có trong \texttt{openapi.yaml}; CI kiểm phản hồi theo hợp đồng. \\
 \textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Buổi thử ba tác vụ với nhóm nông dân, đo bốn chỉ số hành vi (Phụ lục B); kiểm tra tiếp cận bằng axe-core. \\
 \textbf{NFR7.3} & Ứng dụng web cài đặt được (PWA) & Must & Medium & \textit{Manual Checklist:} Trên hai điện thoại thật: cài ứng dụng mua hàng lên màn hình chính, nhận thông báo đẩy, ghi nhật ký canh tác khi mất mạng và đồng bộ đúng khi có mạng lại; ứng dụng nội bộ dùng được trên điện thoại. \\
+\textbf{NFR8.1--8.5} & Tuân thủ pháp lý: thương mại điện tử, dữ liệu cá nhân, hóa đơn, thuế, lưu trữ & Must & Medium & \textit{Compliance Checklist:} đối chiếu từng nghĩa vụ ở Bảng~\ref{tab:phaply} với tính năng tương ứng; NFR8.3 kiểm trọn vẹn khi kết nối hóa đơn thật, NFR8.4 chỉ thiết kế. \\
 \textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\
 \end{longtable}
 \endgroup

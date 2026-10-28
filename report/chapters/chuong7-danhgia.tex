@@ -1,7 +1,7 @@
 \chapter{Đánh giá hệ thống}
 \label{chap:danhgia}
 
-Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery theo sáu trụ cột: kiểm thử chức năng, chất lượng mã nguồn, hiệu năng và khả năng chịu tải phía máy chủ, an toàn bảo mật, khả dụng của giao diện người dùng, và chất lượng của các mô-đun AI. Kết quả là cơ sở kết luận mức độ hoàn thiện so với các mục tiêu đặt ra tại mục~\ref{sec:muctieudanhgia}.
+Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery theo sáu trụ cột: kiểm thử chức năng, chất lượng mã nguồn, hiệu năng và khả năng chịu tải phía máy chủ, an toàn bảo mật, khả dụng của giao diện người dùng, và chất lượng của các mô-đun AI. Sáu trụ cột gộp vào bốn nhóm mục tiêu tại mục~\ref{sec:muctieudanhgia}: kiểm thử chức năng và chất lượng mã nguồn thuộc nhóm đánh giá chức năng; hiệu năng và an toàn bảo mật thuộc nhóm hiệu năng và độ tin cậy; hai trụ cột còn lại giữ nguyên nhóm. Kết quả là cơ sở kết luận mức độ hoàn thiện so với các mục tiêu đó.
 
 \section{Mục tiêu và phương pháp đánh giá}
 \label{sec:muctieuphuongphap}
@@ -22,7 +22,7 @@ Nguyên tắc chi phối toàn chương: mọi ngưỡng đối chiếu đều �
 \section{Đánh giá chức năng}
 \label{sec:danhgiachucnang}
 
-Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức năng, với ba kịch bản trọng tâm: luồng thu mua từ chào hàng tới nhập kho và mở bán; luồng bán sỉ từ yêu cầu báo giá tới giao hàng theo đợt; và luồng bán lẻ từ đặt hàng tới đổi trả.
+Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức năng, với ba kịch bản trọng tâm: luồng thu mua từ chào giá lô tới nhập kho và mở bán; luồng bán sỉ từ yêu cầu báo giá tới giao hàng theo đợt; và luồng bán lẻ từ đặt hàng tới đổi trả.
 
 % TODO: điền bảng test case và kết quả đạt/không đạt theo từng nhóm yêu cầu chức năng. Bảng chi tiết đưa xuống phụ lục, thân chương giữ phần tổng hợp.
 
@@ -31,11 +31,11 @@ Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức n�
 
 \subsection{Hiệu năng và khả năng chịu tải}
 
-Kịch bản tải giả lập tăng dần số người dùng đồng thời thực hiện chuỗi hành vi: tìm kiếm nông sản, xem chi tiết và nhật ký canh tác, thêm giỏ hàng, tạo đơn hàng. Hai chỉ số cần báo cáo là thời gian phản hồi ở p95 (đối chiếu NFR1.1) và tỷ lệ lỗi HTTP 5xx ở mức tải mục tiêu (đối chiếu NFR2.2).
+Kịch bản tải giả lập tăng dần số người dùng đồng thời thực hiện chuỗi hành vi: tìm kiếm nông sản, xem chi tiết và nhật ký canh tác, thêm giỏ hàng, tạo đơn hàng. Hai chỉ số cần báo cáo là thời gian phản hồi ở p95 (đối chiếu NFR1.1) và tỷ lệ lỗi HTTP 5xx ở mức tải mục tiêu 100 người dùng đồng thời (cùng đối chiếu NFR1.1).
 
 Song song với kiểm thử tải, bật thống kê truy vấn sẵn có của PostgreSQL (\texttt{pg\_stat\_statements}) để tìm truy vấn chậm nhất và truy vấn bị gọi lặp nhiều lần --- nguyên nhân phổ biến nhất khiến thời gian phản hồi vượt ngưỡng.
 
-% TODO: điền số đo thực tế cho từng mức tải, kèm kết luận đạt/không đạt so với NFR1.1 và NFR2.2; liệt kê năm truy vấn tốn thời gian nhất.
+% TODO: điền số đo thực tế cho từng mức tải, kèm kết luận đạt/không đạt so với NFR1.1; liệt kê năm truy vấn tốn thời gian nhất.
 
 \subsection{Kiểm thử ràng buộc chống bán vượt tồn kho}
 

@@ -128,7 +128,7 @@ Table identity.businesses {
   verified_by bigint [ref: > identity.users.id]
   verified_at timestamp
 
-  Note: 'Hồ sơ doanh nghiệp thu mua — khách sỉ (FR1.3)'
+  Note: 'Hồ sơ doanh nghiệp mua sỉ — khách sỉ (FR1.3)'
 }
 
 Table identity.ekyc_documents {
@@ -178,7 +178,7 @@ Table identity.data_requests {
 
 Enum notification.channel {
   in_app
-  push
+  push [note: 'Để sau prototype']
   email
   sms [note: 'Chỉ thiết kế']
 }
@@ -230,7 +230,7 @@ Table notification.push_subscriptions {
   created_at timestamp [not null, default: `now()`]
   revoked_at timestamp
 
-  Note: 'Đăng ký Web Push theo chuẩn VAPID của từng trình duyệt'
+  Note: 'Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt'
 }
 
 
@@ -421,7 +421,7 @@ Table catalog.farming_logs {
   image_ids bigint[] [note: '→ media.media_files']
   published_at timestamp [note: 'Đã công khai thì không sửa trực tiếp (NFR9.1)']
   supersedes_id bigint [ref: > catalog.farming_logs.id, note: 'Bản đính chính trỏ về bản cũ']
-  entered_by bigint [not null, note: '→ identity.users | Khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập hộ']
+  entered_by bigint [not null, note: '→ identity.users | Khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập liệu thay nhà cung cấp']
   created_at timestamp [not null, default: `now()`]
 
   Note: 'Nhật ký canh tác theo lô (FR4.2)'
@@ -581,7 +581,7 @@ Table procurement.supplier_offers {
   status procurement.offer_status [not null, default: 'open']
   created_at timestamp [not null, default: `now()`]
 
-  Note: 'Chào hàng lô sắp thu hoạch'
+  Note: 'Chào giá lô sắp thu hoạch'
 }
 
 Table procurement.purchase_orders {
