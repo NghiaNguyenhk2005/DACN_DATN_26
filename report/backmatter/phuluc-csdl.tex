@@ -4,9 +4,9 @@
 \label{apdx:tudien}
 \addcontentsline{toc}{section}{Phụ lục K. Từ điển dữ liệu}
 
-Cơ sở dữ liệu gồm 65 bảng, 565 cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}; sơ đồ quan hệ ở Hình~\ref{fig:erd} và Hình~\ref{fig:erd2}. Mỗi bảng dưới đây có một dòng tiêu đề kèm mục đích, sau đó là từng cột. Quy ước ở cột thứ hai:
+Cơ sở dữ liệu gồm 65 bảng, 565 cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}; sơ đồ quan hệ từ Hình~\ref{fig:erd-tong-quan} đến Hình~\ref{fig:erd-danh-gia-van-hanh}. Mỗi bảng dưới đây có một dòng tiêu đề kèm mục đích, sau đó là từng cột. Quy ước ở cột thứ hai:
 \begin{itemize}
-    \item \textbf{PK} --- khóa chính; \textbf{FK $\to$ bảng} --- khóa ngoại tới bảng trong cùng schema (38 khóa ngoại);
+    \item \textbf{PK} --- khóa chính; \textbf{FK $\to$ bảng} --- khóa ngoại tới bảng trong cùng schema (48 khóa ngoại);
     \item \textbf{$\to$ schema.bảng} --- tham chiếu sang schema khác bằng định danh, không tạo khóa ngoại vật lý, theo ràng buộc RB3 tại mục~\ref{sec:kientruc}; tính nhất quán do mô-đun sở hữu bảng đích bảo đảm qua giao diện công khai và sự kiện;
     \item \textbf{bắt buộc} --- \texttt{NOT NULL}; \textbf{duy nhất} --- \texttt{UNIQUE}. Cột kiểu \texttt{bigint[]} lưu danh sách định danh tệp của schema \texttt{media}.
 \end{itemize}
@@ -74,7 +74,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{province} & \texttt{varchar}; bắt buộc &  \\
 \texttt{is\_\allowbreak{}default} & \texttt{boolean}; bắt buộc & Mặc định: false \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{businesses}} --- Hồ sơ doanh nghiệp thu mua — khách sỉ (FR1.3)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{businesses}} --- Hồ sơ doanh nghiệp mua sỉ — khách sỉ (FR1.3)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{owner\_\allowbreak{}user\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{users}, duy nhất, bắt buộc &  \\
 \texttt{company\_\allowbreak{}name} & \texttt{varchar}; bắt buộc &  \\
@@ -147,7 +147,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{deliveries}} --- Mỗi lần gửi qua kênh đẩy, email (FR11.1)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{notification\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{notifications}, bắt buộc &  \\
-\texttt{channel} & \texttt{enum}; bắt buộc & Giá trị: in\_app, push, email, sms (Chỉ thiết kế) \\
+\texttt{channel} & \texttt{enum}; bắt buộc & Giá trị: in\_app, push (Để sau prototype), email, sms (Chỉ thiết kế) \\
 \texttt{status} & \texttt{varchar}; bắt buộc & queued, sent, failed \\
 \texttt{attempts} & \texttt{int}; bắt buộc & Mặc định: 0 \\
 \texttt{sent\_\allowbreak{}at} & \texttt{timestamp} &  \\
@@ -155,10 +155,10 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{preferences}} --- Kênh người dùng chọn cho từng nhóm thông báo} \\
 \texttt{user\_\allowbreak{}id} & \texttt{bigint}; PK, $\to$ \texttt{identity.users} &  \\
 \texttt{event\_\allowbreak{}group} & \texttt{varchar}; PK & Nhóm sự kiện: đơn hàng, khiếu nại, có hàng, RFQ... \\
-\texttt{channel} & \texttt{enum}; PK & Giá trị: in\_app, push, email, sms (Chỉ thiết kế) \\
+\texttt{channel} & \texttt{enum}; PK & Giá trị: in\_app, push (Để sau prototype), email, sms (Chỉ thiết kế) \\
 \texttt{enabled} & \texttt{boolean}; bắt buộc & Mặc định: true \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{push\_\allowbreak{}subscriptions}} --- Đăng ký Web Push theo chuẩn VAPID của từng trình duyệt} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{push\_\allowbreak{}subscriptions}} --- Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc &  \\
 \texttt{endpoint} & \texttt{varchar}; duy nhất, bắt buộc &  \\
@@ -325,7 +325,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{image\_\allowbreak{}ids} & \texttt{bigint[]}; $\to$ \texttt{media.media\_\allowbreak{}files} &  \\
 \texttt{published\_\allowbreak{}at} & \texttt{timestamp} & Đã công khai thì không sửa trực tiếp (NFR9.1) \\
 \texttt{supersedes\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{farming\_\allowbreak{}logs} & Bản đính chính trỏ về bản cũ \\
-\texttt{entered\_\allowbreak{}by} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc & Khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập hộ \\
+\texttt{entered\_\allowbreak{}by} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc & Khác chủ hồ sơ khi nhân viên hỗ trợ vùng nhập liệu thay nhà cung cấp \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{product\_\allowbreak{}embeddings}} --- Ghi khi nhận sự kiện ProductEmbedded; dùng cho tìm kiếm ngữ nghĩa (FR12.3) và sản phẩm tương tự (FR12.1)} \\
@@ -429,7 +429,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \endhead
 \bottomrule
 \endfoot
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{supplier\_\allowbreak{}offers}} --- Chào hàng lô sắp thu hoạch} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{supplier\_\allowbreak{}offers}} --- Chào giá lô sắp thu hoạch} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{supplier\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{supplier.suppliers}, bắt buộc &  \\
 \texttt{batch\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{catalog.batches}, bắt buộc &  \\

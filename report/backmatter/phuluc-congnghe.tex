@@ -56,7 +56,7 @@ Tìm kiếm & Full-text search của PostgreSQL kèm \texttt{unaccent} và trigr
 Lưu trữ tệp & Object storage tương thích S3 (MinIO) & Tách tệp khỏi cơ sở dữ liệu, tải thẳng qua đường dẫn có chữ ký, thuận lợi khi nhân bản máy chủ & \textbf{Chọn} \\
 & Lưu trong cơ sở dữ liệu & Làm phình dung lượng, chậm sao lưu & Không chọn \\
 & Lưu trên đĩa máy chủ ứng dụng & Cản trở việc nhân bản khi mở rộng & Không chọn \\
-Đệm và hàng đợi & Redis & Một thành phần phục vụ cả cache lẫn hàng đợi tác vụ nền & \textbf{Chọn} \\
+Hàng đợi sự kiện và cache & Redis & Một thành phần phục vụ cả cache lẫn hàng đợi tác vụ nền & \textbf{Chọn} \\
 & Message broker chuyên dụng & Năng lực vượt nhu cầu hiện tại & Để dành cho giai đoạn sau \\
 Dịch vụ AI & Python với FastAPI & Toàn bộ thư viện học máy thuộc hệ sinh thái Python; khai báo API có kiểu, tài liệu tự sinh & \textbf{Chọn} \\
 & Python với Flask & Nhẹ, nhưng phải tự thêm kiểm tra kiểu và tài liệu API & Không chọn \\
@@ -69,7 +69,7 @@ Vận chuyển chặng cuối & Giao Hàng Nhanh (môi trường thử nghiệm)
 & Ahamove & Giao tức thời trong nội thành, hợp với đơn gấp hơn là giao theo khung giờ hằng ngày & Để dành cho khung giờ gấp \\
 Hóa đơn điện tử & Lớp tích hợp với bản giả lập & Kiểm thử được luồng phát hành, tra cứu mà không cần hợp đồng và chứng thư số & \textbf{Chọn} \\
 & VNPT, Viettel, MISA & Nhà cung cấp hóa đơn có API; cần hợp đồng và chứng thư số của doanh nghiệp & Chỉ thiết kế \\
-Thông báo & Web Push (VAPID) và email qua SMTP & Theo chuẩn mở, không phụ thuộc nhà cung cấp, không tốn phí theo tin & \textbf{Chọn} \\
+Thông báo & Dịch vụ đẩy của trình duyệt (Web Push, chuẩn W3C xác thực bằng VAPID) và email qua SMTP & Web Push dùng hạ tầng do hãng trình duyệt vận hành, miễn phí, Farmery không ký hợp đồng; không tốn phí theo tin; để sau prototype & \textbf{Chọn} \\
 & SMS & Tới được người không cài ứng dụng, nhưng tính phí theo tin & Để sau \\
 Ký số hợp đồng & Tổ chức cung cấp dịch vụ chứng thực chữ ký số công cộng & Cần hợp đồng dịch vụ; thay bằng xác nhận giao kết trong hệ thống & Hướng phát triển \\
 Truy xuất nhà nước & TraceViet theo chuẩn kết nối đã công bố & Phụ thuộc quyền kết nối chưa được cấp & Hướng phát triển \\

@@ -79,3 +79,27 @@ export const EVENT_SOURCE_LABELS: Record<Schema<"OrderStatusEvent">["source"], s
   payment_webhook: "Cổng thanh toán",
   carrier_webhook: "Đơn vị vận chuyển",
 };
+
+export const MOVEMENT_LABELS: Record<Schema<"MovementType">, string> = {
+  open_from_batch: "Mở tồn từ lô",
+  ownership_transfer: "Chuyển sở hữu",
+  return_in: "Nhập trả",
+  reserve: "Giữ chỗ",
+  release: "Nhả giữ chỗ",
+  retail_out: "Xuất bán lẻ",
+  wholesale_out: "Xuất bán sỉ",
+  write_off: "Huỷ hàng",
+  packing: "Đóng gói",
+  refund_offset: "Bù hoàn tiền",
+  recall_lock: "Khoá do thu hồi",
+};
+
+export const HOLDING_OWNER_LABELS: Record<Schema<"StockHolding">["ownerType"], string> = {
+  supplier: "Nhà cung cấp",
+  farmery: "Farmery",
+};
+
+export const HOLDING_LOCATION_LABELS: Record<Schema<"StockHolding">["locationType"], string> = {
+  supplier_site: "Tại nhà vườn",
+  farmery_warehouse: "Kho Farmery",
+};

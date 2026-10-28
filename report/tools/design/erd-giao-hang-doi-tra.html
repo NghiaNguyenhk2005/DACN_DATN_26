@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- Sinh tự động bởi gen_erd.py; ảnh rộng 980 px co về 16 cm, chữ 18,5px ~ 8,5pt. -->
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; padding:10px; width:980px; background:#fff; font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:10px; font-size:17px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:8px;}
+  .sw{width:30px; height:20px; border-radius:5px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:40px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:6px; font-size:17px; color:#4d5c55;}
+</style>
+</head>
+<body>
+  <div><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="960" height="746" viewBox="0 0 960 746"><defs></defs><rect x="2" y="8" width="956" height="726" rx="14" fill="#fbe9e9" stroke="#c23b3b" stroke-width="2.5"/>
+<text x="14" y="39" font-size="24" font-weight="800" fill="#c23b3b" text-anchor="start" font-family="Consolas,'Courier New',monospace">fulfillment</text>
+<text x="181.12" y="38" font-size="18" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">6 bảng</text>
+<polyline points="536,153 436,153 436,70.5 424,70.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="153" x2="536" y2="161" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="153" x2="536" y2="153" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="153" x2="536" y2="145" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="145" x2="517" y2="161" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="78.5" x2="434" y2="62.5" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="424,377 452,377 452,77.5 424,77.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="438" y1="377" x2="424" y2="369" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="377" x2="424" y2="377" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="377" x2="424" y2="385" stroke="#44524b" stroke-width="2.2"/>
+<line x1="443" y1="385" x2="443" y2="369" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="85.5" x2="434" y2="69.5" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="536,377 436,377 436,293 424,293" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="377" x2="536" y2="385" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="377" x2="536" y2="377" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="377" x2="536" y2="369" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="369" x2="517" y2="385" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="301" x2="434" y2="285" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="536,643 436,643 436,538 424,538" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="643" x2="536" y2="651" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="643" x2="536" y2="643" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="643" x2="536" y2="635" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="635" x2="517" y2="651" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="546" x2="434" y2="530" stroke="#44524b" stroke-width="2.2"/>
+<rect x="14" y="54" width="410" height="205" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="26" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">transfer_trips</text>
+<text x="26" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Chuyến trung chuyển xe lạnh Lâm Đồng–TP.HCM</text>
+<line x1="22" y1="119" x2="416" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">created_by</text>
+<text x="412" y="164" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ identity.users</text>
+<text x="26" y="190" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="216" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">trip_code</text>
+<text x="26" y="241" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +5 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="54" width="410" height="174" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="548" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">trip_orders</text>
+<text x="548" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Danh sách đơn của chuyến (manifest), lập sau</text>
+<text x="548" y="129" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">giờ chốt đơn</text>
+<line x1="544" y1="140" x2="938" y2="140" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="159" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">trip_id</text>
+<text x="934" y="159" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, FK → transfer_trips</text>
+<text x="548" y="185" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">order_id</text>
+<text x="934" y="185" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, → retail.orders</text>
+<text x="548" y="210" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +1 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="273" width="410" height="231" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="26" y="300" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">shipments</text>
+<text x="26" y="327" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Vận đơn chặng cuối</text>
+<line x1="22" y1="338" x2="416" y2="338" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="357" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="357" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="383" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">trip_id</text>
+<text x="412" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → transfer_trips</text>
+<text x="26" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">order_id</text>
+<text x="412" y="409" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ retail.orders</text>
+<text x="26" y="435" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="461" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">carrier_order_code</text>
+<text x="26" y="486" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +6 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="273" width="410" height="179" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="548" y="300" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">shipment_events</text>
+<text x="548" y="327" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Trạng thái 3PL đẩy về qua webhook</text>
+<line x1="544" y1="338" x2="938" y2="338" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="357" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="357" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="383" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">shipment_id</text>
+<text x="934" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → shipments</text>
+<text x="548" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="548" y="434" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +4 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="518" width="410" height="179" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="26" y="545" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">return_requests</text>
+<text x="26" y="572" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Yêu cầu đổi trả, hoàn tiền, khiếu nại đơn lẻ</text>
+<line x1="22" y1="583" x2="416" y2="583" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="602" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="602" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="628" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">order_id</text>
+<text x="412" y="628" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ retail.orders</text>
+<text x="26" y="654" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="679" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +16 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="518" width="410" height="200" rx="8" fill="#ffffff" stroke="#c23b3b" stroke-width="2.2"/>
+<text x="548" y="545" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">messages</text>
+<text x="548" y="572" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu</text>
+<text x="548" y="593" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">đổi trả</text>
+<line x1="544" y1="604" x2="938" y2="604" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="623" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="623" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="649" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">return_request_id</text>
+<text x="934" y="649" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → return_requests</text>
+<text x="548" y="675" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">order_id</text>
+<text x="934" y="675" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ retail.orders</text>
+<text x="548" y="700" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +5 cột khác (xem Phụ lục K)</text></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Bảng (khung màu theo schema)</span><span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Bảng chỉ thiết kế</span><span><i class="ln"></i>Khóa ngoại cùng schema (chân chim ở phía nhiều)</span><span><i class="ln" style="border-top:3px dashed #8a948f"></i>Tham chiếu sang schema khác (RB3)</span></div>
+  <div class="note">PK: khóa chính; FK: khóa ngoại; dòng “→ schema.bảng”: tham chiếu bằng định danh tới bảng đích, vẽ nét đứt khi đích nằm trong cùng hình. Không vẽ đường tới bảng được từ 4 bảng trở lên trỏ vào (chỉ ghi ở cột bên phải).</div>
+</body>
+</html>

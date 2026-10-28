@@ -24,7 +24,7 @@ EXTS = [
     ('Đơn vị vận chuyển nội thành', 'GHN, môi trường thử nghiệm', False, True),
     ('Dịch vụ hóa đơn điện tử', 'Bản hiện thực: giả lập', False, True),
     ('Dịch vụ email', 'SMTP', False, False),
-    ('Dịch vụ đẩy của trình duyệt', 'Web Push, chuẩn VAPID', False, False),
+    ('Dịch vụ đẩy của trình duyệt (Web Push)', 'Hãng trình duyệt vận hành, miễn phí', False, False),
     ('Dịch vụ SMS', 'OTP, thông báo qua tin nhắn', True, False),
     ('TraceViet', 'Truy xuất nguồn gốc quốc gia (Bộ NN&MT)', True, True),
     ('Tổ chức chứng thực chữ ký số', 'Ký số hợp đồng sỉ', True, True),
@@ -32,7 +32,7 @@ EXTS = [
     ('Facebook', 'Đăng nhập OAuth 2.0', True, True),
 ]
 
-SHORT = ['Cổng thanh toán', 'Vận chuyển nội thành', 'Hóa đơn điện tử', 'Email', 'Web Push',
+SHORT = ['Cổng thanh toán', 'Vận chuyển nội thành', 'Hóa đơn điện tử', 'Email', 'Đẩy của trình duyệt (Web Push)',
          'SMS', 'TraceViet', 'Chữ ký số', 'Google', 'Facebook']
 
 
@@ -68,7 +68,7 @@ def icon(both=False, dash=False, color=ARR, w=3):
 LEG_ARROWS = ('<span>%sMột chiều: chỉ gửi đi</span>' % icon() +
               '<span>%sHai chiều: có dữ liệu trả về, nhãn ghi "phần gửi; phần nhận về" theo bên gọi</span>' % icon(both=True) +
               '<span>%sTới hệ thống chỉ thiết kế</span>' % icon(both=True, dash=True, color=GREY))
-LEG_EXT = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài có trong bản hiện thực</span>' % EXT +
+LEG_EXT = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực (MVP)</span>' % EXT +
            '<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>Hệ thống ngoài chỉ thiết kế</span>' % DES)
 LEG_PERSON = '<span><i class="sw" style="background:%s;border-color:%s;border-radius:14px"></i>Người dùng</span>' % PERSON
 
@@ -82,8 +82,8 @@ s.box(SX, SY, SW_, SH, [('Farmery', 32, 800, WHITE, False), ('[Hệ thống ph�
 persons = [
     ('Khách vãng lai', 'Chưa đăng nhập', 'Tìm kiếm, quét QR; nhận kết quả, trang truy xuất'),
     ('Khách lẻ', 'Người tiêu dùng TP.HCM', 'Gửi đơn, đổi trả, đánh giá; nhận trạng thái đơn, hóa đơn'),
-    ('Khách sỉ', 'Doanh nghiệp thu mua', 'Gửi RFQ, xác nhận hợp đồng; nhận báo giá, hợp đồng'),
-    ('Nhà cung cấp', 'Nông dân, hợp tác xã', 'Gửi sản phẩm, lô, nhật ký, chào hàng; nhận đơn thu mua, đối soát'),
+    ('Khách sỉ', 'Doanh nghiệp mua sỉ', 'Gửi RFQ, xác nhận hợp đồng; nhận báo giá, hợp đồng'),
+    ('Nhà cung cấp', 'Nông dân, hợp tác xã', 'Gửi sản phẩm, lô, nhật ký, chào giá lô; nhận đơn thu mua, đối soát'),
 ]
 for i, (n, d, lab) in enumerate(persons):
     y = SY + i * 151
@@ -110,7 +110,7 @@ bw, gap = 248, 20
 labs = ['Gửi lệnh thanh toán, hoàn tiền; nhận kết quả qua webhook',
         'Tạo vận đơn chặng cuối; nhận trạng thái qua webhook',
         'Gửi dữ liệu hóa đơn; nhận số hóa đơn, mã tra cứu',
-        'Gửi mã OTP, thư thông báo', 'Gửi thông báo đẩy',
+        'Gửi mã OTP, thư thông báo', 'Gửi thông báo đẩy qua dịch vụ của hãng trình duyệt',
         'Gửi OTP, thông báo', 'Gửi dữ liệu lô; nhận mã truy xuất',
         'Gửi hợp đồng; nhận bản ký số', 'Xác thực đăng nhập; nhận định danh', 'Xác thực đăng nhập; nhận định danh']
 for i, (n, d, des, two) in enumerate(EXTS):
@@ -120,7 +120,7 @@ for i, (n, d, des, two) in enumerate(EXTS):
     sx = SX + 30 + col * (SW_ - 60) / 4
     t = 0.36
     if not des:
-        ext(s, x, 10, bw, 160, n, d, des)
+        ext(s, x, 10, bw, 160, n, d, des, name_size=18 if i == 4 else 24, tag=(i != 4))
         link(s, [(sx, SY), (cx, 170)], both=two)
         s.label(cx + t * (sx - cx), 170 + t * (SY - 170), labs[i], 182)
     else:
@@ -131,7 +131,7 @@ for i, (n, d, des, two) in enumerate(EXTS):
 leg = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống đang thiết kế</span>' % SYSTEM) + LEG_PERSON + LEG_EXT + LEG_ARROWS
 io.open(os.path.join(OUT, 'c4-ngu-canh.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Nhãn mũi tên của người dùng viết theo góc nhìn người dùng; nhãn mũi tên tới hệ thống ngoài viết theo góc nhìn Farmery.'))
+    'Nhãn mũi tên của người dùng viết theo góc nhìn người dùng; nhãn mũi tên tới hệ thống ngoài viết theo góc nhìn Farmery. Trong mã nguồn hiện nay mới có giao diện kèm bản giả cho cổng thanh toán và kênh gửi OTP qua email.'))
 
 # ======================= MỨC 2: CONTAINER =======================
 RHT = 186
@@ -148,7 +148,7 @@ def cont(x, y, w, h, name, tech, desc, hot=False, extra=None):
           valign='top' if extra else 'middle')
 
 LX, LW = 215, 270          # cột container bên trái
-CX, CW_ = 625, 250         # ứng dụng lõi
+CX, CW_ = 625, 250         # máy chủ nghiệp vụ
 rows = {}
 y = 60
 for key, h, gap_after in [('app', RHT, 70), ('minio', RHT, 70), ('staff', RHT, 40), ('pg', RHT, 40), ('redis', RHT, 80), ('ai', RHT, 0)]:
@@ -160,7 +160,7 @@ cont(LX, rows['app'][0], LW, RHT, 'Ứng dụng mua hàng', 'Next.js, PWA', 'Ng�
 cont(LX, rows['minio'][0], LW, RHT, 'Lưu trữ tệp', 'MinIO, chuẩn S3', 'Ảnh công khai; giấy tờ riêng tư mã hóa')
 cont(LX, rows['staff'][0], LW, RHT, 'Ứng dụng nội bộ', 'React, Vite, Refine', 'Sáu vai trò nội bộ; 2FA, phiên ngắn')
 cont(LX, rows['pg'][0], LW, RHT, 'Cơ sở dữ liệu', 'PostgreSQL, pgvector', '13 schema theo mô-đun; vector sản phẩm')
-cont(LX, rows['redis'][0], LW, RHT, 'Sự kiện và cache', 'Redis', 'Hàng đợi sự kiện, tác vụ nền, cache')
+cont(LX, rows['redis'][0], LW, RHT, 'Hàng đợi sự kiện và cache (Redis)', 'Redis', 'Sự kiện, tác vụ nền, cache')
 cont(LX, rows['ai'][0], LW, RHT, 'Dịch vụ AI', 'Python, FastAPI', 'Tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá')
 
 blocks = [('Nền tảng chung:', 'identity, notification, media'), ('Nguồn cung:', 'supplier, catalog, inventory'),
@@ -169,15 +169,19 @@ blocks = [('Nền tảng chung:', 'identity, notification, media'), ('Nguồn cu
 extra = [('', 8, 400, INK, False), ('13 mô-đun, 5 khối (mức 3):', 22, 700, INK, False)]
 for b, m in blocks:
     extra += [(b, 22, 700, '#1a4f86', False), (m, 22, 400, INK, True)]
-cont(CX, CY0, CW_, CY1 - CY0, 'Ứng dụng lõi (modular monolith)', 'NestJS',
+cont(CX, CY0, CW_, CY1 - CY0, 'Máy chủ nghiệp vụ (modular monolith)', 'NestJS',
      'API REST: /api cho ứng dụng mua hàng, /api/admin cho ứng dụng nội bộ; nhận webhook của cổng thanh toán và 3PL', hot=True, extra=extra)
 
 # Người dùng (ngoài ranh giới) -> hai ứng dụng
-for key, name, desc in [('app', 'Người dùng bên ngoài', 'Vãng lai, khách lẻ, khách sỉ, nhà cung cấp'),
-                        ('staff', 'Nhân sự nội bộ', 'Sáu vai trò')]:
-    y0, h = rows[key]
-    person(s, 10, y0 - 30, 128, h + 60, name, desc, size=22)
-    link(s, [(138, y0 + h / 2), (LX, y0 + h / 2)])
+y0, h = rows['app']
+ph = (h + 60 - 4) / 2
+person(s, 10, y0 - 30, 128, ph, 'Bên mua', 'Vãng lai, khách lẻ/sỉ', size=22)
+person(s, 10, y0 - 30 + ph + 4, 128, ph, 'Nhà cung cấp', 'Nông dân, HTX', size=22)
+link(s, [(138, y0 + h / 2 - 30), (LX, y0 + h / 2 - 30)])
+link(s, [(138, y0 + h / 2 + 50), (LX, y0 + h / 2 + 50)])
+y0, h = rows['staff']
+person(s, 10, y0 - 30, 128, h + 60, 'Nhân sự nội bộ', 'Sáu vai trò, có hỗ trợ khách', size=22)
+link(s, [(138, y0 + h / 2), (LX, y0 + h / 2)])
 
 # Hai ứng dụng tải tệp thẳng lên MinIO
 mx = LX + LW / 2
@@ -189,7 +193,7 @@ s.label(mx + 108, rows['staff'][0] - 35, 'Tải ảnh nghiệm thu', 200)
 link(s, [(mx, rows['redis'][0] + RHT), (mx, rows['ai'][0])])
 s.label(mx + 108, rows['ai'][0] - 40, 'ProductChanged; vector', 200)
 
-# Container bên trái <-> ứng dụng lõi, nhãn đặt trên đường
+# Container bên trái <-> máy chủ nghiệp vụ, nhãn đặt trên đường
 labs = {'app': 'Gọi /api; nhận JSON [HTTPS]', 'minio': 'Cấp URL ký trước; xác nhận tệp, sinh WebP',
         'staff': 'Gọi /api/admin; nhận JSON [HTTPS]', 'pg': 'Đọc/ghi, khóa dòng tồn [SQL]',
         'redis': 'Phát sự kiện; nhận sự kiện, cache', 'ai': 'Truy vấn, chuỗi giá; vector, dự báo'}
@@ -200,14 +204,14 @@ for key, (y0, h) in rows.items():
 
 # Hệ thống ngoài: mỗi hệ thống một khung, một mũi tên riêng
 ex_labs = ['Lệnh thanh toán; webhook kết quả', 'Vận đơn; webhook trạng thái', 'Dữ liệu hóa đơn; số HĐ, mã tra cứu',
-           'Thư, OTP [SMTP]', 'Thông báo đẩy', 'OTP, thông báo', 'Dữ liệu lô; mã truy xuất',
+           'Thư, OTP [SMTP]', 'Thông báo đẩy [Web Push]', 'OTP, thông báo', 'Dữ liệu lô; mã truy xuất',
            'Hợp đồng; bản ký số', 'Đăng nhập; định danh', 'Đăng nhập; định danh']
 n = len(EXTS)
 eh = 100
 eg = (CY1 - CY0 - n * eh) / (n - 1)
 for i, (nm, d, des, two) in enumerate(EXTS):
     y0 = CY0 + i * (eh + eg)
-    ext(s, 1110, y0, 220, eh, SHORT[i], '', des, name_size=22)
+    ext(s, 1110, y0, 220, eh, SHORT[i], '', des, name_size=19 if i == 4 else 22)
     yy = y0 + eh / 2 + 18
     link(s, [(CX + CW_, yy), (1110, yy)], design=des, both=two)
     s.label(1008, yy, ex_labs[i], 190, color=GREY if des else '#33413a', pos='above')
@@ -217,23 +221,23 @@ leg = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container 
       LEG_PERSON + LEG_EXT + LEG_ARROWS
 io.open(os.path.join(OUT, 'c4-container.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Người dùng truy cập hai ứng dụng qua trình duyệt [HTTPS]. Tệp đi thẳng từ trình duyệt lên kho tệp qua URL ký trước, không qua ứng dụng lõi; chỉ dịch vụ AI tách khỏi ứng dụng lõi.'))
+    'Người dùng truy cập hai ứng dụng qua trình duyệt [HTTPS]. Tệp đi thẳng từ trình duyệt lên kho tệp qua URL ký trước, không qua máy chủ nghiệp vụ; chỉ dịch vụ AI tách khỏi máy chủ nghiệp vụ.'))
 
 # ======================= MỨC 3: MÔ-ĐUN (COMPONENT) =======================
 COLX = [232, 458, 684, 910]; CWD = 196
-MH = 176
+MH = 190
 R = {1: 226}
 R[2] = R[1] + MH + 140
 R[3] = R[2] + MH + 185
 R[4] = R[3] + MH + 92
 RH = {1: MH, 2: MH, 3: MH, 4: 200}
 MF_BOT = R[4] + RH[4] + 30            # đáy hàng mô-đun cuối
-CF_BOT = MF_BOT + 16                  # đáy ranh giới ứng dụng lõi
+CF_BOT = MF_BOT + 16                  # đáy ranh giới máy chủ nghiệp vụ
 YB = CF_BOT + 60                      # hàng container phía dưới
 s = Svg(W, YB + 104)
 
 s.rect(200, 10, 944, CF_BOT - 10, 'none', HOT, 2.5, 18, '12 8')
-s.text(218, 42, 'Ứng dụng lõi  [Container: NestJS]', 24, 700, HOT, 'start')
+s.text(218, 42, 'Máy chủ nghiệp vụ  [Container: NestJS]', 24, 700, HOT, 'start')
 s.box(COLX[0], 54, COLX[3] + CWD - COLX[0], 76,
       [('Lớp API: /api (ứng dụng mua hàng), /api/admin (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
       fill=CONT[0], stroke=CONT[1])
@@ -253,16 +257,16 @@ frame(0, 2, 1, 'Nguồn cung', 'cung'); frame(3, 3, 1, 'Vận hành', 'vh')
 frame(0, 3, 2, 'Giao dịch', 'gd')
 frame(0, 1, 3, 'Sau bán', 'sau')
 frame(0, 2, 4, 'Nền tảng chung', 'chung')
-mod(0, 1, 'Sản phẩm, lô', 'catalog', 'FR4', 'Lô, nhật ký, QR, tìm kiếm', 'cung')
-mod(1, 1, 'Tồn kho', 'inventory', 'FR13.2–13.6', 'Dòng tồn, sổ kho, đóng gói', 'cung')
+mod(0, 1, 'Sản phẩm, lô', 'catalog', 'FR4 (trừ 4.3)', 'Lô, nhật ký, QR, tìm kiếm', 'cung')
+mod(1, 1, 'Tồn kho', 'inventory', 'FR4.3, FR13.2–13.6', 'Dòng tồn, sổ kho, đóng gói', 'cung')
 mod(2, 1, 'Nhà cung cấp', 'supplier', 'FR2, FR3', 'Hồ sơ, chứng nhận, loại thuế', 'cung')
 mod(3, 1, 'Vận hành', 'operations', 'FR10', 'Duyệt, leo thang, cấu hình', 'vh')
-mod(0, 2, 'Thu mua', 'procurement', 'FR13.1–13.2', 'Chào hàng, đơn thu mua', 'gd')
+mod(0, 2, 'Thu mua', 'procurement', 'FR13.1–13.2', 'Chào giá lô, đơn thu mua', 'gd')
 mod(1, 2, 'Bán lẻ', 'retail', 'FR5', 'Giỏ, đơn lẻ, mua lại, báo vào mùa', 'gd')
 mod(2, 2, 'Thanh toán', 'payment', 'FR7', 'Thanh toán, hoàn tiền, HĐĐT', 'gd')
 mod(3, 2, 'Bán sỉ', 'wholesale', 'FR6', 'RFQ, hợp đồng, giao 1 đợt', 'gd')
-mod(0, 3, 'Đánh giá', 'engagement', 'FR5.5, FR9.2', 'Đánh giá, điểm uy tín', 'sau')
-mod(1, 3, 'Giao hàng', 'fulfillment', 'FR8, FR9.1', 'Chuyến, vận đơn, khiếu nại', 'sau')
+mod(0, 3, 'Đánh giá', 'engagement', 'FR5.5, FR9.2', 'Đánh giá của khách, điểm uy tín', 'sau')
+mod(1, 3, 'Giao hàng', 'fulfillment', 'FR8, FR9.1', 'Chuyến, vận đơn, đổi trả, khiếu nại', 'sau')
 mod(0, 4, 'Tài khoản', 'identity', 'FR1', 'OTP, eKYC, vai trò, đồng ý dữ liệu, 2FA', 'chung')
 mod(1, 4, 'Tệp', 'media', 'NFR1, NFR3', 'URL ký trước, kiểm tra tệp, WebP, hạn lưu', 'chung')
 mod(2, 4, 'Thông báo', 'notification', 'FR11', 'Web, đẩy, email theo kênh đăng ký', 'chung')
@@ -291,9 +295,9 @@ s.box(LXc, R[1] + 124, LWc, 272, [('Dịch vụ AI', 23, 700, INK, False), ('[Co
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1], pad=6)
 link(s, [(COLX[0], R[2] + 60), (LXc + LWc, R[2] + 60)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
-s.box(LXc, R[3] - 18, LWc, MH + 48, [('Sự kiện và cache', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
-      ('phát, nhận (Phụ lục V)', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
-link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên ứng dụng lõi
+s.box(LXc, R[3] - 18, LWc, MH + 48, [('Hàng đợi sự kiện và cache (Redis)', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
+      ('phát, nhận sự kiện', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
+link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên máy chủ nghiệp vụ
 link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3] - 18)])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', 'đăng nhập; định danh', True, name_size=22, tag=False)
 ext(s, LXc, R[4] + 104, LWc, 96, 'Facebook', 'đăng nhập; định danh', True, name_size=22, tag=False)
@@ -314,11 +318,12 @@ s.label(1000, yhd + 35, 'dữ liệu hóa đơn; số HĐ, mã tra cứu', 200, 
 ext(s, RX, R[3] + 70, RW, 130, 'Vận chuyển nội thành', '', False, name_size=22)
 link(s, [(COLX[1] + CWD, R[3] + 95), (RX, R[3] + 95)])
 s.label((COLX[1] + CWD + RX) / 2, R[3] + 95, 'vận đơn; webhook trạng thái', 240, pos='above')
-for j, (nm, des) in enumerate([('Email', False), ('Web Push', False), ('SMS', True)]):
-    yy = R[4] + j * 70
-    ext(s, RX, yy, RW, 60, nm, '', des, name_size=22, tag=False)
-    link(s, [(COLX[2] + CWD, yy + 30), (RX, yy + 30)], design=des, both=False)
-    s.label((COLX[2] + CWD + RX) / 2, yy + 30, ['thư, OTP [SMTP]', 'thông báo đẩy', 'OTP, thông báo'][j], 180, pos='above', color=GREY if des else '#33413a')
+for j, (nm, des) in enumerate([('Email', False), ('Đẩy của trình duyệt (Web Push)', False), ('SMS', True)]):
+    yy = R[4] + [0, 64, 154][j]
+    hh = [56, 84, 56][j]
+    ext(s, RX, yy, RW, hh, nm, '', des, name_size=19 if j == 1 else 22, tag=False)
+    link(s, [(COLX[2] + CWD, yy + hh // 2), (RX, yy + hh // 2)], design=des, both=False)
+    s.label((COLX[2] + CWD + RX) / 2, yy + hh // 2, ['thư, OTP [SMTP]', 'thông báo đẩy', 'OTP, thông báo'][j], 180, pos='above', color=GREY if des else '#33413a')
 
 # Hàng dưới: kho tệp dưới mô-đun Tệp, CSDL nối từ biên khung 13 mô-đun
 s.box(COLX[1] - 20, YB, CWD + 40, 92, [('Lưu trữ tệp', 23, 700, INK, False), ('[Container: MinIO]', 22, 400, '#1a4f86', False)], fill=CONT[0], stroke=CONT[1])
@@ -331,13 +336,13 @@ s.label(cx(3) + 105, CF_BOT + 30, 'đọc/ghi [SQL]', 160)
 leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-width:1.5px"></i>%s</span>' % (BLK[k][0], BLK[k][1], t)
               for k, t in [('cung', 'Nguồn cung'), ('gd', 'Giao dịch'), ('sau', 'Sau bán'), ('chung', 'Nền tảng chung'), ('vh', 'Vận hành')]) + \
       ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container</span>' % CONT) + \
-      ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài</span>' % EXT) + \
-      ('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>Chỉ thiết kế</span>' % DES) + \
+      ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực (MVP)</span>' % EXT) + \
+      ('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>Hệ thống ngoài chỉ thiết kế</span>' % DES) + \
       ('<span>%sGọi có khóa dòng tồn</span>' % icon(color=HOT, w=4)) + \
       ('<span>%sMột chiều</span><span>%sHai chiều</span>' % (icon(), icon(both=True)))
 io.open(os.path.join(OUT, 'c4-module.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Chữ đơn cách: tên schema. Mũi tên chạm biên ứng dụng lõi áp cho mọi mô-đun; dữ liệu vào, ra từng mô-đun xem Bảng 5.6, phụ thuộc khác đi qua sự kiện (Phụ lục V).'))
+    'Chữ đơn cách: tên schema. Mũi tên chạm biên máy chủ nghiệp vụ áp cho mọi mô-đun; dữ liệu vào, ra từng mô-đun xem Bảng 5.6, phụ thuộc khác đi qua sự kiện.'))
 
 # ======================= LUỒNG ĐẦU–CUỐI MỘT ĐƠN LẺ =======================
 # (khóa, tên, schema/ghi chú, kiểu): kiểu = person | mod:<khối> | ext
@@ -367,7 +372,7 @@ STEPS = [
     ('event', 'fu', 'rt', 'ShipmentStatusChanged', False),
     ('event', 'fu', 'nt', 'ShipmentStatusChanged', False),
     ('call', 'nt', 'kh', 'Thông báo đẩy, email ở mỗi trạng thái', False),
-    ('call', 'rt', 'pm', 'Đơn hoàn tất: phát hành HĐĐT giả lập', False),
+    ('call', 'rt', 'pm', 'Đơn hoàn tất: Thanh toán lập hóa đơn', False),
 ]
 HH, RH_ = 120, 70
 H_ = HH + 30 + len(STEPS) * RH_ + 20
@@ -399,11 +404,11 @@ for i, st in enumerate(STEPS, 1):
         s.label(mid, yy, '%d. %s' % (i, lab), wl, color='#6b4fa0' if ev else '#33413a', pos='above')
     y += RH_
 
-leg = (LEG_PERSON + ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun của ứng dụng lõi</span>' % BLK['gd'][1]) +
+leg = (LEG_PERSON + ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun của máy chủ nghiệp vụ</span>' % BLK['gd'][1]) +
        ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài</span>' % EXT) +
        ('<span>%sGọi trực tiếp</span>' % icon()) + ('<span>%sGọi và nhận kết quả</span>' % icon(both=True)) +
        ('<span>%sSự kiện qua Redis, mỗi bên nhận một mũi tên</span>' % icon(dash=True, color='#6b4fa0')))
 io.open(os.path.join(OUT, 'luong-don-le.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9.'))
+    'Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9. Ở bước 19, mô-đun Thanh toán gọi dịch vụ hóa đơn điện tử, là hệ thống ngoài chạy bản giả lập (hình 5.5).'))
 print('ok')

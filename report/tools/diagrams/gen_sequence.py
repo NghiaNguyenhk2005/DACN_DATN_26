@@ -256,7 +256,7 @@ Seq([('ks', 'Khách sỉ', 'ứng dụng mua hàng', 'person'), ('ws', 'Bán s�
         ]),
     ]),
 ], 'seq-hop-dong-si.html',
-    'ContractConcluded còn được payment nhận để lập yêu cầu thanh toán (Phụ lục V). Ký số qua tổ chức chứng thực và giao nhiều đợt chỉ thiết kế.')
+    'ContractConcluded còn được payment nhận để lập yêu cầu thanh toán. Ký số qua tổ chức chứng thực và giao nhiều đợt chỉ thiết kế.')
 
 # ======================= 3. ĐĂNG LÔ, DUYỆT LÔ, SINH QR =======================
 Seq([('nc', 'Nhà cung cấp', '', 'person'), ('md', 'Tệp', 'media', 'mod:chung'),

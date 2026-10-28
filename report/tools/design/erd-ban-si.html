@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- Sinh tự động bởi gen_erd.py; ảnh rộng 980 px co về 16 cm, chữ 18,5px ~ 8,5pt. -->
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; padding:10px; width:980px; background:#fff; font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:10px; font-size:17px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:8px;}
+  .sw{width:30px; height:20px; border-radius:5px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:40px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:6px; font-size:17px; color:#4d5c55;}
+</style>
+</head>
+<body>
+  <div><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="960" height="918" viewBox="0 0 960 918"><defs></defs><rect x="2" y="8" width="956" height="898" rx="14" fill="#fdf1dc" stroke="#c98a1a" stroke-width="2.5"/>
+<text x="14" y="39" font-size="24" font-weight="800" fill="#c98a1a" text-anchor="start" font-family="Consolas,'Courier New',monospace">wholesale</text>
+<text x="153.28" y="38" font-size="18" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">7 bảng</text>
+<polyline points="424,403 436,403 436,70.5 536,70.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="438" y1="403" x2="424" y2="395" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="403" x2="424" y2="403" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="403" x2="424" y2="411" stroke="#44524b" stroke-width="2.2"/>
+<line x1="443" y1="411" x2="443" y2="395" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="62.5" x2="526" y2="78.5" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="536,403 452,403 452,77.5 536,77.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="526" y1="395" x2="526" y2="411" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="69.5" x2="526" y2="85.5" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="424,596 468,596 468,312 536,312" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="438" y1="596" x2="424" y2="588" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="596" x2="424" y2="596" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="596" x2="424" y2="604" stroke="#44524b" stroke-width="2.2"/>
+<line x1="443" y1="604" x2="443" y2="588" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="304" x2="526" y2="320" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="536,596 484,596 484,319 536,319" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="596" x2="536" y2="604" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="596" x2="536" y2="596" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="596" x2="536" y2="588" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="588" x2="517" y2="604" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="311" x2="526" y2="327" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="424,789 500,789 500,326 536,326" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="434" y1="797" x2="434" y2="781" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="318" x2="526" y2="334" stroke="#44524b" stroke-width="2.2"/>
+<rect x="14" y="54" width="410" height="153" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="26" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">price_tiers</text>
+<text x="26" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Bảng giá sỉ theo bậc số lượng</text>
+<line x1="22" y1="119" x2="416" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">product_id</text>
+<text x="412" y="164" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ catalog.products</text>
+<text x="26" y="189" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +5 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="54" width="410" height="231" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="548" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">rfqs</text>
+<text x="548" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Yêu cầu báo giá</text>
+<line x1="544" y1="119" x2="938" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">business_id</text>
+<text x="934" y="164" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ identity.businesses</text>
+<text x="548" y="190" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">supplier_id</text>
+<text x="934" y="190" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ supplier.suppliers</text>
+<text x="548" y="216" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">product_id</text>
+<text x="934" y="216" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ catalog.products</text>
+<text x="548" y="242" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="548" y="267" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +4 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="299" width="410" height="153" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="26" y="326" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">rfq_messages</text>
+<text x="26" y="353" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Báo giá và trao đổi trong kênh gắn với RFQ</text>
+<line x1="22" y1="364" x2="416" y2="364" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="383" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">rfq_id</text>
+<text x="412" y="409" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → rfqs</text>
+<text x="26" y="434" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +8 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="299" width="410" height="205" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="548" y="326" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contracts</text>
+<text x="548" y="353" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Hợp đồng sinh từ mẫu chuẩn khi RFQ được chốt</text>
+<line x1="544" y1="364" x2="938" y2="364" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="383" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">rfq_id</text>
+<text x="934" y="409" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → rfqs</text>
+<text x="548" y="435" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="548" y="461" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_code</text>
+<text x="548" y="486" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +6 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="518" width="410" height="153" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="26" y="545" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_versions</text>
+<text x="26" y="572" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Mỗi lần sửa bản nháp tạo một phiên bản mới</text>
+<line x1="22" y1="583" x2="416" y2="583" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="602" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_id</text>
+<text x="412" y="602" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, FK → contracts</text>
+<text x="26" y="628" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">version</text>
+<text x="412" y="628" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="653" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +4 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="518" width="410" height="153" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="548" y="545" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_confirmations</text>
+<text x="548" y="572" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Xác nhận giao kết bằng mã dùng một lần</text>
+<line x1="544" y1="583" x2="938" y2="583" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="602" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_id</text>
+<text x="934" y="602" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, FK → contracts</text>
+<text x="548" y="628" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">party</text>
+<text x="934" y="628" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="653" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +5 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="685" width="410" height="205" rx="8" fill="#ffffff" stroke="#c98a1a" stroke-width="2.2"/>
+<text x="26" y="712" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">wholesale_orders</text>
+<text x="26" y="739" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đơn sỉ giao một đợt theo hợp đồng</text>
+<line x1="22" y1="750" x2="416" y2="750" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="769" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="769" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="795" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">contract_id</text>
+<text x="412" y="795" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → contracts</text>
+<text x="26" y="821" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">holding_id</text>
+<text x="412" y="821" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ inventory.stock_holdings</text>
+<text x="26" y="847" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="872" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +3 cột khác (xem Phụ lục K)</text></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Bảng (khung màu theo schema)</span><span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Bảng chỉ thiết kế</span><span><i class="ln"></i>Khóa ngoại cùng schema (chân chim ở phía nhiều)</span><span><i class="ln" style="border-top:3px dashed #8a948f"></i>Tham chiếu sang schema khác (RB3)</span></div>
+  <div class="note">PK: khóa chính; FK: khóa ngoại; dòng “→ schema.bảng”: tham chiếu bằng định danh tới bảng đích, vẽ nét đứt khi đích nằm trong cùng hình. Không vẽ đường tới bảng được từ 4 bảng trở lên trỏ vào (chỉ ghi ở cột bên phải).</div>
+</body>
+</html>

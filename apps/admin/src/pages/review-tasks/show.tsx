@@ -29,6 +29,10 @@ import { unwrap } from "../../lib/problem";
 
 type ReviewTaskDetail = Schema<"ReviewTaskDetail">;
 type BatchReview = NonNullable<ReviewTaskDetail["batch"]>;
+type ProductReview = NonNullable<ReviewTaskDetail["product"]>;
+type SupplierProfileReview = NonNullable<ReviewTaskDetail["supplierProfile"]>;
+type CertificationReview = NonNullable<ReviewTaskDetail["certification"]>;
+type Certification = Schema<"Certification">;
 
 const fmtDate = (v: string) => dayjs(v).format("DD/MM/YYYY");
 const fmtTime = (v: string) => dayjs(v).format("HH:mm DD/MM/YYYY");
@@ -119,6 +123,12 @@ export function ReviewTaskShow() {
 
           {task.batch ? (
             <BatchSection review={task.batch} />
+          ) : task.product ? (
+            <ProductSection review={task.product} />
+          ) : task.supplierProfile ? (
+            <SupplierProfileSection review={task.supplierProfile} />
+          ) : task.certification ? (
+            <CertificationSection review={task.certification} />
           ) : (
             <Alert type="info" showIcon message="Màn hình chưa hiển thị chi tiết cho loại việc duyệt này." />
           )}
@@ -178,25 +188,7 @@ function BatchSection({ review }: { review: BatchReview }) {
         </Descriptions>
       </Card>
 
-      <Card title="Chứng nhận của nhà cung cấp" size="small">
-        <AntList
-          dataSource={certifications}
-          locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có chứng nhận" /> }}
-          renderItem={(c) => (
-            <AntList.Item>
-              <AntList.Item.Meta
-                title={
-                  <Space wrap>
-                    {CERT_LABELS[c.type]}
-                    {c.valid ? <Tag color="green">Còn hiệu lực</Tag> : <Tag color="red">Hết hiệu lực</Tag>}
-                  </Space>
-                }
-                description={`Số ${c.certificateNumber} · ${c.issuingAuthority} · ${fmtDate(c.issuedDate)} – ${fmtDate(c.expiryDate)}`}
-              />
-            </AntList.Item>
-          )}
-        />
-      </Card>
+      <CertificationsCard certifications={certifications} />
 
       <Card title={`Nhật ký canh tác (${logs.length})`} size="small">
         {sortedLogs.length === 0 ? (
@@ -236,6 +228,134 @@ function BatchSection({ review }: { review: BatchReview }) {
           />
         )}
       </Card>
+    </Flex>
+  );
+}
+
+function CertificationsCard({ certifications }: { certifications: Certification[] }) {
+  return (
+    <Card title="Chứng nhận của nhà cung cấp" size="small">
+      <AntList
+        dataSource={certifications}
+        locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có chứng nhận" /> }}
+        renderItem={(c) => (
+          <AntList.Item>
+            <AntList.Item.Meta
+              title={
+                <Space wrap>
+                  {CERT_LABELS[c.type]}
+                  {c.valid ? <Tag color="green">Còn hiệu lực</Tag> : <Tag color="red">Hết hiệu lực</Tag>}
+                </Space>
+              }
+              description={`Số ${c.certificateNumber} · ${c.issuingAuthority} · ${fmtDate(c.issuedDate)} – ${fmtDate(c.expiryDate)}`}
+            />
+          </AntList.Item>
+        )}
+      />
+    </Card>
+  );
+}
+
+function SupplierCard({ supplier }: { supplier: Schema<"SupplierRef"> }) {
+  return (
+    <Card title="Nhà cung cấp" size="small">
+      <Descriptions size="small" column={{ xs: 1, md: 2 }}>
+        <Descriptions.Item label="Tên">{supplier.displayName}</Descriptions.Item>
+        <Descriptions.Item label="Vùng trồng">{supplier.growingRegion}</Descriptions.Item>
+      </Descriptions>
+    </Card>
+  );
+}
+
+function DocumentLink({ url, label }: { url: string | null | undefined; label: string }) {
+  return url ? (
+    <Typography.Link href={url} target="_blank" rel="noreferrer">
+      {label}
+    </Typography.Link>
+  ) : (
+    <Typography.Text type="secondary">Chưa tải lên</Typography.Text>
+  );
+}
+
+function ProductSection({ review }: { review: ProductReview }) {
+  const { product, supplier } = review;
+  return (
+    <Flex vertical gap={16}>
+      <Card title="Sản phẩm" size="small">
+        <Descriptions size="small" column={{ xs: 1, md: 2 }}>
+          <Descriptions.Item label="Tên">{product.name}</Descriptions.Item>
+          <Descriptions.Item label="Trạng thái">
+            <Tag color={REVIEW_STATUS[product.status].color}>{REVIEW_STATUS[product.status].label}</Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Danh mục">{product.categoryName}</Descriptions.Item>
+          <Descriptions.Item label="Đơn vị">{product.unit}</Descriptions.Item>
+          <Descriptions.Item label="Giá bán lẻ tham khảo">
+            {product.referenceRetailPrice != null ? `${product.referenceRetailPrice.toLocaleString("vi-VN")} ₫` : "—"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Mùa vụ">{product.seasonality ?? "—"}</Descriptions.Item>
+          {product.description && (
+            <Descriptions.Item label="Mô tả" span={2}>
+              {product.description}
+            </Descriptions.Item>
+          )}
+        </Descriptions>
+        {product.imageUrls && product.imageUrls.length > 0 && (
+          <Image.PreviewGroup>
+            <Space wrap style={{ marginTop: 12 }}>
+              {product.imageUrls.map((url) => (
+                <Image key={url} src={url} width={96} height={96} style={{ objectFit: "cover", borderRadius: 6 }} />
+              ))}
+            </Space>
+          </Image.PreviewGroup>
+        )}
+      </Card>
+      <SupplierCard supplier={supplier} />
+    </Flex>
+  );
+}
+
+function SupplierProfileSection({ review }: { review: SupplierProfileReview }) {
+  const { profile, taxCode, licenseUrl } = review;
+  return (
+    <Flex vertical gap={16}>
+      <Card title="Hồ sơ nhà cung cấp" size="small">
+        <Descriptions size="small" column={{ xs: 1, md: 2 }}>
+          <Descriptions.Item label="Tên">{profile.displayName}</Descriptions.Item>
+          <Descriptions.Item label="Vùng trồng">{profile.growingRegion}</Descriptions.Item>
+          <Descriptions.Item label="Mã số thuế">{taxCode ?? "—"}</Descriptions.Item>
+          <Descriptions.Item label="Mã vùng trồng">{profile.growingAreaCode ?? "—"}</Descriptions.Item>
+          <Descriptions.Item label="Giấy phép kinh doanh">
+            <DocumentLink url={licenseUrl} label="Xem giấy phép" />
+          </Descriptions.Item>
+          <Descriptions.Item label="Sản phẩm đang có">{profile.products.length}</Descriptions.Item>
+          <Descriptions.Item label="Giới thiệu" span={2}>
+            {profile.description}
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
+      <CertificationsCard certifications={profile.certifications} />
+    </Flex>
+  );
+}
+
+function CertificationSection({ review }: { review: CertificationReview }) {
+  const { certification: c, supplier, documentUrl } = review;
+  return (
+    <Flex vertical gap={16}>
+      <Card title="Chứng nhận" size="small">
+        <Descriptions size="small" column={{ xs: 1, md: 2 }}>
+          <Descriptions.Item label="Loại">{CERT_LABELS[c.type]}</Descriptions.Item>
+          <Descriptions.Item label="Số chứng nhận">{c.certificateNumber}</Descriptions.Item>
+          <Descriptions.Item label="Cơ quan cấp">{c.issuingAuthority}</Descriptions.Item>
+          <Descriptions.Item label="Hiệu lực">
+            {fmtDate(c.issuedDate)} – {fmtDate(c.expiryDate)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Bản scan">
+            <DocumentLink url={documentUrl} label="Xem tài liệu" />
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
+      <SupplierCard supplier={supplier} />
     </Flex>
   );
 }

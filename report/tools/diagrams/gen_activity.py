@@ -179,8 +179,8 @@ LEGEND = ('<span><svg width="30" height="30"><circle cx="15" cy="15" r="11" fill
 def thu_mua():
     a = Act([('Nhà cung cấp', 'person'), ('NV thu mua', 'staff'), ('NV kho', 'staff'), ('Hệ thống', 'sys')])
     a.n('s', 0, 0, 'start')
-    a.n('a1', 0, 1, 'act', 'Gửi chào hàng cho lô đã duyệt')
-    a.n('a2', 1, 2, 'act', 'Xem chào hàng, tồn kho, giá dự báo')
+    a.n('a1', 0, 1, 'act', 'Gửi chào giá lô đã duyệt')
+    a.n('a2', 1, 2, 'act', 'Xem chào giá lô, tồn kho, giá dự báo')
     a.n('a3', 1, 3, 'act', 'Lập đơn thu mua')
     a.n('d1', 0, 4, 'dec', 'Xác nhận đơn?')
     a.n('x1', 1, 4, 'end')

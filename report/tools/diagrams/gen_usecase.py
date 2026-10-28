@@ -84,7 +84,7 @@ def finish(s):
 
 LEG_UC = ('<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#c98a1a" stroke-width="3.4"/></svg>Trục bán lẻ</span>'
           '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#fff" stroke="#55635c" stroke-width="2"/></svg>Use case khác</span>'
-          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế hoặc sau phần hiện thực</span>'
+          '<span><svg width="60" height="28"><rect x="2" y="3" width="56" height="22" rx="11" fill="#f6f7f6" stroke="#8a948f" stroke-width="2" stroke-dasharray="6 4"/></svg>Chỉ thiết kế hoặc để sau prototype</span>'
           '<span><svg width="60" height="16"><line x1="2" y1="8" x2="44" y2="8" stroke="#44524b" stroke-width="2"/><path d="M44,2 L57,8 L44,14 z" fill="#fff" stroke="#44524b" stroke-width="1.6"/></svg>Tổng quát hóa (con làm được mọi việc của cha)</span>')
 LEG_DEP = ('<span><svg width="60" height="16"><line x1="2" y1="8" x2="54" y2="8" stroke="#44524b" stroke-width="2" stroke-dasharray="7 5"/><path d="M47,2 L57,8 L47,14" fill="none" stroke="#44524b" stroke-width="1.8"/></svg>'
            '«include»: luôn thực hiện; «extend»: chỉ khi thỏa điều kiện</span>')
@@ -101,9 +101,9 @@ def overview():
         ('B', 'B. Nguồn cung (FR2–FR4)',
          [('B1', 'Tìm kiếm, quét QR xem truy xuất', 'b'), ('B2', 'UC-B2 Đăng sản phẩm, lô, nhật ký', 'n'),
           ('B3', 'Đăng ký, xác minh, khai báo chứng nhận', 'n')],
-         [('B5', 'Hỗ trợ, nhập liệu hộ nhà cung cấp', 'n')]),
+         [('B5', 'Hỗ trợ, nhập liệu thay nhà cung cấp', 'n')]),
         ('C', 'C. Giao dịch (FR5–FR7, FR12.2, FR13)',
-         [('C5', 'Gửi chào hàng, xác nhận đơn thu mua', 'n'), ('C3', 'UC-D4 Gửi RFQ, giao kết hợp đồng sỉ', 'n'),
+         [('C5', 'Gửi chào giá lô, xác nhận đơn thu mua', 'n'), ('C3', 'UC-D4 Gửi RFQ, giao kết hợp đồng sỉ', 'n'),
           ('C8', 'Nộp ký quỹ đơn sỉ', 'd'), ('C1', 'UC-C4 Đặt hàng, thanh toán đơn lẻ', 'b'),
           ('C2', 'Mua lại, đăng ký báo vào mùa', 'b')],
          [('C9', 'Định giá bán lẻ, xem dự báo giá', 'n'), ('C6', 'UC-B5 Lập đơn thu mua, nghiệm thu', 'n'),
@@ -175,19 +175,21 @@ def overview():
     assoc(s, (FX0 + 60, U['A2']['y']), U['A2']['R'])
 
     # Tác nhân hệ thống ở góc dưới trái; mỗi đường đi riêng trong khe giữa hai cột
-    S = {'hd': sysactor(s, 430, U['E1']['y'] - 42, 'Dịch vụ HĐĐT', w=270),
-         'tt': sysactor(s, 430, U['D6']['y'] - 42, 'Cổng thanh toán', w=270),
-         '3pl': sysactor(s, 430, U['E3']['y'] - 42, 'Đơn vị vận chuyển', w=270)}
-    chan = [('hd', 'D1', 652, 0, 'L'), ('tt', 'D2', 664, -16, 'L'), ('tt', 'C1', 676, 16, 'L'), ('3pl', 'D3', 690, 0, 'R')]
-    for a, k, cxx, dy, side in chan:
+    S = {'hd': sysactor(s, 430, U['E1']['y'] - 42, 'Dịch vụ HĐĐT', w=230),
+         'tt': sysactor(s, 430, U['D6']['y'] - 42, 'Cổng thanh toán', w=230),
+         '3pl': sysactor(s, 430, U['E3']['y'] - 42, 'Đơn vị vận chuyển', w=230)}
+    chan = [('hd', 'D1', 652, 0, 'L', 'hóa đơn'), ('tt', 'D2', 664, -16, 'L', 'hoàn tiền'),
+            ('tt', 'C1', 676, 16, 'L', 'thanh toán'), ('3pl', 'D3', 690, 0, 'R', 'vận đơn')]
+    for a, k, cxx, dy, side, lab in chan:
         rx_, ry = S[a]['R']
-        poly(s, [(rx_, ry + dy), (cxx, ry + dy), (cxx, U[k]['y']),
-                 (U[k]['R'][0] if side == 'L' else U[k]['L'][0], U[k]['y'])])
+        ux = U[k]['R'][0] if side == 'L' else U[k]['L'][0]
+        poly(s, [(ux, U[k]['y']), (cxx, U[k]['y']), (cxx, ry + dy), (rx_, ry + dy)], 'open')
+        s.label((rx_ + cxx) / 2 - 8, ry + dy + (28 if dy > 0 else 0), lab, 130, size=20, pos='above')
     s.h = int(max(PB, FY1) + 16)
     leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-width:1.5px"></i>%s</span>'
                   % (PK[k][0], PK[k][1], t) for k, t in
                   [('A', 'Nền tảng chung'), ('B', 'Nguồn cung'), ('C', 'Giao dịch'), ('D', 'Sau bán'), ('E', 'Vận hành')]) + LEG_UC + \
-        '<span><svg width="40" height="28"><rect x="2" y="3" width="36" height="22" rx="4" fill="#f3f8f5" stroke="#12351f" stroke-width="1.5"/></svg>Nối từ biên khung: áp cho mọi vai trò</span>'
+        '<span><svg width="40" height="28"><rect x="2" y="3" width="36" height="22" rx="4" fill="#f3f8f5" stroke="#12351f" stroke-width="1.5"/></svg>Nối từ biên khung: áp cho mọi vai trò</span>' +         '<span><svg width="60" height="16"><line x1="2" y1="8" x2="54" y2="8" stroke="#44524b" stroke-width="2"/><path d="M47,2 L57,8 L47,14" fill="none" stroke="#44524b" stroke-width="1.8"/></svg>Use case gọi hệ thống bên ngoài (mũi tên chỉ về hệ thống, nhãn ghi nội dung gọi)</span>'
     io.open(os.path.join(OUT, 'usecase-overview.html'), 'w', encoding='utf-8').write(page(
         '', '', finish(s), leg, 'Mã UC ghi cho các use case có bảng đặc tả.'))
 
@@ -231,7 +233,7 @@ def run_detail(fname, rows, *a, **kw):
 
 def supplier():
     mains = [('m0', 'Đăng ký, xác minh danh tính (eKYC)', 'n'), ('m1', 'Tải, theo dõi chứng nhận', 'n'),
-             ('m2', 'Theo dõi tồn kho của mình', 'n'), ('m3', 'Gửi chào hàng cho Farmery', 'n'),
+             ('m2', 'Theo dõi tồn kho của mình', 'n'), ('m3', 'Gửi chào giá lô cho Farmery', 'n'),
              ('m4', 'Xác nhận đơn thu mua', 'n'), ('m5', 'Phản hồi RFQ, thương lượng', 'n'),
              ('m6', 'UC-D4 Xác nhận giao kết hợp đồng sỉ', 'n'), ('m7', 'Xem doanh thu, đối soát', 'n'),
              ('m8', 'Xem báo cáo thống kê', 'd'), ('m9', 'Đăng sản phẩm, khai báo lô', 'n'),
@@ -273,23 +275,25 @@ def wholesale():
     mains = [('m0', 'Xem giá sỉ theo MOQ', 'n'), ('m1', 'Gửi yêu cầu báo giá (RFQ)', 'n'),
              ('m2', 'Thương lượng báo giá', 'n'), ('m3', 'UC-D4 Chốt báo giá, giao kết hợp đồng', 'n'),
              ('m4', 'Theo dõi, nhận đơn sỉ một đợt', 'n'), ('m5', 'Thanh toán đơn sỉ', 'n'),
-             ('m6', 'Nộp ký quỹ', 'd'), ('m7', 'Khiếu nại đơn sỉ', 'n'), ('m8', 'Giao nhận nhiều đợt', 'd')]
+             ('m6', 'Nộp ký quỹ', 'd'), ('m7', 'Khiếu nại đơn sỉ', 'n'), ('m8', 'Giao nhận nhiều đợt', 'd'),
+             ('m9', 'Nộp hồ sơ doanh nghiệp (MST, GPKD)', 'n')]
     sides = {'s1': (1, 'Kiểm tra đạt MOQ', 'n'), 's4': (4, 'Xác nhận giao kết bằng OTP', 'n')}
     deps = [('m1', 's1', 'include'), ('m3', 's4', 'include')]
-    left = [('si', 'Khách sỉ', ['m%d' % i for i in range(9)], False, 3.4, False)]
+    left = [('si', 'Khách sỉ', ['m%d' % i for i in range(10)], False, 3.9, False)]
     right = [('ncc', 'Nhà cung cấp', ['m2', 'm3'], False, 1.8, False),
              ('tt', 'Cổng thanh toán', ['m5', 'm6'], True, 5.0, False),
-             ('ops', 'Nhân viên vận hành', ['m7'], False, 7.0, False)]
-    run_detail('usecase-nguoi-mua-si.html', 9.6, PK['B'][1], mains, sides, deps, left, right,
+             ('ops', 'Nhân viên vận hành', ['m7'], False, 7.0, False),
+             ('mod', 'Kiểm duyệt viên', ['m9'], False, 9.0, False)]
+    run_detail('usecase-nguoi-mua-si.html', 10.6, PK['B'][1], mains, sides, deps, left, right,
                note='Luồng bán sỉ 3P tối giản: giao một đợt, thanh toán thường. Nhà cung cấp là actor chính cùng khách sỉ ở bước thương lượng và giao kết.')
 
 
 def internal_supply():
-    mains = [('m0', 'Xem chào hàng của nhà cung cấp', 'n'), ('m1', 'Định giá bán lẻ', 'n'),
+    mains = [('m0', 'Xem chào giá lô của nhà cung cấp', 'n'), ('m1', 'Định giá bán lẻ', 'n'),
              ('m2', 'UC-B5 Lập đơn thu mua và nghiệm thu', 'n'), ('m3', 'Đóng gói, in tem QR và nhãn', 'n'),
              ('m4', 'Quản lý dòng tồn, sổ nhập xuất', 'n'), ('m5', 'Lập chuyến trung chuyển', 'n'),
              ('m6', 'Tạo vận đơn chặng cuối', 'n'), ('m7', 'Sơ chế, phân loại nhiều bước', 'd'),
-             ('m8', 'Kiểm kê định kỳ', 'd'), ('m9', 'Nhập liệu hộ nhà cung cấp', 'n')]
+             ('m8', 'Kiểm kê định kỳ', 'd'), ('m9', 'Nhập liệu thay nhà cung cấp', 'n')]
     sides = {'s1': (1, 'Xem dự báo giá', 'n')}
     deps = [('m1', 's1', 'include')]
     left = [('src', 'Nhân viên thu mua', ['m0', 'm1', 'm2'], False, 0.4, False),
@@ -302,7 +306,7 @@ def internal_supply():
 
 
 def internal_ops():
-    mains = [('m0', 'Duyệt hồ sơ, loại thuế, chứng nhận', 'n'), ('m1', 'UC-B4 Duyệt sản phẩm và lô', 'n'),
+    mains = [('m0', 'Duyệt hồ sơ nhà cung cấp, khách sỉ, chứng nhận', 'n'), ('m1', 'UC-B4 Duyệt sản phẩm và lô', 'n'),
              ('m2', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('m3', 'Xử lý vi phạm nội dung', 'n'),
              ('m4', 'Xử lý khiếu nại, đổi trả', 'n'), ('m5', 'Ra lệnh hoàn tiền', 'n'),
              ('m6', 'Giám sát đơn và giao hàng', 'n'), ('m7', 'Thu hồi lô', 'n'), ('m8', 'Xem báo cáo thống kê', 'd'),

@@ -4,7 +4,7 @@
 \label{apdx:sukien}
 \addcontentsline{toc}{section}{Phụ lục V. Danh mục sự kiện nghiệp vụ}
 
-Các mô-đun của ứng dụng lõi chỉ gọi nhau trực tiếp khi cần kết quả ngay trong
+Các mô-đun của máy chủ nghiệp vụ chỉ gọi nhau trực tiếp khi cần kết quả ngay trong
 cùng một giao dịch (giữ chỗ, trừ tồn, tạo giao dịch thanh toán, tạo giao hàng).
 Mọi phụ thuộc còn lại đi qua sự kiện phát vào Redis: mô-đun phát không cần biết
 ai nhận, mô-đun nhận xử lý ngoài đường giao dịch chính. Bảng~\ref{tab:sukien}
