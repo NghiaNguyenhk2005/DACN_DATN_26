@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- Sinh tự động bởi gen_erd.py; ảnh rộng 980 px co về 16 cm, chữ 18,5px ~ 8,5pt. -->
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; padding:10px; width:980px; background:#fff; font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:10px; font-size:17px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:8px;}
+  .sw{width:30px; height:20px; border-radius:5px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:40px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:6px; font-size:17px; color:#4d5c55;}
+</style>
+</head>
+<body>
+  <div><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="960" height="733" viewBox="0 0 960 733"><defs></defs><rect x="2" y="8" width="956" height="460" rx="14" fill="#eaf7ef" stroke="#1f8a4c" stroke-width="2.5"/>
+<text x="14" y="39" font-size="24" font-weight="800" fill="#1f8a4c" text-anchor="start" font-family="Consolas,'Courier New',monospace">notification</text>
+<text x="195.04" y="38" font-size="18" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">4 bảng</text>
+<rect x="2" y="480" width="956" height="241" rx="14" fill="#eaf7ef" stroke="#1f8a4c" stroke-width="2.5"/>
+<text x="14" y="511" font-size="24" font-weight="800" fill="#1f8a4c" text-anchor="start" font-family="Consolas,'Courier New',monospace">media</text>
+<text x="97.6" y="510" font-size="18" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">1 bảng</text>
+<polyline points="536,158 436,158 436,74 424,74" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="158" x2="536" y2="166" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="158" x2="536" y2="158" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="158" x2="536" y2="150" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="150" x2="517" y2="166" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="82" x2="434" y2="66" stroke="#44524b" stroke-width="2.2"/>
+<rect x="14" y="54" width="410" height="179" rx="8" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="26" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">notifications</text>
+<text x="26" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Thông báo trên giao diện</text>
+<line x1="22" y1="119" x2="416" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">user_id</text>
+<text x="412" y="164" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ identity.users</text>
+<text x="26" y="190" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">title</text>
+<text x="26" y="215" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +5 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="54" width="410" height="205" rx="8" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="548" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">deliveries</text>
+<text x="548" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Mỗi lần gửi qua kênh đẩy, email</text>
+<line x1="544" y1="119" x2="938" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">notification_id</text>
+<text x="934" y="164" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → notifications</text>
+<text x="548" y="190" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="548" y="216" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">channel</text>
+<text x="548" y="241" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +2 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="273" width="410" height="179" rx="8" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="26" y="300" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">preferences</text>
+<text x="26" y="327" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Kênh người dùng chọn cho từng nhóm thông báo</text>
+<line x1="22" y1="338" x2="416" y2="338" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="357" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">user_id</text>
+<text x="412" y="357" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, → identity.users</text>
+<text x="26" y="383" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">event_group</text>
+<text x="412" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="409" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">channel</text>
+<text x="412" y="409" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="434" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +1 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="273" width="410" height="174" rx="8" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="548" y="300" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">push_subscriptions</text>
+<text x="548" y="327" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Đăng ký nhận thông báo đẩy (Web Push, địa chỉ</text>
+<text x="548" y="348" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">nhận tin và khóa) của từng…</text>
+<line x1="544" y1="359" x2="938" y2="359" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="378" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="378" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="404" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">user_id</text>
+<text x="934" y="404" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ identity.users</text>
+<text x="548" y="429" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +6 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="526" width="410" height="179" rx="8" fill="#ffffff" stroke="#1f8a4c" stroke-width="2.2"/>
+<text x="26" y="553" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">media_files</text>
+<text x="26" y="580" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Mọi tệp trong kho tệp</text>
+<line x1="22" y1="591" x2="416" y2="591" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="610" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="610" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="636" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">owner_user_id</text>
+<text x="412" y="636" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ identity.users</text>
+<text x="26" y="662" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="687" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +9 cột khác (xem Phụ lục K)</text></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Bảng (khung màu theo schema)</span><span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Bảng chỉ thiết kế</span><span><i class="ln"></i>Khóa ngoại cùng schema (chân chim ở phía nhiều)</span><span><i class="ln" style="border-top:3px dashed #8a948f"></i>Tham chiếu sang schema khác (RB3)</span></div>
+  <div class="note">PK: khóa chính; FK: khóa ngoại; dòng “→ schema.bảng”: tham chiếu bằng định danh tới bảng đích, vẽ nét đứt khi đích nằm trong cùng hình. Không vẽ đường tới bảng được từ 4 bảng trở lên trỏ vào (chỉ ghi ở cột bên phải).</div>
+</body>
+</html>

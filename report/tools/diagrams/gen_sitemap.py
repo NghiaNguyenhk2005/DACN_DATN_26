@@ -9,12 +9,12 @@ W = 1340
 INK = '#16241e'
 GREY = '#8a948f'
 LINE = '#44524b'
-D = '*'          # tiền tố đánh dấu trang chỉ thiết kế / sau phần hiện thực
+D = '*'          # tiền tố đánh dấu trang chỉ thiết kế / để sau prototype
 
 SHOP = [
     ('Công khai', 'không cần đăng nhập', ('#e9edeb', '#4d5c55'), [
-        'Trang chủ theo mùa', 'Tìm kiếm', 'Danh mục', 'Chi tiết sản phẩm', 'Trang truy xuất QR',
-        'Hồ sơ nguồn gốc nhà cung cấp', 'Sàn sỉ', 'Đăng ký, đăng nhập', 'Giới thiệu, chính sách, biểu phí']),
+        'Đăng ký, đăng nhập', 'Trang chủ theo mùa', 'Tìm kiếm', 'Danh mục', 'Chi tiết sản phẩm',
+        'Trang truy xuất QR', 'Hồ sơ nguồn gốc nhà cung cấp', 'Sàn sỉ', 'Giới thiệu, chính sách, biểu phí']),
     ('Khách lẻ', 'sau đăng nhập', ('#fdf1dc', '#c98a1a'), [
         'Giỏ hàng', 'Thanh toán', 'Đơn hàng', 'Đổi trả, khiếu nại', 'Đánh giá',
         'Báo khi có hàng, vào mùa', 'Sổ địa chỉ', D + 'Yêu thích']),
@@ -22,18 +22,18 @@ SHOP = [
         'Hồ sơ doanh nghiệp, địa chỉ nhận', 'Yêu cầu báo giá', 'Hợp đồng', 'Đơn sỉ một đợt', 'Thanh toán',
         'Khiếu nại', D + 'Ký quỹ']),
     ('Nhà cung cấp', 'sau đăng nhập', ('#eaf7ef', '#1f8a4c'), [
-        'Hồ sơ, xác minh, loại thuế', 'Chứng nhận', 'Sản phẩm và lô', 'Nhật ký canh tác',
-        'Tồn kho của tôi', 'Chào hàng, đơn thu mua', 'Báo giá, hợp đồng sỉ', 'Đơn sỉ', 'Đối soát',
-        'Đánh giá, uy tín', 'Thao tác nhập hộ', D + 'Tổng quan thống kê']),
+        'Hồ sơ, xác minh, loại thuế', 'Chứng nhận', 'Xem lại bản nhập liệu thay', 'Sản phẩm và lô',
+        'Nhật ký canh tác', 'Tồn kho của tôi', 'Chào giá lô, đơn thu mua', 'Báo giá, hợp đồng sỉ', 'Đơn sỉ',
+        'Đối soát', 'Đánh giá, uy tín', D + 'Tổng quan thống kê']),
 ]
 STAFF = [
+    ('Hỗ trợ vùng', 'staff_support', ['Nhà cung cấp phụ trách', 'Nhập liệu thay nhà cung cấp']),
     ('Kiểm duyệt', 'staff_moderation', ['Hàng đợi duyệt', 'Đánh giá nghi vấn', 'Vi phạm nội dung']),
-    ('Vận hành', 'staff_operations', ['Khiếu nại, đổi trả, tranh chấp', 'Giám sát đơn, giao hàng', 'Thu hồi lô',
-                                      'Vi phạm từ đơn hàng', D + 'Báo cáo thống kê']),
-    ('Thu mua', 'staff_sourcing', ['Chào hàng', 'Đơn thu mua', 'Định giá, dự báo']),
-    ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Đóng gói, in tem', 'Tồn kho, sổ nhập xuất', 'Chuyến trung chuyển',
+    ('Thu mua', 'staff_sourcing', ['Chào giá lô', 'Đơn thu mua', 'Định giá, dự báo']),
+    ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Tồn kho, sổ nhập xuất', 'Đóng gói, in tem', 'Chuyến trung chuyển',
                                 D + 'Sơ chế, kiểm kê']),
-    ('Hỗ trợ vùng', 'staff_support', ['Nhà cung cấp phụ trách', 'Nhập liệu hộ']),
+    ('Vận hành', 'staff_operations', ['Giám sát đơn, giao hàng', 'Khiếu nại, đổi trả, tranh chấp',
+                                      'Vi phạm từ đơn hàng', 'Thu hồi lô', D + 'Báo cáo thống kê']),
     ('Quản trị', 'platform_owner', ['Tài khoản, vai trò', 'Danh mục', 'Cấu hình, biểu phí', 'Chính sách, phiên bản',
                                     'Nhật ký thao tác']),
 ]
@@ -121,7 +121,7 @@ s.h = int(bottom2 + 6)
 leg = ('<span><i class="sw" style="background:#1a5fa8;border-color:#0f3d6e"></i>Ứng dụng</span>'
        '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
        '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang (cấp 3 ở Phụ lục T)</span>'
-       '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế hoặc sau phần hiện thực</span>')
+       '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế hoặc để sau prototype</span>')
 io.open(os.path.join(OUT, 'sitemap-tong-quan.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
     'Hai ứng dụng gọi chung một API. Trao đổi theo đơn nằm trong trang Đơn hàng và Đổi trả, không có trang tin nhắn chung; hỗ trợ chung qua Zalo OA.'))

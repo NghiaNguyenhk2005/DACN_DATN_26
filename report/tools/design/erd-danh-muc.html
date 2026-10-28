@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- Sinh tự động bởi gen_erd.py; ảnh rộng 980 px co về 16 cm, chữ 18,5px ~ 8,5pt. -->
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; padding:10px; width:980px; background:#fff; font-family:'Segoe UI','Noto Sans',Arial,sans-serif; color:#16241e;}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:10px; font-size:17px; color:#33413a; align-items:center;}
+  .legend span{display:inline-flex; align-items:center; gap:8px;}
+  .sw{width:30px; height:20px; border-radius:5px; display:inline-block; border:2px solid; flex:none;}
+  .ln{width:40px; height:0; border-top:3px solid #44524b; display:inline-block;}
+  .note{margin-top:6px; font-size:17px; color:#4d5c55;}
+</style>
+</head>
+<body>
+  <div><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto" width="960" height="673" viewBox="0 0 960 673"><defs></defs><rect x="2" y="8" width="956" height="653" rx="14" fill="#eef4fb" stroke="#1a5fa8" stroke-width="2.5"/>
+<text x="14" y="39" font-size="24" font-weight="800" fill="#1a5fa8" text-anchor="start" font-family="Consolas,'Courier New',monospace">catalog</text>
+<text x="125.44" y="38" font-size="18" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">5 bảng</text>
+<polyline points="536,158 436,158 436,74 424,74" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="158" x2="536" y2="166" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="158" x2="536" y2="158" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="158" x2="536" y2="150" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="150" x2="517" y2="166" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="82" x2="434" y2="66" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="424,403 452,403 452,70.5 536,70.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="438" y1="403" x2="424" y2="395" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="403" x2="424" y2="403" stroke="#44524b" stroke-width="2.2"/>
+<line x1="438" y1="403" x2="424" y2="411" stroke="#44524b" stroke-width="2.2"/>
+<line x1="443" y1="411" x2="443" y2="395" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="62.5" x2="526" y2="78.5" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="536,403 436,403 436,319 424,319" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="522" y1="403" x2="536" y2="411" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="403" x2="536" y2="403" stroke="#44524b" stroke-width="2.2"/>
+<line x1="522" y1="403" x2="536" y2="395" stroke="#44524b" stroke-width="2.2"/>
+<line x1="517" y1="395" x2="517" y2="411" stroke="#44524b" stroke-width="2.2"/>
+<line x1="434" y1="327" x2="434" y2="311" stroke="#44524b" stroke-width="2.2"/>
+<polyline points="424,596 468,596 468,77.5 536,77.5" fill="none" stroke="#44524b" stroke-width="2.4"/>
+<line x1="434" y1="604" x2="434" y2="588" stroke="#44524b" stroke-width="2.2"/>
+<line x1="526" y1="69.5" x2="526" y2="85.5" stroke="#44524b" stroke-width="2.2"/>
+<rect x="14" y="54" width="410" height="200" rx="8" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="26" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">categories</text>
+<text x="26" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Cây danh mục nông sản đóng, do quản trị viên</text>
+<text x="26" y="129" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">hệ thống định nghĩa</text>
+<line x1="22" y1="140" x2="416" y2="140" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="159" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="159" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="185" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">parent_id</text>
+<text x="412" y="185" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → categories</text>
+<text x="26" y="211" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">name</text>
+<text x="26" y="236" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +4 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="54" width="410" height="231" rx="8" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="548" y="81" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">products</text>
+<text x="548" y="108" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Sản phẩm do nhà cung cấp đăng</text>
+<line x1="544" y1="119" x2="938" y2="119" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="138" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="138" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="164" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">category_id</text>
+<text x="934" y="164" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → categories</text>
+<text x="548" y="190" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">supplier_id</text>
+<text x="934" y="190" font-size="17" font-weight="400" fill="#6b7872" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">→ supplier.suppliers</text>
+<text x="548" y="216" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="548" y="242" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">name</text>
+<text x="548" y="267" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +10 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="299" width="410" height="205" rx="8" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="26" y="326" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">batches</text>
+<text x="26" y="353" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Lô hàng</text>
+<line x1="22" y1="364" x2="416" y2="364" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="383" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="412" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="26" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">product_id</text>
+<text x="412" y="409" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → products</text>
+<text x="26" y="435" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">status</text>
+<text x="26" y="461" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">batch_code</text>
+<text x="26" y="486" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +7 cột khác (xem Phụ lục K)</text>
+<rect x="536" y="299" width="410" height="179" rx="8" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="548" y="326" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">farming_logs</text>
+<text x="548" y="353" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Nhật ký canh tác theo lô</text>
+<line x1="544" y1="364" x2="938" y2="364" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="548" y="383" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">id</text>
+<text x="934" y="383" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK</text>
+<text x="548" y="409" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">batch_id</text>
+<text x="934" y="409" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → batches</text>
+<text x="548" y="435" font-size="18.5" font-weight="400" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">supersedes_id</text>
+<text x="934" y="435" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">FK → farming_logs</text>
+<text x="548" y="460" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +7 cột khác (xem Phụ lục K)</text>
+<rect x="14" y="518" width="410" height="127" rx="8" fill="#ffffff" stroke="#1a5fa8" stroke-width="2.2"/>
+<text x="26" y="545" font-size="20" font-weight="800" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">product_embeddings</text>
+<text x="26" y="572" font-size="17" font-weight="400" fill="#4d5c55" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">Ghi khi nhận sự kiện ProductEmbedded</text>
+<line x1="22" y1="583" x2="416" y2="583" stroke="#c7d1cb" stroke-width="1.4"/>
+<text x="26" y="602" font-size="18.5" font-weight="700" fill="#16241e" text-anchor="start" font-family="Consolas,'Courier New',monospace">product_id</text>
+<text x="412" y="602" font-size="17" font-weight="600" fill="#44524b" text-anchor="end" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">PK, FK → products</text>
+<text x="26" y="627" font-size="16" font-weight="400" fill="#7a8782" text-anchor="start" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-style="italic">… +3 cột khác (xem Phụ lục K)</text></svg></div>
+  <div class="legend"><span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Bảng (khung màu theo schema)</span><span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Bảng chỉ thiết kế</span><span><i class="ln"></i>Khóa ngoại cùng schema (chân chim ở phía nhiều)</span><span><i class="ln" style="border-top:3px dashed #8a948f"></i>Tham chiếu sang schema khác (RB3)</span></div>
+  <div class="note">PK: khóa chính; FK: khóa ngoại; dòng “→ schema.bảng”: tham chiếu bằng định danh tới bảng đích, vẽ nét đứt khi đích nằm trong cùng hình. Không vẽ đường tới bảng được từ 4 bảng trở lên trỏ vào (chỉ ghi ở cột bên phải).</div>
+</body>
+</html>

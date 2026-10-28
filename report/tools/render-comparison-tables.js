@@ -25,9 +25,18 @@ const pages = [
   'c4-ngu-canh.html',
   'c4-container.html',
   'c4-module.html',
-  // ERD hai phần; HTML sinh từ tools/diagrams/gen_erd.py (đọc schema.dbml)
-  'erd-nen-tang.html',
-  'erd-giao-dich.html',
+  // ERD tổng quan + theo miền; HTML sinh từ tools/diagrams/gen_erd.py (đọc schema.dbml)
+  'erd-tong-quan.html',
+  'erd-dinh-danh.html',
+  'erd-thong-bao-tep.html',
+  'erd-nha-cung-cap-ton-kho.html',
+  'erd-danh-muc.html',
+  'erd-ban-le.html',
+  'erd-thu-mua.html',
+  'erd-thanh-toan.html',
+  'erd-ban-si.html',
+  'erd-giao-hang-doi-tra.html',
+  'erd-danh-gia-van-hanh.html',
   'luong-don-le.html',
   'sitemap-tong-quan.html',
   // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
