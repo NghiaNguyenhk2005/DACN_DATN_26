@@ -1127,3 +1127,23 @@ SỬA 2026-10-27: bỏ yêu cầu "một người duyệt" (README cũ) và ngo�
 người viết PR tự merge; mọi thành viên đã là collaborator. Quy tắc "không tự merge PR" ở trên chỉ còn áp dụng cho Claude: chỉ
 merge khi người dùng nói rõ. Lý do: nhóm nhỏ, duyệt chéo làm chậm; đánh đổi là không còn chốt kiểm người thứ hai, nên
 PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
+
+
+### Sửa báo cáo theo rà soát 28/10: ba nhãn trạng thái, làm rõ Web Push, ERD 11 hình — 2026-10-28
+**Quyết định:**
+- Ba nhãn trạng thái dùng toàn báo cáo: Đã hiện thực; Chỉ thiết kế (đặc tả đầy đủ, cố ý không làm); Để sau prototype
+  (thuộc MVP, chưa làm ở prototype). FR2.2, FR3.3 (nhắc gia hạn), FR4.7, FR5.3, FR5.5, FR5.7, FR9.2, FR10.4, FR11.2 và thông báo
+  đẩy của FR11.1 gán "Để sau prototype".
+- Web Push là chuẩn của trình duyệt (Push API, khóa VAPID); endpoint nằm ở dịch vụ đẩy do hãng trình duyệt vận hành, Farmery không
+  có hợp đồng riêng. Prototype hỏi lại trạng thái đơn mỗi 5 giây; MVP dùng Web Push. Trong 5 hệ thống ngoài thuộc MVP, mã hiện chỉ
+  có 2 đứng sau interface kèm bản giả (cổng thanh toán, gửi OTP).
+- "Chịu 100 người dùng đồng thời" thuộc NFR1.1; NFR2.2 giữ nghĩa mở rộng ngang (chỉ thiết kế). Phụ lục M bổ sung NFR3.6, NFR5, NFR8.
+- Kiểm duyệt viên xác minh hồ sơ khách sỉ; eKYC trong phạm vi đồ án là duyệt thủ công ảnh giấy tờ; hạn duyệt lô mặc định 48 giờ,
+  cấu hình được; kiểm duyệt chứng nhận ba tầng.
+- Tên gọi: "máy chủ nghiệp vụ" (thay "ứng dụng lõi"), "chào giá lô", "doanh nghiệp mua sỉ", "nhập liệu thay nhà cung cấp",
+  "Hàng đợi sự kiện và cache (Redis)".
+- ERD trình bày thành 11 hình: ma trận phụ thuộc giữa 13 schema và 10 hình theo schema (khóa, cột định danh, mô tả một dòng).
+**Bối cảnh:** rà soát liên chương tìm thấy nhãn "chỉ thiết kế" mang hai nghĩa, Web Push vừa "có trong hiện thực" vừa "chỉ thiết kế",
+NFR2.2 hai nghĩa; ERD hai hình 31 và 34 bảng chữ nhỏ khó đọc.
+**Đánh đổi:** báo cáo dài thêm khoảng 20 trang do mỗi hình ERD một trang; hình use case và sitemap dùng một chú thích chung cho cả
+hai nhãn nét đứt thay vì thêm một kiểu nét thứ ba.

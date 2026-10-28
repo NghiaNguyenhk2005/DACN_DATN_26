@@ -53,7 +53,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 267 trang |
+| `main.pdf` | Bản build gần nhất, 286 trang |
 | `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
 | `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10) |
 | `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10); `chapters/_incoming/` cũng vậy |
@@ -76,7 +76,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `report/backmatter/` — Phụ lục A–V
+## `report/backmatter/` — Phụ lục A–W
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ. Phụ lục mới nối đuôi (U, V)
 thay vì đánh lại chữ cái.
@@ -87,7 +87,7 @@ thay vì đánh lại chữ cái.
 | `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ đánh giá khả dụng |
 | `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 17 điều, viết để đọc độc lập |
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản |
-| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 16 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
+| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 17 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
 | `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
 | `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đủ 13 schema, mỗi schema một bảng `tab:db-<schema>` (~30 trang). **Sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay |
 | `phuluc-nguong.tex` | **Phụ lục L** — ngưỡng NFR và ngưỡng AI kèm căn cứ |
@@ -121,7 +121,7 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_sitemap.py` | Sinh `sitemap-tong-quan` (hai cây theo hai ứng dụng) |
 | `diagrams/gen_sequence.py` | Sinh 4 lược đồ tuần tự `seq-*` (lớp `Seq`: lane theo mô-đun, gọi / trả về / sự kiện, khung `alt`/`loop` lồng được) |
 | `diagrams/gen_class.py` | Sinh `class-mien` (17 lớp miền, vị trí đặt tay theo lưới, bội số hai đầu, hợp thành, tham chiếu xuyên mô-đun nét đứt) |
-| `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh `erd-nen-tang`, `erd-giao-dich` (vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
+| `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh 11 hình ERD `erd-tong-quan` … `erd-danh-gia-van-hanh` (một hình tổng quan 13 schema và 10 hình theo nhóm schema; vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
@@ -151,17 +151,17 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
 `fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, `fig:erd`, `fig:erd2` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
+`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, 11 hình ERD `fig:erd-tong-quan`, `fig:erd-dinh-danh`, `fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`, `fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
 **Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
 `fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).
 
 **Bảng ở thân báo cáo:** `tab:phaply` (Ch.2); `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap` (Ch.3);
-`tab:hailuong`, `tab:nhomnguoidung`, `tab:vaitro-noibo` (Ch.4); `tab:actor-usecase`, `tab:uc-b4`, `tab:uc-c4`,
+`tab:hailuong`, `tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:kiemduyet-giaidoan`, `tab:chi-thiet-ke` (Ch.4; ba nhãn trạng thái Đã hiện thực / Chỉ thiết kế / Để sau prototype định nghĩa ở mục Yêu cầu chức năng); `tab:actor-usecase`, `tab:uc-b4`, `tab:uc-c4`,
 `tab:uc-c6`, `tab:container-io`, `tab:module-io`, `tab:tinhnangAI` (Ch.5).
 **Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` (B); `tab:bmc-full` (E); `tab:vande-muctieu` (F);
 `tab:dacdiem-hanghoa` (G); `tab:chungnhan` (H); `tab:sosanh-congnghe`, `tab:sosanh-ai` (I); `tab:truyvet-us`,
-`tab:fr-nguoidung` (J); `tab:db-nhom1`–`4` (K); `tab:nguongNFR`, `tab:nguongAI` (L); `tab:fr-matrix`, `tab:nfr-matrix`
+`tab:fr-nguoidung` (J); `tab:db-<schema>` ×13 (K); `tab:nguongNFR`, `tab:nguongAI` (L); `tab:fr-matrix`, `tab:nfr-matrix`
 (M); `tab:khoangcachxuatkhau`, `tab:nguondulieu` (N, O); `tab:customer-journey`, `tab:nguon-giaodich` (Q);
 `tab:uc-b2`, `tab:uc-b5`, `tab:uc-d4`, `tab:uc-c7` (S); `tab:sitemap-chitiet` (T); `tab:bochinhsach` (U);
 `tab:sukien` (V); `tab:kehoach`.
