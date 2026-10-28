@@ -144,10 +144,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> vấn đề là chuỗi trung gian + thiếu niềm tin; Farmery giải bằng hai luồng bổ trợ + truy xuất QR, và chỉ cam kết những gì kiểm chứng được.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Vì sao ghép sỉ và lẻ mà không làm một luồng?</em> — Nhà cung cấp nhỏ giỏi giao lô lớn nhưng không đóng gói/giao từng đơn vài kg; 1P gánh phần việc đó (Ch4 §4.1.1), 3P giữ nhà cung cấp tự định giá. Đánh đổi nêu thẳng: vốn lưu động + rủi ro tồn kho (<code>tab:hailuong</code>).
-2. <em>Số liệu 30–40% / 35–40% lấy đâu?</em> — Đã kiểm lại 6 nguồn rủi ro cao bằng truy cập trực tiếp, khớp 100% (<code>NOTES.md</code>, mục rà Ch1–3 ngày 15/09).
-3. <em>Phạm vi có quá rộng cho một học kỳ?</em> — Có, nên chia ba mức, ghi nhãn <em>(chỉ thiết kế)</em> hoặc <em>(để sau prototype)</em> trong từng FR và có <code>tab:chi-thiet-ke</code>; đo bằng <code>MVP.md</code>.</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Vì sao ghép sỉ và lẻ mà không làm một luồng?</em> — Nhà cung cấp nhỏ giỏi giao lô lớn nhưng không đóng gói/giao từng đơn vài kg; 1P gánh phần việc đó (Ch4 §4.1.1), 3P giữ nhà cung cấp tự định giá. Đánh đổi nêu thẳng: vốn lưu động + rủi ro tồn kho (<code>tab:hailuong</code>).</li>
+<li><em>Số liệu 30–40% / 35–40% lấy đâu?</em> — Đã kiểm lại 6 nguồn rủi ro cao bằng truy cập trực tiếp, khớp 100% (<code>NOTES.md</code>, mục rà Ch1–3 ngày 15/09).</li>
+<li><em>Phạm vi có quá rộng cho một học kỳ?</em> — Có, nên chia ba mức, ghi nhãn <em>(chỉ thiết kế)</em> hoặc <em>(để sau prototype)</em> trong từng FR và có <code>tab:chi-thiet-ke</code>; đo bằng <code>MVP.md</code>.</li>
+</ol>
 <h3 id="chuong-2-kien-thuc-nen-tang-chuong2-kienthuc-nentangtex">Chương 2 — Kiến thức nền tảng (<code>chuong2-kienthuc-nentang.tex</code>)</h3>
 <ul>
 <li><strong>Bốn khác biệt của nông sản</strong> (§2.1.2): mau hỏng; nguồn cung theo mùa; chất lượng không đồng đều giữa lô; người mua không tự kiểm chứng được chất lượng. Đối chiếu 9 tiêu chí ở PL-G.</li>
@@ -228,10 +230,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> đặc thù nông sản (mau hỏng, theo mùa, khó kiểm chứng) là <em>gốc</em> của mọi quyết định thiết kế, không phải trang trí.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Vì sao không dùng blockchain cho truy xuất?</em> — Blockchain chỉ khóa dữ liệu sau khi ghi, không xác minh dữ liệu nhập; nông dân vẫn nhập tay. Farmery dùng CSDL tập trung + nguyên lý GS1 + <strong>kiểm duyệt người</strong> + nhật ký chỉ nối thêm (NFR9.1). Lập luận dựa rào cản áp dụng, không dựa chi phí hạ tầng (đã sửa 24/09, <code>DECISIONS.md</code>).
-2. <em>Vì sao giám sát bất thường chỉ dùng luật ngưỡng?</em> — Học máy cần lưu lượng thật và tập nhãn gian lận; chưa có cả hai, không đo được → trái nguyên tắc §1.2.3. Mọi phán quyết của kiểm duyệt viên được tích lũy làm nhãn cho giai đoạn sau (Ch4 §4.3.3, mục dữ liệu phân tích).
-3. <em>Có đọc kỹ pháp luật không?</em> — Ba điểm viết dè dặt vì chưa rõ: khấu trừ thuế với nông dân tự sản xuất; hiệu lực NĐ 46/2026 (đang tạm ngưng); ngưỡng doanh thu không chịu thuế (để cấu hình, không ghi cứng).</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Vì sao không dùng blockchain cho truy xuất?</em> — Blockchain chỉ khóa dữ liệu sau khi ghi, không xác minh dữ liệu nhập; nông dân vẫn nhập tay. Farmery dùng CSDL tập trung + nguyên lý GS1 + <strong>kiểm duyệt người</strong> + nhật ký chỉ nối thêm (NFR9.1). Lập luận dựa rào cản áp dụng, không dựa chi phí hạ tầng (đã sửa 24/09, <code>DECISIONS.md</code>).</li>
+<li><em>Vì sao giám sát bất thường chỉ dùng luật ngưỡng?</em> — Học máy cần lưu lượng thật và tập nhãn gian lận; chưa có cả hai, không đo được → trái nguyên tắc §1.2.3. Mọi phán quyết của kiểm duyệt viên được tích lũy làm nhãn cho giai đoạn sau (Ch4 §4.3.3, mục dữ liệu phân tích).</li>
+<li><em>Có đọc kỹ pháp luật không?</em> — Ba điểm viết dè dặt vì chưa rõ: khấu trừ thuế với nông dân tự sản xuất; hiệu lực NĐ 46/2026 (đang tạm ngưng); ngưỡng doanh thu không chịu thuế (để cấu hình, không ghi cứng).</li>
+</ol>
 <h3 id="chuong-3-cong-trinh-lien-quan-chuong3-congtrinh-lienquantex">Chương 3 — Công trình liên quan (<code>chuong3-congtrinh-lienquan.tex</code>)</h3>
 <ul>
 <li>Bốn nghiên cứu: Morepje 2024 (nông hộ nhỏ cần giao diện đơn giản, nền tảng thuần trung gian không giải quyết đóng gói); Keogh 2020 (GS1 + blockchain không tự giải bất cân xứng); Tran 2023 (hạn chế học máy dự báo giá: phụ thuộc độ dài dữ liệu); <strong>Farm2Market 2025</strong> (gần nhất, ~82% độ chính xác dự báo, mới ở mức đề xuất).</li>
@@ -271,10 +275,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> khoảng trống là <em>kết hợp 3P + 1P cho hàng tươi có truy xuất</em>; không sàn nào ở đủ hai phía.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Nếu hay thì sao Shopee/Lazada không làm?</em> — N1–N2 (§3.3): chi phí xử lý mỗi đơn hàng tươi cao, khiếu nại nhiều, cần vốn + kho lạnh. Farmery chỉ chấp nhận được nhờ phạm vi thí điểm hẹp.
-2. <em>Điểm khác Farm2Market?</em> — Farm2Market chưa có dữ liệu vận hành và không phục vụ song song sỉ + lẻ; Farmery lấy mốc ~82% để đặt ngưỡng MAPE &lt; 20% (PL-L).
-3. <em>Tài liệu tham khảo có đủ mới không?</em> — Số liệu/chính sách giai đoạn 2020–2026 (§1.3.2); nguồn pháp lý cập nhật tới 2026.</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Nếu hay thì sao Shopee/Lazada không làm?</em> — N1–N2 (§3.3): chi phí xử lý mỗi đơn hàng tươi cao, khiếu nại nhiều, cần vốn + kho lạnh. Farmery chỉ chấp nhận được nhờ phạm vi thí điểm hẹp.</li>
+<li><em>Điểm khác Farm2Market?</em> — Farm2Market chưa có dữ liệu vận hành và không phục vụ song song sỉ + lẻ; Farmery lấy mốc ~82% để đặt ngưỡng MAPE &lt; 20% (PL-L).</li>
+<li><em>Tài liệu tham khảo có đủ mới không?</em> — Số liệu/chính sách giai đoạn 2020–2026 (§1.3.2); nguồn pháp lý cập nhật tới 2026.</li>
+</ol>
 <h3 id="chuong-4-he-thong-e-xuat-chuong4-hethong-dexuattex">Chương 4 — Hệ thống đề xuất (<code>chuong4-hethong-dexuat.tex</code>)</h3>
 <ul>
 <li><strong>§4.1 Ngữ cảnh nghiệp vụ:</strong> mô hình kinh doanh (BMC, điều kiện hòa vốn 1P: <code>p − g ≥ h/(1−h)·g + c_đg + c_vh/q</code>; hao hụt 20–40% → số hạng hao hụt bằng 25–67% giá mua); <strong>10 quy trình</strong> kèm quy tắc + ngoại lệ (xem phần 3); chính sách pháp lý (§4.1.3).</li>
@@ -339,10 +345,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> mọi yêu cầu truy được về nhu cầu người dùng; phần không làm được nêu rõ và có lý do.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Chống bán vượt giữa hai luồng ở đâu?</em> — Hàng một lô tách thành <strong>dòng tồn</strong> theo chủ (ví dụ lô 1.000 kg: 700 kg của HTX chỉ bán sỉ, 300 kg của Farmery chỉ bán lẻ); hợp đồng sỉ và đơn thu mua giành dòng của nhà cung cấp, nhiều đơn lẻ giành dòng của Farmery; cả hai đi qua một giao dịch có khóa (§4.1.2 "Quản lý tồn kho", thách thức §4.2.3, NC5).
-2. <em>Giá trị pháp lý của "xác nhận giao kết"?</em> — Dùng hình thức xác nhận bằng OTP + lưu tài khoản, thời điểm, mã băm của đúng phiên bản (FR6.3); Luật GDĐT 20/2023 Điều 22–23. Ký số thật là hướng phát triển (FR6.6 đã rút).
-3. <em>Thu mua có hợp lý về kinh tế?</em> — Có điều kiện hòa vốn tường minh; thiết kế xoay quanh giữ <code>h</code> thấp: chỉ mua lượng bán trong hạn, FEFO, chuyến trung chuyển cố định (§4.1.1).</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Chống bán vượt giữa hai luồng ở đâu?</em> — Hàng một lô tách thành <strong>dòng tồn</strong> theo chủ (ví dụ lô 1.000 kg: 700 kg của HTX chỉ bán sỉ, 300 kg của Farmery chỉ bán lẻ); hợp đồng sỉ và đơn thu mua giành dòng của nhà cung cấp, nhiều đơn lẻ giành dòng của Farmery; cả hai đi qua một giao dịch có khóa (§4.1.2 "Quản lý tồn kho", thách thức §4.2.3, NC5).</li>
+<li><em>Giá trị pháp lý của "xác nhận giao kết"?</em> — Dùng hình thức xác nhận bằng OTP + lưu tài khoản, thời điểm, mã băm của đúng phiên bản (FR6.3); Luật GDĐT 20/2023 Điều 22–23. Ký số thật là hướng phát triển (FR6.6 đã rút).</li>
+<li><em>Thu mua có hợp lý về kinh tế?</em> — Có điều kiện hòa vốn tường minh; thiết kế xoay quanh giữ <code>h</code> thấp: chỉ mua lượng bán trong hạn, FEFO, chuyến trung chuyển cố định (§4.1.1).</li>
+</ol>
 <h3 id="chuong-5-phan-tich-va-thiet-ke-chuong5-phantich-thietketex">Chương 5 — Phân tích và thiết kế (<code>chuong5-phantich-thietke.tex</code>)</h3>
 <ul>
 <li><strong>§5.1 Phân tích:</strong> 10 sơ đồ hoạt động (2 ở thân: <code>fig:act-thu-mua</code>, <code>fig:act-dat-hang</code>; 8 ở PL-R); use case tổng quan + 5 chi tiết (PL-S); đặc tả UC-B4, UC-C4, UC-C6 ở thân, UC-B2, B5, C7, D4 ở PL-S.</li>
@@ -419,10 +427,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> kiến trúc là <em>hệ quả</em> của ràng buộc khó nhất (chống bán vượt cần giao dịch một CSDL), không phải mốt.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Vì sao modular monolith, không microservices?</em> — Xem câu 1 phần 4.
-2. <em>Vì sao PostgreSQL một mình?</em> — Khóa dòng chống oversell + JSON cho nhật ký canh tác + pgvector cho ngữ nghĩa, không dựng thêm DB vector/search engine để khỏi đồng bộ hai nơi (§5.2.2).
-3. <em>RB1–RB3 là gì, bảo đảm bằng cách nào?</em> — Chia mô-đun theo miền; gọi nhau qua service công khai; không join bảng xuyên mô-đun. Mỗi mô-đun một schema trong cùng CSDL nên vi phạm RB3 lộ ngay khi đọc mã (§5.3.1).</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Vì sao modular monolith, không microservices?</em> — Xem câu 1 phần 4.</li>
+<li><em>Vì sao PostgreSQL một mình?</em> — Khóa dòng chống oversell + JSON cho nhật ký canh tác + pgvector cho ngữ nghĩa, không dựng thêm DB vector/search engine để khỏi đồng bộ hai nơi (§5.2.2).</li>
+<li><em>RB1–RB3 là gì, bảo đảm bằng cách nào?</em> — Chia mô-đun theo miền; gọi nhau qua service công khai; không join bảng xuyên mô-đun. Mỗi mô-đun một schema trong cùng CSDL nên vi phạm RB3 lộ ngay khi đọc mã (§5.3.1).</li>
+</ol>
 <h3 id="chuong-6-hien-thuc-va-kiem-thu-chuong6-hienthuc-kiemthutex">Chương 6 — Hiện thực và kiểm thử (<code>chuong6-hienthuc-kiemthu.tex</code>)</h3>
 <ul>
 <li><strong>Có nội dung:</strong> §6.1.1 môi trường/công cụ: monorepo pnpm + Turborepo; GitHub Actions chạy test + độ phủ; SonarQube Cloud (kho riêng tư tới 50 nghìn dòng); k6, Lighthouse chạy riêng; danh sách công nghệ khớp §5.2; bên thứ ba: hiện mới có giao diện kèm bản giả cho cổng thanh toán và kênh gửi OTP, các dịch vụ còn lại để sau prototype.</li>
@@ -465,10 +475,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> chương hiện còn khung; phải nói thẳng với hội đồng và dùng prototype + e2e làm minh chứng.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Prototype là gì, có bỏ đi không?</em> — Không: chạy đúng stack, đúng hợp đồng <code>openapi.yaml</code>, đúng 13 mô-đun; chỉ giả lập lưu trữ (bộ nhớ), OTP cố định, cổng thanh toán giả (<code>MVP.md</code> §6).
-2. <em>Giữ mã làm nền MVP theo điều kiện gì?</em> — Bốn điều kiện rà ở mốc 21/10: qua repository, luật nghiệp vụ có test, không lối tắt ngoài <code>DEMO_MODE</code>, API khớp hợp đồng (CI xanh, bật kiểm phản hồi).
-3. <em>Đã test những gì?</em> — 37 test e2e API (jest + supertest: 8 khung + 2 đăng nhập + 11 catalog công khai + 16 lô hàng/kiểm duyệt) và 10 test Playwright (<code>apps/e2e</code>) — đếm ngày 28/10 bằng grep; <strong>chưa</strong> có test chống bán vượt vì chưa có mô-đun tồn kho.</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Prototype là gì, có bỏ đi không?</em> — Không: chạy đúng stack, đúng hợp đồng <code>openapi.yaml</code>, đúng 13 mô-đun; chỉ giả lập lưu trữ (bộ nhớ), OTP cố định, cổng thanh toán giả (<code>MVP.md</code> §6).</li>
+<li><em>Giữ mã làm nền MVP theo điều kiện gì?</em> — Bốn điều kiện rà ở mốc 21/10: qua repository, luật nghiệp vụ có test, không lối tắt ngoài <code>DEMO_MODE</code>, API khớp hợp đồng (CI xanh, bật kiểm phản hồi).</li>
+<li><em>Đã test những gì?</em> — 37 test e2e API (jest + supertest: 8 khung + 2 đăng nhập + 11 catalog công khai + 16 lô hàng/kiểm duyệt) và 10 test Playwright (<code>apps/e2e</code>) — đếm ngày 28/10 bằng grep; <strong>chưa</strong> có test chống bán vượt vì chưa có mô-đun tồn kho.</li>
+</ol>
 <h3 id="chuong-7-anh-gia-he-thong-chuong7-danhgiatex">Chương 7 — Đánh giá hệ thống (<code>chuong7-danhgia.tex</code>)</h3>
 <ul>
 <li><strong>Khung đã chốt, kết quả chưa có:</strong> sáu trụ cột (gộp vào bốn nhóm mục tiêu đánh giá ở Ch1 §1.2.3: chức năng + chất lượng mã; hiệu năng + bảo mật; khả dụng giao diện; AI): chức năng; chất lượng mã (SonarQube); hiệu năng + chống bán vượt (k6); bảo mật (RBAC tự động, 403); khả dụng giao diện (Lighthouse, axe-core, thử với nhà cung cấp); AI (offline).</li>
@@ -521,10 +533,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> phương pháp và ngưỡng có sẵn, nhưng <em>số đo thì chưa</em>; không được nói đã đạt.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Ngưỡng chọn dựa vào đâu?</em> — Xuất phát từ người dùng thật: p95 vì nhà cung cấp dùng 4G yếu ở đuôi phân bố; 100 người đồng thời vì cầu dồn khi mở bán lô mới; 80% vì đội hỗ trợ vùng chỉ kham 1/5 người cần giúp (PL-L).
-2. <em>Dữ liệu AI lấy đâu?</em> — Dự báo giá dùng giá nông sản công khai (PL-O), không phải dữ liệu giao dịch; tìm kiếm/tương tự dùng bộ truy vấn và sản phẩm do nhóm gán nhãn tay, tối thiểu 50 mỗi loại; ghi rõ là dữ liệu mô phỏng (§1.3.2).
-3. <em>Nếu không đạt ngưỡng?</em> — Kết chương dự kiến phân tích nguyên nhân và phản ánh vào Hạn chế của Ch8 (ghi trong TODO của Ch7).</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Ngưỡng chọn dựa vào đâu?</em> — Xuất phát từ người dùng thật: p95 vì nhà cung cấp dùng 4G yếu ở đuôi phân bố; 100 người đồng thời vì cầu dồn khi mở bán lô mới; 80% vì đội hỗ trợ vùng chỉ kham 1/5 người cần giúp (PL-L).</li>
+<li><em>Dữ liệu AI lấy đâu?</em> — Dự báo giá dùng giá nông sản công khai (PL-O), không phải dữ liệu giao dịch; tìm kiếm/tương tự dùng bộ truy vấn và sản phẩm do nhóm gán nhãn tay, tối thiểu 50 mỗi loại; ghi rõ là dữ liệu mô phỏng (§1.3.2).</li>
+<li><em>Nếu không đạt ngưỡng?</em> — Kết chương dự kiến phân tích nguyên nhân và phản ánh vào Hạn chế của Ch8 (ghi trong TODO của Ch7).</li>
+</ol>
 <h3 id="chuong-8-tong-ket-chuong8-tongkettex">Chương 8 — Tổng kết (<code>chuong8-tongket.tex</code>)</h3>
 <ul>
 <li>§8.1 Kết quả đạt được: <strong>TODO</strong> (đối chiếu MT1–MT7 sau khi có số đo Ch7).</li>
@@ -560,10 +574,12 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tbody>
 </table>
 <p><strong>Thông điệp cốt lõi:</strong> phần "chưa làm" được nêu có điều kiện kích hoạt cụ thể, không phải lời hứa chung chung.</p>
-<p><strong>Câu hỏi hội đồng</strong>
-1. <em>Đã đạt mục tiêu nào?</em> — Hiện chưa trả lời bằng số được (TODO §8.1). Nên chuẩn bị bảng MT1–MT7 × bằng chứng (xem gợi ý phần 5).
-2. <em>Khi nào mới tách microservices?</em> — Có thể không bao giờ cần ở quy mô này; microservices chỉ đáng khi nhiều đội phát triển song song, không phải để nhanh hơn (§8.3.2).
-3. <em>Vì sao đội giao riêng chưa làm?</em> — Chỉ khi mật độ đơn khiến chi phí cố định chia mỗi đơn thấp hơn cước 3PL nội thành cho cùng chặng.</p>
+<p><strong>Câu hỏi hội đồng</strong></p>
+<ol>
+<li><em>Đã đạt mục tiêu nào?</em> — Hiện chưa trả lời bằng số được (TODO §8.1). Nên chuẩn bị bảng MT1–MT7 × bằng chứng (xem gợi ý phần 5).</li>
+<li><em>Khi nào mới tách microservices?</em> — Có thể không bao giờ cần ở quy mô này; microservices chỉ đáng khi nhiều đội phát triển song song, không phải để nhanh hơn (§8.3.2).</li>
+<li><em>Vì sao đội giao riêng chưa làm?</em> — Chỉ khi mật độ đơn khiến chi phí cố định chia mỗi đơn thấp hơn cước 3PL nội thành cho cùng chặng.</li>
+</ol>
 <h3 id="phu-luc-chinh-vai-tro">Phụ lục chính (vai trò)</h3>
 <table>
 <thead>
@@ -721,28 +737,34 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </tr>
 </tbody>
 </table>
-<p><strong>Tóm tắt các phụ lục hay được hỏi</strong>
-- <strong>PL-V (sự kiện):</strong> mô-đun chỉ gọi trực tiếp nhau khi cần kết quả ngay trong cùng giao dịch (giữ chỗ, trừ tồn, tạo giao dịch thanh toán, tạo giao hàng); mọi phụ thuộc còn lại qua sự kiện Redis; bên nhận xử lý độc lập, gửi lại nhiều lần chỉ có tác dụng một lần. <strong>[Chỉ thiết kế]</strong>, chưa có hàng đợi trong mã.
-- <strong>PL-K (từ điển dữ liệu):</strong> nguồn chính để trả lời "bảng X có cột gì". Hai bảng được tham chiếu nhiều nhất: <code>identity.users</code>, <code>media.media_files</code>.
-- <strong>PL-M (ma trận):</strong> 13 nhóm FR = 11 Must + 2 Should (tương tác, AI); NFR có ma trận riêng: Must là NFR1, 3, 4, 5, 7, 8, 9, Should là NFR2, 6 (7 + 2), NFR2.2 Could; có NFR3.6, NFR5.1-5.2, NFR8.1-8.5.
-- <strong>PL-L (ngưỡng):</strong> xem bảng số liệu ở phần 8.3; mọi ngưỡng kèm căn cứ từ hành vi người dùng thật (4G yếu, cầu dồn khi mở bán lô, đội hỗ trợ vùng).
-- <strong>PL-N/O/P/G/H:</strong> tư liệu nền; chỉ cần nhớ N là nơi giải thích vì sao xuất khẩu để sang hướng phát triển.</p>
+<p><strong>Tóm tắt các phụ lục hay được hỏi</strong></p>
+<ul>
+<li><strong>PL-V (sự kiện):</strong> mô-đun chỉ gọi trực tiếp nhau khi cần kết quả ngay trong cùng giao dịch (giữ chỗ, trừ tồn, tạo giao dịch thanh toán, tạo giao hàng); mọi phụ thuộc còn lại qua sự kiện Redis; bên nhận xử lý độc lập, gửi lại nhiều lần chỉ có tác dụng một lần. <strong>[Chỉ thiết kế]</strong>, chưa có hàng đợi trong mã.</li>
+<li><strong>PL-K (từ điển dữ liệu):</strong> nguồn chính để trả lời "bảng X có cột gì". Hai bảng được tham chiếu nhiều nhất: <code>identity.users</code>, <code>media.media_files</code>.</li>
+<li><strong>PL-M (ma trận):</strong> 13 nhóm FR = 11 Must + 2 Should (tương tác, AI); NFR có ma trận riêng: Must là NFR1, 3, 4, 5, 7, 8, 9, Should là NFR2, 6 (7 + 2), NFR2.2 Could; có NFR3.6, NFR5.1-5.2, NFR8.1-8.5.</li>
+<li><strong>PL-L (ngưỡng):</strong> xem bảng số liệu ở phần 8.3; mọi ngưỡng kèm căn cứ từ hành vi người dùng thật (4G yếu, cầu dồn khi mở bán lô, đội hỗ trợ vùng).</li>
+<li><strong>PL-N/O/P/G/H:</strong> tư liệu nền; chỉ cần nhớ N là nơi giải thích vì sao xuất khẩu để sang hướng phát triển.</li>
+</ul>
 <hr />
 <h2 id="2-noi-dung-cot-loi-can-nho-cheat-sheet">2. Nội dung cốt lõi cần nhớ (cheat-sheet)</h2>
-<p><strong>Khái niệm</strong>
-- <strong>Dòng tồn</strong> = (lô, chủ sở hữu, nơi chứa); mọi thay đổi số lượng đi qua <strong>sổ nhập xuất</strong>, không sửa trực tiếp (FR13.3, bảng <code>inventory.stock_holdings</code>, <code>stock_movements</code>).
-- <strong>Chào giá lô</strong> = nhà cung cấp công bố lô sắp thu hoạch (<code>procurement.supplier_offers</code>); <strong>đơn thu mua</strong> chỉ có hiệu lực khi nhà cung cấp xác nhận, từ đó phần sản lượng được giữ chỗ.
-- <strong>Máy chủ nghiệp vụ</strong> = NestJS chứa 13 mô-đun; <strong>dịch vụ AI</strong> là khối riêng.
-- <strong>Xác nhận giao kết</strong> = OTP + lưu tài khoản/thời điểm/mã băm văn bản (không phải chữ ký số).
-- <strong>Nhập liệu thay nhà cung cấp</strong> = nhân viên hỗ trợ vùng ghi nhật ký hộ nhà cung cấp được phân công; ghi <code>entered_by</code>, thời điểm, lý do, cờ <code>onBehalf</code> (FR4.2, FR10.7; bảng <code>supplier.support_assignments</code>, <code>operations.staff_audit_logs</code>).
-- <strong>Nhật ký canh tác chỉ nối thêm:</strong> sửa = bản mới có <code>supersedesId</code>, bản cũ thành "đã đính chính" (NFR9.1; có test).
-- <strong>Web Push</strong> = thông báo đẩy của trình duyệt theo chuẩn mở W3C, không phải đối tác thương mại; prototype chưa làm (hỏi lại 5 giây), MVP dùng Web Push, nhãn <em>Để sau prototype</em>. Cơ chế ở 8.2.</p>
-<p><strong>Quyết định then chốt</strong>
-- Modular monolith + tách riêng AI; RB1–RB3; một schema/mô-đun (<code>DECISIONS.md</code> 23/09).
-- PostgreSQL làm trung tâm; không Elasticsearch, không DB vector riêng.
-- Không blockchain; không giữ tiền (cổng thanh toán giữ, kể cả escrow thiết kế); không ML bất thường.
-- Giữ chỗ <strong>15 phút</strong> trước, trừ tồn sau khi thanh toán; COD chỉ cho đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng; webhook xử lý <strong>một lần</strong>.
-- Hết hạn chứng nhận: ẩn nhãn, <strong>không gỡ sản phẩm</strong>; đổi giá &gt; 20% hoặc đổi mô tả chất lượng → duyệt lại (§4.1.2).</p>
+<p><strong>Khái niệm</strong></p>
+<ul>
+<li><strong>Dòng tồn</strong> = (lô, chủ sở hữu, nơi chứa); mọi thay đổi số lượng đi qua <strong>sổ nhập xuất</strong>, không sửa trực tiếp (FR13.3, bảng <code>inventory.stock_holdings</code>, <code>stock_movements</code>).</li>
+<li><strong>Chào giá lô</strong> = nhà cung cấp công bố lô sắp thu hoạch (<code>procurement.supplier_offers</code>); <strong>đơn thu mua</strong> chỉ có hiệu lực khi nhà cung cấp xác nhận, từ đó phần sản lượng được giữ chỗ.</li>
+<li><strong>Máy chủ nghiệp vụ</strong> = NestJS chứa 13 mô-đun; <strong>dịch vụ AI</strong> là khối riêng.</li>
+<li><strong>Xác nhận giao kết</strong> = OTP + lưu tài khoản/thời điểm/mã băm văn bản (không phải chữ ký số).</li>
+<li><strong>Nhập liệu thay nhà cung cấp</strong> = nhân viên hỗ trợ vùng ghi nhật ký hộ nhà cung cấp được phân công; ghi <code>entered_by</code>, thời điểm, lý do, cờ <code>onBehalf</code> (FR4.2, FR10.7; bảng <code>supplier.support_assignments</code>, <code>operations.staff_audit_logs</code>).</li>
+<li><strong>Nhật ký canh tác chỉ nối thêm:</strong> sửa = bản mới có <code>supersedesId</code>, bản cũ thành "đã đính chính" (NFR9.1; có test).</li>
+<li><strong>Web Push</strong> = thông báo đẩy của trình duyệt theo chuẩn mở W3C, không phải đối tác thương mại; prototype chưa làm (hỏi lại 5 giây), MVP dùng Web Push, nhãn <em>Để sau prototype</em>. Cơ chế ở 8.2.</li>
+</ul>
+<p><strong>Quyết định then chốt</strong></p>
+<ul>
+<li>Modular monolith + tách riêng AI; RB1–RB3; một schema/mô-đun (<code>DECISIONS.md</code> 23/09).</li>
+<li>PostgreSQL làm trung tâm; không Elasticsearch, không DB vector riêng.</li>
+<li>Không blockchain; không giữ tiền (cổng thanh toán giữ, kể cả escrow thiết kế); không ML bất thường.</li>
+<li>Giữ chỗ <strong>15 phút</strong> trước, trừ tồn sau khi thanh toán; COD chỉ cho đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng; webhook xử lý <strong>một lần</strong>.</li>
+<li>Hết hạn chứng nhận: ẩn nhãn, <strong>không gỡ sản phẩm</strong>; đổi giá &gt; 20% hoặc đổi mô tả chất lượng → duyệt lại (§4.1.2).</li>
+</ul>
 <p><strong>Số liệu hay bị hỏi (kèm nguồn)</strong></p>
 <table>
 <thead>
@@ -805,11 +827,13 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <hr />
 <h2 id="3-danh-muc-tat-ca-cac-luong">3. Danh mục tất cả các luồng</h2>
 <p>Kiểm chứng trạng thái bằng: (a) bảng <code>tab:chi-thiet-ke</code> và <code>tab:kiemduyet-giaidoan</code> ở Ch4, (b) <code>MVP.md</code>, (c) mã <code>apps/api</code> (controller thực có, đếm 28/10), (d) <code>apps/e2e</code>, (e) <code>NOTES.md</code> mục "BE2: cả 13 thao tác..." (cập nhật 27/10).</p>
-<p><strong>Cách đọc "Trạng thái" — 4 mức (cột ghi thêm nhãn báo cáo)</strong>
-- <strong>A. Chạy trên API thật</strong> + có test: kiểm bằng mã.
-- <strong>B. Giao diện đã dựng theo hợp đồng, API còn 501</strong> (chạy qua server giả theo hợp đồng ngoài repo, không commit).
-- <strong>C. Chưa có mã.</strong> Cột ghi tiếp nhãn: <strong>[Để sau prototype]</strong> (thuộc MVP, ghi ở <code>tab:chi-thiet-ke</code>/<code>tab:kiemduyet-giaidoan</code>), <strong>[Chỉ thiết kế]</strong> (cố ý không làm) hoặc <strong>[Chưa có mã]</strong> (thuộc bản nộp, báo cáo không gắn nhãn).
-- <strong>D. Ngoài phạm vi / hướng phát triển.</strong></p>
+<p><strong>Cách đọc "Trạng thái" — 4 mức (cột ghi thêm nhãn báo cáo)</strong></p>
+<ul>
+<li><strong>A. Chạy trên API thật</strong> + có test: kiểm bằng mã.</li>
+<li><strong>B. Giao diện đã dựng theo hợp đồng, API còn 501</strong> (chạy qua server giả theo hợp đồng ngoài repo, không commit).</li>
+<li><strong>C. Chưa có mã.</strong> Cột ghi tiếp nhãn: <strong>[Để sau prototype]</strong> (thuộc MVP, ghi ở <code>tab:chi-thiet-ke</code>/<code>tab:kiemduyet-giaidoan</code>), <strong>[Chỉ thiết kế]</strong> (cố ý không làm) hoặc <strong>[Chưa có mã]</strong> (thuộc bản nộp, báo cáo không gắn nhãn).</li>
+<li><strong>D. Ngoài phạm vi / hướng phát triển.</strong></li>
+</ul>
 <blockquote>
 <p>Lưu ý: nhóm "ĐÃ HIỆN THỰC" theo cam kết báo cáo/MVP (trục bán lẻ làm sâu) <strong>rộng hơn</strong> nhóm đang chạy được. Cột "Trạng thái mã 28/10" nói đúng hiện trạng.</p>
 </blockquote>
@@ -1391,8 +1415,8 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <li>Phần đạt <strong>đổi chủ</strong> sang dòng tồn của Farmery (giữ mã lô, QR); phần từ chối ở lại dòng nhà cung cấp.</li>
 <li>Ghi khoản phải trả nhà cung cấp theo sản lượng đạt (<code>supplier_payouts</code>; sự kiện <code>ProcurementReceived</code>).</li>
 <li>Đóng gói <strong>một bước</strong> thành đơn vị bán lẻ, in tem QR (<code>packing_runs</code>).</li>
-<li>Nhân viên thu mua <strong>đặt giá bán lẻ</strong> (<code>retail.listings</code>).</li>
-<li>Lô sỉ cận hạn có thể được Farmery thu mua chiết khấu; Farmery không bán sỉ lại (FR13.7 đã rút).</li>
+<li>Nhân viên thu mua <strong>đặt giá bán lẻ</strong> (<code>retail.listings</code>).
+- Lô sỉ cận hạn có thể được Farmery thu mua chiết khấu; Farmery không bán sỉ lại (FR13.7 đã rút).</li>
 </ol>
 <p><strong>E3. Đăng sản phẩm/lô và kiểm duyệt ba giai đoạn — [Hiện thực] phần lô; tạo sản phẩm mới [Giao diện]</strong></p>
 <ol>
@@ -1400,16 +1424,16 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <li>Tạo lô: trạng thái <code>pending_review</code>, hệ thống tự sinh việc duyệt (hạn mặc định 48 giờ, cấu hình được).</li>
 <li>Ghi nhật ký canh tác (chỉ nối thêm; sửa = bản mới có <code>supersedesId</code>, bản cũ thành "đã đính chính").</li>
 <li>Kiểm duyệt viên duyệt → <code>approved</code> + mã <code>TRC-…</code> + <code>traceUrl</code>; hoặc từ chối kèm lý do 5–1000 ký tự.</li>
-<li>Sự kiện <code>BatchApproved</code> mở dòng tồn của nhà cung cấp (phía <code>inventory</code> chưa có).</li>
-<li>Ba giai đoạn (<code>tab:kiemduyet-giaidoan</code>): <strong>trước giao hàng</strong> (hồ sơ/eKYC 5 ngày làm việc; sản phẩm; lô mặc định 48 giờ, cấu hình được; nghiệm thu), <strong>trong giao hàng</strong> (trạng thái chuyến–vận đơn; kiểm khi xuất kho), <strong>sau giao hàng</strong> (khiếu nại; đánh giá nghi vấn, báo cáo sai danh mục; vi phạm, thu hồi lô). Chỉ "lô hàng" và "nhân viên chuyển trạng thái đơn" là đã hiện thực; hồ sơ NCC/eKYC/chứng nhận, nghiệm thu, khiếu nại-đổi trả, đánh giá nghi vấn và báo cáo sai danh mục, vi phạm và thu hồi lô đều <em>Để sau prototype</em>; kiểm khi xuất kho, bàn giao 3PL là <em>Chỉ thiết kế</em>.</li>
-<li>Đổi giá &gt; 20% hoặc đổi mô tả chất lượng → duyệt lại.</li>
+<li>Sự kiện <code>BatchApproved</code> mở dòng tồn của nhà cung cấp (phía <code>inventory</code> chưa có).
+- Ba giai đoạn (<code>tab:kiemduyet-giaidoan</code>): <strong>trước giao hàng</strong> (hồ sơ/eKYC 5 ngày làm việc; sản phẩm; lô mặc định 48 giờ, cấu hình được; nghiệm thu), <strong>trong giao hàng</strong> (trạng thái chuyến–vận đơn; kiểm khi xuất kho), <strong>sau giao hàng</strong> (khiếu nại; đánh giá nghi vấn, báo cáo sai danh mục; vi phạm, thu hồi lô). Chỉ "lô hàng" và "nhân viên chuyển trạng thái đơn" là đã hiện thực; hồ sơ NCC/eKYC/chứng nhận, nghiệm thu, khiếu nại-đổi trả, đánh giá nghi vấn và báo cáo sai danh mục, vi phạm và thu hồi lô đều <em>Để sau prototype</em>; kiểm khi xuất kho, bàn giao 3PL là <em>Chỉ thiết kế</em>.
+- Đổi giá &gt; 20% hoặc đổi mô tả chất lượng → duyệt lại.</li>
 </ol>
 <p><strong>E4. Truy xuất QR — [Hiện thực]</strong></p>
 <ol>
 <li>Khách quét QR → <code>GET /public/trace/{traceCode}</code> (không đăng nhập).</li>
 <li>Trang hiện hồ sơ nhà cung cấp, chứng nhận (chứng nhận hết hạn bị ẩn nhãn), nhật ký canh tác theo thời gian; dòng bị đính chính vẫn hiện (gạch ngang).</li>
-<li>Lô bị thu hồi: trang hiện cảnh báo (thu hồi lô là [Để sau prototype]).</li>
-<li>Đường phục vụ trang này được tách và cache tích cực (thành phần nên tách ra trước nếu chia nhỏ).</li>
+<li>Lô bị thu hồi: trang hiện cảnh báo (thu hồi lô là [Để sau prototype]).
+- Đường phục vụ trang này được tách và cache tích cực (thành phần nên tách ra trước nếu chia nhỏ).</li>
 </ol>
 <p><strong>E5. Bán sỉ RFQ → hợp đồng — [Chưa có mã]; MVP xếp "tối giản", tuần 8–9; <code>fig:act-ban-si</code>, <code>fig:seq-hop-dong-si</code>, UC-D4</strong></p>
 <ol>
@@ -1419,8 +1443,8 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <li>Chốt báo giá → sinh hợp đồng từ mẫu; mỗi lần sửa là một phiên bản (<code>contract_versions</code>).</li>
 <li>Mỗi bên <strong>xác nhận giao kết bằng OTP</strong>; lưu tài khoản, thời điểm, mã băm đúng phiên bản (<code>contract_confirmations</code>); sự kiện <code>ContractConcluded</code>.</li>
 <li>Giữ chỗ dòng tồn của nhà cung cấp; giao <strong>một đợt</strong>; bên mua xác nhận nhận hàng.</li>
-<li>Thanh toán qua cổng khi nhận; Farmery thu hoa hồng + hóa đơn dịch vụ.</li>
-<li>Chỉ thiết kế: ký số (FR6.6 đã rút), giao nhiều đợt (FR6.5), ký quỹ (FR7.3), khấu trừ thuế.</li>
+<li>Thanh toán qua cổng khi nhận; Farmery thu hoa hồng + hóa đơn dịch vụ.
+- Chỉ thiết kế: ký số (FR6.6 đã rút), giao nhiều đợt (FR6.5), ký quỹ (FR7.3), khấu trừ thuế.</li>
 </ol>
 <p><strong>E6. Thanh toán và hoàn tiền — [Giao diện] (cổng giả); thật là [Chỉ thiết kế]</strong></p>
 <ul>
@@ -1433,16 +1457,16 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <ol>
 <li>Chặng 1: nhà cung cấp tự đưa hàng về kho sơ chế Lâm Đồng (xe gom chặng đầu là [Chỉ thiết kế]).</li>
 <li>Chặng 2: xe lạnh Lâm Đồng–TP.HCM theo chuyến cố định; manifest lập sau giờ chốt (<code>transfer_trips</code>, <code>trip_orders</code>).</li>
-<li>Chặng 3: 3PL nội thành tạo vận đơn, webhook trạng thái (<code>shipments</code>, <code>shipment_events</code>).</li>
-<li>Phí giao = cước 3PL + phần chia chặng trung chuyển (FR8.2); trễ/sự cố hiện trên bảng giám sát (FR10.5); lỗi 3PL: Farmery xử lý với khách trước, đòi 3PL sau.</li>
+<li>Chặng 3: 3PL nội thành tạo vận đơn, webhook trạng thái (<code>shipments</code>, <code>shipment_events</code>).
+- Phí giao = cước 3PL + phần chia chặng trung chuyển (FR8.2); trễ/sự cố hiện trên bảng giám sát (FR10.5); lỗi 3PL: Farmery xử lý với khách trước, đòi 3PL sau.</li>
 </ol>
 <p><strong>E8. Đổi trả, hoàn tiền, khiếu nại — [Để sau prototype]; UC-C6, <code>fig:act-doi-tra</code></strong></p>
 <ol>
 <li>Khách gửi yêu cầu trong hạn (rau lá 24 h, củ quả 48 h, hàng khô 7 ngày) kèm ảnh.</li>
 <li>Farmery tiếp nhận trong 24 h; trao đổi theo đơn (<code>messages</code>).</li>
 <li>Phân loại nguyên nhân; quyết định trong 3 ngày làm việc: hoàn toàn phần / một phần / giao bù / từ chối.</li>
-<li>Hoàn tiền qua cổng (7 ngày làm việc); hàng trả về nhập kho (<code>CaseResolved</code>, <code>Refunded</code>).</li>
-<li>Khiếu nại lặp trên một lô tự gắn cờ → vào hàng đợi vận hành.</li>
+<li>Hoàn tiền qua cổng (7 ngày làm việc); hàng trả về nhập kho (<code>CaseResolved</code>, <code>Refunded</code>).
+- Khiếu nại lặp trên một lô tự gắn cờ → vào hàng đợi vận hành.</li>
 </ol>
 <p><strong>E9. Đánh giá — [Để sau prototype]; UC-C7, <code>fig:act-danh-gia</code></strong></p>
 <ol>
@@ -1560,35 +1584,45 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <p><em>(Câu dự phòng ngắn)</em> <strong>Có chặn giá bất thường không?</strong> Hệ thống kiểm sơ bộ giá lệch mặt bằng danh mục + luật ngưỡng cấu hình bởi quản trị viên. <strong>Có thử với nông dân thật chưa?</strong> Chưa; kế hoạch tuần 13 theo PL-B, ngưỡng 80% hoàn thành không hỗ trợ.</p>
 <hr />
 <h2 id="5-iem-yeu-can-biet-truoc-trung-thuc">5. Điểm yếu cần biết trước (trung thực)</h2>
-<p><strong>A. Phần báo cáo còn TODO (hội đồng đọc thấy ngay)</strong>
-1. <strong>Ch6 gần như trống:</strong> chỉ có §6.1.1 môi trường; thiếu kiến trúc triển khai, 8 mô-đun hiện thực, giải thuật, kết quả kiểm thử.
-2. <strong>Ch7 chưa có một số đo nào:</strong> không có bảng test case, số đo k6/Lighthouse/axe, số đo chống bán vượt, kết quả RBAC, kết quả AI, kết chương. Phải nói là <em>"khung và ngưỡng"</em>, không nói "đã đạt".
-3. <strong>Ch8 §8.1 "Kết quả đạt được" là TODO:</strong> chưa đối chiếu MT1–MT7.
-4. <strong>Ch5 còn TODO:</strong> thiết kế API, UI/UX, test case; sơ đồ luồng dữ liệu AI.
-5. <strong>Phụ lục A (hướng dẫn sử dụng), C (mã nguồn bổ sung) TODO;</strong> Ch7 thiếu "điều kiện đo" (cấu hình máy, phiên bản công cụ).
-6. <code>NOTES.md</code> còn mục mở: TODO trích dẫn (văn bản pháp lý Ch2), kiểm tra lại Ch1 mục tiêu/phạm vi. (Tôi không rà lại toàn bộ <code>NOTES.md</code> nên có thể còn mục khác.)</p>
-<p><strong>B. Phần chưa hiện thực nhưng báo cáo viết như trục chính</strong>
-7. <strong>Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.</strong> <code>retail</code>, <code>payment</code>, <code>inventory</code>, <code>fulfillment</code>, <code>procurement</code>, <code>wholesale</code>, <code>engagement</code>, <code>notification</code>, <code>media</code> chỉ có file module rỗng; hợp đồng 40 thao tác, <strong>20 có handler</strong>, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng <strong>server giả ngoài repo, không commit</strong> (<code>DECISIONS.md</code> 17/10, 21/10). <code>NOTES.md</code> mục "BE2" (27/10) vẫn <code>Status: open</code>.
-8. <strong>Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:</strong> <code>apps/api/README.md</code> nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun <code>inventory</code>/<code>retail</code> rỗng.
-9. <strong>Nhập liệu thay nhà cung cấp</strong> (thuật ngữ mới của báo cáo): service đã gán <code>onBehalf</code> cho <code>staff_*</code>, nhưng <code>x-roles</code> của <code>appendFarmingLog</code> chỉ có <code>seller</code> → nhân viên hỗ trợ vùng sẽ bị 403; chưa có test. (Tôi suy từ đọc mã, chưa chạy.)
-10. <strong>AI:</strong> không có dịch vụ Python/FastAPI nào trong <code>apps/</code>; tìm kiếm là bỏ dấu + Levenshtein trong bộ nhớ, "tương tự" là cùng danh mục lấy 4 sản phẩm đầu, <strong>không có</strong> ngữ nghĩa/vector/dự báo giá/mã <code>product_embeddings</code>/<code>price_forecasts</code> thật.
-11. <strong>Không có Web Push (Để sau prototype), SMTP gửi thư, SMS (chỉ thiết kế), hóa đơn giả lập, GHN, hoàn tiền</strong> nào chạy; theo dõi đơn dùng hỏi lại 5 giây. Trong 5 hệ thống ngoài thuộc phạm vi MVP, mã chỉ có 2 đứng sau interface kèm bản giả (cổng thanh toán, gửi OTP qua email).
-12. <strong>Eventing/Redis:</strong> 17 sự kiện thiết kế (PL-V), chưa có hàng đợi; mô-đun gọi nhau chưa qua sự kiện.</p>
-<p><strong>C. Chỗ prototype dùng mock / trong bộ nhớ</strong>
-13. Lưu trữ <strong>trong bộ nhớ</strong> từ <code>packages/mock-data</code>, <code>POST /api/dev/reset</code>; Prisma/PostgreSQL dự kiến tuần 5 (23–29/10), chưa xong. Do đó <strong>chưa có</strong> giao dịch CSDL thật, schema 65 bảng chưa được dùng trong chạy thật.
-14. <code>identity</code> là bản tạm: vai trò theo quy tắc email (email chứa "admin"/"staff"), mọi email khác thành cùng một người dùng <code>seller</code>+<code>buyer_retail</code> (id 201); <code>GET /me</code> cố định; <code>FALLBACK</code>/giá trị gõ cứng (<code>supplierId "101"</code>, <code>categoryId "1"</code>, <code>unit "kg"</code>) ở <code>catalog.service</code> (<code>NOTES.md</code> 21/10, BE1).
-15. OTP cố định <code>123456</code> trả <code>devCode</code> (chỉ khi <code>DEMO_MODE</code>); thanh toán <code>DemoPaymentGateway</code>; nhân viên bấm chuyển bước thay webhook; token admin ở <code>localStorage</code>; id sinh bằng <code>Date.now()</code> có thể trùng; URL ảnh nhật ký gõ cứng <code>localhost:4000</code>.
-16. CI chưa chạy Playwright; <code>develop</code>/<code>main</code> chưa bật branch protection (<code>NOTES.md</code> 27/10).
-17. Số test: 37 API + 10 Playwright <strong>chỉ phủ phần đã chạy</strong> (đăng nhập, catalog, lô–duyệt–QR); không đo độ phủ/SonarQube trong tài liệu tôi đọc.</p>
-<p><strong>D. Mâu thuẫn tài liệu cần chuẩn bị đáp</strong>
-18. <strong>Nhãn "Để sau prototype" đã khép các mâu thuẫn cũ</strong> giữa <code>MVP.md</code>/§1.3.4 và Ch4 (đánh giá FR5.5, thông báo đẩy FR11.1, nghiệm thu nhập kho, hồ sơ NCC/eKYC): cùng thuộc MVP, nhưng chưa làm ở prototype. Cách nói: ba mức (Ch1 §1.3.4) trả lời "làm sâu đến đâu", ba nhãn trả lời "đã làm chưa"; đánh giá và thông báo vẫn nằm trong trục bán lẻ làm sâu, nhưng nhãn là <em>Để sau prototype</em>.
-19. Kế hoạch (<code>kehoach.tex</code>) cập nhật 13/10; hiện trạng 28/10 trễ so với kế hoạch tuần 5–7 (Prisma, tồn kho). Nên có sẵn câu giải thích và phương án cắt.
-20. Ch2 <code>tab:phaply</code> tham chiếu các văn bản đặt hiệu lực 2026 (NĐ 248/2026, NĐ 68/2026, NĐ 141/2026...); báo cáo tự nhận chưa đọc toàn văn NĐ 141/2026.
-21. <strong>Nhãn dư âm trong báo cáo (đọc 28/10):</strong> PL-M dòng FR9 còn ghi "yêu thích <em>(chỉ thiết kế)</em>", Ch5 §5.3.5 và PL-K (<code>wishlist_items</code>) cũng ghi "chỉ thiết kế", PL-K cột <code>channel</code> ghi <code>push</code> là "Chỉ thiết kế"; trong khi Ch4 ghi FR9.2 và Web Push là <em>Để sau prototype</em>. Nếu bị hỏi, nói theo Ch4 (nguồn định nghĩa nhãn).</p>
-<p><strong>E. Gợi ý chuẩn bị</strong>
-- Làm một bảng "MT1–MT7 × bằng chứng": MT1 (thủ công, <code>ekyc_documents</code> chưa chạy), MT2 <strong>có</strong>, MT3–MT5 thiết kế + giao diện, MT6 chưa, MT7 một phần (kiểm duyệt lô, tổng quan).
-- Chuẩn bị demo duy nhất chắc chạy: <strong>đăng nhập → NCC tạo lô + ghi nhật ký → cán bộ duyệt → quét QR công khai → NCC thấy "Đã phê duyệt"</strong>; chạy <code>pnpm e2e</code> trước giờ bảo vệ.
-- Với mọi câu hỏi về chống bán vượt/AI/thanh toán: trả lời <em>thiết kế → vì sao → kế hoạch → hiện trạng</em>, không nhận là đã chạy.</p>
+<p><strong>A. Phần báo cáo còn TODO (hội đồng đọc thấy ngay)</strong></p>
+<ol>
+<li><strong>Ch6 gần như trống:</strong> chỉ có §6.1.1 môi trường; thiếu kiến trúc triển khai, 8 mô-đun hiện thực, giải thuật, kết quả kiểm thử.</li>
+<li><strong>Ch7 chưa có một số đo nào:</strong> không có bảng test case, số đo k6/Lighthouse/axe, số đo chống bán vượt, kết quả RBAC, kết quả AI, kết chương. Phải nói là <em>"khung và ngưỡng"</em>, không nói "đã đạt".</li>
+<li><strong>Ch8 §8.1 "Kết quả đạt được" là TODO:</strong> chưa đối chiếu MT1–MT7.</li>
+<li><strong>Ch5 còn TODO:</strong> thiết kế API, UI/UX, test case; sơ đồ luồng dữ liệu AI.</li>
+<li><strong>Phụ lục A (hướng dẫn sử dụng), C (mã nguồn bổ sung) TODO;</strong> Ch7 thiếu "điều kiện đo" (cấu hình máy, phiên bản công cụ).</li>
+<li><code>NOTES.md</code> còn mục mở: TODO trích dẫn (văn bản pháp lý Ch2), kiểm tra lại Ch1 mục tiêu/phạm vi. (Tôi không rà lại toàn bộ <code>NOTES.md</code> nên có thể còn mục khác.)</li>
+</ol>
+<p><strong>B. Phần chưa hiện thực nhưng báo cáo viết như trục chính</strong></p>
+<ol start="7">
+<li><strong>Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.</strong> <code>retail</code>, <code>payment</code>, <code>inventory</code>, <code>fulfillment</code>, <code>procurement</code>, <code>wholesale</code>, <code>engagement</code>, <code>notification</code>, <code>media</code> chỉ có file module rỗng; hợp đồng 40 thao tác, <strong>20 có handler</strong>, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng <strong>server giả ngoài repo, không commit</strong> (<code>DECISIONS.md</code> 17/10, 21/10). <code>NOTES.md</code> mục "BE2" (27/10) vẫn <code>Status: open</code>.</li>
+<li><strong>Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:</strong> <code>apps/api/README.md</code> nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun <code>inventory</code>/<code>retail</code> rỗng.</li>
+<li><strong>Nhập liệu thay nhà cung cấp</strong> (thuật ngữ mới của báo cáo): service đã gán <code>onBehalf</code> cho <code>staff_*</code>, nhưng <code>x-roles</code> của <code>appendFarmingLog</code> chỉ có <code>seller</code> → nhân viên hỗ trợ vùng sẽ bị 403; chưa có test. (Tôi suy từ đọc mã, chưa chạy.)</li>
+<li><strong>AI:</strong> không có dịch vụ Python/FastAPI nào trong <code>apps/</code>; tìm kiếm là bỏ dấu + Levenshtein trong bộ nhớ, "tương tự" là cùng danh mục lấy 4 sản phẩm đầu, <strong>không có</strong> ngữ nghĩa/vector/dự báo giá/mã <code>product_embeddings</code>/<code>price_forecasts</code> thật.</li>
+<li><strong>Không có Web Push (Để sau prototype), SMTP gửi thư, SMS (chỉ thiết kế), hóa đơn giả lập, GHN, hoàn tiền</strong> nào chạy; theo dõi đơn dùng hỏi lại 5 giây. Trong 5 hệ thống ngoài thuộc phạm vi MVP, mã chỉ có 2 đứng sau interface kèm bản giả (cổng thanh toán, gửi OTP qua email).</li>
+<li><strong>Eventing/Redis:</strong> 17 sự kiện thiết kế (PL-V), chưa có hàng đợi; mô-đun gọi nhau chưa qua sự kiện.</li>
+</ol>
+<p><strong>C. Chỗ prototype dùng mock / trong bộ nhớ</strong></p>
+<ol start="13">
+<li>Lưu trữ <strong>trong bộ nhớ</strong> từ <code>packages/mock-data</code>, <code>POST /api/dev/reset</code>; Prisma/PostgreSQL dự kiến tuần 5 (23–29/10), chưa xong. Do đó <strong>chưa có</strong> giao dịch CSDL thật, schema 65 bảng chưa được dùng trong chạy thật.</li>
+<li><code>identity</code> là bản tạm: vai trò theo quy tắc email (email chứa "admin"/"staff"), mọi email khác thành cùng một người dùng <code>seller</code>+<code>buyer_retail</code> (id 201); <code>GET /me</code> cố định; <code>FALLBACK</code>/giá trị gõ cứng (<code>supplierId "101"</code>, <code>categoryId "1"</code>, <code>unit "kg"</code>) ở <code>catalog.service</code> (<code>NOTES.md</code> 21/10, BE1).</li>
+<li>OTP cố định <code>123456</code> trả <code>devCode</code> (chỉ khi <code>DEMO_MODE</code>); thanh toán <code>DemoPaymentGateway</code>; nhân viên bấm chuyển bước thay webhook; token admin ở <code>localStorage</code>; id sinh bằng <code>Date.now()</code> có thể trùng; URL ảnh nhật ký gõ cứng <code>localhost:4000</code>.</li>
+<li>CI chưa chạy Playwright; <code>develop</code>/<code>main</code> chưa bật branch protection (<code>NOTES.md</code> 27/10).</li>
+<li>Số test: 37 API + 10 Playwright <strong>chỉ phủ phần đã chạy</strong> (đăng nhập, catalog, lô–duyệt–QR); không đo độ phủ/SonarQube trong tài liệu tôi đọc.</li>
+</ol>
+<p><strong>D. Mâu thuẫn tài liệu cần chuẩn bị đáp</strong></p>
+<ol start="18">
+<li><strong>Nhãn "Để sau prototype" đã khép các mâu thuẫn cũ</strong> giữa <code>MVP.md</code>/§1.3.4 và Ch4 (đánh giá FR5.5, thông báo đẩy FR11.1, nghiệm thu nhập kho, hồ sơ NCC/eKYC): cùng thuộc MVP, nhưng chưa làm ở prototype. Cách nói: ba mức (Ch1 §1.3.4) trả lời "làm sâu đến đâu", ba nhãn trả lời "đã làm chưa"; đánh giá và thông báo vẫn nằm trong trục bán lẻ làm sâu, nhưng nhãn là <em>Để sau prototype</em>.</li>
+<li>Kế hoạch (<code>kehoach.tex</code>) cập nhật 13/10; hiện trạng 28/10 trễ so với kế hoạch tuần 5–7 (Prisma, tồn kho). Nên có sẵn câu giải thích và phương án cắt.</li>
+<li>Ch2 <code>tab:phaply</code> tham chiếu các văn bản đặt hiệu lực 2026 (NĐ 248/2026, NĐ 68/2026, NĐ 141/2026...); báo cáo tự nhận chưa đọc toàn văn NĐ 141/2026.</li>
+<li><strong>Nhãn dư âm trong báo cáo (đọc 28/10):</strong> PL-M dòng FR9 còn ghi "yêu thích <em>(chỉ thiết kế)</em>", Ch5 §5.3.5 và PL-K (<code>wishlist_items</code>) cũng ghi "chỉ thiết kế", PL-K cột <code>channel</code> ghi <code>push</code> là "Chỉ thiết kế"; trong khi Ch4 ghi FR9.2 và Web Push là <em>Để sau prototype</em>. Nếu bị hỏi, nói theo Ch4 (nguồn định nghĩa nhãn).</li>
+</ol>
+<p><strong>E. Gợi ý chuẩn bị</strong></p>
+<ul>
+<li>Làm một bảng "MT1–MT7 × bằng chứng": MT1 (thủ công, <code>ekyc_documents</code> chưa chạy), MT2 <strong>có</strong>, MT3–MT5 thiết kế + giao diện, MT6 chưa, MT7 một phần (kiểm duyệt lô, tổng quan).</li>
+<li>Chuẩn bị demo duy nhất chắc chạy: <strong>đăng nhập → NCC tạo lô + ghi nhật ký → cán bộ duyệt → quét QR công khai → NCC thấy "Đã phê duyệt"</strong>; chạy <code>pnpm e2e</code> trước giờ bảo vệ.</li>
+<li>Với mọi câu hỏi về chống bán vượt/AI/thanh toán: trả lời <em>thiết kế → vì sao → kế hoạch → hiện trạng</em>, không nhận là đã chạy.</li>
+</ul>
 <hr />
 <h2 id="6-o-khong-chac-cua-tai-lieu-nay">6. Độ không chắc của tài liệu này</h2>
 <ul>
