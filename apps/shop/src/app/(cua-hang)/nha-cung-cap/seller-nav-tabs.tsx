@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Layers, Package, PlusCircle } from "lucide-react";
+import { Layers, Package, PackagePlus, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -10,6 +10,12 @@ const TABS = [
     href: "/nha-cung-cap",
     label: "Sản phẩm của tôi",
     icon: Package,
+    exact: true,
+  },
+  {
+    href: "/nha-cung-cap/san-pham/tao-moi",
+    label: "Đăng sản phẩm mới",
+    icon: PackagePlus,
     exact: true,
   },
   {

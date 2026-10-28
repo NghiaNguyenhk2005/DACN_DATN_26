@@ -50,14 +50,14 @@ Bốn vấn đề này được ánh xạ sang hướng giải quyết cụ th�
 
 \subsection{Mục tiêu tổng quát}
 
-Xây dựng Farmery --- một nền tảng thương mại điện tử chuyên biệt cho nông sản, vận hành đồng thời hai luồng: một sàn bán sỉ nơi nông dân và hợp tác xã tự bán cho doanh nghiệp thu mua, và một gian hàng bán lẻ nơi chính nền tảng thu mua hàng rồi bán lại cho người tiêu dùng --- nhằm góp phần giải quyết bốn vấn đề đã nêu tại mục~\ref{sec:vande}.
+Xây dựng Farmery --- một nền tảng thương mại điện tử chuyên biệt cho nông sản, vận hành đồng thời hai luồng: một sàn bán sỉ nơi nông dân và hợp tác xã tự bán cho doanh nghiệp mua sỉ, và một gian hàng bán lẻ nơi chính nền tảng thu mua hàng rồi bán lại cho người tiêu dùng --- nhằm góp phần giải quyết bốn vấn đề đã nêu tại mục~\ref{sec:vande}.
 
 \subsection{Mục tiêu cụ thể}
 
 \begin{enumerate}
     \item[\textbf{MT1.}] Xây dựng quy trình đăng ký, xác thực và kiểm duyệt chứng nhận chất lượng cho nhà cung cấp, làm cơ sở minh bạch hóa thông tin nguồn gốc sản phẩm.
     \item[\textbf{MT2.}] Hiện thực cơ chế truy xuất nguồn gốc bằng mã QR gắn với nhật ký canh tác theo từng lô sản phẩm.
-    \item[\textbf{MT3.}] Hiện thực luồng bán sỉ ở mức tối giản cho doanh nghiệp thu mua: yêu cầu báo giá, hợp đồng có xác nhận giao kết, giá bậc theo sản lượng tối thiểu (MOQ) và giao hàng một đợt; thiết kế đầy đủ phần giao nhiều đợt và ký quỹ.
+    \item[\textbf{MT3.}] Hiện thực luồng bán sỉ ở mức tối giản cho doanh nghiệp mua sỉ: yêu cầu báo giá, hợp đồng có xác nhận giao kết, giá bậc theo sản lượng tối thiểu (MOQ) và giao hàng một đợt; thiết kế đầy đủ phần giao nhiều đợt và ký quỹ.
     \item[\textbf{MT4.}] Hiện thực luồng bán lẻ theo mô hình nền tảng tự thu mua và bán lại, gồm đơn thu mua, nghiệm thu, tồn kho theo lô, đóng gói kèm tem QR và định giá bán.
     \item[\textbf{MT5.}] Hiện thực trọn trục bán lẻ phía khách hàng --- giỏ hàng, thanh toán, theo dõi đơn, giao hàng ba chặng, đổi trả và hoàn tiền --- phù hợp đặc thù hàng nông sản dễ hư hỏng.
     \item[\textbf{MT6.}] Tích hợp các tính năng AI hỗ trợ ra quyết định: tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm tương tự và dự báo giá nông sản cho khâu thu mua.
@@ -95,7 +95,7 @@ Số liệu thực trạng và các văn bản chính sách được tham chiế
 
 \subsection{Phạm vi nội dung}
 
-Hệ thống phục vụ ba nhóm người dùng bên ngoài --- nhà cung cấp là nông dân và hợp tác xã, khách sỉ là doanh nghiệp thu mua, khách lẻ là người tiêu dùng cá nhân --- cùng nhân sự nội bộ của Farmery được chia thành sáu vai trò theo phạm vi công việc (chi tiết tại mục~\ref{sec:doituongnguoidung}). Về nghiệp vụ, đồ án bao phủ toàn bộ vòng đời của một lô nông sản trên nền tảng: từ đăng ký và xác thực nhà cung cấp, đăng và kiểm duyệt sản phẩm, tới hai luồng bán hàng song song, quản lý tồn kho và vận chuyển, đánh giá uy tín, và cuối cùng là các công cụ quản trị (mục~\ref{sec:quytrinhnghiepvu}).
+Hệ thống phục vụ ba nhóm người dùng bên ngoài --- nhà cung cấp là nông dân và hợp tác xã, khách sỉ là doanh nghiệp mua sỉ, khách lẻ là người tiêu dùng cá nhân --- cùng nhân sự nội bộ của Farmery được chia thành sáu vai trò theo phạm vi công việc (chi tiết tại mục~\ref{sec:doituongnguoidung}). Về nghiệp vụ, đồ án bao phủ toàn bộ vòng đời của một lô nông sản trên nền tảng: từ đăng ký và xác thực nhà cung cấp, đăng và kiểm duyệt sản phẩm, tới hai luồng bán hàng song song, quản lý tồn kho và vận chuyển, đánh giá uy tín, và cuối cùng là các công cụ quản trị (mục~\ref{sec:quytrinhnghiepvu}).
 
 \subsection{Phạm vi hiện thực}
 
@@ -105,7 +105,7 @@ Báo cáo thiết kế đủ cả hai luồng, nhưng phần hiện thực tập
     \item \textbf{Nguồn hàng, rút gọn:} đăng ký và xác thực nhà cung cấp, chứng nhận, đăng sản phẩm và lô kèm mã QR, đơn thu mua có nhà cung cấp xác nhận, nghiệm thu nhập kho, dòng tồn và sổ nhập xuất, một bước đóng gói ra đơn vị bán lẻ, thu hồi lô. Sơ chế, phân loại nhiều bước và kiểm kê chỉ được thiết kế.
     \item \textbf{Bán sỉ, tối giản:} yêu cầu báo giá, phản hồi, chốt giá, sinh hợp đồng và xác nhận giao kết, giao một đợt với thanh toán thường. Giao nhiều đợt và ký quỹ trung gian chỉ được thiết kế.
 \end{itemize}
-Các mục chỉ thiết kế được ghi chú ngay trong danh sách yêu cầu (mục~\ref{sec:yeucauchucnang}); các hạng mục đã rút khỏi bộ yêu cầu được nêu ở hướng phát triển (Chương~\ref{chap:ketluan}).
+Ba mức trên là mức độ làm sâu. Trạng thái của từng yêu cầu được ghi bằng ba nhãn dùng thống nhất trong báo cáo: \emph{đã hiện thực}; \emph{chỉ thiết kế}, tức đặc tả đầy đủ nhưng cố ý không làm trong đồ án; và \emph{để sau prototype}, tức thuộc phạm vi sản phẩm khả dụng tối thiểu nhưng chưa làm ở bản prototype. Các nhãn được ghi ngay trong danh sách yêu cầu và định nghĩa ở mục~\ref{sec:yeucauchucnang}; các hạng mục đã rút khỏi bộ yêu cầu được nêu ở hướng phát triển (Chương~\ref{chap:ketluan}).
 
 \subsection{Giới hạn kỹ thuật}
 

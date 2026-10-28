@@ -1,4 +1,4 @@
-import { AuditOutlined, DashboardOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { AuditOutlined, DashboardOutlined, InboxOutlined, SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { ErrorComponent, ThemedLayout, ThemedTitle, useNotificationProvider } from "@refinedev/antd";
 import { Authenticated, CanAccess, Refine } from "@refinedev/core";
 import routerProvider, {
@@ -11,11 +11,13 @@ import { App as AntdApp, ConfigProvider, Result } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { DashboardPage } from "./pages/dashboard";
+import { InventoryList } from "./pages/inventory/list";
 import { LoginPage } from "./pages/login";
 import { OrderList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { ReviewTaskList } from "./pages/review-tasks/list";
 import { ReviewTaskShow } from "./pages/review-tasks/show";
+import { SettingsPage } from "./pages/settings";
 import { accessControlProvider } from "./providers/access-control-provider";
 import { authProvider } from "./providers/auth-provider";
 import { dataProvider } from "./providers/data-provider";
@@ -58,6 +60,16 @@ export function App() {
                   roles: ["staff_operations", "staff_warehouse"],
                 },
               },
+              {
+                name: "inventory",
+                list: "/kho",
+                meta: { label: "Tồn kho", icon: <InboxOutlined />, roles: ["staff_warehouse", "staff_operations"] },
+              },
+              {
+                name: "settings",
+                list: "/cau-hinh",
+                meta: { label: "Cấu hình", icon: <SettingOutlined />, roles: ["platform_owner", "staff_operations"] },
+              },
             ]}
             options={{ syncWithLocation: true, warnWhenUnsavedChanges: true, disableTelemetry: true }}
           >
@@ -84,6 +96,8 @@ export function App() {
                   <Route index element={<OrderList />} />
                   <Route path=":id" element={<OrderShow />} />
                 </Route>
+                <Route path="/kho" element={<InventoryList />} />
+                <Route path="/cau-hinh" element={<SettingsPage />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Route>
               <Route

@@ -25,6 +25,19 @@ test.describe("Admin — đăng nhập OTP", () => {
     await expect(page).toHaveURL("/");
     await expect(page.getByText("Tổng quan").first()).toBeVisible();
     await expect(page.getByRole("menuitem", { name: /Kiểm duyệt/ })).toBeVisible();
+    await expect(page.locator(".ant-statistic-title", { hasText: "Chờ duyệt" })).toBeVisible();
+    await expect(page.getByText("Gần hạn nhất")).toBeVisible();
+  });
+
+  test("menu theo vai trò: chủ nền tảng thấy Cấu hình, không thấy Tồn kho", async ({ page }) => {
+    const code = await requestOtp(page, "staff@example.com");
+    await submitOtp(page, code);
+
+    await expect(page.getByRole("menuitem", { name: /Cấu hình/ })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: /Tồn kho/ })).toHaveCount(0);
+    await page.getByRole("menuitem", { name: /Cấu hình/ }).click();
+    await expect(page).toHaveURL("/cau-hinh");
+    await expect(page.getByText("Cấu hình nền tảng")).toBeVisible();
   });
 
   test("tài khoản không phải nhân viên bị chặn", async ({ page }) => {

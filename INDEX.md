@@ -37,10 +37,10 @@ làm nền MVP: mục "Chuẩn bị prototype làm nền MVP".
 
 | Thư mục | Gói | Vai trò | Cổng / lệnh |
 |---|---|---|---|
-| `apps/shop/` | `@farmery/shop` | Ứng dụng mua hàng (gồm khu nhà cung cấp): Next.js 16 App Router + Tailwind 4 + shadcn/ui (`components.json`, style base-nova). `src/app/` trang: `(cua-hang)/` các trang dùng chung đầu/chân trang: công khai (trang chủ, `danh-muc/[slug]`, `san-pham/[slug]`, `tim-kiem`; đường dẫn dạng `ten-<id>`) và luồng khách lẻ (`dang-nhap` OTP qua email, `gio-hang`, `thanh-toan`, `don-hang/[ma]` trả tiền giả lập có đếm ngược giữ chỗ), `truy-xuat/[ma]/` trang truy xuất theo `traceCode` có layout gọn; `src/components/farmery/` component theo gói thiết kế (token trong `src/app/globals.css`), `src/components/ui/` thành phần shadcn (`pnpm dlx shadcn@4.21.0 add <tên>`); `src/lib/data/` lớp dữ liệu phía máy chủ cho Server Components (gọi API, 404 → null, lỗi → `error.tsx`), `src/lib/data/actions.ts` Server Action "Xem thêm"; `src/lib/data/account.ts` lớp dữ liệu cần đăng nhập (`requireViewer`, giỏ, địa chỉ, báo giá, đơn) và `auth-`, `cart-`, `order-actions.ts` Server Action ghi; `src/lib/session.ts` cookie phiên httpOnly; `src/proxy.ts` chặn nhanh `/gio-hang`, `/thanh-toan`, `/don-hang/*` khi chưa có cookie; `src/lib/problem.ts` mã lỗi `Problem.code` → câu báo tiếng Việt; `src/lib/filters.ts` bộ lọc trên URL, `src/lib/api.ts` client gọi API từ trình duyệt (`NEXT_PUBLIC_API_URL`), `src/lib/image-hosts.ts` host ảnh ngoài được phép (dùng chung với `next.config.ts`) | 3000 · `typecheck` chạy `next typegen` trước `tsc` |
-| `apps/admin/` | `@farmery/admin` | Ứng dụng nội bộ: Vite + React + Refine 5 + Ant Design 5 (`@refinedev/antd`), cấu trúc theo mẫu Finefoods. `src/App.tsx` khai resource và route; `src/providers/` `authProvider`, `dataProvider` (stub, chờ nối API); `src/theme.ts` token antd; `src/pages/<resource>/` màn hình; `src/lib/api.ts` client (`VITE_API_URL`) | 5173 |
+| `apps/shop/` | `@farmery/shop` | Ứng dụng mua hàng (gồm khu nhà cung cấp): Next.js 16 App Router + Tailwind 4 + shadcn/ui (`components.json`, style base-nova). `src/app/` trang: `(cua-hang)/` các trang dùng chung đầu/chân trang: công khai (trang chủ, `danh-muc/[slug]`, `san-pham/[slug]`, `tim-kiem`; đường dẫn dạng `ten-<id>`) và luồng khách lẻ (`dang-nhap` OTP qua email, `gio-hang`, `thanh-toan`, `don-hang/[ma]` trả tiền giả lập có đếm ngược giữ chỗ), `nha-cung-cap/` khu nhà cung cấp (sản phẩm của tôi, `san-pham/tao-moi` đăng sản phẩm chờ duyệt, `lo-hang/` danh sách, tạo lô, chi tiết lô kèm nhật ký), `truy-xuat/[ma]/` trang truy xuất theo `traceCode` có layout gọn; `src/components/farmery/` component theo gói thiết kế (token trong `src/app/globals.css`), `src/components/ui/` thành phần shadcn (`pnpm dlx shadcn@4.21.0 add <tên>`); `src/lib/data/` lớp dữ liệu phía máy chủ cho Server Components (gọi API, 404 → null, lỗi → `error.tsx`), `src/lib/data/actions.ts` Server Action "Xem thêm"; `src/lib/data/account.ts` lớp dữ liệu cần đăng nhập (`requireViewer`, giỏ, địa chỉ, báo giá, đơn) và `auth-`, `cart-`, `order-actions.ts` Server Action ghi; `src/lib/session.ts` cookie phiên httpOnly; `src/proxy.ts` chặn nhanh `/gio-hang`, `/thanh-toan`, `/don-hang/*` khi chưa có cookie; `src/lib/problem.ts` mã lỗi `Problem.code` → câu báo tiếng Việt; `src/lib/filters.ts` bộ lọc trên URL, `src/lib/api.ts` client gọi API từ trình duyệt (`NEXT_PUBLIC_API_URL`), `src/lib/image-hosts.ts` host ảnh ngoài được phép (dùng chung với `next.config.ts`) | 3000 · `typecheck` chạy `next typegen` trước `tsc` |
+| `apps/admin/` | `@farmery/admin` | Ứng dụng nội bộ: Vite + React + Refine 5 + Ant Design 5 (`@refinedev/antd`), cấu trúc theo mẫu Finefoods. `src/App.tsx` khai resource và route; `src/providers/` `authProvider` (OTP), `dataProvider` (ánh xạ resource → thao tác hợp đồng, phân trang cursor), `accessControlProvider` (menu theo `meta.roles` chép từ `x-roles`); `src/theme.ts` token antd; `src/pages/<resource>/` màn hình: `dashboard` (Tổng quan, khối Kiểm duyệt cho `staff_moderation`), `review-tasks` (`/kiem-duyet`, chi tiết theo bốn loại việc duyệt), `orders` (`/van-hanh`), `inventory` (`/kho`, tồn theo lô + sổ nhập xuất), `settings` (`/cau-hinh`, chỉ `platform_owner` sửa); `src/lib/labels.ts` nhãn tiếng Việt cho enum hợp đồng; `src/lib/api.ts` client (`VITE_API_URL`) | 5173 |
 | `apps/api/` | `@farmery/api` | NestJS 11, mọi đường dẫn dưới `/api`. `src/core/` nền chung: cấu hình (`app-config.ts`: `PORT`, `CORS_ORIGINS`, `DEMO_MODE`, `JWT_SECRET`, `VALIDATE_RESPONSES`), kiểm dữ liệu vào/ra theo `openapi.yaml` (`openapi-validator.ts`), `AuthGuard` đọc `security`/`x-roles` từ hợp đồng, JWT (`token.service.ts`), lỗi RFC 9457 (`problem.ts`, `problem.filter.ts`), `Idempotency-Key`, `DemoResetRegistry`. `src/modules/` 13 mô-đun theo báo cáo, `catalog` là mẫu controller → service → repository (bản trong bộ nhớ). `src/integrations/` interface dịch vụ ngoài (`OtpSender`, `PaymentGateway`) kèm bản giả. `src/system/` `GET /api/health`, `POST /api/dev/reset` (204, chỉ khi `DEMO_MODE`). `app.setup.ts` dùng chung cho `main.ts` và test. Swagger ở `/docs` (JSON `/docs-json`). `test/` e2e jest + supertest. `README.md`: khuôn viết endpoint, quy tắc, mã lỗi khung tự trả | 4000 · `dev` = `nest start --watch` · `test` |
-| `apps/e2e/` | `@farmery/e2e` | Test e2e trên trình duyệt (Playwright, Chromium). `playwright.config.ts` hai project `shop`, `admin` (mỗi project một `baseURL`), `webServer` tự bật api + shop + admin ở cổng mặc định hoặc dùng lại server đang chạy (trừ khi `CI`), chạy tuần tự một worker; `tests/global-setup.ts` gọi `POST /api/dev/reset`; `tests/shop/`, `tests/admin/` các spec (hiện có: đăng nhập OTP). Kết quả ở `test-results/`, `playwright-report/` (gitignore) | `pnpm e2e` ở gốc · `e2e:ui`, `e2e:report` · không thuộc `pnpm test` |
+| `apps/e2e/` | `@farmery/e2e` | Test e2e trên trình duyệt (Playwright, Chromium). `playwright.config.ts` ba project: `shop`, `admin` (mỗi project một `baseURL`) và `kich-ban` (kịch bản xuyên hai app, dùng `SHOP_URL`/`ADMIN_URL` export từ config), `webServer` tự bật api + shop + admin ở cổng mặc định hoặc dùng lại server đang chạy (trừ khi `CI`), chạy tuần tự một worker; `tests/global-setup.ts` gọi `POST /api/dev/reset`; `tests/shop/`, `tests/admin/` spec đăng nhập OTP; `tests/kich-ban/` kịch bản nhiều vai (mỗi vai một browser context): đăng lô + nhật ký → duyệt → truy xuất, và từ chối lô; `tests/helpers.ts` hàm đăng nhập shop/admin. Kết quả ở `test-results/`, `playwright-report/` (gitignore) | `pnpm e2e` ở gốc · `e2e:ui`, `e2e:report` · không thuộc `pnpm test` |
 | `packages/contract/` | `@farmery/contract` | `openapi.yaml` — hợp đồng API (OpenAPI 3.1, 33 đường dẫn, 40 thao tác, `servers` có tiền tố `/api`), tên trường bám `report/schema.dbml`, vai trò ở `x-roles`. `lint:spec` (Redocly, cấu hình `redocly.yaml`; thiếu `summary` là lỗi); `generate` sinh `src/generated/schema.ts` (openapi-typescript, không commit); `build` (tsup, ESM + CJS). Export `paths`, `components`, `Schema<K>`, `OrderStatus`, `createApiClient` (openapi-fetch, gắn Bearer token) | sửa spec xong chạy `pnpm generate` |
 | `packages/mock-data/` | `@farmery/mock-data` | Dữ liệu giả gõ theo `Schema<K>` của contract, theo vùng thí điểm Lâm Đồng (dâu tây Đà Lạt), không dùng thông tin người thật; `createSeed()` trả bản sao để repository nạp lại khi `/api/dev/reset` | — |
 
@@ -53,7 +53,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 267 trang |
+| `main.pdf` | Bản build gần nhất, 286 trang |
 | `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
 | `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10) |
 | `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10); `chapters/_incoming/` cũng vậy |
@@ -76,7 +76,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `report/backmatter/` — Phụ lục A–V
+## `report/backmatter/` — Phụ lục A–W
 
 Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ. Phụ lục mới nối đuôi (U, V)
 thay vì đánh lại chữ cái.
@@ -87,7 +87,7 @@ thay vì đánh lại chữ cái.
 | `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ đánh giá khả dụng |
 | `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 17 điều, viết để đọc độc lập |
 | `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản |
-| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 16 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
+| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 17 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
 | `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
 | `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đủ 13 schema, mỗi schema một bảng `tab:db-<schema>` (~30 trang). **Sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay |
 | `phuluc-nguong.tex` | **Phụ lục L** — ngưỡng NFR và ngưỡng AI kèm căn cứ |
@@ -121,7 +121,7 @@ thay vì đánh lại chữ cái.
 | `diagrams/gen_sitemap.py` | Sinh `sitemap-tong-quan` (hai cây theo hai ứng dụng) |
 | `diagrams/gen_sequence.py` | Sinh 4 lược đồ tuần tự `seq-*` (lớp `Seq`: lane theo mô-đun, gọi / trả về / sự kiện, khung `alt`/`loop` lồng được) |
 | `diagrams/gen_class.py` | Sinh `class-mien` (17 lớp miền, vị trí đặt tay theo lưới, bội số hai đầu, hợp thành, tham chiếu xuyên mô-đun nét đứt) |
-| `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh `erd-nen-tang`, `erd-giao-dich` (vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
+| `diagrams/gen_erd.py` | Đọc `schema.dbml`, sinh 11 hình ERD `erd-tong-quan` … `erd-danh-gia-van-hanh` (một hình tổng quan 13 schema và 10 hình theo nhóm schema; vị trí bảng đặt tay theo lưới; đường xuyên schema chỉ vẽ theo danh sách `X1`, `X2`) và ghi đè `backmatter/phuluc-csdl.tex` |
 | `diagrams/gen_activity.py` | Sinh 10 sơ đồ hoạt động `act-*` (lớp `Act`: swimlane tô màu theo loại tác nhân, nút đặt theo (lane, hàng), cạnh vuông góc, nhãn điều kiện có nền) |
 | `design/*.html` | HTML sinh từ `diagrams/` (**không sửa tay**) và các infographic viết tay: `thuc-trang-chuoi-cung-ung`, `ocop-2024-2025`, `bmc-cum1`–`3` |
 
@@ -151,17 +151,17 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
 `fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, `fig:erd`, `fig:erd2` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
+`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, 11 hình ERD `fig:erd-tong-quan`, `fig:erd-dinh-danh`, `fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`, `fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
 **Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
 `fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
 `fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).
 
 **Bảng ở thân báo cáo:** `tab:phaply` (Ch.2); `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap` (Ch.3);
-`tab:hailuong`, `tab:nhomnguoidung`, `tab:vaitro-noibo` (Ch.4); `tab:actor-usecase`, `tab:uc-b4`, `tab:uc-c4`,
+`tab:hailuong`, `tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:kiemduyet-giaidoan`, `tab:chi-thiet-ke` (Ch.4; ba nhãn trạng thái Đã hiện thực / Chỉ thiết kế / Để sau prototype định nghĩa ở mục Yêu cầu chức năng); `tab:actor-usecase`, `tab:uc-b4`, `tab:uc-c4`,
 `tab:uc-c6`, `tab:container-io`, `tab:module-io`, `tab:tinhnangAI` (Ch.5).
 **Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` (B); `tab:bmc-full` (E); `tab:vande-muctieu` (F);
 `tab:dacdiem-hanghoa` (G); `tab:chungnhan` (H); `tab:sosanh-congnghe`, `tab:sosanh-ai` (I); `tab:truyvet-us`,
-`tab:fr-nguoidung` (J); `tab:db-nhom1`–`4` (K); `tab:nguongNFR`, `tab:nguongAI` (L); `tab:fr-matrix`, `tab:nfr-matrix`
+`tab:fr-nguoidung` (J); `tab:db-<schema>` ×13 (K); `tab:nguongNFR`, `tab:nguongAI` (L); `tab:fr-matrix`, `tab:nfr-matrix`
 (M); `tab:khoangcachxuatkhau`, `tab:nguondulieu` (N, O); `tab:customer-journey`, `tab:nguon-giaodich` (Q);
 `tab:uc-b2`, `tab:uc-b5`, `tab:uc-d4`, `tab:uc-c7` (S); `tab:sitemap-chitiet` (T); `tab:bochinhsach` (U);
 `tab:sukien` (V); `tab:kehoach`.

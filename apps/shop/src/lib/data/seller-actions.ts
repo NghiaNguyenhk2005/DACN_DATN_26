@@ -76,3 +76,54 @@ export async function appendFarmingLogAction(
   revalidatePath(`/nha-cung-cap/lo-hang/${batchId}`);
   return { ok: true, message: supersedesId ? "Đã lưu bản đính chính." : "Đã ghi nhật ký canh tác." };
 }
+
+export type CreateProductResult = {
+  ok: boolean;
+  message?: string;
+};
+
+/** Server Action: đăng sản phẩm mới chờ duyệt (POST /seller/products), xong về trang Sản phẩm của tôi. */
+export async function createProductAction(
+  _prev: CreateProductResult | null,
+  formData: FormData,
+): Promise<CreateProductResult> {
+  const text = (key: string) => String(formData.get(key) ?? "").trim();
+  const idempotencyKey = text("idempotencyKey");
+  const categoryId = text("categoryId");
+  const name = text("name");
+  const unit = text("unit");
+  const description = text("description");
+  const seasonality = text("seasonality");
+  const priceText = text("referenceRetailPrice");
+  const referenceRetailPrice = priceText ? Number(priceText) : undefined;
+
+  if (!categoryId) return { ok: false, message: "Vui lòng chọn danh mục." };
+  if (name.length < 2 || name.length > 200) return { ok: false, message: "Tên sản phẩm cần từ 2 đến 200 ký tự." };
+  if (!unit) return { ok: false, message: "Vui lòng nhập quy cách bán." };
+  if (referenceRetailPrice !== undefined && !(Number.isInteger(referenceRetailPrice) && referenceRetailPrice >= 0)) {
+    return { ok: false, message: "Giá tham khảo phải là số nguyên không âm." };
+  }
+
+  const res = await mutate(
+    (api) =>
+      api.POST("/seller/products", {
+        params: { header: { "Idempotency-Key": idempotencyKey || undefined } },
+        body: {
+          categoryId,
+          name,
+          unit,
+          description: description || undefined,
+          seasonality: seasonality || undefined,
+          referenceRetailPrice,
+        },
+      }),
+    "Không đăng được sản phẩm. Vui lòng kiểm tra lại thông tin.",
+  );
+  if (!res.ok) {
+    if (res.code === "UNAUTHENTICATED") redirect(loginHref("/nha-cung-cap/san-pham/tao-moi"));
+    return { ok: false, message: res.message };
+  }
+
+  revalidatePath("/nha-cung-cap", "layout");
+  redirect("/nha-cung-cap");
+}
