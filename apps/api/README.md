@@ -94,3 +94,33 @@ TP.HCM), `khachtuchoi@example.com` (từng từ chối COD), `seller@farmery.vn`
 
 **Còn thiếu có chủ ý:** hoàn tiền thật khi hủy đơn đã trả (chỉ đánh dấu `refunded`), hạn dùng của lô không chặn bán,
 khiếu nại/đổi trả (FR8.3), thông báo cho khách.
+
+## Bảo mật, xử lý lỗi và kiểm thử blackbox
+
+**Bảo mật đã có**
+- Header: `helmet` (CSP `default-src 'none'`, nosniff, no-referrer, HSTS ở production), `Cache-Control: no-store`, không lộ `X-Powered-By`.
+  Swagger UI (`/docs`) chỉ nới CSP riêng cho nó và tắt mặc định ở production.
+- Giới hạn tần suất theo IP (`/api/auth/*` chặt hơn), thêm giới hạn theo từng email cho OTP: giãn cách gửi lại, trần mỗi giờ,
+  khóa tạm khi nhập sai nhiều lần (tính cả nhiều challenge). Trả 429 kèm `Retry-After`.
+- OTP: mã lưu dạng HMAC (không đọc được từ bộ nhớ), so sánh hằng thời gian, dùng một lần, hết hạn 10 phút, sai 5 lần thì hủy.
+  Ngoài DEMO_MODE, email lạ trả y như thành công (không lộ tài khoản nào có thật); chỉ DEMO_MODE trả 404 và `devCode`.
+- JWT: ghim HS256, issuer, audience; kiểm hình dạng claims; header `Authorization` đọc chặt, giới hạn độ dài.
+- Khởi động từ chối cấu hình nguy hiểm: production thiếu hoặc `JWT_SECRET` dưới 32 ký tự, `CORS_ORIGINS=*`, tắt DEMO_MODE mà thiếu `SMTP_URL`, số sai định dạng.
+- Đầu vào: body tối đa 100 KB, hợp đồng giới hạn độ dài/mẫu/khoảng giá trị và cấm trường thừa; tối đa 20 địa chỉ, 50 dòng giỏ mỗi người.
+  Mọi dữ liệu theo chủ sở hữu (đơn, giỏ, địa chỉ) kiểm đúng người dùng, người khác nhận 404.
+- Idempotency-Key: so nội dung (cùng key khác nội dung 422), xử lý đúng khi gửi song song, có hạn dùng và trần số lượng.
+- Chống bán vượt: giữ chỗ chạy tuần tự dưới khóa; kiểm bằng test hai khách tranh nhau.
+
+**Xử lý lỗi:** mọi lỗi là `application/problem+json` có `code` và `instance` (`urn:request:<X-Request-Id>`); 5xx không lộ chi tiết và được ghi log theo mã yêu cầu.
+400 sai dữ liệu / JSON hỏng, 401 thiếu hoặc sai token (kèm `WWW-Authenticate`), 403 sai vai trò, 404 không có, 405 sai phương thức,
+413 quá lớn, 415 sai kiểu nội dung, 422 vi phạm luật nghiệp vụ, 429 quá tần suất, 431 header quá lớn, 501 chưa có endpoint, 503 gửi OTP thất bại.
+
+**Test**
+- `pnpm test`: test e2e trong tiến trình (đồng hồ chỉnh tay).
+- `pnpm test:blackbox`: build rồi khởi động `dist/main.js` thành 3 server thật (demo, kiểu production có SMTP giả, giới hạn tần suất thấp)
+  và chỉ nói chuyện qua HTTP. Gồm: bảo mật (token giả, truy cập chéo, CORS, giới hạn tần suất, OTP qua email), fuzz sinh từ `openapi.yaml`
+  (mọi thao tác × đầu vào xấu, không được có 5xx), hành trình đầu–cuối (nhà cung cấp → kiểm duyệt → mua → thanh toán → vận hành,
+  tranh chấp tồn, giữ chỗ hết hạn theo giờ thật ~70 giây). `BLACKBOX_SKIP_SLOW=1` bỏ phần chờ.
+
+**Placeholder còn lại:** cổng thanh toán giả lập (luôn thành công), trạng thái nằm trong bộ nhớ (mất khi khởi động lại, đúng quyết định prototype),
+Idempotency/giới hạn tần suất theo tiến trình (nhiều bản server cần Redis), token chưa có đăng xuất/thu hồi, `POST /seller/products` và `POST /media` trả 501.

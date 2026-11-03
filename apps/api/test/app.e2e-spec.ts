@@ -96,11 +96,13 @@ describe("API khung", () => {
 describe("khi tắt DEMO_MODE", () => {
   it("POST /api/dev/reset trả 404", async () => {
     process.env.DEMO_MODE = "false";
+    process.env.SMTP_URL = "smtp://localhost:1"; // ngoài DEMO_MODE bắt buộc có SMTP; test này không gửi thư
     const app = await createApp();
     try {
       expect((await request(app.getHttpServer()).post("/api/dev/reset").expect(404)).body.code).toBe("DEMO_MODE_OFF");
     } finally {
       delete process.env.DEMO_MODE;
+      delete process.env.SMTP_URL;
       await app.close();
     }
   });

@@ -81,5 +81,13 @@ describe("Đăng nhập OTP, hồ sơ, sổ địa chỉ", () => {
     const staff = await login(t, "kho@farmery.vn");
     await request(t.http()).get("/api/me/addresses").auth(staff, { type: "bearer" }).expect(403);
     await request(t.http()).post("/api/me/addresses").auth(buyer, { type: "bearer" }).send({ recipientName: "A" }).expect(400);
+
+    // Số điện thoại gõ kiểu "09xx xxx xxx" được chuẩn hóa; sai số chữ số bị 400.
+    for (const typed of ["0912 345 678", "+84 912 345 678", "0912.345.678"]) {
+      const res = await request(t.http()).post("/api/me/addresses").auth(buyer, { type: "bearer" }).send({ ...ADDRESS, phone: typed }).expect(201);
+      expect(res.body.phone).toBe("0912345678");
+    }
+    const short = await request(t.http()).post("/api/me/addresses").auth(buyer, { type: "bearer" }).send({ ...ADDRESS, phone: "0912 345" }).expect(400);
+    expect(short.body.code).toBe("VALIDATION_FAILED");
   });
 });

@@ -32,6 +32,7 @@ export interface PlaceOrderInput {
 
 const SWEEP_INTERVAL_MS = 10_000;
 const SLOT_DAYS = 3;
+const MAX_CART_LINES = 50;
 
 const money = (n: number): number => Math.round(n);
 const vnd = (n: number): string => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}₫`;
@@ -100,6 +101,9 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
   }
 
   async setCartItem(userId: string, listingId: string, quantity: number): Promise<Cart> {
+    if (Math.abs(quantity * 1000 - Math.round(quantity * 1000)) > 1e-6) {
+      throw problem(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", "Số lượng chỉ được có tối đa 3 chữ số thập phân");
+    }
     const listing = await this.catalog.getListing(listingId);
     if (!listing) throw problem(HttpStatus.NOT_FOUND, "NOT_FOUND", `Không tìm thấy tin bán với ID: ${listingId}`);
     const wanted = qty(quantity);
@@ -110,6 +114,10 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
         "CART_QTY_EXCEEDS_STOCK",
         `${listing.productName}: chỉ còn ${available} ${listing.saleUnit}`,
       );
+    }
+    const lines = await this.carts.findLines(userId);
+    if (!lines.some((l) => l.listingId === listingId) && lines.length >= MAX_CART_LINES) {
+      throw problem(HttpStatus.UNPROCESSABLE_ENTITY, "CART_LIMIT_REACHED", `Giỏ hàng tối đa ${MAX_CART_LINES} loại sản phẩm`);
     }
     await this.carts.setLine(userId, { listingId, quantity: wanted });
     return this.getCart(userId);
