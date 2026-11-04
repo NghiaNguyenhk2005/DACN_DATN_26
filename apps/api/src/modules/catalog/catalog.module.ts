@@ -11,6 +11,7 @@ import { InMemoryBatchRepository } from "./in-memory-batch.repository";
 import { SupplierModule } from "../supplier/supplier.module";
 import { OperationsModule } from "../operations/operations.module";
 import { CoreModule } from "../../core/core.module";
+import { InventoryModule } from "../inventory/inventory.module";
 
 // Mô-đun catalog: danh mục, sản phẩm, lô hàng và truy xuất công khai
 @Module({
@@ -18,6 +19,7 @@ import { CoreModule } from "../../core/core.module";
     SupplierModule,
     forwardRef(() => OperationsModule),
     CoreModule,
+    InventoryModule,
   ],
   controllers: [CatalogController, SellerBatchController],
   providers: [

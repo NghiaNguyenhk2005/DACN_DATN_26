@@ -76,9 +76,9 @@ paths:
         Chỉ trả sản phẩm đã duyệt.
       security: []
       parameters:
-        - { name: q, in: query, schema: { type: string } }
+        - { name: q, in: query, schema: { type: string, maxLength: 100 } }
         - { name: categoryId, in: query, schema: { $ref: '#/components/schemas/Id' } }
-        - { name: region, in: query, description: Vùng trồng, schema: { type: string } }
+        - { name: region, in: query, description: Vùng trồng, schema: { type: string, maxLength: 100 } }
         - { name: cert, in: query, schema: { $ref: '#/components/schemas/CertType' } }
         - { name: inStock, in: query, schema: { type: boolean } }
         - { name: inSeason, in: query, description: Đang vào mùa — trang chủ dùng, schema: { type: boolean } }
@@ -172,7 +172,7 @@ paths:
               type: object
               required: [email]
               properties:
-                email: { type: string, format: email, examples: ['khachle@example.com'] }
+                email: { type: string, format: email, maxLength: 254, examples: ['khachle@example.com'] }
       responses:
         '200':
           description: Đã tạo phiên OTP
@@ -194,7 +194,8 @@ paths:
       summary: Đăng nhập bằng OTP
       description: |
         Nhân sự nội bộ cũng đăng nhập qua bước này ở prototype (thay cho 2FA thật).
-        Dữ liệu giả có sẵn tài khoản cho từng vai trò.
+        Dữ liệu giả có sẵn tài khoản cho từng vai trò. Sai mã trả 401 `OTP_INVALID`; mã hết hạn (10 phút),
+        đã dùng, không tồn tại hoặc nhập sai quá 5 lần trả 401 `OTP_EXPIRED`.
       security: []
       requestBody:
         required: true
@@ -204,7 +205,7 @@ paths:
               type: object
               required: [challengeId, code]
               properties:
-                challengeId: { type: string }
+                challengeId: { type: string, format: uuid }
                 code: { type: string, pattern: '^[0-9]{6}$' }
       responses:
         '200':
@@ -295,7 +296,7 @@ paths:
               type: object
               required: [quantity]
               properties:
-                quantity: { type: number, exclusiveMinimum: 0 }
+                quantity: { type: number, minimum: 0.001, maximum: 10000, description: Tối đa 3 chữ số thập phân }
       responses:
         '200':
           description: Giỏ sau khi đổi
@@ -325,7 +326,9 @@ paths:
       summary: Tính tiền trước khi xác nhận (FR5.2, FR8.2)
       description: |
         Trả tiền hàng, thuế, cước giao, khung giờ còn nhận đơn và việc COD có được phép hay không.
-        COD chỉ mở khi tổng tiền ≤ `cod_max_amount` và tài khoản chưa từng từ chối nhận COD (FR7.1).
+        COD chỉ mở khi tổng tiền ≤ `codMaxAmount` và tài khoản chưa từng từ chối nhận COD (FR7.1).
+        Khung giờ: ba ngày liền từ hôm nay (giờ Việt Nam) × `deliverySlots`; hôm nay hết nhận sau `cutoffTime`.
+        422 `CART_EMPTY` khi giỏ rỗng, 422 `ADDRESS_NOT_FOUND` khi địa chỉ không thuộc người gọi.
       x-roles: [buyer_retail]
       requestBody:
         required: true
@@ -374,7 +377,10 @@ paths:
       description: |
         Khóa dòng tồn theo FEFO và giữ chỗ. Đơn `prepaid` ở trạng thái `placed`, giữ chỗ tới
         `reserveExpiresAt` (15 phút), quá hạn chưa thanh toán thì tự hủy. Đơn `cod` hợp lệ chuyển
-        thẳng sang `paid`. Giỏ được làm rỗng khi đặt thành công.
+        thẳng sang `paid`. Giỏ được làm rỗng khi đặt thành công. Một tin bán có thể tách thành nhiều
+        `OrderItem` khi FEFO phải lấy từ hơn một lô.
+        409 `STOCK_CONFLICT` khi hết hàng lúc đặt; 422: `CART_EMPTY`, `ADDRESS_NOT_FOUND`,
+        `SLOT_UNAVAILABLE` (khung giờ không nằm trong `quote` hoặc đã qua giờ chốt), `COD_NOT_ALLOWED`.
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
@@ -425,7 +431,10 @@ paths:
       tags: [Buyer]
       operationId: payOrder
       summary: Thanh toán giả lập cho đơn trả trước
-      description: Thay cho cổng thanh toán ở prototype. `placed` → `paid`; quá hạn giữ chỗ trả 409 `RESERVATION_EXPIRED`.
+      description: |
+        Thay cho cổng thanh toán ở prototype. `placed` → `paid` và đổi phần giữ chỗ thành trừ tồn.
+        Quá hạn giữ chỗ trả 409 `RESERVATION_EXPIRED` (đơn đã bị tự hủy); đơn không còn ở `placed`
+        (đã trả, COD, đã hủy) trả 409 `ORDER_NOT_PAYABLE`; cổng từ chối trả 409 `PAYMENT_FAILED`.
       x-roles: [buyer_retail]
       parameters:
         - $ref: '#/components/parameters/OrderId'
@@ -724,6 +733,8 @@ paths:
         Ở hệ thống thật một số bước do webhook 3PL đẩy; prototype cho nhân viên bấm thay.
         Đơn `placed`, `completed`, `cancelled`, `returned`, `disputed` trả 409 `ORDER_TRANSITION_INVALID`.
         Mỗi lần chuyển ghi một `OrderStatusEvent` có `source: staff`.
+        Ai được chuyển bước nào: `staff_operations` chuyển được mọi bước; `staff_warehouse` chỉ các bước phía kho
+        (paid → packing → on_trip → handed_to_3pl), bước khác trả 403 `FORBIDDEN_ROLE`.
       x-roles: [staff_operations, staff_warehouse]
       parameters:
         - $ref: '#/components/parameters/OrderId'
@@ -741,6 +752,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/OrderDetail' }
+        '403': { $ref: '#/components/responses/Forbidden' }
         '409': { $ref: '#/components/responses/Conflict' }
 
   /admin/inventory/holdings:
@@ -800,7 +812,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/PlatformSettings' }
+            schema: { $ref: '#/components/schemas/PlatformSettingsUpdate' }
       responses:
         '200':
           description: Cấu hình sau khi cập nhật
@@ -881,7 +893,8 @@ components:
     Cursor:
       name: cursor
       in: query
-      schema: { type: string }
+      description: Con trỏ phân trang do máy chủ trả về (`nextCursor`); giá trị tự nghĩ ra bị từ chối 400
+      schema: { type: string, pattern: '^[0-9]{1,9}$' }
     Limit:
       name: limit
       in: query
@@ -959,6 +972,7 @@ components:
     Id:
       type: string
       pattern: '^[0-9]+$'
+      maxLength: 18
       description: Định danh bigint dạng chuỗi
       examples: ['1024']
     Problem:
@@ -973,9 +987,11 @@ components:
         code:
           type: string
           description: |
-            Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, STOCK_CONFLICT,
-            COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_CANCELLABLE,
-            ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED, BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID
+            Mã lỗi máy đọc được. Dùng ở prototype: CART_QTY_EXCEEDS_STOCK, CART_EMPTY, ADDRESS_NOT_FOUND,
+            STOCK_CONFLICT, COD_NOT_ALLOWED, SLOT_UNAVAILABLE, RESERVATION_EXPIRED, ORDER_NOT_PAYABLE,
+            PAYMENT_FAILED, ADDRESS_LIMIT_REACHED, CART_LIMIT_REACHED, ORDER_NOT_CANCELLABLE, ORDER_TRANSITION_INVALID, TASK_ALREADY_DECIDED,
+            BATCH_DATE_INVALID, LOG_SUPERSEDES_INVALID, OTP_INVALID, OTP_EXPIRED, IDEMPOTENCY_KEY_REUSED.
+            Mọi thao tác còn có thể trả 413 PAYLOAD_TOO_LARGE, 415 UNSUPPORTED_MEDIA_TYPE, 429 RATE_LIMITED (kèm Retry-After)
         errors:
           type: array
           items:
@@ -1150,12 +1166,12 @@ components:
         categoryId: { $ref: '#/components/schemas/Id' }
         name: { type: string, minLength: 2, maxLength: 200 }
         description: { type: string, maxLength: 5000 }
-        unit: { type: string, description: Thuộc đơn vị hợp lệ của danh mục }
+        unit: { type: string, maxLength: 50, description: Thuộc đơn vị hợp lệ của danh mục }
         imageIds:
           type: array
           items: { $ref: '#/components/schemas/Id' }
         referenceRetailPrice: { type: integer, minimum: 0 }
-        seasonality: { type: string }
+        seasonality: { type: string, maxLength: 100 }
     SellerProduct:
       type: object
       required: [id, name, categoryId, unit, status]
@@ -1176,7 +1192,7 @@ components:
           format: date
           description: Ngày thu hoạch (dự kiến nếu khai lô trước khi thu hoạch); bestBefore phải sau ngày này
         bestBefore: { type: string, format: date }
-        declaredQuantity: { type: number, exclusiveMinimum: 0, description: Theo đơn vị của sản phẩm }
+        declaredQuantity: { type: number, exclusiveMinimum: 0, maximum: 10000000, description: Theo đơn vị của sản phẩm }
     Batch:
       type: object
       required: [id, batchCode, productId, productName, harvestDate, bestBefore, declaredQuantity, status, createdAt]
@@ -1300,22 +1316,29 @@ components:
           description: Có khi tài khoản là nhà cung cấp
     AddressInput:
       type: object
+      additionalProperties: false
       required: [recipientName, phone, addressLine, ward, province]
       properties:
-        label: { type: string }
-        recipientName: { type: string }
-        phone: { type: string }
-        addressLine: { type: string }
-        ward: { type: string }
-        province: { type: string }
+        label: { type: string, maxLength: 50 }
+        recipientName: { type: string, minLength: 1, maxLength: 100 }
+        phone: { type: string, minLength: 10, maxLength: 20, pattern: '^(0|\+84)[0-9 .\-]{9,18}$', description: 'Số di động Việt Nam, cho phép dấu cách, chấm, gạch; máy chủ chuẩn hóa về dạng 0xxxxxxxxx' }
+        addressLine: { type: string, minLength: 1, maxLength: 200 }
+        ward: { type: string, minLength: 1, maxLength: 100 }
+        province: { type: string, minLength: 1, maxLength: 100 }
         isDefault: { type: boolean, default: false }
+    # Giống AddressInput cộng id; viết riêng vì allOf không đi cùng additionalProperties: false
     Address:
-      allOf:
-        - $ref: '#/components/schemas/AddressInput'
-        - type: object
-          required: [id, isDefault]
-          properties:
-            id: { $ref: '#/components/schemas/Id' }
+      type: object
+      required: [id, recipientName, phone, addressLine, ward, province, isDefault]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        label: { type: string, maxLength: 50 }
+        recipientName: { type: string, maxLength: 100 }
+        phone: { type: string }
+        addressLine: { type: string, maxLength: 200 }
+        ward: { type: string, maxLength: 100 }
+        province: { type: string, maxLength: 100 }
+        isDefault: { type: boolean }
 
     # ------------------------------------------------------------ giỏ, đơn
     CartItem:
@@ -1412,7 +1435,10 @@ components:
             reserveExpiresAt:
               type: [string, 'null']
               format: date-time
-              description: Hạn giữ chỗ 15 phút của đơn trả trước chưa thanh toán; FE đếm ngược theo trường này
+              description: |
+                Hạn giữ chỗ (mặc định 15 phút) của đơn trả trước; FE đếm ngược theo trường này. Đơn quá hạn bị tự hủy
+                vẫn giữ nguyên giá trị này và có sự kiện `cancelled` mang mốc đúng hạn trong `timeline`, để FE phân biệt
+                "hết thời gian giữ chỗ" với khách tự hủy. `null` với đơn COD và đơn đã thanh toán
             timeline:
               type: array
               description: Các mốc đã qua, cũ trước
@@ -1512,28 +1538,65 @@ components:
       properties:
         id: { $ref: '#/components/schemas/Id' }
         movementType: { $ref: '#/components/schemas/MovementType' }
-        quantity: { type: number, description: 'Dương là tăng, âm là giảm' }
-        sourceType: { type: string, examples: ['retail_order'] }
+        quantity:
+          type: number
+          description: |
+            Dương là tăng, âm là giảm. `reserve`, `release` tính theo lượng còn bán được (tồn − đang giữ chỗ);
+            các loại còn lại (`open_from_batch`, `retail_out`, `return_in`, ...) tính theo tồn thực `qtyOnHand`.
+        sourceType: { type: string, examples: ['retail_order', 'batch'] }
         sourceId: { $ref: '#/components/schemas/Id' }
         reason: { type: [string, 'null'] }
         createdAt: { type: string, format: date-time }
     PlatformSettings:
       type: object
-      description: operations.platform_settings; PUT chỉ gửi khóa cần đổi. `default` là giá trị nạp sẵn ở prototype
+      description: |
+        operations.platform_settings, đủ mọi khóa. `default` là giá trị nạp sẵn ở prototype.
+        Cập nhật dùng `PlatformSettingsUpdate` (không có `default`, vì bộ kiểm sẽ tự điền `default` vào body).
+      additionalProperties: false
+      required: [codMaxAmount, cutoffTime, deliverySlots, shippingFee, freeShippingThreshold, reservationMinutes, retailVatPercent]
       properties:
-        codMaxAmount: { type: integer, minimum: 0, default: 1000000, description: VND }
-        cutoffTime: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', default: '16:00' }
+        codMaxAmount: { type: integer, minimum: 0, maximum: 1000000000, default: 1000000, description: VND }
+        cutoffTime: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]$', default: '16:00' }
         deliverySlots:
           type: array
-          items: { type: string }
+          minItems: 1
+          maxItems: 12
+          items: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]$' }
           default: ['08:00-11:00', '14:00-17:00', '18:00-21:00']
-        shippingFee: { type: integer, minimum: 0, default: 25000, description: 'VND, đã gồm thuế' }
-        freeShippingThreshold: { type: integer, minimum: 0, default: 300000, description: Tiền hàng từ mức này thì miễn phí giao }
-        reservationMinutes: { type: integer, minimum: 1, default: 15 }
+        shippingFee: { type: integer, minimum: 0, maximum: 10000000, default: 25000, description: 'VND, đã gồm thuế' }
+        freeShippingThreshold: { type: integer, minimum: 0, maximum: 1000000000, default: 300000, description: Tiền hàng từ mức này thì miễn phí giao }
+        reservationMinutes: { type: integer, minimum: 1, maximum: 120, default: 15 }
         retailVatPercent:
           type: number
           minimum: 0
+          maximum: 100
           default: 5
+          description: |
+            Thuế suất GTGT khi Farmery bán nông sản chưa chế biến hoặc chỉ sơ chế thông thường cho cá nhân
+            (Luật 48/2024/QH15; Nghị định 181/2025, sửa bởi Nghị định 359/2025). Hàng đã chế biến theo
+            nhóm thuế riêng của sản phẩm, ngoài phạm vi prototype.
+    PlatformSettingsUpdate:
+      type: object
+      description: |
+        Phần cần đổi của `PlatformSettings`: chỉ gửi khóa muốn đổi, ít nhất một khóa; khóa lạ bị từ chối 400.
+        Cố ý không có `default` để khóa không gửi giữ nguyên giá trị hiện tại.
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        codMaxAmount: { type: integer, minimum: 0, maximum: 1000000000, description: VND }
+        cutoffTime: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]$' }
+        deliverySlots:
+          type: array
+          minItems: 1
+          maxItems: 12
+          items: { type: string, pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]$' }
+        shippingFee: { type: integer, minimum: 0, maximum: 10000000, description: 'VND, đã gồm thuế' }
+        freeShippingThreshold: { type: integer, minimum: 0, maximum: 1000000000, description: Tiền hàng từ mức này thì miễn phí giao }
+        reservationMinutes: { type: integer, minimum: 1, maximum: 120 }
+        retailVatPercent:
+          type: number
+          minimum: 0
+          maximum: 100
           description: |
             Thuế suất GTGT khi Farmery bán nông sản chưa chế biến hoặc chỉ sơ chế thông thường cho cá nhân
             (Luật 48/2024/QH15; Nghị định 181/2025, sửa bởi Nghị định 359/2025). Hàng đã chế biến theo

@@ -129,6 +129,11 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
     return structuredClone(found);
   }
 
+  async findByListingId(listingId: string): Promise<ProductDetail | null> {
+    const found = this.products.find((p) => p.listing?.id === listingId);
+    return found ? structuredClone(found) : null;
+  }
+
   async findBySupplierId(supplierId: string): Promise<ProductCard[]> {
     return this.products
       .filter((p) => p.supplier.id === supplierId)
