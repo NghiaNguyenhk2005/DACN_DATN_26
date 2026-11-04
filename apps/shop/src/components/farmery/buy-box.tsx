@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, CreditCard, Minus, Plus, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
+import { Clock, CreditCard, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
 import type { Schema } from "@farmery/contract";
 import { Button } from "@/components/ui/button";
-import { LOW_STOCK } from "@/lib/decision";
+import { LOW_STOCK, quantityRule } from "@/lib/decision";
 import { formatVnd } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { FeedbackText, useAddToCart } from "./add-to-cart";
+import { QuantityInput } from "./quantity-input";
 import { SafeImage } from "./safe-image";
 import { WholesalePanel } from "./wholesale-panel";
 
@@ -52,44 +53,6 @@ function ModeSwitch({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void 
   );
 }
 
-function Qty({
-  qty,
-  setQty,
-  max,
-  className = "",
-}: {
-  qty: number;
-  setQty: (n: number) => void;
-  max: number;
-  className?: string;
-}) {
-  return (
-    <div className={`flex items-center rounded-btn border border-border ${className}`}>
-      <button
-        type="button"
-        aria-label="Giảm"
-        disabled={qty <= 1}
-        onClick={() => setQty(Math.max(1, qty - 1))}
-        className="grid size-11 place-items-center text-ink-2 disabled:opacity-40 md:size-9"
-      >
-        <Minus className="size-4" />
-      </button>
-      <span className="min-w-6 text-center text-body font-semibold md:min-w-[34px]" aria-live="polite">
-        {qty}
-      </span>
-      <button
-        type="button"
-        aria-label="Tăng"
-        disabled={qty >= max}
-        onClick={() => setQty(Math.min(max, qty + 1))}
-        className="grid size-11 place-items-center text-ink-2 disabled:opacity-40 md:size-9"
-      >
-        <Plus className="size-4" />
-      </button>
-    </div>
-  );
-}
-
 /**
  * Khung mua. ≥lg: thẻ cột phải 300px; <lg: thanh dính đáy [số lượng] [giỏ] [Mua ngay + tạm tính] (trang chừa pb-28).
  * Thêm vào giỏ ở lại trang; Mua ngay thêm vào giỏ rồi sang /thanh-toan.
@@ -97,9 +60,15 @@ function Qty({
 export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: Props) {
   const [mode, setMode] = useState<Mode>(listing || !wholesale ? "retail" : "wholesale");
   const [qty, setQty] = useState(1);
-  const max = listing ? Math.max(1, Math.floor(listing.available)) : 1;
+  const [qtyNote, setQtyNote] = useState<string | null>(null);
+  const max = listing ? listing.available : 1;
+  const byWeight = listing ? quantityRule(listing.saleUnit).byWeight : false;
+  const onQty = (n: number, note: string | null) => {
+    setQty(n);
+    setQtyNote(note);
+  };
   const soldOut = !listing || listing.available <= 0;
-  const total = listing ? listing.unitPrice * qty : 0;
+  const total = listing ? Math.round(listing.unitPrice * qty) : 0;
   const { add, pending, feedback } = useAddToCart();
   const buy = (buyNow: boolean) => listing && add(listing.id, qty, buyNow);
   const lowStock = listing && !soldOut && listing.available <= LOW_STOCK;
@@ -124,10 +93,13 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
             <>
               {listing && (
                 <>
-                  <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="mb-1.5 flex items-center justify-between gap-3">
                     <span className="text-small text-ink-2">Số lượng ({listing.saleUnit})</span>
-                    <Qty qty={qty} setQty={setQty} max={max} />
+                    <QuantityInput value={qty} onChange={onQty} saleUnit={listing.saleUnit} max={max} label="số lượng" disabled={soldOut} />
                   </div>
+                  <p className={`mb-3 min-h-4 text-right text-micro ${qtyNote ? "text-warning" : "text-muted-foreground"}`} role="status">
+                    {qtyNote ?? (byWeight ? "Bán theo cân, nhập lẻ được (vd 1,5 kg)" : "")}
+                  </p>
                   <div className="mb-4 flex items-center justify-between text-small text-ink-2">
                     <span>Tạm tính</span>
                     <span className="text-[17px] font-bold text-ink">{formatVnd(total)}</span>
@@ -183,13 +155,21 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
       </aside>
 
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-2.5 border-t border-border bg-background px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
-        {feedback && (
+        {feedback ? (
           <FeedbackText
             feedback={feedback}
             className="absolute inset-x-0 bottom-full border-t border-border bg-background px-4 py-2 text-center text-small"
           />
+        ) : (
+          qtyNote && (
+            <p role="status" className="absolute inset-x-0 bottom-full border-t border-border bg-background px-4 py-2 text-center text-small text-warning">
+              {qtyNote}
+            </p>
+          )
         )}
-        {listing && <Qty qty={qty} setQty={setQty} max={max} className="h-[46px]" />}
+        {listing && (
+          <QuantityInput value={qty} onChange={onQty} saleUnit={listing.saleUnit} max={max} label="số lượng" disabled={soldOut} className="h-[46px]" />
+        )}
         <Button
           variant="outline"
           disabled={soldOut || pending}

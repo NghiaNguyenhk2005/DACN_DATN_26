@@ -66,6 +66,7 @@ Thư mục `apps/shop/src/components/farmery/` (component sản phẩm) và `com
 | Button | `cta` (chính), `outline` viền primary (phụ), `ghost` (thứ ba), `danger` | default · hover · focus-visible (vòng `ring`) · disabled · loading ("Đang …" + spinner) |
 | StatusBadge | success · warning · danger · neutral; icon + chữ | — |
 | Tabs điều hướng | gạch chân 2 px `primary` (như `ProductTabs`) | đang chọn · hover · có badge số |
+| QuantityInput (ô số lượng) | gõ tự do + nút −/+; đơn vị "kg" nhập lẻ tới 0,1 kg, bước 0,5; hộp, túi, gói, bó, khay chỉ số nguyên; "1,5" và "1.5" đều đọc là 1,5 | gõ dở · đã chuẩn hóa (làm tròn, kẹp trong tồn, kèm câu giải thích) · disabled |
 | Segmented (nút gạt) | 2–3 lựa chọn, nền `surface`, ô chọn trắng + `shadow-segment` | đang chọn · disabled |
 | ProductCard | có/không tin bán, hết hàng, có giá quy đổi | ảnh lỗi → ô thay thế |
 | FactGrid (`LotInfo`) | 2 / 4 cột | giá trị cảnh báo/nguy hiểm |

@@ -679,6 +679,11 @@ thông tin cần đọc (persona 52 tuổi, điện thoại tầm trung).</p>
 <td>đang chọn · hover · có badge số</td>
 </tr>
 <tr>
+<td>QuantityInput (ô số lượng)</td>
+<td>gõ tự do + nút −/+; đơn vị "kg" nhập lẻ tới 0,1 kg, bước 0,5; hộp, túi, gói, bó, khay chỉ số nguyên; "1,5" và "1.5" đều đọc là 1,5</td>
+<td>gõ dở · đã chuẩn hóa (làm tròn, kẹp trong tồn, kèm câu giải thích) · disabled</td>
+</tr>
+<tr>
 <td>Segmented (nút gạt)</td>
 <td>2–3 lựa chọn, nền <code>surface</code>, ô chọn trắng + <code>shadow-segment</code></td>
 <td>đang chọn · disabled</td>
@@ -769,7 +774,7 @@ Trạng thái: danh mục lỗi → ẩn khối 2 (không làm hỏng trang); kh
 <p><strong>Khung mua</strong> — nút gạt <strong>Mua lẻ | Mua sỉ</strong> ở đầu khung, chỉ hiện khi nhà cung cấp có bảng giá sỉ cho sản phẩm (không
 hiện công tắc dẫn tới khung trống).</p>
 <ul>
-<li>Mua lẻ: nhà cung cấp, số lượng, tạm tính, Mua ngay (cam), Thêm vào giỏ (viền); ◆ "Chỉ còn N" khi tồn ≤10;
+<li>Mua lẻ: nhà cung cấp, <strong>ô số lượng gõ tự do</strong> (xem 04 §5, QuantityInput), tạm tính, Mua ngay (cam), Thêm vào giỏ (viền); ◆ "Chỉ còn N" khi tồn ≤10;
   ◆ "Đặt trước 16:00, giao sáng mai"; cam kết giao, hoàn tiền, thanh toán.</li>
 <li>Mua sỉ: bảng bậc giá (từ X → giá/đơn vị, bậc đang áp dụng tô <code>primary</code>), lượng tối thiểu, thời gian chuẩn bị, ô nhập
   sản lượng → ◆ ước tính tổng; nút "Gửi yêu cầu báo giá" (cam). Dưới lượng tối thiểu → cảnh báo vàng, gợi ý Mua lẻ.
@@ -780,7 +785,7 @@ hiện công tắc dẫn tới khung trống).</p>
 <p>Thu hồi (nếu có) lên đầu, đỏ; FactGrid 4 cột; chứng nhận; nhật ký đầy đủ kể cả đính chính.</p>
 <h3>S6–S9. Đăng nhập, giỏ, thanh toán, đơn hàng</h3>
 <ul>
-<li>Giỏ: sửa số lượng <strong>tại chỗ</strong> (− / số / +), xoá dòng, tạm tính sống.</li>
+<li>Giỏ: sửa số lượng <strong>tại chỗ</strong> bằng cùng ô số lượng của khung mua, xóa dòng, tạm tính sống.</li>
 <li>Thanh toán: 3 bước (Giao đến · Khung giờ · Thanh toán), một nút cam cuối.</li>
 <li>Đơn: đếm ngược giữ chỗ, dòng thời gian 8 bước, cảnh báo thu hồi.</li>
 </ul>
@@ -1065,8 +1070,8 @@ của giấy chứng nhận. Tách hai từ để người mua không nhầm "c�
 </tbody>
 </table></div>
 <h3>Chính tả</h3>
-<p>Đặt dấu thanh <strong>kiểu cũ</strong>, thống nhất với báo cáo và locale <code>vi_VN</code> của Ant Design: <strong>hủy, khóa, hóa đơn, thủy canh</strong>.
-Không dùng "huỷ, khoá, hoá".
+<p>Đặt dấu thanh <strong>kiểu cũ</strong>, thống nhất với báo cáo và locale <code>vi_VN</code> của Ant Design: <strong>hủy, khóa, xóa, hóa đơn, thủy canh</strong>.
+Không dùng "huỷ, khoá, hoá, xoá".
 Số: <code>1.250.000₫</code>, ngày <code>dd/mm/yyyy</code>, giờ <code>14:05</code>, khối lượng <code>500 g</code>, <code>1,5 kg</code>.</p></section><section id="s-07-quy-uoc-fe"><h1>07 — Quy ước FE (bàn giao cho dev)</h1>
 <h2>1. Tổ chức mã</h2>
 <div class="tbl"><table>

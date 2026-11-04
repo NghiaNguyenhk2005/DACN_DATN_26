@@ -79,3 +79,43 @@ export function suggestedShelfDays(rootCategoryName: string | undefined): number
 export function wholesaleTier(offer: Schema<"WholesaleOffer">, quantity: number) {
   return [...offer.tiers].sort((a, b) => b.minQuantity - a.minQuantity).find((t) => quantity >= t.minQuantity) ?? null;
 }
+
+export interface QtyRule {
+  min: number;
+  step: number;
+  /** Số chữ số thập phân được nhập */
+  decimals: number;
+  /** Bán theo cân: nhập số lẻ được */
+  byWeight: boolean;
+}
+
+/** Quy tắc số lượng theo đơn vị bán: "kg" nhập lẻ tới 0,1 kg, nút −/+ bước 0,5; hộp, túi, gói… chỉ số nguyên. */
+export function quantityRule(saleUnit: string): QtyRule {
+  return saleUnit.trim().toLowerCase() === "kg"
+    ? { min: 0.1, step: 0.5, decimals: 1, byWeight: true }
+    : { min: 1, step: 1, decimals: 0, byWeight: false };
+}
+
+/** Đưa số nhập về hợp lệ: làm tròn theo quy tắc, kẹp trong [min, max]. `note` giải thích khi đã phải sửa. */
+export function normalizeQty(raw: number, rule: QtyRule, max: number, unit: string): { qty: number; note: string | null } {
+  const f = 10 ** rule.decimals;
+  const cap = Math.floor(max * f) / f;
+  if (!Number.isFinite(raw) || raw <= 0) return { qty: rule.min, note: "Số lượng phải lớn hơn 0." };
+  let qty = Math.round(raw * f) / f;
+  let note: string | null = qty !== raw ? (rule.byWeight ? "Đã làm tròn tới 0,1 kg." : `Sản phẩm bán theo ${unit}, nhập số nguyên.`) : null;
+  if (qty < rule.min) {
+    qty = rule.min;
+    note = `Tối thiểu ${rule.min.toLocaleString("vi-VN")} ${unit}.`;
+  }
+  if (cap >= rule.min && qty > cap) {
+    qty = cap;
+    note = `Chỉ còn ${cap.toLocaleString("vi-VN")} ${unit}.`;
+  }
+  return { qty, note };
+}
+
+/** Đọc số lượng gõ tay: "1,5" và "1.5" đều là 1,5; có dấu phẩy thì dấu chấm là phân cách hàng nghìn. */
+export function parseQtyInput(text: string): number {
+  const t = text.trim().replace(/\s/g, "");
+  return Number(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t);
+}

@@ -40,7 +40,7 @@ Bố cục ≥lg `[520 | 1fr | 300]`; <lg một cột, khung mua dính đáy.
 
 **Khung mua** — nút gạt **Mua lẻ | Mua sỉ** ở đầu khung, chỉ hiện khi nhà cung cấp có bảng giá sỉ cho sản phẩm (không
 hiện công tắc dẫn tới khung trống).
-- Mua lẻ: nhà cung cấp, số lượng, tạm tính, Mua ngay (cam), Thêm vào giỏ (viền); ◆ "Chỉ còn N" khi tồn ≤10;
+- Mua lẻ: nhà cung cấp, **ô số lượng gõ tự do** (xem 04 §5, QuantityInput), tạm tính, Mua ngay (cam), Thêm vào giỏ (viền); ◆ "Chỉ còn N" khi tồn ≤10;
   ◆ "Đặt trước 16:00, giao sáng mai"; cam kết giao, hoàn tiền, thanh toán.
 - Mua sỉ: bảng bậc giá (từ X → giá/đơn vị, bậc đang áp dụng tô `primary`), lượng tối thiểu, thời gian chuẩn bị, ô nhập
   sản lượng → ◆ ước tính tổng; nút "Gửi yêu cầu báo giá" (cam). Dưới lượng tối thiểu → cảnh báo vàng, gợi ý Mua lẻ.
@@ -51,7 +51,7 @@ hiện công tắc dẫn tới khung trống).
 Thu hồi (nếu có) lên đầu, đỏ; FactGrid 4 cột; chứng nhận; nhật ký đầy đủ kể cả đính chính.
 
 ### S6–S9. Đăng nhập, giỏ, thanh toán, đơn hàng
-- Giỏ: sửa số lượng **tại chỗ** (− / số / +), xoá dòng, tạm tính sống.
+- Giỏ: sửa số lượng **tại chỗ** bằng cùng ô số lượng của khung mua, xóa dòng, tạm tính sống.
 - Thanh toán: 3 bước (Giao đến · Khung giờ · Thanh toán), một nút cam cuối.
 - Đơn: đếm ngược giữ chỗ, dòng thời gian 8 bước, cảnh báo thu hồi.
 
