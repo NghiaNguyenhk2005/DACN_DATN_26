@@ -1,0 +1,1552 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thiết kế FE Farmery</title>
+<style>
+:root { --bg:#fff; --ink:#1c211b; --ink2:#3d4a37; --muted:#68766a; --line:#e6ebe2; --surface:#f4f7f1; --primary:#1f5132; --cta:#c2410c; }
+@media (prefers-color-scheme: dark) { :root { --bg:#121712; --ink:#e7ece4; --ink2:#c5cfc1; --muted:#98a594; --line:#2a3429; --surface:#1a211a; --primary:#7dc286; --cta:#f08a5d; } }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.65 "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width:1180px; margin:0 auto; padding:0 16px; display:grid; gap:32px; }
+@media (min-width:960px) { .wrap { grid-template-columns:260px minmax(0,1fr); padding:0 32px; } nav.toc { position:sticky; top:0; max-height:100vh; overflow:auto; } }
+header.top { border-bottom:1px solid var(--line); padding:20px 16px; text-align:center; }
+header.top h1 { margin:0; font-size:22px; color:var(--primary); }
+header.top p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+nav.toc { padding:20px 0; }
+nav.toc ol { margin:0; padding-left:20px; }
+nav.toc li { margin:6px 0; font-size:14px; }
+a { color:var(--primary); }
+main { min-width:0; padding:8px 0 64px; }
+section { border-bottom:1px solid var(--line); padding:12px 0 28px; }
+h1 { font-size:24px; line-height:1.3; margin:24px 0 12px; }
+h2 { font-size:19px; margin:28px 0 10px; }
+h3 { font-size:16px; margin:22px 0 8px; }
+.tbl { overflow-x:auto; margin:12px 0; border:1px solid var(--line); border-radius:10px; }
+table { border-collapse:collapse; width:100%; font-size:13.5px; }
+th, td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--line); }
+th { background:var(--surface); white-space:nowrap; }
+tr:last-child td { border-bottom:0; }
+code { background:var(--surface); padding:1px 5px; border-radius:5px; font-size:.9em; word-break:break-word; }
+pre { background:var(--surface); padding:12px 14px; border-radius:10px; overflow-x:auto; font-size:12.5px; line-height:1.5; }
+pre code { padding:0; background:none; word-break:normal; }
+ul, ol { padding-left:22px; }
+strong { color:var(--ink); }
+.top-link { position:fixed; right:16px; bottom:16px; background:var(--primary); color:var(--bg); width:44px; height:44px; border-radius:22px; display:grid; place-items:center; text-decoration:none; font-size:20px; }
+</style>
+</head>
+<body>
+<header class="top"><h1>Tài liệu thiết kế giao diện Farmery</h1><p>Bản xem nhanh sinh từ <code>design/*.md</code> — bản .md là nguồn chính</p></header>
+<div class="wrap">
+<nav class="toc" aria-label="Mục lục"><strong>Mục lục</strong><ol><li><a href="#s-readme">design/ — Tài liệu thiết kế giao diện (UI + UX)</a></li><li><a href="#s-01-nguoi-dung-va-hanh-trinh">01 — Người dùng và hành trình</a></li><li><a href="#s-02-kien-truc-thong-tin">02 — Kiến trúc thông tin</a></li><li><a href="#s-03-luong-tac-vu">03 — Luồng tác vụ</a></li><li><a href="#s-04-he-thong-thiet-ke">04 — Hệ thống thiết kế</a></li><li><a href="#s-05-dac-ta-man-hinh">05 — Đặc tả màn hình</a></li><li><a href="#s-06-noi-dung-va-thuat-ngu">06 — Nội dung và thuật ngữ</a></li><li><a href="#s-07-quy-uoc-fe">07 — Quy ước FE (bàn giao cho dev)</a></li><li><a href="#s-08-ra-soat-hien-trang">08 — Rà soát hiện trạng so với tài liệu thiết kế</a></li></ol></nav>
+<main><section id="s-readme"><h1>design/ — Tài liệu thiết kế giao diện (UI + UX)</h1>
+<p>Bộ tài liệu mô tả <strong>giao diện đích</strong> của hai ứng dụng Farmery (<code>apps/shop</code>, <code>apps/admin</code>) theo cách một nhóm web
+designer + frontend dev làm việc thật. Đây là doc sống: code lệch tài liệu thì hoặc sửa code, hoặc sửa tài liệu kèm
+một dòng ở <code>DECISIONS.md</code> — không để hai bên nói khác nhau.</p>
+<h2>Quy trình 7 bước và file tương ứng</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Ai làm chính</th>
+<th>Câu hỏi trả lời</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Hiểu người dùng</td>
+<td>UX designer</td>
+<td>Ai dùng, để làm gì, lo điều gì, dùng thiết bị gì?</td>
+<td><a href="#s-01-nguoi-dung-va-hanh-trinh">01-nguoi-dung-va-hanh-trinh.md</a></td>
+</tr>
+<tr>
+<td>2. Sắp xếp thông tin</td>
+<td>UX designer</td>
+<td>Có những trang nào, đi giữa chúng thế nào, gọi tên ra sao?</td>
+<td><a href="#s-02-kien-truc-thong-tin">02-kien-truc-thong-tin.md</a></td>
+</tr>
+<tr>
+<td>3. Vẽ luồng tác vụ</td>
+<td>UX designer</td>
+<td>Từng việc đi qua những bước nào, rẽ nhánh và lỗi ở đâu?</td>
+<td><a href="#s-03-luong-tac-vu">03-luong-tac-vu.md</a></td>
+</tr>
+<tr>
+<td>4. Hệ thống thiết kế</td>
+<td>UI designer + FE</td>
+<td>Màu, chữ, khoảng cách, component và trạng thái của chúng</td>
+<td><a href="#s-04-he-thong-thiet-ke">04-he-thong-thiet-ke.md</a></td>
+</tr>
+<tr>
+<td>5. Đặc tả màn hình</td>
+<td>UI designer</td>
+<td>Mỗi màn có khối gì, thứ tự ưu tiên, bố cục, trạng thái, vị trí nút</td>
+<td><a href="#s-05-dac-ta-man-hinh">05-dac-ta-man-hinh.md</a></td>
+</tr>
+<tr>
+<td>6. Nội dung, thuật ngữ</td>
+<td>UX writer</td>
+<td>Viết nút, thông báo, trạng thái thế nào; một khái niệm một tên</td>
+<td><a href="#s-06-noi-dung-va-thuat-ngu">06-noi-dung-va-thuat-ngu.md</a></td>
+</tr>
+<tr>
+<td>7. Bàn giao cho dev</td>
+<td>FE dev</td>
+<td>Tổ chức component, dữ liệu, form, a11y, hiệu năng, kiểm thử</td>
+<td><a href="#s-07-quy-uoc-fe">07-quy-uoc-fe.md</a></td>
+</tr>
+<tr>
+<td>Rà soát</td>
+<td>Cả nhóm</td>
+<td>Code và báo cáo hiện tại lệch tài liệu ở đâu?</td>
+<td><a href="#s-08-ra-soat-hien-trang">08-ra-soat-hien-trang.md</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2>Nguồn</h2>
+<ul>
+<li>Báo cáo <code>report/</code>: persona và hành trình (§4.2, Phụ lục Q), quy trình nghiệp vụ (§4.1.2), FR/NFR (§4.3), sitemap
+  (§5.3), thiết kế AI (§5.2). Tài liệu này không chép lại báo cáo, chỉ rút phần giao diện cần dùng.</li>
+<li>Token gốc: gói handoff Claude Design (ngoài repo), đã chép vào <code>apps/shop/src/app/globals.css</code> (DECISIONS 16/10).</li>
+<li>Phạm vi theo <code>MVP.md</code>: mục nào thuộc "chỉ thiết kế" ghi rõ ở cuối mỗi đặc tả.</li>
+</ul>
+<h2>Bản HTML</h2>
+<p><code>thiet-ke-fe.html</code> gộp 9 file .md thành một trang có mục lục, mở thẳng bằng trình duyệt (đọc tốt trên điện thoại) để gửi
+cho người ngoài nhóm. Đây là bản chụp: sửa .md thì chạy <code>python scripts/design-html.py</code> ở gốc repo (cần <code>pip install markdown</code>),
+không sửa tay file HTML.</p>
+<h2>Cập nhật</h2>
+<ul>
+<li>Thêm/đổi màn: sửa 02 (sitemap) và 05 (đặc tả) trong cùng PR với code.</li>
+<li>Thêm/đổi chữ hiển thị cho một khái niệm đã có trong bảng thuật ngữ (06 §3): dùng đúng từ trong bảng; muốn đổi từ
+  thì đổi bảng trước.</li>
+<li>Thêm token/component dùng chung: ghi vào 04 trước khi dùng ở màn thứ hai.</li>
+</ul></section><section id="s-01-nguoi-dung-va-hanh-trinh"><h1>01 — Người dùng và hành trình</h1>
+<p>Rút từ persona (báo cáo §4.2.6) và bản đồ hành trình (Phụ lục Q), viết lại theo góc nhìn giao diện: mỗi nhóm cần
+<strong>trả lời được câu hỏi gì</strong> ở mỗi bước. Danh sách câu hỏi là đầu vào cho "thông tin hỗ trợ ra quyết định" ở 05.</p>
+<h2>1. Bốn nhóm người dùng</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Persona</th>
+<th>App, thiết bị chính</th>
+<th>Năng lực số</th>
+<th>Nguyên tắc thiết kế rút ra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Khách lẻ</td>
+<td>Anh Minh Trí, 29, TP.HCM</td>
+<td>Shop, điện thoại (≥70% thời gian)</td>
+<td>Thành thạo TMĐT</td>
+<td>Nhanh, ít bước, bằng chứng nguồn gốc nhìn thấy ngay chứ không giấu trong tab</td>
+</tr>
+<tr>
+<td>Doanh nghiệp mua sỉ</td>
+<td>Chị Mai Phương, 35, thu mua chuỗi</td>
+<td>Shop, máy tính</td>
+<td>Thành thạo ERP</td>
+<td>Số liệu đầy đủ, bảng rõ, giá theo bậc, giấy tờ tải được</td>
+</tr>
+<tr>
+<td>Nhà cung cấp</td>
+<td>Bác Ba Hưng, 52, HTX Đơn Dương</td>
+<td>Shop (khu nhà cung cấp), Android tầm trung, 4G chập chờn</td>
+<td>Thấp, quen Zalo</td>
+<td>Mỗi màn một việc, chữ to, nút lớn, ít trường, gợi ý sẵn, không thuật ngữ kỹ thuật</td>
+</tr>
+<tr>
+<td>Nhân viên nội bộ</td>
+<td>Kiểm duyệt viên, vận hành, kho, thu mua (Chị Thu Hà)</td>
+<td>Admin, laptop; thu mua dùng cả điện thoại</td>
+<td>Thành thạo</td>
+<td>Mật độ thông tin cao, đối chiếu nhanh, quyết định có kiểm soát (không bấm nhầm)</td>
+</tr>
+</tbody>
+</table></div>
+<h2>2. Câu hỏi cần trả lời theo bước</h2>
+<h3>Khách lẻ — Khám phá → Thẩm định → Đặt → Nhận → Quay lại</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Câu hỏi của người dùng</th>
+<th>Giao diện trả lời bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Khám phá</td>
+<td>Hôm nay có gì ngon, đang vào mùa? Tìm "dâu" có ra "dâu tây" không?</td>
+<td>Trang chủ theo mùa, lưới danh mục, ô tìm kiếm có gợi ý, đồng nghĩa</td>
+</tr>
+<tr>
+<td>Thẩm định</td>
+<td>Có tươi không — hái hôm nào, còn dùng được mấy ngày?</td>
+<td>"Thu hoạch N ngày trước", "Còn N ngày hạn sử dụng"</td>
+</tr>
+<tr>
+<td></td>
+<td>Chứng nhận có thật, còn hiệu lực không?</td>
+<td>Nhãn chứng nhận + "Còn hiệu lực đến dd/mm/yyyy", link trang truy xuất</td>
+</tr>
+<tr>
+<td></td>
+<td>Ai trồng, ở đâu?</td>
+<td>Tên nhà cung cấp + vùng trồng ngay dưới tên sản phẩm</td>
+</tr>
+<tr>
+<td></td>
+<td>Đắt hay rẻ? Hộp 500 g và 1 kg so sao?</td>
+<td>Giá quy đổi theo kg/100 g</td>
+</tr>
+<tr>
+<td></td>
+<td>Còn hàng không, có kịp giao không?</td>
+<td>"Chỉ còn N", "Đặt trước 16:00 — giao sáng mai"</td>
+</tr>
+<tr>
+<td></td>
+<td>Hỏng thì sao?</td>
+<td>Cam kết hoàn tiền 24 giờ ngay cạnh nút mua</td>
+</tr>
+<tr>
+<td>Đặt</td>
+<td>Tổng bao nhiêu, phí giao, khi nào tới?</td>
+<td>Tạm tính sống, phí giao/miễn phí từ 300.000₫, khung giờ</td>
+</tr>
+<tr>
+<td>Nhận</td>
+<td>Đơn đang ở đâu?</td>
+<td>Dòng thời gian 8 bước, tự làm mới</td>
+</tr>
+<tr>
+<td>Quay lại</td>
+<td>Lô mình mua có bị thu hồi không?</td>
+<td>Cảnh báo thu hồi trên trang đơn và trang truy xuất</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Doanh nghiệp mua sỉ</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Câu hỏi</th>
+<th>Giao diện trả lời bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tìm nguồn</td>
+<td>Ai có đủ sản lượng, đạt VietGAP/GlobalGAP?</td>
+<td>Lọc chứng nhận, vùng trồng; trang sản phẩm có chế độ "Mua sỉ"</td>
+</tr>
+<tr>
+<td>Hỏi giá</td>
+<td>Mua 500 kg giá bao nhiêu? Tối thiểu bao nhiêu? Bao lâu chuẩn bị?</td>
+<td>Bảng bậc giá, lượng tối thiểu (MOQ), thời gian chuẩn bị, ước tính tổng theo bậc</td>
+</tr>
+<tr>
+<td>Gửi yêu cầu</td>
+<td>Gửi cho ai, khi nào có trả lời?</td>
+<td>Form yêu cầu báo giá gửi thẳng nhà cung cấp, trạng thái "Đã gửi — chờ nhà cung cấp phản hồi"</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Nhà cung cấp</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Câu hỏi</th>
+<th>Giao diện trả lời bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vào khu</td>
+<td>Hôm nay tôi cần làm gì?</td>
+<td>Tổng quan: việc cần xử lý (lô bị từ chối, chứng nhận sắp hết hiệu lực, yêu cầu báo giá mới)</td>
+</tr>
+<tr>
+<td>Đăng sản phẩm</td>
+<td>Điền gì, chọn đơn vị nào?</td>
+<td>Gợi ý đơn vị theo danh mục, ví dụ đúng vùng Lâm Đồng</td>
+</tr>
+<tr>
+<td>Chứng nhận</td>
+<td>Nhập chứng nhận ở đâu, lúc nào?</td>
+<td>Tab Hồ sơ &amp; chứng nhận; nhập tại chỗ khi đăng sản phẩm thiếu chứng nhận</td>
+</tr>
+<tr>
+<td>Khai lô</td>
+<td>Hạn sử dụng đặt bao nhiêu ngày? Chứng nhận nào đi kèm lô?</td>
+<td>Gợi ý hạn theo loại sản phẩm; danh sách chứng nhận sẽ gắn + cảnh báo hết hiệu lực</td>
+</tr>
+<tr>
+<td>Chờ duyệt</td>
+<td>Bao lâu được duyệt, bị từ chối vì sao, sửa gì?</td>
+<td>Hạn duyệt 48 giờ, lý do từ chối nổi bật kèm việc cần làm</td>
+</tr>
+<tr>
+<td>Sau duyệt</td>
+<td>Lấy QR in tem thế nào?</td>
+<td>Thẻ QR có nút tải/in</td>
+</tr>
+<tr>
+<td>Bán sỉ</td>
+<td>Có ai hỏi mua sỉ không?</td>
+<td>Danh sách yêu cầu báo giá trong khu nhà cung cấp</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Kiểm duyệt viên</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Bước</th>
+<th>Câu hỏi</th>
+<th>Giao diện trả lời bằng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hàng đợi</td>
+<td>Việc nào gấp, quá hạn?</td>
+<td>Cột hạn xử lý tô đỏ khi quá hạn, mặc định lọc "Chờ duyệt"</td>
+</tr>
+<tr>
+<td>Xem việc</td>
+<td>Hồ sơ có đủ, khớp nhau không?</td>
+<td>Checklist đối chiếu: chứng nhận còn hiệu lực sau hạn sử dụng lô, có nhật ký thu hoạch, ảnh…</td>
+</tr>
+<tr>
+<td>Quyết định</td>
+<td>Đã xem hết chưa? Lý do từ chối viết sao cho nhà cung cấp hiểu?</td>
+<td>Thanh quyết định ở cuối nội dung (dính đáy), lý do mẫu chọn nhanh</td>
+</tr>
+</tbody>
+</table></div>
+<h2>3. Ràng buộc chung rút ra</h2>
+<ul>
+<li><strong>Mobile-first cho shop</strong>, bố cục 390 px là chuẩn; admin desktop-first, chỉ cần dùng được trên tablet.</li>
+<li><strong>Nhà cung cấp ít rành công nghệ</strong> (NFR6): một màn một việc chính, nhãn đời thường, không hiện id kỹ thuật, vùng
+  chạm ≥44 px, form dài chia nhóm, giữ dữ liệu khi mất mạng giữa chừng (bản nháp).</li>
+<li><strong>Niềm tin là sản phẩm chính</strong>: bằng chứng (chứng nhận, nhật ký, thu hồi) phải nằm trên đường mua, không chỉ ở
+  trang truy xuất.</li>
+<li><strong>Hai loại "hạn" khác nhau</strong>: hạn sử dụng của nông sản và hiệu lực của chứng nhận — không dùng chung một chữ
+  (xem 06).</li>
+</ul></section><section id="s-02-kien-truc-thong-tin"><h1>02 — Kiến trúc thông tin</h1>
+<h2>1. Sitemap</h2>
+<h3>Shop (<code>apps/shop</code>, Next.js)</h3>
+<pre><code>/                              Trang chủ theo mùa: hero + tra nguồn gốc, lưới danh mục, chip lọc nhanh, đang vào mùa
+├─ /danh-muc/[ten-id]          Danh mục (cha gồm cả con) + bộ lọc
+├─ /tim-kiem?q=…               Kết quả tìm kiếm + bộ lọc (gợi ý khi gõ ở ô đầu trang)
+├─ /san-pham/[ten-id]          Chi tiết: ảnh | thông tin + bằng chứng | khung mua (Mua lẻ / Mua sỉ)
+├─ /truy-xuat/[traceCode]      Trang truy xuất công khai (layout gọn, mở từ QR)
+├─ /dang-nhap?next=…           OTP qua email
+├─ /gio-hang                   ┐
+├─ /thanh-toan                 │ cần đăng nhập (chặn ở proxy.ts)
+├─ /don-hang, /don-hang/[ma]   ┘
+└─ /nha-cung-cap               Khu nhà cung cấp (vai trò seller)
+   ├─ /                        Tổng quan: việc cần xử lý, số liệu nhanh, yêu cầu báo giá mới
+   ├─ /lo-hang                 Danh sách lô, lọc theo trạng thái/sản phẩm
+   │  ├─ /tao-moi              Khai báo lô (nút hành động, không phải tab)
+   │  └─ /[id]                 Chi tiết lô: trạng thái, QR, nhật ký canh tác
+   ├─ /san-pham                Sản phẩm của tôi
+   │  └─ /tao-moi              Đăng sản phẩm (nút hành động, không phải tab)
+   ├─ /ho-so                   Hồ sơ &amp; chứng nhận (thêm chứng nhận)
+   └─ /bao-gia                 Yêu cầu báo giá sỉ nhận được (vào từ Tổng quan, không có tab riêng)
+</code></pre>
+<h3>Admin (<code>apps/admin</code>, Refine + Ant Design)</h3>
+<pre><code>/login
+/                    Tổng quan (khối theo vai trò)
+/kiem-duyet          Hàng đợi duyệt → /kiem-duyet/:id (lô, sản phẩm, hồ sơ, chứng nhận)
+/van-hanh            Đơn hàng → /van-hanh/:id
+/kho                 Tồn theo lô + sổ nhập xuất
+/cau-hinh            Cấu hình nền tảng (chỉ platform_owner sửa)
+</code></pre>
+<h2>2. Điều hướng</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Tầng</th>
+<th>Shop</th>
+<th>Khu nhà cung cấp</th>
+<th>Admin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Toàn cục</td>
+<td>Đầu trang: logo, tìm kiếm, tài khoản, giỏ; thanh danh mục</td>
+<td>Như shop + nút "Khu nhà cung cấp" ở đầu trang</td>
+<td>Sidebar theo <code>meta.roles</code></td>
+</tr>
+<tr>
+<td>Khu vực</td>
+<td>Breadcrumb ở danh mục, chi tiết, tìm kiếm</td>
+<td><strong>Hàng tab = nơi đến</strong>: Tổng quan · Lô hàng · Sản phẩm · Hồ sơ &amp; chứng nhận</td>
+<td>Tiêu đề trang + breadcrumb Refine</td>
+</tr>
+<tr>
+<td>Hành động chính</td>
+<td>Nút cam (cta) duy nhất mỗi màn</td>
+<td>"Khai báo lô" (cam), "Đăng sản phẩm" (viền) ở phải hàng tab; mobile: nút chính dính đáy</td>
+<td>Nút quyết định ở <strong>thanh dính đáy</strong> của trang chi tiết</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quy tắc: <strong>tab không bao giờ là hành động</strong>. Mục nào bấm vào để <em>làm</em> (tạo, gửi) là nút; mục nào bấm vào để <em>xem</em> là
+tab/liên kết. Mỗi màn có tối đa một nút cam.</p>
+<h2>3. Mô hình nội dung</h2>
+<pre><code>Danh mục ─┬─ Sản phẩm (của một nhà cung cấp; tên, mô tả, đơn vị, mùa vụ, ảnh)
+          │     ├─ Lô (ngày thu hoạch, hạn sử dụng, sản lượng, mã truy xuất, trạng thái duyệt, thu hồi)
+          │     │     └─ Nhật ký canh tác (hoạt động, ngày, mô tả, ảnh; đính chính không xoá)
+          │     ├─ Tin bán lẻ (1P, Farmery đặt giá; đơn vị bán, giá, còn bán được)
+          │     └─ Bảng giá sỉ (3P, nhà cung cấp đặt; bậc giá, lượng tối thiểu, thời gian chuẩn bị)
+Nhà cung cấp ─ Chứng nhận (loại, số, cơ quan cấp, ngày cấp, ngày hết hiệu lực, trạng thái duyệt)
+</code></pre>
+<p>Hệ quả hiển thị:</p>
+<ul>
+<li>Chứng nhận gắn với <strong>nhà cung cấp</strong>, hiện ở sản phẩm và lô của nhà cung cấp đó; chỉ chứng nhận đã duyệt và còn
+  hiệu lực mới hiện cho người mua.</li>
+<li>Thông tin độ tươi (thu hoạch, hạn sử dụng) thuộc <strong>lô</strong>; trang sản phẩm lấy lô đang bán có hạn sớm nhất.</li>
+<li>Giá lẻ thuộc <strong>tin bán lẻ</strong>, giá sỉ thuộc <strong>bảng giá sỉ</strong> — hai chế độ của khung mua đọc hai nguồn khác nhau.</li>
+</ul>
+<h2>4. Đặt tên route</h2>
+<ul>
+<li>Tiếng Việt không dấu, gạch nối: <code>/nha-cung-cap/lo-hang/tao-moi</code>.</li>
+<li>Tài nguyên công khai dạng <code>ten-&lt;id&gt;</code> (chỉ đọc id cuối). Trang truy xuất theo <code>traceCode</code>.</li>
+<li>Trạng thái lọc trên URL (<code>?status=</code>, <code>?q=</code>, <code>?cert=</code>) để chia sẻ và quay lại được.</li>
+</ul></section><section id="s-03-luong-tac-vu"><h1>03 — Luồng tác vụ</h1>
+<p>Ký hiệu: <code>[màn]</code> · <code>(hành động)</code> · <code>◇</code> rẽ nhánh · <code>⚠</code> điểm lỗi cần thông báo.</p>
+<h2>F1. Tìm và mua lẻ</h2>
+<pre><code>[Trang chủ] ──(gõ ô tìm kiếm)──► gợi ý tức thì: sản phẩm · danh mục · vùng trồng · &quot;tìm tất cả 'x'&quot;
+     │                              ◇ chọn sản phẩm ─► [Chi tiết]
+     │                              ◇ Enter ─► [Tìm kiếm] với chip lọc hiểu từ câu (vd &quot;hữu cơ&quot;, &quot;dưới 200k&quot;)
+     ├─(chọn ô danh mục)─► [Danh mục]
+     └─(chip lọc nhanh)─► [Tìm kiếm]
+[Tìm kiếm] ◇ 0 kết quả ─► &quot;Có phải bạn muốn tìm …&quot;, bỏ bớt lọc, gợi ý danh mục
+[Chi tiết] (chế độ Mua lẻ) ─(Thêm vào giỏ)─► ở lại trang, báo &quot;Đã thêm&quot;
+                           ─(Mua ngay)─► ◇ chưa đăng nhập ─► [Đăng nhập ?next] ─► quay lại
+                                         ─► [Thanh toán] ─► [Đơn hàng: chờ trả tiền, đếm ngược 15 phút]
+⚠ hết hàng giữa chừng (`STOCK_INSUFFICIENT`), ⚠ quá giờ chốt khung giao, ⚠ quá 15 phút giữ chỗ → đơn tự hủy
+</code></pre>
+<h2>F2. Hỏi giá sỉ</h2>
+<pre><code>[Chi tiết] ─(công tắc &quot;Mua sỉ&quot;)─► khung mua đổi sang: bậc giá · lượng tối thiểu · thời gian chuẩn bị
+   ◇ sản phẩm chưa có bảng giá sỉ ─► &quot;Nhà cung cấp chưa nhận bán sỉ sản phẩm này&quot; (công tắc vẫn hiện, khung giải thích)
+   ─(nhập sản lượng)─► hiện bậc áp dụng + ước tính tổng
+   ◇ dưới lượng tối thiểu ─► cảnh báo, gợi ý chuyển sang Mua lẻ
+   ─(Gửi yêu cầu báo giá)─► ◇ chưa đăng nhập ─► [Đăng nhập]
+                           ◇ không phải tài khoản doanh nghiệp mua sỉ ─► giải thích + liên hệ đăng ký
+                           ─► form: sản lượng, ngày cần hàng, ghi chú ─► &quot;Đã gửi tới &lt;nhà cung cấp&gt;&quot;
+[Khu nhà cung cấp › Tổng quan] hiện &quot;N yêu cầu báo giá mới&quot; ─► [Yêu cầu báo giá]
+Phần sau (phản hồi, thương lượng, hợp đồng — FR6.2–6.4) thuộc MVP, chưa làm ở prototype.
+</code></pre>
+<h2>F3. Nhà cung cấp: chứng nhận → sản phẩm → lô → nhật ký → QR</h2>
+<pre><code>[Hồ sơ &amp; chứng nhận] ─(Thêm chứng nhận)─► sheet: loại · số · cơ quan cấp · ngày cấp · ngày hết hiệu lực · ảnh
+                     ─► chứng nhận &quot;Chờ duyệt&quot; (chưa hiện cho người mua)
+[Đăng sản phẩm] ─(chọn &quot;Sản phẩm đạt chứng nhận&quot;: VietGAP…)─►
+     ◇ chưa có chứng nhận loại đó ─► nút &quot;Thêm chứng nhận VietGAP&quot; mở cùng sheet tại chỗ, không rời form
+     ─(Gửi duyệt)─► sản phẩm &quot;Chờ duyệt&quot;
+[Khai báo lô] chọn sản phẩm đã duyệt ─► gợi ý hạn sử dụng theo danh mục
+     ─► khối &quot;Chứng nhận đi kèm lô&quot; (chỉ đọc) ◇ có chứng nhận hết hiệu lực trước hạn sử dụng ─► cảnh báo vàng
+     ─(Gửi duyệt)─► [Chi tiết lô ?thanh-cong] &quot;Chờ duyệt — thường trong 48 giờ&quot;
+[Chi tiết lô] (Thêm nhật ký) · (Đính chính dòng cũ) ─► khi duyệt xong: thẻ QR (tải/in)
+     ◇ bị từ chối ─► khối đỏ: lý do + việc cần làm
+</code></pre>
+<h2>F4. Kiểm duyệt</h2>
+<pre><code>[Hàng đợi] lọc mặc định &quot;Chờ duyệt&quot;, sắp theo hạn ─► [Chi tiết việc duyệt]
+   đọc từ trên xuống: thông tin chính → chứng nhận → nhật ký → checklist đối chiếu
+   ─► thanh quyết định dính đáy: (Duyệt) xác nhận một bước · (Từ chối) modal lý do, có lý do mẫu
+   ⚠ việc đã có quyết định (`REVIEW_TASK_DECIDED`) ─► báo và tải lại
+</code></pre>
+<h2>F5. Sửa thông tin</h2>
+<p>Nguyên tắc chọn cách sửa (áp dụng cho mọi màn):</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Loại thay đổi</th>
+<th>Cách sửa</th>
+<th>Ví dụ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Một trường ngắn, độc lập, không cần duyệt lại</td>
+<td><strong>Sửa tại chỗ</strong> (bấm → ô nhập → Lưu/Esc), lưu lạc quan</td>
+<td>Số lượng trong giỏ, đặt địa chỉ mặc định</td>
+</tr>
+<tr>
+<td>Bản ghi nhiều trường, cần ngữ cảnh danh sách</td>
+<td><strong>Sheet/drawer</strong> cạnh danh sách, không rời trang</td>
+<td>Thêm chứng nhận, thêm nhật ký</td>
+</tr>
+<tr>
+<td>Thay đổi thứ người mua đã thấy và đã được duyệt</td>
+<td><strong>Tạo bản chờ duyệt</strong>, bản cũ vẫn hiện tới khi duyệt</td>
+<td>Giá tham khảo, mô tả, chứng nhận của sản phẩm đã duyệt</td>
+</tr>
+<tr>
+<td>Bản ghi không được sửa theo nghiệp vụ</td>
+<td><strong>Đính chính</strong> (bản mới, giữ bản cũ)</td>
+<td>Nhật ký canh tác (NFR9)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Hợp đồng hiện chưa có thao tác sửa sản phẩm/lô (<code>PATCH</code>); hàng thứ ba thuộc MVP.</p></section><section id="s-04-he-thong-thiet-ke"><h1>04 — Hệ thống thiết kế</h1>
+<p>Nguồn sự thật của token là <code>apps/shop/src/app/globals.css</code> (Tailwind 4 <code>@theme</code>). Admin dùng Ant Design, ánh xạ token
+qua <code>apps/admin/src/theme.ts</code>. Chỉ có bản sáng.</p>
+<h2>1. Màu</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Vai trò</th>
+<th>Token (class)</th>
+<th>Giá trị</th>
+<th>Dùng cho</th>
+<th>Không dùng cho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thương hiệu</td>
+<td><code>primary</code></td>
+<td>#1f5132</td>
+<td>Liên kết, tab đang chọn, nút viền, nhãn chứng nhận</td>
+<td>Nút hành động chính</td>
+</tr>
+<tr>
+<td>Hành động chính</td>
+<td><code>cta</code> / <code>cta-hover</code></td>
+<td>#c2410c / #9a3412</td>
+<td><strong>Một</strong> nút chính mỗi màn (Mua ngay, Khai báo lô, Gửi duyệt)</td>
+<td>Trang trí, nhãn</td>
+</tr>
+<tr>
+<td>Lá</td>
+<td><code>leaf</code>, <code>leaf-soft</code></td>
+<td>#4f9c56, #a8cf9c</td>
+<td>Điểm nhấn "vào mùa", nền nhẹ khu nhà cung cấp</td>
+<td>Chữ trên nền trắng (tương phản thấp)</td>
+</tr>
+<tr>
+<td>Chữ</td>
+<td><code>ink</code>, <code>ink-2</code>, <code>muted-foreground</code>, <code>subtle</code>, <code>faint</code></td>
+<td>#1c211b → #a8b0a5</td>
+<td>Tiêu đề → phụ chú</td>
+<td><code>faint</code> cho chữ cần đọc</td>
+</tr>
+<tr>
+<td>Nền, viền</td>
+<td><code>background</code>, <code>surface</code>, <code>surface-2</code>, <code>line</code>, <code>line-strong</code>, <code>chip</code></td>
+<td></td>
+<td>Thẻ dùng <strong>viền</strong>, không bóng</td>
+<td></td>
+</tr>
+<tr>
+<td>Thành công</td>
+<td><code>success</code>, <code>success-soft</code></td>
+<td>#2f7a48</td>
+<td>Còn hiệu lực, lô hợp lệ, đã duyệt</td>
+<td></td>
+</tr>
+<tr>
+<td>Cảnh báo</td>
+<td><code>warning</code>, <code>warning-dot</code>, <code>warning-soft</code>, <code>warning-line</code></td>
+<td></td>
+<td>Chờ duyệt, sắp hết hiệu lực, sắp hết hạn sử dụng, bản đính chính</td>
+<td></td>
+</tr>
+<tr>
+<td>Nguy hiểm</td>
+<td><code>danger</code>, <code>danger-soft</code>, <code>danger-line</code>, <code>danger-ink</code></td>
+<td>#b42318</td>
+<td>Bị từ chối, hết hiệu lực, thu hồi, hết hàng, lỗi</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Quy tắc:</p>
+<ul>
+<li><strong>Không dùng bảng màu mặc định của Tailwind</strong> (<code>emerald-50</code>, <code>blue-700</code>…). Cần phân biệt nhiều loại (vd 5 loại hoạt
+  động nhật ký) thì phân biệt bằng <strong>icon + nhãn</strong>, màu chỉ dùng token trung tính hoặc ngữ nghĩa.</li>
+<li>Màu trạng thái luôn đi cùng chữ hoặc icon (không chỉ dựa vào màu — WCAG 1.4.1).</li>
+<li>Admin: <code>colorPrimary = #1f5132</code>, <code>colorError = #b42318</code>, <code>colorWarning = #d97706</code>, <code>colorSuccess = #2f7a48</code>,
+  <code>borderRadius = 8</code>, font Be Vietnam Pro. Tag trạng thái dùng cùng ngữ nghĩa màu với shop (xem 06 §3).</li>
+</ul>
+<h2>2. Chữ</h2>
+<p>Be Vietnam Pro cho giao diện; Lora (serif) <strong>chỉ</strong> cho tiêu đề trang công khai (H1 chi tiết, hero, tìm kiếm, truy xuất).
+Khu nhà cung cấp và admin không dùng serif.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Desktop / mobile</th>
+<th>Dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text-display</code> / <code>-sm</code></td>
+<td>36 / 24</td>
+<td>Hero</td>
+</tr>
+<tr>
+<td><code>text-h1</code> / <code>-sm</code></td>
+<td>27 / 24</td>
+<td>Tiêu đề trang</td>
+</tr>
+<tr>
+<td><code>text-h2</code> / <code>-sm</code></td>
+<td>20 / 18</td>
+<td>Tiêu đề khối</td>
+</tr>
+<tr>
+<td><code>text-h3</code></td>
+<td>15</td>
+<td>Tiêu đề thẻ</td>
+</tr>
+<tr>
+<td><code>text-title</code></td>
+<td>14</td>
+<td>Nút, nhãn trường, tab</td>
+</tr>
+<tr>
+<td><code>text-body</code></td>
+<td>13,5</td>
+<td>Đoạn văn</td>
+</tr>
+<tr>
+<td><code>text-small</code>, <code>text-caption</code>, <code>text-micro</code></td>
+<td>13 / 12,5 / 11,5</td>
+<td>Phụ chú, nhãn trạng thái</td>
+</tr>
+<tr>
+<td><code>text-price</code>, <code>text-price-xl</code></td>
+<td>16 / 30</td>
+<td>Giá</td>
+</tr>
+</tbody>
+</table></div>
+<p>Khu nhà cung cấp: chữ thân tối thiểu <code>text-small</code> (13 px), nhãn trường <code>text-title</code>, không dùng <code>text-micro</code> cho
+thông tin cần đọc (persona 52 tuổi, điện thoại tầm trung).</p>
+<h2>3. Bo góc, khoảng cách, bóng</h2>
+<ul>
+<li>Bo góc theo <strong>vai trò</strong>, không theo cỡ: <code>rounded-tag</code> 5 (nhãn), <code>rounded-btn</code> 8 (nút, ô nhập), <code>rounded-search</code> 9,
+  <code>rounded-tile</code> 10 (ô thông tin), <code>rounded-card</code> 12 (thẻ), <code>rounded-panel</code> 14 (khối lớn), <code>rounded-banner</code> 16 (hero);
+  <code>rounded-full</code> cho huy hiệu trạng thái dạng viên thuốc. Không dùng <code>rounded-lg/xl/2xl</code> trực tiếp.</li>
+<li>Khoảng cách theo bội 4 px; lề trang 16 px mobile, 48 px desktop; khung rộng tối đa 1440 px.</li>
+<li><strong>Bóng</strong>: chỉ <code>shadow-segment</code> cho nút gạt đang chọn và bóng nổi của popover/sheet (do thư viện). Thẻ, khối, nút
+  không đổ bóng — phân tầng bằng viền và nền <code>surface</code>.</li>
+</ul>
+<h2>4. Breakpoint, vùng chạm</h2>
+<ul>
+<li><code>md</code> 768, <code>lg</code> 1024. Thiết kế 390 px trước.</li>
+<li>Vùng chạm ≥44×44 px trên mobile (<code>min-h-11</code>); nút chính khu nhà cung cấp cao 44–48 px.</li>
+<li>Thanh hành động dính đáy mobile chừa <code>env(safe-area-inset-bottom)</code>; trang chừa <code>pb-28</code>.</li>
+</ul>
+<h2>5. Component</h2>
+<p>Thư mục <code>apps/shop/src/components/farmery/</code> (component sản phẩm) và <code>components/ui/</code> (shadcn base-nova).</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Biến thể</th>
+<th>Trạng thái bắt buộc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Button</td>
+<td><code>cta</code> (chính), <code>outline</code> viền primary (phụ), <code>ghost</code> (thứ ba), <code>danger</code></td>
+<td>default · hover · focus-visible (vòng <code>ring</code>) · disabled · loading ("Đang …" + spinner)</td>
+</tr>
+<tr>
+<td>StatusBadge</td>
+<td>success · warning · danger · neutral; icon + chữ</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Tabs điều hướng</td>
+<td>gạch chân 2 px <code>primary</code> (như <code>ProductTabs</code>)</td>
+<td>đang chọn · hover · có badge số</td>
+</tr>
+<tr>
+<td>Segmented (nút gạt)</td>
+<td>2–3 lựa chọn, nền <code>surface</code>, ô chọn trắng + <code>shadow-segment</code></td>
+<td>đang chọn · disabled</td>
+</tr>
+<tr>
+<td>ProductCard</td>
+<td>có/không tin bán, hết hàng, có giá quy đổi</td>
+<td>ảnh lỗi → ô thay thế</td>
+</tr>
+<tr>
+<td>FactGrid (<code>LotInfo</code>)</td>
+<td>2 / 4 cột</td>
+<td>giá trị cảnh báo/nguy hiểm</td>
+</tr>
+<tr>
+<td>CategoryTile</td>
+<td>ảnh + tên + số sản phẩm</td>
+<td>lưới desktop / slider mobile</td>
+</tr>
+<tr>
+<td>SearchSuggest</td>
+<td>nhóm: sản phẩm · danh mục · vùng · tìm gần đây</td>
+<td>đang tải · rỗng · mục đang chọn (bàn phím)</td>
+</tr>
+<tr>
+<td>Field (nhãn + ô + gợi ý + lỗi)</td>
+<td>text, number có đơn vị, date, select, textarea</td>
+<td>lỗi (viền <code>danger</code> + câu lỗi dưới ô, <code>aria-describedby</code>)</td>
+</tr>
+<tr>
+<td>Sheet</td>
+<td>phải (desktop) / đáy (mobile)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>EmptyState, ErrorState, Skeleton</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>StickyActionBar</td>
+<td>dính đáy vùng nội dung</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quy tắc mới thêm component: dùng ở ≥2 màn thì đưa vào <code>components/farmery/</code> và ghi vào bảng này.</p></section><section id="s-05-dac-ta-man-hinh"><h1>05 — Đặc tả màn hình</h1>
+<p>Mỗi màn: <strong>mục đích</strong> · khối nội dung theo thứ tự ưu tiên · bố cục · trạng thái · hành động. "Hỗ trợ quyết định"
+đánh dấu ◆ là thông tin trả lời câu hỏi ở 01 §2.</p>
+<h2>Shop — công khai</h2>
+<h3>S1. Trang chủ <code>/</code></h3>
+<p>Mục đích: cho thấy hàng đang vào mùa, đưa nhanh vào danh mục hoặc tra nguồn gốc.</p>
+<ol>
+<li>Hero theo mùa + ô tra nguồn gốc (≥lg: <code>[1fr | 336px]</code>; &lt;lg xếp dọc).</li>
+<li><strong>Mua theo danh mục</strong>: ≥md lưới 5 cột ô ảnh (ảnh danh mục, tên, "N sản phẩm"); &lt;md slider cuộn ngang có snap,
+   ô rộng 40% để thấy 2,5 ô (gợi ý vuốt), không mũi tên.</li>
+<li>Chip lọc nhanh (chứng nhận, còn hàng, vùng trồng).</li>
+<li>Đang vào mùa: lưới thẻ sản phẩm + "Xem tất cả".
+Trạng thái: danh mục lỗi → ẩn khối 2 (không làm hỏng trang); không có sản phẩm vào mùa → EmptyState.</li>
+</ol>
+<h3>S2. Danh mục, S3. Tìm kiếm</h3>
+<ul>
+<li>Đầu trang: breadcrumb, H1 (serif), số kết quả nếu có.</li>
+<li>Tìm kiếm: hàng <strong>chip "đã hiểu"</strong> dưới H1 khi câu tìm chứa cụm lọc ("Hữu cơ ×", "Dưới 200.000₫ ×"); dòng "Có phải
+  bạn muốn tìm <em>dâu tây</em>?" khi có gợi ý sửa.</li>
+<li>Bộ lọc: sidebar ≥lg, sheet &lt;lg. Kết quả: lưới thẻ, "Xem thêm" theo con trỏ.</li>
+<li>0 kết quả: gợi ý sửa từ, danh mục liên quan, nút "Bỏ bộ lọc".</li>
+</ul>
+<h3>Ô tìm kiếm đầu trang (mọi trang)</h3>
+<ul>
+<li>Gõ ≥1 ký tự → sau 200 ms hiện bảng gợi ý: Sản phẩm (≤5, ảnh nhỏ + giá), Danh mục (≤3), Vùng trồng (≤2), dòng cuối
+  "Tìm tất cả “x”". Ô trống + focus → "Tìm gần đây" (≤5, lưu trên máy, có nút xoá).</li>
+<li>Bàn phím: ↑↓ chọn, Enter mở, Esc đóng; <code>role="combobox"</code>, <code>aria-expanded</code>, <code>aria-activedescendant</code>.</li>
+<li>Mobile: bảng gợi ý phủ toàn chiều rộng dưới ô.</li>
+</ul>
+<h3>S4. Chi tiết sản phẩm <code>/san-pham/[ten-id]</code></h3>
+<p>Bố cục ≥lg <code>[520 | 1fr | 300]</code>; &lt;lg một cột, khung mua dính đáy.</p>
+<ol>
+<li>Ảnh.</li>
+<li>Tên (serif) · nhà cung cấp · vùng trồng.</li>
+<li>Giá + đơn vị; ◆ <strong>giá quy đổi</strong> "≈ 240.000₫/kg" khi đơn vị bán có khối lượng (hộp 500 g…).</li>
+<li>◆ <strong>Dải độ tươi</strong>: "Thu hoạch 2 ngày trước · Còn 5 ngày hạn sử dụng" (cảnh báo khi ≤2 ngày).</li>
+<li>FactGrid: Ngày thu hoạch · Vùng trồng · Chứng nhận · Hạn sử dụng.</li>
+<li>◆ <strong>Chứng nhận</strong>: từng chứng nhận "VietGAP · Còn hiệu lực đến 12/2027" (link trang truy xuất).</li>
+<li>Tab: Mô tả · Nhật ký canh tác (QR, dòng thời gian).</li>
+<li>Sản phẩm tương tự.</li>
+</ol>
+<p><strong>Khung mua</strong> — nút gạt <strong>Mua lẻ | Mua sỉ</strong> ở đầu khung, chỉ hiện khi nhà cung cấp có bảng giá sỉ cho sản phẩm (không
+hiện công tắc dẫn tới khung trống).</p>
+<ul>
+<li>Mua lẻ: nhà cung cấp, số lượng, tạm tính, Mua ngay (cam), Thêm vào giỏ (viền); ◆ "Chỉ còn N" khi tồn ≤10;
+  ◆ "Đặt trước 16:00, giao sáng mai"; cam kết giao, hoàn tiền, thanh toán.</li>
+<li>Mua sỉ: bảng bậc giá (từ X → giá/đơn vị, bậc đang áp dụng tô <code>primary</code>), lượng tối thiểu, thời gian chuẩn bị, ô nhập
+  sản lượng → ◆ ước tính tổng; nút "Gửi yêu cầu báo giá" (cam). Dưới lượng tối thiểu → cảnh báo vàng, gợi ý Mua lẻ.
+  Mobile: thanh dính đáy giữ cho mua lẻ; khối "Mua sỉ từ <nhà cung cấp>" nằm ngay trong cột nội dung, trên tab Mô tả.</li>
+<li>Form yêu cầu báo giá (trong khung): sản lượng, ngày cần hàng, ghi chú; gửi xong hiện "Đã gửi tới <nhà cung cấp>".</li>
+</ul>
+<h3>S5. Truy xuất <code>/truy-xuat/[traceCode]</code></h3>
+<p>Thu hồi (nếu có) lên đầu, đỏ; FactGrid 4 cột; chứng nhận; nhật ký đầy đủ kể cả đính chính.</p>
+<h3>S6–S9. Đăng nhập, giỏ, thanh toán, đơn hàng</h3>
+<ul>
+<li>Giỏ: sửa số lượng <strong>tại chỗ</strong> (− / số / +), xoá dòng, tạm tính sống.</li>
+<li>Thanh toán: 3 bước (Giao đến · Khung giờ · Thanh toán), một nút cam cuối.</li>
+<li>Đơn: đếm ngược giữ chỗ, dòng thời gian 8 bước, cảnh báo thu hồi.</li>
+</ul>
+<h2>Shop — khu nhà cung cấp</h2>
+<p>Đầu khu: tên nhà cung cấp, vùng trồng, mã vùng trồng, nhãn chứng nhận còn hiệu lực. Hàng điều hướng:</p>
+<pre><code>[Tổng quan] [Lô hàng ②] [Sản phẩm] [Hồ sơ &amp; chứng nhận ①]        (Đăng sản phẩm)  (Khai báo lô)
+ gạch chân 2px primary, badge = số việc cần xử lý                  nút viền          nút cam
+</code></pre>
+<p>Mobile: hàng tab cuộn ngang; "Khai báo lô" thành nút cam dính đáy, "Đăng sản phẩm" vào trang Sản phẩm.</p>
+<h3>N1. Tổng quan <code>/nha-cung-cap</code></h3>
+<ol>
+<li><strong>Việc cần làm</strong> (chỉ hiện khi có): lô bị từ chối (link tới lô), chứng nhận hết/sắp hết hiệu lực (≤30 ngày),
+   yêu cầu báo giá mới.</li>
+<li>Số liệu nhanh: sản phẩm · lô đang bán · chờ duyệt · bị từ chối (bấm được → danh sách đã lọc).</li>
+<li>Lô gần đây (5 dòng).</li>
+<li>Quy trình 3 bước (chỉ hiện khi chưa có lô nào).</li>
+</ol>
+<h3>N2. Lô hàng <code>/nha-cung-cap/lo-hang</code></h3>
+<p>Lọc trạng thái dạng segmented: Tất cả · Chờ duyệt · Đã duyệt · Bị từ chối; chip "Sản phẩm: X ×". Thẻ lô: mã lô,
+sản phẩm, trạng thái, thu hoạch, hạn sử dụng, sản lượng <strong>kèm đơn vị của sản phẩm</strong>; bị từ chối hiện lý do.</p>
+<h3>N3. Khai báo lô <code>/nha-cung-cap/lo-hang/tao-moi</code></h3>
+<p>Sản phẩm → ngày thu hoạch → hạn sử dụng (◆ gợi ý "+N ngày" theo danh mục, chip chọn nhanh 3/5/7/14 ngày) → sản lượng
+(đơn vị hiện bên phải ô) → <strong>Chứng nhận đi kèm lô</strong> (chỉ đọc; ◆ cảnh báo chứng nhận hết hiệu lực trước hạn sử dụng)
+→ Hủy / Gửi duyệt (cam).</p>
+<h3>N4. Chi tiết lô <code>/nha-cung-cap/lo-hang/[id]</code></h3>
+<p>Trạng thái + bước tiếp theo ở đầu (chờ duyệt: "thường trong 48 giờ"; bị từ chối: lý do + việc cần làm; đã duyệt: QR).
+Nhật ký: form thêm ở đầu danh sách; mỗi dòng: icon + nhãn hoạt động (theo bảng thuật ngữ), ngày, mô tả, ảnh, người ghi.
+Không hiện id kỹ thuật.</p>
+<h3>N5. Sản phẩm <code>/nha-cung-cap/san-pham</code>, N6. Đăng sản phẩm</h3>
+<ul>
+<li>Danh sách thẻ: ảnh, tên, trạng thái, đơn vị, số lô / đang bán; hành động "Khai báo lô" · "Xem lô".</li>
+<li>Form đăng: tên (ví dụ vùng Lâm Đồng), danh mục, đơn vị (gợi ý theo danh mục), giá tham khảo, mùa vụ, mô tả,
+  <strong>Sản phẩm đạt chứng nhận</strong> (chọn từ chứng nhận đã có; thiếu → "Thêm chứng nhận" mở sheet tại chỗ).</li>
+</ul>
+<h3>N7. Hồ sơ &amp; chứng nhận <code>/nha-cung-cap/ho-so</code></h3>
+<p>Thông tin hồ sơ (chỉ đọc ở prototype). Danh sách chứng nhận: loại, số, cơ quan cấp, hiệu lực (từ – đến), trạng thái
+duyệt + trạng thái hiệu lực. Nút "Thêm chứng nhận" → sheet form.</p>
+<h3>N8. Yêu cầu báo giá <code>/nha-cung-cap/bao-gia</code></h3>
+<p>Bảng: ngày gửi, doanh nghiệp, sản phẩm, sản lượng, ngày cần hàng, ghi chú, trạng thái. Phản hồi báo giá thuộc MVP.</p>
+<h2>Admin</h2>
+<h3>A1. Hàng đợi duyệt <code>/kiem-duyet</code></h3>
+<p>Lọc mặc định "Chờ duyệt"; cột hạn xử lý đỏ khi quá hạn.</p>
+<h3>A2. Chi tiết việc duyệt <code>/kiem-duyet/:id</code></h3>
+<p>Đọc từ trên xuống: tóm tắt việc → nội dung theo loại (lô / sản phẩm / hồ sơ / chứng nhận) → chứng nhận → nhật ký →
+◆ <strong>checklist đối chiếu</strong> (tự tính, chỉ để tham khảo: chứng nhận còn hiệu lực tới sau hạn sử dụng lô; có nhật ký
+thu hoạch; ngày thu hoạch không ở tương lai; có ảnh).
+<strong>Thanh quyết định dính đáy</strong> vùng nội dung (không ở header): bên trái tóm tắt checklist "3/4 mục đạt", bên phải
+"Từ chối" (viền đỏ) · "Duyệt" (chính). Duyệt: xác nhận một bước (Popconfirm). Từ chối: modal lý do + chip lý do mẫu.
+Việc đã có quyết định → thanh đổi thành dòng trạng thái, không còn nút.</p>
+<h3>A3–A5. Vận hành đơn, Tồn kho, Cấu hình</h3>
+<p>Giữ như hiện tại; dùng nhãn trạng thái theo 06.</p></section><section id="s-06-noi-dung-va-thuat-ngu"><h1>06 — Nội dung và thuật ngữ</h1>
+<h2>1. Giọng văn</h2>
+<ul>
+<li>Xưng "bạn" với người dùng; câu ngắn, chủ động, nói điều xảy ra và việc cần làm tiếp.</li>
+<li>Khu nhà cung cấp: từ đời thường của nhà vườn ("thu hoạch", "lô", "tem QR"), không từ kỹ thuật ("ID", "hàng đợi",
+  "đơn vị" chung chung, "Best Before", "kiểm định").</li>
+<li>Không phóng đại ("độc nhất", "tự động" khi thật ra là người duyệt).</li>
+</ul>
+<h2>2. Mẫu câu</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Quy tắc</th>
+<th>Ví dụ đúng</th>
+<th>Tránh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nút</td>
+<td>Động từ + tân ngữ, ≤4 từ</td>
+<td>"Khai báo lô", "Gửi duyệt", "Thêm vào giỏ"</td>
+<td>"OK", "Xác nhận" chung chung</td>
+</tr>
+<tr>
+<td>Nút đang chạy</td>
+<td>"Đang …" + spinner</td>
+<td>"Đang gửi…"</td>
+<td>"Loading"</td>
+</tr>
+<tr>
+<td>Lỗi</td>
+<td>Điều gì sai + cách sửa</td>
+<td>"Hạn sử dụng phải sau ngày thu hoạch."</td>
+<td>"Dữ liệu không hợp lệ"</td>
+</tr>
+<tr>
+<td>Thành công</td>
+<td>Việc đã xong + bước tiếp</td>
+<td>"Đã gửi duyệt. Thường có kết quả trong 48 giờ."</td>
+<td>"Thành công!"</td>
+</tr>
+<tr>
+<td>Rỗng</td>
+<td>Vì sao rỗng + hành động</td>
+<td>"Chưa có lô nào. Khai báo lô đầu tiên để bắt đầu bán."</td>
+<td>"Không có dữ liệu"</td>
+</tr>
+<tr>
+<td>Ví dụ trong ô nhập</td>
+<td>Dữ liệu đúng vùng thí điểm Lâm Đồng</td>
+<td>"Dâu tây Hana Đà Lạt"</td>
+<td>"Dâu tây Mộc Châu"</td>
+</tr>
+</tbody>
+</table></div>
+<h2>3. Bảng thuật ngữ chuẩn</h2>
+<p>Một khái niệm — một từ, dùng giống nhau ở shop, admin, API message và báo cáo. Cột "Không dùng" là các biến thể đã
+gặp trong code (xem 08).</p>
+<h3>Trạng thái duyệt (<code>ReviewStatus</code>, <code>TaskStatus</code>)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Mã</th>
+<th>Từ chuẩn</th>
+<th>Màu</th>
+<th>Không dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>Nháp</td>
+<td>trung tính</td>
+<td></td>
+</tr>
+<tr>
+<td><code>pending_review</code>, <code>open</code></td>
+<td><strong>Chờ duyệt</strong></td>
+<td>cảnh báo</td>
+<td>Chờ kiểm duyệt, Chờ kiểm định, Đang chờ duyệt, hàng đợi</td>
+</tr>
+<tr>
+<td><code>in_review</code></td>
+<td>Đang duyệt</td>
+<td>thông tin</td>
+<td></td>
+</tr>
+<tr>
+<td><code>approved</code></td>
+<td><strong>Đã duyệt</strong></td>
+<td>thành công</td>
+<td>Đã duyệt mở bán, Đã phê duyệt mở bán</td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td><strong>Bị từ chối</strong></td>
+<td>nguy hiểm</td>
+<td>Từ chối (dùng cho nút hành động, không cho trạng thái)</td>
+</tr>
+<tr>
+<td><code>hidden</code></td>
+<td>Đã ẩn</td>
+<td>trung tính</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>"Từ chối" là <strong>nút</strong> (hành động); "Bị từ chối" là <strong>trạng thái</strong>. Tương tự "Duyệt" (nút) / "Đã duyệt" (trạng thái).</p>
+<h3>Hai loại "hạn"</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Khái niệm</th>
+<th>Từ chuẩn</th>
+<th>Không dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ngày nông sản còn dùng được (<code>bestBefore</code>)</td>
+<td><strong>Hạn sử dụng</strong></td>
+<td>Hạn dùng, Hạn dùng tốt nhất (Best Before), HSD</td>
+</tr>
+<tr>
+<td>Chứng nhận còn giá trị</td>
+<td><strong>Còn hiệu lực</strong> · <strong>Sắp hết hiệu lực</strong> (≤30 ngày) · <strong>Hết hiệu lực</strong></td>
+<td>Còn hạn, Hết hạn (cho chứng nhận)</td>
+</tr>
+<tr>
+<td>Ngày ghi trên chứng nhận</td>
+<td>"Hiệu lực đến dd/mm/yyyy"</td>
+<td>"Đến …", "Hết hạn …"</td>
+</tr>
+<tr>
+<td>Hạn xử lý việc duyệt</td>
+<td>Hạn xử lý · <strong>Quá hạn</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Thời gian giữ hàng của đơn chưa trả</td>
+<td>Giữ chỗ · "Quá thời gian giữ chỗ"</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Lý do: "hạn sử dụng" là thuật ngữ ghi nhãn hàng hóa (Nghị định 43/2017), báo cáo dùng 15 lần; "hiệu lực" là thuật ngữ
+của giấy chứng nhận. Tách hai từ để người mua không nhầm "còn hạn" của chứng nhận với hạn của rau.</p>
+<h3>Người và vai trò</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Khái niệm</th>
+<th>Từ chuẩn</th>
+<th>Không dùng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bên cung cấp hàng</td>
+<td><strong>Nhà cung cấp</strong></td>
+<td>người bán, nhà vườn (trong nhãn hệ thống; được dùng trong văn mô tả)</td>
+</tr>
+<tr>
+<td>Khách mua sỉ</td>
+<td><strong>Doanh nghiệp mua sỉ</strong> (đầy đủ), <strong>khách sỉ</strong> (ngắn)</td>
+<td>khách hàng B2B</td>
+</tr>
+<tr>
+<td>Nhân viên duyệt</td>
+<td><strong>Kiểm duyệt viên</strong></td>
+<td>kiểm định viên, cán bộ kiểm duyệt</td>
+</tr>
+<tr>
+<td>Nhân viên nhập hộ</td>
+<td>Nhân viên hỗ trợ vùng — "nhập hộ"</td>
+<td>Cán bộ hỗ trợ vùng</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Đối tượng</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Khái niệm</th>
+<th>Từ chuẩn</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lô thu hoạch</td>
+<td><strong>Lô</strong> (nhãn), "lô hàng" trong câu</td>
+<td></td>
+</tr>
+<tr>
+<td>Mã người dùng thấy của lô</td>
+<td><strong>Mã lô</strong> (<code>batchCode</code>)</td>
+<td></td>
+</tr>
+<tr>
+<td>Mã trên QR</td>
+<td><strong>Mã truy xuất</strong> (<code>traceCode</code>)</td>
+<td>Không gọi "mã QR truy xuất" cho chuỗi mã</td>
+</tr>
+<tr>
+<td>Tem có QR</td>
+<td><strong>Tem QR</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Nhật ký</td>
+<td><strong>Nhật ký canh tác</strong>; dòng sửa: <strong>Bản đính chính</strong>; dòng cũ: <strong>Đã được đính chính</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Hoạt động nhật ký</td>
+<td>Gieo trồng · Chăm sóc · Phòng trừ sâu bệnh · Thu hoạch · Công việc khác</td>
+<td>Theo <code>labels.ts</code>, không đặt tên dài riêng</td>
+</tr>
+<tr>
+<td>Yêu cầu báo giá sỉ</td>
+<td><strong>Yêu cầu báo giá</strong></td>
+<td>RFQ (chỉ trong tài liệu kỹ thuật)</td>
+</tr>
+<tr>
+<td>Lượng tối thiểu</td>
+<td><strong>Lượng tối thiểu</strong> (MOQ trong ngoặc ở tooltip)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3>Chính tả</h3>
+<p>Đặt dấu thanh <strong>kiểu cũ</strong>, thống nhất với báo cáo và locale <code>vi_VN</code> của Ant Design: <strong>hủy, khóa, hóa đơn, thủy canh</strong>.
+Không dùng "huỷ, khoá, hoá".
+Số: <code>1.250.000₫</code>, ngày <code>dd/mm/yyyy</code>, giờ <code>14:05</code>, khối lượng <code>500 g</code>, <code>1,5 kg</code>.</p></section><section id="s-07-quy-uoc-fe"><h1>07 — Quy ước FE (bàn giao cho dev)</h1>
+<h2>1. Tổ chức mã</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Chỗ</th>
+<th>Chứa</th>
+<th>Quy tắc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apps/shop/src/app/**/page.tsx</code></td>
+<td>Server Component lấy dữ liệu, ghép khối</td>
+<td>Không chứa logic tính toán dùng lại được</td>
+</tr>
+<tr>
+<td><code>app/**/&lt;tên&gt;-form.tsx</code>, <code>*-client.tsx</code></td>
+<td>Client Component riêng của trang</td>
+<td>Chỉ khi cần state/sự kiện</td>
+</tr>
+<tr>
+<td><code>components/farmery/</code></td>
+<td>Component dùng ≥2 nơi, theo 04 §5</td>
+<td>Không gọi API trực tiếp; nhận dữ liệu qua props</td>
+</tr>
+<tr>
+<td><code>components/ui/</code></td>
+<td>shadcn (base-nova)</td>
+<td>Không sửa tay trừ khi bắt buộc; thêm bằng <code>pnpm dlx shadcn@4.21.0 add</code></td>
+</tr>
+<tr>
+<td><code>lib/data/*.ts</code></td>
+<td>Đọc dữ liệu phía máy chủ</td>
+<td>404 → <code>null</code>; lỗi khác ném cho <code>error.tsx</code></td>
+</tr>
+<tr>
+<td><code>lib/data/*-actions.ts</code></td>
+<td>Server Action ghi</td>
+<td>Trả <code>{ ok, message }</code>, không ném lỗi ra form</td>
+</tr>
+<tr>
+<td><code>lib/labels.ts</code></td>
+<td>Nhãn enum theo 06 §3</td>
+<td><strong>Nguồn duy nhất</strong> của nhãn trạng thái; trang không tự đặt nhãn</td>
+</tr>
+<tr>
+<td><code>lib/format.ts</code></td>
+<td>Định dạng số, ngày, giá quy đổi, độ tươi</td>
+<td>Hàm thuần, có test</td>
+</tr>
+</tbody>
+</table></div>
+<p>Admin: <code>pages/&lt;resource&gt;/</code>, nhãn ở <code>src/lib/labels.ts</code> (cùng từ với shop).</p>
+<h2>2. Dữ liệu</h2>
+<ul>
+<li>Kiểu lấy từ <code>Schema&lt;K&gt;</code> của <code>@farmery/contract</code>; không tự khai kiểu trùng.</li>
+<li>Thay đổi hợp đồng: sửa <code>packages/contract/openapi.yaml</code> → <code>pnpm generate</code> → API → FE, cùng một PR; báo cả nhóm.</li>
+<li>Trạng thái lọc, trang, tab nằm trên URL. Trạng thái tạm (ô đang mở, gợi ý) ở client.</li>
+<li>Lưu trên trình duyệt chỉ cho tiện ích cá nhân (tìm gần đây), bọc <code>try/catch</code>.</li>
+</ul>
+<h2>3. Form</h2>
+<ul>
+<li><code>useActionState</code> + Server Action; Idempotency-Key cho thao tác tạo.</li>
+<li>Nhãn luôn hiện (không chỉ placeholder); dấu <code>*</code> cho trường bắt buộc; gợi ý dưới ô bằng <code>text-caption</code>.</li>
+<li>Lỗi: ở đầu form (tổng) + dưới ô (từng trường), <code>aria-invalid</code>, <code>aria-describedby</code>.</li>
+<li>Nút gửi: disabled + "Đang gửi…" khi chờ; không reset dữ liệu khi lỗi.</li>
+<li>Giá trị mặc định thông minh (ngày thu hoạch = hôm nay, hạn sử dụng theo danh mục).</li>
+</ul>
+<h2>4. Tiếp cận (WCAG 2.2 AA)</h2>
+<ul>
+<li>Tương phản chữ ≥4,5:1 (<code>faint</code> chỉ cho trang trí); vòng focus thấy rõ (<code>focus-visible:ring-2 ring-ring</code>).</li>
+<li>Mọi icon trang trí <code>aria-hidden</code>; nút chỉ có icon có <code>aria-label</code>.</li>
+<li>Trạng thái không chỉ bằng màu; thông báo động dùng <code>role="status"</code>/<code>aria-live</code>.</li>
+<li>Combobox tìm kiếm theo mẫu ARIA APG; tab theo <code>role="tablist"</code> (hoặc <code>nav</code> + <code>aria-current</code> cho tab điều hướng).</li>
+<li>Vùng chạm ≥44 px mobile, không dựa vào hover.</li>
+</ul>
+<h2>5. Hiệu năng</h2>
+<ul>
+<li>Server Component mặc định; client chỉ ở lá. Ảnh qua <code>SafeImage</code> với <code>sizes</code> đúng.</li>
+<li>Gợi ý tìm kiếm: debounce 200 ms, hủy yêu cầu cũ (<code>AbortController</code>), ≤10 mục.</li>
+<li>Không thêm thư viện UI mới khi shadcn/antd đã có; thêm gói npm phải ghim bản và ghi <code>DECISIONS.md</code>.</li>
+</ul>
+<h2>6. Kiểm thử</h2>
+<ul>
+<li>Hàm thuần (<code>format.ts</code>, phân tích câu tìm, giá quy đổi): unit test.</li>
+<li>Luồng chính: Playwright <code>apps/e2e</code> (shop, admin, kịch bản nhiều vai). Đổi chữ trên nút/nhãn → sửa locator e2e cùng PR.</li>
+<li>Trước khi báo xong: <code>pnpm lint</code>, <code>pnpm typecheck</code>, <code>pnpm test</code>, <code>pnpm e2e</code>, mở trang trên 390 px và 1440 px.</li>
+</ul></section><section id="s-08-ra-soat-hien-trang"><h1>08 — Rà soát hiện trạng so với tài liệu thiết kế</h1>
+<p>Rà ngày 05/11/2026 trên nhánh <code>feat/fe-thiet-ke-ux</code> (tách từ <code>feat/gop-be2-giao-dich</code>, commit <code>0b3df68</code>).
+Mức độ: <strong>Cao</strong> = sai nghĩa / cản trở việc chính · <strong>TB</strong> = không nhất quán, gây nhầm · <strong>Thấp</strong> = thẩm mỹ, chi tiết.
+Cột "Xử lý" trỏ tới hạng mục của phiên 05/11 (B2–B11) hoặc "Mở" nếu chưa xử lý.</p>
+<h2>1. Thuật ngữ, nội dung (so với 06)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Chứng nhận: shop "Còn hạn/Hết hạn", "Đến dd/mm" — admin "Còn hiệu lực/Hết hiệu lực"</td>
+<td><code>shop/components/farmery/certificate-list.tsx:13,41</code>; <code>admin/pages/review-tasks/show.tsx:247</code></td>
+<td>Cao</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Trạng thái lô có 4 cách gọi "chờ": Chờ duyệt / Chờ kiểm duyệt / Chờ kiểm định / Đang chờ duyệt</td>
+<td><code>nha-cung-cap/lo-hang/page.tsx:36</code>, <code>lo-hang/[id]/page.tsx:114</code>, <code>nha-cung-cap/page.tsx:53</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>"Đã duyệt" / "Đã duyệt mở bán" / "Đã phê duyệt mở bán"; "Từ chối" dùng cho cả trạng thái</td>
+<td><code>lo-hang/page.tsx:37</code>, <code>lo-hang/[id]/page.tsx:109</code>, <code>labels.ts</code> (shop, admin)</td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>"Hạn dùng", "Hạn dùng tốt nhất (Best Before)" thay "Hạn sử dụng" (báo cáo dùng "hạn sử dụng")</td>
+<td><code>san-pham/[slug]/page.tsx:107</code>, <code>truy-xuat/[ma]/page.tsx:74</code>, <code>create-batch-form.tsx:96</code>, <code>lo-hang/[id]/page.tsx:151</code>, <code>admin review-tasks/show.tsx:180</code>, <code>seller-actions.ts:27</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>Chính tả lẫn "huỷ/hủy", "khoá" — báo cáo và antd <code>vi_VN</code> dùng "hủy, khóa"</td>
+<td>20+ chỗ: <code>labels.ts</code> (2 app), <code>problem.ts</code>, <code>payment-panel.tsx</code>, <code>address-form.tsx</code>, <code>i18n-provider.ts:16</code>, <code>inventory/list.tsx:80-82</code></td>
+<td>Thấp</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>"Hủy bỏ" (khu nhà cung cấp) vs "Hủy"</td>
+<td><code>create-batch-form.tsx:153</code>, <code>create-product-form.tsx:105</code>, <code>farming-log-form.tsx:273</code></td>
+<td>Thấp</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Từ sai vai trò: "Kiểm định viên", "kiểm định", "Cán bộ hỗ trợ vùng", "Hàng đợi kiểm duyệt" cho nhà cung cấp</td>
+<td><code>lo-hang/[id]/page.tsx:94,211,345</code>, <code>lo-hang/tao-moi/page.tsx:40</code>, <code>create-batch-form.tsx:142</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Nhãn hoạt động nhật ký đặt tên riêng dài ("Chăm sóc &amp; Bón phân &amp; Tưới tiêu") khác <code>labels.ts</code></td>
+<td><code>lo-hang/[id]/page.tsx</code> <code>ACTIVITY_CONFIG</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>Hiện id kỹ thuật cho nhà cung cấp: "ID #…", "#log.id", "Mã định danh lô: #…"</td>
+<td><code>nha-cung-cap/page.tsx:132</code>, <code>lo-hang/[id]/page.tsx:128,281</code>, <code>farming-log-form.tsx:255</code></td>
+<td>TB</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Sản lượng ghi "đơn vị" chung chung thay đơn vị của sản phẩm</td>
+<td><code>lo-hang/page.tsx:182</code>, <code>lo-hang/[id]/page.tsx:161</code></td>
+<td>TB</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Ví dụ "Dâu tây Mộc Châu" ngoài vùng thí điểm Lâm Đồng</td>
+<td><code>create-product-form.tsx:36</code></td>
+<td>Thấp</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T12</td>
+<td>Nói quá: "cấp mã QR tự động", "mã QR … độc nhất", "hệ thống xác nhận đạt chuẩn" — thật ra kiểm duyệt viên duyệt tay</td>
+<td><code>create-batch-form.tsx:140-142</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>T13</td>
+<td>Báo cáo gọi chứng nhận "sắp hết hạn", "ngày hết hạn" (9 chỗ) — lệch quy ước "hiệu lực"</td>
+<td><code>chuong4:112,119,299,648,698,867</code>, <code>phuluc-chitiet:377</code>, <code>phuluc-matran:44</code>, <code>phuluc-sukien:32</code></td>
+<td>Thấp</td>
+<td>Mở — cần nhóm đồng ý sửa báo cáo</td>
+</tr>
+</tbody>
+</table></div>
+<h2>2. Hệ thống thiết kế (so với 04)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Màu ngoài token: <code>emerald/blue/amber/purple/zinc</code> cho 5 loại hoạt động</td>
+<td><code>lo-hang/[id]/page.tsx</code> <code>ACTIVITY_CONFIG</code></td>
+<td>TB</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Đổ bóng thẻ/nút (<code>shadow-xs/2xs/sm/md</code>, 37 chỗ) trái quy tắc "thẻ dùng viền"</td>
+<td>khu <code>nha-cung-cap/**</code></td>
+<td>Thấp</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Bo góc theo cỡ (<code>rounded-lg/xl/2xl</code>, 56 chỗ) thay token vai trò</td>
+<td>khu <code>nha-cung-cap/**</code>, vài component</td>
+<td>Thấp</td>
+<td>B5 (khu nhà cung cấp) / Mở (phần còn lại)</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>Admin dùng <code>RefineThemes.Green</code>, chưa đặt <code>colorPrimary</code> #1f5132 dù comment ghi "chỉnh theo bảng màu shop"</td>
+<td><code>admin/src/theme.ts</code></td>
+<td>TB</td>
+<td>B8</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Ô nhập form nhà cung cấp tự viết class, không qua component <code>Field</code>/<code>input</code> chung; lỗi chỉ hiện ở đầu form</td>
+<td><code>create-*-form.tsx</code>, <code>farming-log-form.tsx</code></td>
+<td>TB</td>
+<td>Mở</td>
+</tr>
+<tr>
+<td>D6</td>
+<td><code>text-micro</code> cho thông tin cần đọc ở khu nhà cung cấp (trạng thái, người ghi, thời điểm)</td>
+<td><code>lo-hang/**</code></td>
+<td>Thấp</td>
+<td>B5</td>
+</tr>
+</tbody>
+</table></div>
+<h2>3. Kiến trúc thông tin, điều hướng (so với 02)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I1</td>
+<td>Tab trộn nơi đến và hành động ("Đăng sản phẩm mới", "Khai báo lô mới" là tab)</td>
+<td><code>nha-cung-cap/seller-nav-tabs.tsx</code></td>
+<td>Cao</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>I2</td>
+<td>CTA "Khai báo lô" lặp 3 lần trên cùng màn (header khu, tab, link trong khối) + nút cam ở trang danh sách lô</td>
+<td><code>nha-cung-cap/layout.tsx:70</code>, <code>seller-nav-tabs.tsx</code>, <code>nha-cung-cap/page.tsx:242</code>, <code>lo-hang/page.tsx:54</code></td>
+<td>TB</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>I3</td>
+<td>Không có nơi nhập/xem chứng nhận cho nhà cung cấp; hợp đồng không có thao tác</td>
+<td>—</td>
+<td>Cao</td>
+<td>B3</td>
+</tr>
+<tr>
+<td>I4</td>
+<td>Không có trang tổng quan "việc cần làm"; trang đầu khu là danh sách sản phẩm</td>
+<td><code>nha-cung-cap/page.tsx</code></td>
+<td>TB</td>
+<td>B5</td>
+</tr>
+<tr>
+<td>I5</td>
+<td>Không có lối vào danh mục bằng hình ở trang chủ (chỉ thanh chữ)</td>
+<td><code>(cua-hang)/page.tsx</code></td>
+<td>TB</td>
+<td>B10</td>
+</tr>
+</tbody>
+</table></div>
+<h2>4. Luồng, tương tác (so với 03, 05)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>U1</td>
+<td>Nút Duyệt/Từ chối ở header; người duyệt đọc hết nhật ký rồi phải cuộn lên; có thể duyệt khi chưa xem</td>
+<td><code>admin/pages/review-tasks/show.tsx:84-108</code></td>
+<td>Cao</td>
+<td>B4</td>
+</tr>
+<tr>
+<td>U2</td>
+<td>Ô tìm kiếm không gợi ý, không đồng nghĩa ("rau sạch", "salad"), không hiểu cụm lọc, 0 kết quả không gợi ý sửa</td>
+<td><code>search-box.tsx</code>, <code>tim-kiem/page.tsx</code></td>
+<td>Cao</td>
+<td>B2</td>
+</tr>
+<tr>
+<td>U3</td>
+<td>Khung mua chỉ có chế độ lẻ; không có lối hỏi giá sỉ dù vai trò <code>buyer_wholesale</code> đã có</td>
+<td><code>buy-box.tsx</code></td>
+<td>TB</td>
+<td>B7</td>
+</tr>
+<tr>
+<td>U4</td>
+<td>Thiếu thông tin ra quyết định: độ tươi theo ngày, giá quy đổi, tồn thấp, hiệu lực chứng nhận đến bao giờ ở trang chi tiết, ước tính giao</td>
+<td><code>san-pham/[slug]/page.tsx</code>, <code>product-card.tsx</code></td>
+<td>TB</td>
+<td>B9</td>
+</tr>
+<tr>
+<td>U5</td>
+<td>Khai lô: không gợi ý hạn sử dụng, không cho thấy chứng nhận đi kèm, mặc định sản lượng 100</td>
+<td><code>create-batch-form.tsx</code></td>
+<td>TB</td>
+<td>B3, B9</td>
+</tr>
+<tr>
+<td>U6</td>
+<td>Lý do từ chối không có mẫu; nhà cung cấp không được chỉ việc cần làm tiếp</td>
+<td><code>review-tasks/show.tsx</code>, <code>lo-hang/[id]/page.tsx</code></td>
+<td>Thấp</td>
+<td>B4</td>
+</tr>
+<tr>
+<td>U7</td>
+<td>Không có thao tác sửa sản phẩm/lô trong hợp đồng; sửa tại chỗ chưa có nguyên tắc</td>
+<td>—</td>
+<td>Thấp</td>
+<td>B6 (chỉ thảo luận)</td>
+</tr>
+</tbody>
+</table></div>
+<h2>5. Dữ liệu demo</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>Danh mục thưa: nấm, atisô/thảo mộc, trà, cà phê, quả mọng ít hoặc không có sản phẩm → trang danh mục trống</td>
+<td><code>packages/mock-data/src/products.ts</code></td>
+<td>TB</td>
+<td>B11</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>Danh mục không có ảnh → không dựng được lưới danh mục</td>
+<td>hợp đồng <code>Category</code></td>
+<td>TB</td>
+<td>B10</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>Không có tài khoản doanh nghiệp mua sỉ mẫu</td>
+<td><code>api/modules/identity/seed-accounts.ts</code></td>
+<td>TB</td>
+<td>B7</td>
+</tr>
+</tbody>
+</table></div>
+<h2>6. Phát hiện thêm trong lúc sửa</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lệch</th>
+<th>Vị trí</th>
+<th>Mức</th>
+<th>Xử lý</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X1</td>
+<td><code>POST /seller/products</code> chưa có ở API (trả 501) — form "Đăng sản phẩm" không chạy được</td>
+<td><code>apps/api/.../seller-batch.controller.ts</code></td>
+<td>Cao</td>
+<td>Đã làm 05/11</td>
+</tr>
+<tr>
+<td>X2</td>
+<td><code>/seller/products</code> gõ cứng nhà cung cấp "101", đơn vị "kg"; <code>/seller/batches</code> trả lô của mọi nhà cung cấp</td>
+<td><code>catalog.service.ts</code></td>
+<td>Cao</td>
+<td>Đã làm 05/11 (theo tài khoản đăng nhập)</td>
+</tr>
+<tr>
+<td>X3</td>
+<td>Bộ lọc vùng của shop theo địa giới mới (Lang Biang, Hiệp Thạnh) nhưng dữ liệu mẫu còn tên cũ → 2 chip trả rỗng</td>
+<td><code>mock-data/suppliers.ts</code></td>
+<td>TB</td>
+<td>Đã làm 05/11</td>
+</tr>
+<tr>
+<td>X4</td>
+<td>14/30 sản phẩm mẫu không có lô đã duyệt → không có tồn → hiện "Hết hàng"</td>
+<td><code>mock-data</code></td>
+<td>TB</td>
+<td>Đã làm 05/11 (B11)</td>
+</tr>
+<tr>
+<td>X5</td>
+<td>Ngày lô mẫu cố định quanh 16/10 → sau mốc đó mọi lô quá hạn sử dụng</td>
+<td><code>mock-data</code></td>
+<td>TB</td>
+<td>Đã làm 05/11 (<code>createSeed</code> dời ngày)</td>
+</tr>
+<tr>
+<td>X6</td>
+<td>Nút đầu trang chi tiết admin hiện khóa dịch thô <code>review-tasks.titles.list</code></td>
+<td><code>admin/providers/i18n-provider.ts</code></td>
+<td>Thấp</td>
+<td>Đã làm 05/11</td>
+</tr>
+<tr>
+<td>X7</td>
+<td>Việc duyệt mẫu có hạn xử lý cố định 19/10 → luôn "Quá hạn" khi demo</td>
+<td><code>operations/in-memory-review-task.repository.ts</code></td>
+<td>Thấp</td>
+<td>Mở</td>
+</tr>
+<tr>
+<td>X8</td>
+<td>So khớp gần đúng của API quá rộng ("bongcaii" ra cà chua) nên gợi ý sửa từ ít khi xuất hiện</td>
+<td><code>catalog/utils/vietnamese-search.util.ts</code></td>
+<td>TB</td>
+<td>Mở (NOTES 16/10)</td>
+</tr>
+</tbody>
+</table></div>
+<h2>7. Trạng thái sau phiên 05/11</h2>
+<p>Đã xử lý: T1–T12, D1, D2 và D3, D6 trong khu nhà cung cấp, D4, I1–I5, U1–U6, M1–M3, X1–X6.
+Còn mở: T13 (sửa báo cáo), D3 ngoài khu nhà cung cấp, D5 (component <code>Field</code> chung), U7 (sửa tại chỗ cần <code>PATCH</code>), X7, X8.</p>
+<h2>8. Ngoài phạm vi phiên này (ghi lại)</h2>
+<ul>
+<li>D3 phần ngoài khu nhà cung cấp, D5 component <code>Field</code> chung: làm khi chạm tới form tiếp theo.</li>
+<li>T13 sửa báo cáo: cần nhóm đồng ý.</li>
+<li>Sửa tại chỗ thật (cần <code>PATCH</code> sản phẩm/lô): MVP.</li>
+</ul></section></main>
+</div>
+<a class="top-link" href="#" aria-label="Lên đầu trang">↑</a>
+</body>
+</html>
