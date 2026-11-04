@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export interface LotFact {
   label: string;
   value: string;
-  /** Tô màu giá trị, vd "danger" cho hạn dùng của lô bị thu hồi */
+  /** Tô màu giá trị, vd "danger" cho hạn sử dụng của lô bị thu hồi */
   tone?: "default" | "danger";
 }
 

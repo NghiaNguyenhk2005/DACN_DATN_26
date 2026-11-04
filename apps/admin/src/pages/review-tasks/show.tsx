@@ -6,7 +6,6 @@ import { QRCodeSVG } from "qrcode.react";
 import {
   Alert,
   App,
-  Button,
   Card,
   Descriptions,
   Empty,
@@ -15,7 +14,6 @@ import {
   Input,
   List as AntList,
   Modal,
-  Popconfirm,
   Space,
   Tag,
   Timeline,
@@ -26,6 +24,8 @@ import type { Schema } from "@farmery/contract";
 import { api } from "../../lib/api";
 import { ACTIVITY_LABELS, CERT_LABELS, REVIEW_STATUS, TASK_STATUS, TASK_TYPE_LABELS } from "../../lib/labels";
 import { unwrap } from "../../lib/problem";
+import { ChecklistCard, DecisionBar } from "./decision";
+import { REJECT_TEMPLATES, reviewChecks } from "./review-checks";
 
 type ReviewTaskDetail = Schema<"ReviewTaskDetail">;
 type BatchReview = NonNullable<ReviewTaskDetail["batch"]>;
@@ -77,6 +77,8 @@ export function ReviewTaskShow() {
 
   const pending = task?.status === "open" || task?.status === "in_review";
   const reasonValid = reason.trim().length >= 5;
+  const checks = task ? reviewChecks(task) : [];
+  const templates = task ? (REJECT_TEMPLATES[task.taskType] ?? []) : [];
 
   return (
     <Show
@@ -84,26 +86,6 @@ export function ReviewTaskShow() {
       isLoading={query.isLoading}
       canEdit={false}
       canDelete={false}
-      headerButtons={() =>
-        pending && (
-          <Space wrap>
-            <Popconfirm
-              title="Duyệt việc này?"
-              description={task?.taskType === "batch" ? "Lô sẽ mở bán và có mã QR truy xuất công khai." : undefined}
-              okText="Duyệt"
-              cancelText="Huỷ"
-              onConfirm={() => decide("approve")}
-            >
-              <Button type="primary" loading={busy === "approve"} disabled={busy !== null}>
-                Duyệt
-              </Button>
-            </Popconfirm>
-            <Button danger disabled={busy !== null} onClick={() => setRejectOpen(true)}>
-              Từ chối
-            </Button>
-          </Space>
-        )
-      }
     >
       {query.isError && <Alert type="error" showIcon message={query.error?.message} />}
       {task && (
@@ -132,6 +114,17 @@ export function ReviewTaskShow() {
           ) : (
             <Alert type="info" showIcon message="Màn hình chưa hiển thị chi tiết cho loại việc duyệt này." />
           )}
+
+          <ChecklistCard checks={checks} />
+          <DecisionBar
+            checks={checks}
+            pending={pending}
+            busy={busy}
+            isBatch={task.taskType === "batch"}
+            decidedLabel={<Tag color={TASK_STATUS[task.status].color}>{TASK_STATUS[task.status].label}</Tag>}
+            onApprove={() => decide("approve")}
+            onReject={() => setRejectOpen(true)}
+          />
         </Flex>
       )}
 
@@ -139,12 +132,27 @@ export function ReviewTaskShow() {
         title="Từ chối việc duyệt"
         open={rejectOpen}
         okText="Từ chối"
-        cancelText="Huỷ"
+        cancelText="Hủy"
         okButtonProps={{ danger: true, disabled: !reasonValid, loading: busy === "reject" }}
         onOk={() => decide("reject")}
         onCancel={() => setRejectOpen(false)}
       >
-        <Typography.Paragraph type="secondary">Lý do được gửi cho nhà cung cấp (5–1000 ký tự).</Typography.Paragraph>
+        <Typography.Paragraph type="secondary">
+          Lý do được gửi cho nhà cung cấp (5–1000 ký tự). Viết rõ điều chưa đạt và việc cần làm để nhà cung cấp sửa được.
+        </Typography.Paragraph>
+        {templates.length > 0 && (
+          <Space wrap size={[6, 6]} style={{ marginBottom: 12 }}>
+            {templates.map((t) => (
+              <Tag.CheckableTag
+                key={t}
+                checked={reason.includes(t)}
+                onChange={(on) => setReason((r) => (on ? `${r.trim()} ${t}`.trim() : r.replace(t, "").replace(/\s{2,}/g, " ").trim()))}
+              >
+                {t}
+              </Tag.CheckableTag>
+            ))}
+          </Space>
+        )}
         <Input.TextArea
           rows={4}
           maxLength={1000}
@@ -177,7 +185,7 @@ function BatchSection({ review }: { review: BatchReview }) {
           <Descriptions.Item label="Sản phẩm">{batch.productName}</Descriptions.Item>
           <Descriptions.Item label="Sản lượng khai báo">{batch.declaredQuantity.toLocaleString("vi-VN")}</Descriptions.Item>
           <Descriptions.Item label="Ngày thu hoạch">{fmtDate(batch.harvestDate)}</Descriptions.Item>
-          <Descriptions.Item label="Hạn dùng">{fmtDate(batch.bestBefore)}</Descriptions.Item>
+          <Descriptions.Item label="Hạn sử dụng">{fmtDate(batch.bestBefore)}</Descriptions.Item>
           <Descriptions.Item label="Nhà cung cấp">{supplier.displayName}</Descriptions.Item>
           <Descriptions.Item label="Vùng trồng">{supplier.growingRegion}</Descriptions.Item>
           {batch.recalledAt && (

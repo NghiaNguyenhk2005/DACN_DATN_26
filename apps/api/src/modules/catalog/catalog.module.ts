@@ -12,11 +12,12 @@ import { SupplierModule } from "../supplier/supplier.module";
 import { OperationsModule } from "../operations/operations.module";
 import { CoreModule } from "../../core/core.module";
 import { InventoryModule } from "../inventory/inventory.module";
+import { ConceptSemanticSearch, SemanticSearch } from "./search/semantic-search";
 
 // Mô-đun catalog: danh mục, sản phẩm, lô hàng và truy xuất công khai
 @Module({
   imports: [
-    SupplierModule,
+    forwardRef(() => SupplierModule),
     forwardRef(() => OperationsModule),
     CoreModule,
     InventoryModule,
@@ -27,6 +28,7 @@ import { InventoryModule } from "../inventory/inventory.module";
     { provide: CategoryRepository, useClass: InMemoryCategoryRepository },
     { provide: ProductRepository, useClass: InMemoryProductRepository },
     { provide: BatchRepository, useClass: InMemoryBatchRepository },
+    { provide: SemanticSearch, useClass: ConceptSemanticSearch },
   ],
   exports: [CatalogService, ProductRepository, BatchRepository],
 })

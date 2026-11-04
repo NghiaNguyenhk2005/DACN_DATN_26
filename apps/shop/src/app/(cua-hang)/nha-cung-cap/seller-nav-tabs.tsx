@@ -2,69 +2,81 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Layers, Package, PackagePlus, PlusCircle } from "lucide-react";
+import { PackagePlus, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
-  {
-    href: "/nha-cung-cap",
-    label: "Sản phẩm của tôi",
-    icon: Package,
-    exact: true,
-  },
-  {
-    href: "/nha-cung-cap/san-pham/tao-moi",
-    label: "Đăng sản phẩm mới",
-    icon: PackagePlus,
-    exact: true,
-  },
-  {
-    href: "/nha-cung-cap/lo-hang",
-    label: "Quản lý lô hàng",
-    icon: Layers,
-    exact: false,
-    isActive: (pathname: string) =>
-      pathname === "/nha-cung-cap/lo-hang" ||
-      (pathname.startsWith("/nha-cung-cap/lo-hang/") && !pathname.endsWith("/tao-moi")),
-  },
-  {
-    href: "/nha-cung-cap/lo-hang/tao-moi",
-    label: "Khai báo lô mới",
-    icon: PlusCircle,
-    exact: true,
-  },
-];
+  { href: "/nha-cung-cap", label: "Tổng quan", match: (p: string) => p === "/nha-cung-cap" || p.startsWith("/nha-cung-cap/bao-gia") },
+  { href: "/nha-cung-cap/lo-hang", label: "Lô hàng", badge: "batches", match: (p: string) => p.startsWith("/nha-cung-cap/lo-hang") },
+  { href: "/nha-cung-cap/san-pham", label: "Sản phẩm", match: (p: string) => p.startsWith("/nha-cung-cap/san-pham") },
+  { href: "/nha-cung-cap/ho-so", label: "Hồ sơ & chứng nhận", badge: "profile", match: (p: string) => p.startsWith("/nha-cung-cap/ho-so") },
+] as const;
 
-export function SellerNavTabs() {
+type Badges = { batches: number; profile: number };
+
+/**
+ * Điều hướng khu nhà cung cấp (design/02 §2): tab là nơi đến, gạch chân như tab trang chi tiết; badge là số việc cần
+ * xử lý. Hành động là nút ở phải ("Khai báo lô" cam, "Đăng sản phẩm" viền); mobile nút chính dính đáy.
+ */
+export function SellerNav({ badges }: { badges: Badges }) {
   const pathname = usePathname();
-
+  const creating = pathname.endsWith("/tao-moi");
   return (
-    <nav className="flex space-x-1 overflow-x-auto pb-1" aria-label="Điều hướng Khu nhà cung cấp">
-      {TABS.map((tab) => {
-        const Icon = tab.icon;
-        const active = tab.isActive
-          ? tab.isActive(pathname)
-          : tab.exact
-            ? pathname === tab.href
-            : pathname.startsWith(tab.href);
-
-        return (
+    <>
+      <div className="flex items-end justify-between gap-4 border-b border-line">
+        <nav aria-label="Khu nhà cung cấp" className="scrollbar-none -mb-px flex gap-6 overflow-x-auto md:gap-7">
+          {TABS.map((tab) => {
+            const active = tab.match(pathname);
+            const count = "badge" in tab ? badges[tab.badge] : 0;
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex items-center gap-1.5 whitespace-nowrap border-b-2 border-transparent py-3 text-title font-medium text-subtle hover:text-ink",
+                  active && "border-primary font-semibold text-primary hover:text-primary",
+                )}
+              >
+                {tab.label}
+                {count > 0 && (
+                  <span className="grid min-w-5 place-items-center rounded-full bg-danger px-1.5 text-micro font-bold text-white" aria-label={`${count} việc cần xử lý`}>
+                    {count}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="hidden flex-none items-center gap-2.5 pb-2 md:flex">
           <Link
-            key={tab.href}
-            href={tab.href}
-            className={cn(
-              "flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-title font-medium transition-all",
-              active
-                ? "bg-primary text-white shadow-xs font-semibold"
-                : "text-ink-2 hover:bg-surface-2 hover:text-ink",
-            )}
-            aria-current={active ? "page" : undefined}
+            href="/nha-cung-cap/san-pham/tao-moi"
+            className="inline-flex h-10 items-center gap-2 rounded-btn border-[1.5px] border-primary px-3.5 text-small font-semibold text-primary hover:bg-surface hover:text-primary"
           >
-            <Icon className="size-4 shrink-0" aria-hidden />
-            <span>{tab.label}</span>
+            <PackagePlus className="size-4" aria-hidden />
+            Đăng sản phẩm
           </Link>
-        );
-      })}
-    </nav>
+          <Link
+            href="/nha-cung-cap/lo-hang/tao-moi"
+            className="inline-flex h-10 items-center gap-2 rounded-btn bg-cta px-4 text-small font-semibold text-white hover:bg-cta-hover hover:text-white"
+          >
+            <PlusCircle className="size-4" aria-hidden />
+            Khai báo lô
+          </Link>
+        </div>
+      </div>
+
+      {!creating && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] md:hidden">
+          <Link
+            href="/nha-cung-cap/lo-hang/tao-moi"
+            className="flex h-12 items-center justify-center gap-2 rounded-btn bg-cta text-title font-semibold text-white hover:bg-cta-hover hover:text-white"
+          >
+            <PlusCircle className="size-5" aria-hidden />
+            Khai báo lô
+          </Link>
+        </div>
+      )}
+    </>
   );
 }

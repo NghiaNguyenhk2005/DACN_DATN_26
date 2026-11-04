@@ -1,4 +1,5 @@
 import type { Schema } from "@farmery/contract";
+import { categoryImages } from "./extra";
 
 export const categories: Schema<"Category">[] = [
   {
@@ -48,3 +49,5 @@ export const categories: Schema<"Category">[] = [
     ],
   },
 ];
+
+for (const c of categories) c.imageUrl = categoryImages[c.id] ?? null;

@@ -45,7 +45,7 @@ export function AddressForm({ onCancel }: { onCancel?: () => void }) {
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} className="h-11 rounded-btn px-5 text-title">
-            Huỷ
+            Hủy
           </Button>
         )}
       </div>

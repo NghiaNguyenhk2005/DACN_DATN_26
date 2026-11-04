@@ -24,6 +24,7 @@ export class OperationsService {
     private readonly reviewTasks: ReviewTaskRepository,
     @Inject(forwardRef(() => CatalogService))
     private readonly catalogService: CatalogService,
+    @Inject(forwardRef(() => SupplierService))
     private readonly supplierService: SupplierService,
   ) {}
 
@@ -70,6 +71,12 @@ export class OperationsService {
           certifications,
         };
       }
+    } else if (task.taskType === "certification") {
+      const review = await this.supplierService.getCertificationReview(task.targetId);
+      if (review) detail.certification = review;
+    } else if (task.taskType === "product") {
+      const review = await this.catalogService.getProductReview(task.targetId);
+      if (review) detail.product = review;
     }
 
     return detail;
@@ -102,6 +109,10 @@ export class OperationsService {
 
     if (task.taskType === "batch") {
       await this.catalogService.approveBatch(task.targetId);
+    } else if (task.taskType === "certification") {
+      await this.supplierService.decideCertification(task.targetId, true);
+    } else if (task.taskType === "product") {
+      await this.catalogService.decideProduct(task.targetId, true);
     }
 
     return this.getReviewTask(taskId);
@@ -134,20 +145,29 @@ export class OperationsService {
 
     if (task.taskType === "batch") {
       await this.catalogService.rejectBatch(task.targetId, reason);
+    } else if (task.taskType === "certification") {
+      await this.supplierService.decideCertification(task.targetId, false, reason);
+    } else if (task.taskType === "product") {
+      await this.catalogService.decideProduct(task.targetId, false, reason);
     }
 
     return this.getReviewTask(taskId);
   }
 
-  async createBatchReviewTask(batch: Schema<"Batch">): Promise<ReviewTask> {
+  createBatchReviewTask(batch: Schema<"Batch">): Promise<ReviewTask> {
+    return this.createReviewTask("batch", batch.id, `Lô ${batch.batchCode} — ${batch.productName}`);
+  }
+
+  /** Việc duyệt mới ở hàng đợi, hạn xử lý 48 giờ. */
+  async createReviewTask(taskType: Schema<"TaskType">, targetId: string, title: string): Promise<ReviewTask> {
     const now = new Date();
     const due = new Date(now.getTime() + 48 * 3600 * 1000);
     const taskRecord: ReviewTaskRecord = {
       id: String(Date.now()),
-      taskType: "batch",
-      targetId: batch.id,
+      taskType,
+      targetId,
       status: "open",
-      title: `Lô ${batch.batchCode} — ${batch.productName}`,
+      title,
       dueAt: due.toISOString(),
       createdAt: now.toISOString(),
       decisionReason: null,

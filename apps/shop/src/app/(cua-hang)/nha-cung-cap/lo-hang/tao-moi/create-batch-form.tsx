@@ -2,172 +2,202 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
+import { AlertCircle, AlertTriangle, Loader2, ShieldCheck } from "lucide-react";
 import type { Schema } from "@farmery/contract";
-import { AlertCircle, Loader2, PlusCircle, ShieldCheck } from "lucide-react";
 import { createBatchAction } from "@/lib/data/seller-actions";
+import { formatDateVi } from "@/lib/format";
+import { CERT_LABELS } from "@/lib/labels";
+import { cn } from "@/lib/utils";
+import { sellerField, sellerLabel } from "../../certification-form";
 
-interface CreateBatchFormProps {
-  products: Schema<"SellerProduct">[];
-  initialProductId?: string;
-}
+export type BatchProductOption = { id: string; name: string; unit: string; shelfDays: number };
 
-function getDefaultHarvestDate() {
-  return new Date().toISOString().slice(0, 10);
-}
+const QUICK_DAYS = [3, 5, 7, 14];
 
-function getDefaultBestBefore() {
-  const d = new Date();
-  d.setDate(d.getDate() + 7);
+function addDays(date: string, days: number) {
+  const d = new Date(`${date}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
 }
 
-export function CreateBatchForm({ products, initialProductId }: CreateBatchFormProps) {
+/**
+ * Khai báo lô (design/05 N3): sản phẩm → ngày thu hoạch → hạn sử dụng (gợi ý theo danh mục, chip +N ngày) → sản lượng
+ * theo đơn vị bán → chứng nhận đi kèm lô (chỉ đọc, cảnh báo nếu hết hiệu lực trước hạn sử dụng).
+ */
+export function CreateBatchForm({
+  products,
+  initialProductId,
+  certifications,
+  today,
+}: {
+  products: BatchProductOption[];
+  initialProductId?: string;
+  certifications: Schema<"SellerCertification">[];
+  today: string;
+}) {
   const [state, formAction, isPending] = useActionState(createBatchAction, null);
-
-  const [selectedProductId, setSelectedProductId] = useState<string>(
-    initialProductId && products.some((p) => p.id === initialProductId)
-      ? initialProductId
-      : products[0]?.id ?? "",
+  const [productId, setProductId] = useState(
+    initialProductId && products.some((p) => p.id === initialProductId) ? initialProductId : (products[0]?.id ?? ""),
   );
+  const product = products.find((p) => p.id === productId);
+  const [harvestDate, setHarvestDate] = useState(today);
+  const [shelfDays, setShelfDays] = useState(product?.shelfDays ?? 7);
+  const bestBefore = addDays(harvestDate, shelfDays);
+  const approved = certifications.filter((c) => c.status === "approved");
 
-  const selectedProduct = products.find((p) => p.id === selectedProductId);
-
-  const [harvestDate, setHarvestDate] = useState<string>(getDefaultHarvestDate);
-  const [bestBefore, setBestBefore] = useState<string>(getDefaultBestBefore);
+  if (products.length === 0) {
+    return (
+      <p className="rounded-card border border-dashed border-line-strong px-5 py-6 text-small text-ink-2">
+        Chưa có sản phẩm nào được duyệt. <Link href="/nha-cung-cap/san-pham/tao-moi">Đăng sản phẩm</Link> trước, sản phẩm được duyệt mới
+        khai báo lô được.
+      </p>
+    );
+  }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="flex flex-col gap-5">
       {state && !state.ok && state.message && (
-        <div className="flex items-start gap-3 rounded-xl border border-danger-line bg-danger-soft p-4 text-small text-danger-ink">
-          <AlertCircle className="mt-0.5 size-5 shrink-0 text-danger" />
-          <div>
-            <strong className="font-semibold">Chưa thể gửi thông tin lô:</strong>
-            <p className="mt-0.5">{state.message}</p>
-          </div>
-        </div>
+        <p role="alert" className="flex items-start gap-2.5 rounded-card border border-danger-line bg-danger-soft px-4 py-3 text-small text-danger-ink">
+          <AlertCircle className="mt-0.5 size-5 flex-none text-danger" aria-hidden />
+          <span>
+            <strong className="font-semibold">Chưa gửi được lô.</strong> {state.message}
+          </span>
+        </p>
       )}
 
-      <div className="space-y-2">
-        <label htmlFor="productId" className="block text-title font-semibold text-ink">
-          Sản phẩm nông sản <span className="text-danger">*</span>
-        </label>
+      <label className="flex flex-col gap-1.5">
+        <span className={sellerLabel}>
+          Sản phẩm <span className="text-danger">*</span>
+        </span>
         <select
-          id="productId"
           name="productId"
-          value={selectedProductId}
-          onChange={(e) => setSelectedProductId(e.target.value)}
+          value={productId}
+          onChange={(e) => {
+            setProductId(e.target.value);
+            setShelfDays(products.find((p) => p.id === e.target.value)?.shelfDays ?? 7);
+          }}
           required
-          className="w-full rounded-btn border border-line bg-surface px-3.5 py-2.5 text-title text-ink shadow-2xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          className={sellerField}
         >
           {products.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.name} (Quy cách: {p.unit})
+              {p.name}
             </option>
           ))}
         </select>
-        {selectedProduct && (
-          <p className="text-caption text-ink-2">
-            Đơn vị tính quy ước: <strong className="font-medium text-ink">{selectedProduct.unit}</strong>
-          </p>
-        )}
-      </div>
+      </label>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <label htmlFor="harvestDate" className="block text-title font-semibold text-ink">
-            Ngày thu hoạch (dự kiến/thực tế) <span className="text-danger">*</span>
-          </label>
-          <input
-            id="harvestDate"
-            name="harvestDate"
-            type="date"
-            value={harvestDate}
-            onChange={(e) => setHarvestDate(e.target.value)}
-            required
-            className="w-full rounded-btn border border-line bg-surface px-3.5 py-2.5 text-title text-ink shadow-2xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-          />
-          <p className="text-caption text-subtle">
-            Có thể khai báo trước đợt thu hoạch 1-2 ngày
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="bestBefore" className="block text-title font-semibold text-ink">
-            Hạn dùng tốt nhất (Best Before) <span className="text-danger">*</span>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="flex flex-col gap-1.5">
+          <span className={sellerLabel}>
+            Ngày thu hoạch <span className="text-danger">*</span>
+          </span>
+          <input name="harvestDate" type="date" value={harvestDate} max={addDays(today, 2)} onChange={(e) => setHarvestDate(e.target.value)} required className={sellerField} />
+          <span className="text-small text-ink-2">Khai trước được 1–2 ngày nếu sắp thu hoạch.</span>
+        </label>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="bestBefore" className={sellerLabel}>
+            Hạn sử dụng <span className="text-danger">*</span>
           </label>
           <input
             id="bestBefore"
             name="bestBefore"
             type="date"
             value={bestBefore}
-            onChange={(e) => setBestBefore(e.target.value)}
-            min={harvestDate}
+            min={addDays(harvestDate, 1)}
+            onChange={(e) => {
+              const days = Math.round((Date.parse(e.target.value) - Date.parse(harvestDate)) / 86_400_000);
+              if (Number.isFinite(days)) setShelfDays(days);
+            }}
             required
-            className="w-full rounded-btn border border-line bg-surface px-3.5 py-2.5 text-title text-ink shadow-2xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className={sellerField}
           />
-          <p className="text-caption text-subtle">
-            Phải sau ngày thu hoạch
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="declaredQuantity" className="block text-title font-semibold text-ink">
-          Sản lượng khai báo ({selectedProduct?.unit ?? "đơn vị"}) <span className="text-danger">*</span>
-        </label>
-        <div className="relative">
-          <input
-            id="declaredQuantity"
-            name="declaredQuantity"
-            type="number"
-            min={1}
-            step={1}
-            defaultValue={100}
-            required
-            placeholder="Ví dụ: 250"
-            className="w-full rounded-btn border border-line bg-surface px-3.5 py-2.5 text-title text-ink shadow-2xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-          />
-        </div>
-        <p className="text-caption text-subtle">
-          Số lượng thực tế nhập kho để mở bán trên sàn thương mại điện tử
-        </p>
-      </div>
-
-      <div className="rounded-xl border border-leaf-soft bg-leaf-soft/30 p-4 text-small text-ink">
-        <div className="flex items-start gap-3">
-          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
-          <div className="space-y-1">
-            <h4 className="font-semibold text-primary">Cơ chế kiểm duyệt và cấp mã QR tự động</h4>
-            <p className="text-caption text-ink-2">
-              Lô hàng sau khi tạo sẽ được đưa vào <strong>Hàng đợi kiểm duyệt</strong>. Khi bộ phận vận hành hoặc hệ thống xác nhận đạt chuẩn chỉ tiêu chất lượng, lô hàng sẽ tự động chuyển sang trạng thái <strong>Đã duyệt</strong> và sinh mã QR truy xuất độc nhất để dán lên bao bì sản phẩm.
-            </p>
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Chọn nhanh số ngày hạn sử dụng">
+            {[...new Set([product?.shelfDays ?? 7, ...QUICK_DAYS])]
+              .filter((d) => d <= 60)
+              .sort((a, b) => a - b)
+              .map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setShelfDays(d)}
+                  aria-pressed={shelfDays === d}
+                  className={cn(
+                    "min-h-9 rounded-full border px-3 text-small",
+                    shelfDays === d ? "border-chip bg-surface font-semibold text-primary" : "border-line text-ink-2",
+                  )}
+                >
+                  +{d} ngày{d === product?.shelfDays ? " (gợi ý)" : ""}
+                </button>
+              ))}
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 border-t border-line/60 pt-5">
-        <Link
-          href="/nha-cung-cap/lo-hang"
-          className="inline-flex h-11 items-center justify-center rounded-btn border border-line bg-surface px-5 text-title font-medium text-ink transition-colors hover:bg-surface-2"
-        >
-          Hủy bỏ
-        </Link>
+      <label className="flex flex-col gap-1.5">
+        <span className={sellerLabel}>
+          Sản lượng <span className="text-danger">*</span>
+        </span>
+        <span className="flex items-center rounded-btn border border-line-strong focus-within:border-primary focus-within:ring-2 focus-within:ring-ring/30">
+          <input
+            name="declaredQuantity"
+            type="number"
+            inputMode="decimal"
+            min={1}
+            step="any"
+            required
+            placeholder="Ví dụ: 250"
+            className="w-full min-w-0 rounded-btn bg-transparent px-3.5 py-2.5 text-title text-ink outline-none"
+          />
+          <span className="flex-none px-3.5 text-title text-ink-2">{product?.unit}</span>
+        </span>
+        <span className="text-small text-ink-2">Số đơn vị bán thu hoạch được trong lô này.</span>
+      </label>
 
+      <section className="rounded-card border border-line p-4" aria-labelledby="cn-di-kem">
+        <h3 id="cn-di-kem" className="flex items-center gap-2 text-title font-semibold text-ink">
+          <ShieldCheck className="size-5 text-primary" aria-hidden /> Chứng nhận đi kèm lô
+        </h3>
+        {approved.length === 0 ? (
+          <p className="mt-1.5 text-small text-ink-2">
+            Chưa có chứng nhận đã duyệt. <Link href="/nha-cung-cap/ho-so">Khai báo chứng nhận</Link> để lô có nhãn chứng nhận.
+          </p>
+        ) : (
+          <ul className="mt-2 flex flex-col gap-1.5">
+            {approved.map((c) => {
+              const lapses = c.expiryDate < bestBefore;
+              return (
+                <li key={c.id} className="flex flex-wrap items-center gap-x-2 text-small text-ink-2">
+                  <strong className="text-ink">{CERT_LABELS[c.type]}</strong>
+                  <span>hiệu lực đến {formatDateVi(c.expiryDate)}</span>
+                  {lapses && (
+                    <span className="inline-flex items-center gap-1 font-semibold text-warning">
+                      <AlertTriangle className="size-4" aria-hidden /> hết hiệu lực trước hạn sử dụng của lô
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <p className="mt-2 text-small text-ink-2">Kiểm duyệt viên đối chiếu lô với nhật ký và chứng nhận, thường trong 48 giờ; duyệt xong lô có mã QR để in tem.</p>
+      </section>
+
+      <div className="flex items-center justify-end gap-3 border-t border-line pt-5">
+        <Link href="/nha-cung-cap/lo-hang" className="inline-flex h-12 items-center rounded-btn border border-line-strong px-5 text-title font-medium text-ink hover:bg-surface hover:text-ink">
+          Hủy
+        </Link>
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-btn bg-cta px-6 text-title font-semibold text-white shadow-xs transition-colors hover:bg-cta-hover disabled:opacity-50"
+          className="inline-flex h-12 items-center gap-2 rounded-btn bg-cta px-6 text-title font-semibold text-white hover:bg-cta-hover disabled:opacity-50"
         >
           {isPending ? (
             <>
-              <Loader2 className="size-4 animate-spin" />
-              <span>Đang gửi thông tin...</span>
+              <Loader2 className="size-4 animate-spin" aria-hidden /> Đang gửi…
             </>
           ) : (
-            <>
-              <PlusCircle className="size-4" />
-              <span>Gửi duyệt lô hàng</span>
-            </>
+            "Gửi duyệt"
           )}
         </button>
       </div>

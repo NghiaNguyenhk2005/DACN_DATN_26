@@ -71,7 +71,7 @@ export default async function TracePage({ params }: PageProps<"/truy-xuat/[ma]">
           facts={[
             { label: "Mã lô", value: trace.batch.batchCode },
             { label: "Ngày thu hoạch", value: formatDateVi(trace.batch.harvestDate) },
-            { label: "Hạn dùng", value: formatDateVi(trace.batch.bestBefore), tone: recalled ? "danger" : "default" },
+            { label: "Hạn sử dụng", value: formatDateVi(trace.batch.bestBefore), tone: recalled ? "danger" : "default" },
             { label: "Vùng trồng", value: region },
           ]}
         />

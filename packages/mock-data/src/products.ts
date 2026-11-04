@@ -1,5 +1,6 @@
 import type { Schema } from "@farmery/contract";
 import { suppliers } from "./suppliers";
+import { extraProducts, wholesaleOffers } from "./extra";
 
 const supplierMap = new Map(suppliers.map((s) => [s.id, s]));
 
@@ -110,7 +111,7 @@ export const products: ProductSeedItem[] = [
       id: "204",
       saleUnit: "kg",
       unitPrice: 110000,
-      available: 120,
+      available: 8,
     },
     batchesOnSale: [],
     similar: [],
@@ -823,6 +824,9 @@ export const products: ProductSeedItem[] = [
     similar: [],
   },
 ];
+
+products.push(...extraProducts);
+for (const p of products) p.wholesale = wholesaleOffers[p.id] ?? null;
 
 // Tự động điền danh sách sản phẩm tương tự (cùng categoryId, loại trừ chính nó)
 for (const p of products) {

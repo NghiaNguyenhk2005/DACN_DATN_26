@@ -65,3 +65,6 @@ export const getTrace = (traceCode: string): Promise<Schema<"TraceView"> | null>
 
 export const getSupplier = (supplierId: string): Promise<Schema<"SupplierProfile"> | null> =>
   optional(() => api.GET("/suppliers/{supplierId}", { params: { path: { supplierId } } }));
+
+export const getSearchSuggest = (q: string): Promise<Schema<"SearchSuggest">> =>
+  required(() => api.GET("/search/suggest", { params: { query: { q } } }));

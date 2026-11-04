@@ -5,7 +5,9 @@ import { CategoryRepository, type Category } from "./category.repository";
 import {
   ProductRepository,
   type ProductDetail,
+  type ProductCard,
   type ProductFilter,
+  type ProductRecord,
   type ProductSearchResult,
 } from "./product.repository";
 import {
@@ -19,6 +21,8 @@ import { OperationsService } from "../operations/operations.service";
 import { APP_CONFIG, type AppConfig } from "../../core/app-config";
 import { InventoryService } from "../inventory/inventory.service";
 import type { AuthUser } from "../../core/token.service";
+import { SemanticSearch } from "./search/semantic-search";
+import { buildVocabulary, correctQuery, fold, interpretQuery, PILOT_REGIONS } from "./search/query-understanding";
 
 export type TraceView = Schema<"TraceView">;
 export type PublicFarmingLog = Schema<"PublicFarmingLog">;
@@ -34,6 +38,7 @@ export interface ListingSnapshot {
 }
 
 type WithListing = { listing?: Schema<"Listing"> | null };
+type Freshness = Schema<"BatchFreshness">;
 
 function withStock<T extends WithListing>(item: T, availability: Map<string, number>): T {
   if (!item.listing) return item;
@@ -46,23 +51,49 @@ export class CatalogService {
     private readonly categories: CategoryRepository,
     private readonly products: ProductRepository,
     private readonly batches: BatchRepository,
+    @Inject(forwardRef(() => SupplierService))
     private readonly supplierService: SupplierService,
     @Inject(forwardRef(() => OperationsService))
     private readonly operationsService: OperationsService,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
     private readonly inventory: InventoryService,
+    private readonly semantic: SemanticSearch,
   ) {}
 
-  listCategories(): Promise<Category[]> {
-    return this.categories.findTree();
+  /** Cây danh mục kèm số sản phẩm đang bán (danh mục cha cộng cả danh mục con). */
+  async listCategories(): Promise<Category[]> {
+    const [tree, counts] = await Promise.all([this.categories.findTree(), this.products.countByCategory()]);
+    const withCount = (c: Category): Category => {
+      const children = c.children.map(withCount);
+      const productCount = (counts[c.id] ?? 0) + children.reduce((sum, ch) => sum + (ch.productCount ?? 0), 0);
+      return { ...c, productCount, children };
+    };
+    return tree.map(withCount);
+  }
+
+  /** Lô bán trước của từng sản phẩm: lô đã duyệt, chưa thu hồi, hạn sử dụng sớm nhất. */
+  private async freshnessByProduct(): Promise<Map<string, Freshness>> {
+    const approved = await this.batches.findBatches({ status: "approved" });
+    const map = new Map<string, Freshness>();
+    for (const b of approved) {
+      if (b.recalledAt) continue;
+      const cur = map.get(b.productId);
+      if (!cur || b.bestBefore < cur.bestBefore) map.set(b.productId, { harvestDate: b.harvestDate, bestBefore: b.bestBefore });
+    }
+    return map;
+  }
+
+  private withFreshness<T extends ProductCard>(cards: T[], freshness: Map<string, Freshness>): T[] {
+    return cards.map((c) => ({ ...c, saleBatch: freshness.get(c.id) ?? null }));
   }
 
   // Lượng còn bán được lấy từ dòng tồn (inventory), không dùng số tĩnh trong dữ liệu mẫu.
-  async searchProducts(filter: ProductFilter): Promise<ProductSearchResult> {
-    const availability = await this.inventory.availabilityByListing();
+  async searchProducts(rawFilter: ProductFilter): Promise<ProductSearchResult> {
+    const filter: ProductFilter = rawFilter.q ? { ...rawFilter, semanticTerms: this.semantic.expand(rawFilter.q) } : rawFilter;
+    const [availability, freshness] = await Promise.all([this.inventory.availabilityByListing(), this.freshnessByProduct()]);
     if (filter.inStock === undefined) {
       const result = await this.products.search(filter);
-      return { ...result, items: result.items.map((c) => withStock(c, availability)) };
+      return { ...result, items: this.withFreshness(result.items.map((c) => withStock(c, availability)), freshness) };
     }
 
     // Lọc "còn hàng" theo tồn thật: lấy hết kết quả khớp, lọc rồi phân trang lại.
@@ -82,7 +113,7 @@ export class CatalogService {
     const parsed = cursor ? parseInt(cursor, 10) : 0;
     const offset = Number.isNaN(parsed) || parsed < 0 ? 0 : parsed;
     return {
-      items: filtered.slice(offset, offset + pageSize),
+      items: this.withFreshness(filtered.slice(offset, offset + pageSize), freshness),
       nextCursor: offset + pageSize < filtered.length ? String(offset + pageSize) : null,
     };
   }
@@ -115,13 +146,15 @@ export class CatalogService {
     const categoryId = (product as { categoryId?: string }).categoryId ?? "";
     const similar = await this.products.findSimilar(categoryId, productId, 4);
 
-    const availability = await this.inventory.availabilityByListing();
+    const [availability, freshness] = await Promise.all([this.inventory.availabilityByListing(), this.freshnessByProduct()]);
     return withStock(
       {
         ...product,
+        wholesale: product.wholesale ?? null,
+        saleBatch: freshness.get(product.id) ?? null,
         batchesOnSale:
           batchesOnSale.length > 0 ? batchesOnSale : product.batchesOnSale,
-        similar: similar.map((c) => withStock(c, availability)),
+        similar: this.withFreshness(similar.map((c) => withStock(c, availability)), freshness),
       },
       availability,
     );
@@ -195,20 +228,143 @@ export class CatalogService {
     return this.batches.findFarmingLogsByBatchId(batchId);
   }
 
-  async listSellerProducts(): Promise<Schema<"SellerProduct">[]> {
-    const products = await this.products.findBySupplierId("101");
-    return products.map((p) => ({
+  private toSellerProduct(p: ProductRecord): Schema<"SellerProduct"> {
+    return {
       id: p.id,
       name: p.name,
-      categoryId: "1",
-      unit: "kg",
-      status: "approved" as const,
-      imageUrl: p.imageUrl,
-    }));
+      categoryId: p.categoryId ?? "",
+      unit: p.unit,
+      status: p.status ?? "approved",
+      imageUrl: p.imageUrl ?? null,
+    };
   }
 
-  listSellerBatches(filter: BatchFilter): Promise<Batch[]> {
-    return this.batches.findBatches(filter);
+  async listSellerProducts(user?: AuthUser): Promise<Schema<"SellerProduct">[]> {
+    const supplierId = await this.supplierService.requireSupplierId(user?.id);
+    const records = await this.products.findRecordsBySupplier(supplierId);
+    return records.map((p) => this.toSellerProduct(p));
+  }
+
+  /** Lô của nhà cung cấp đang đăng nhập (lọc theo sản phẩm của họ), mới nhất trước. */
+  async listSellerBatches(filter: BatchFilter, user?: AuthUser): Promise<Batch[]> {
+    const supplierId = await this.supplierService.requireSupplierId(user?.id);
+    const own = new Set((await this.products.findRecordsBySupplier(supplierId)).map((p) => p.id));
+    const batches = await this.batches.findBatches(filter);
+    return batches.filter((b) => own.has(b.productId)).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  private findCategory(tree: Category[], id: string): Category | null {
+    for (const c of tree) {
+      if (c.id === id) return c;
+      const hit = this.findCategory(c.children, id);
+      if (hit) return hit;
+    }
+    return null;
+  }
+
+  async createSellerProduct(user: AuthUser | undefined, input: Schema<"ProductInput">): Promise<Schema<"SellerProduct">> {
+    const supplierId = await this.supplierService.requireSupplierId(user?.id);
+    const category = this.findCategory(await this.categories.findTree(), input.categoryId);
+    if (!category || !category.isLeaf) {
+      throw new ProblemException(HttpStatus.UNPROCESSABLE_ENTITY, "VALIDATION_FAILED", "Chọn một danh mục cụ thể (danh mục con).");
+    }
+    const certs = input.certifications ?? [];
+    if (certs.length > 0) {
+      const own = await this.supplierService.listSellerCertifications(user?.id);
+      const declared = new Set(own.filter((c) => c.status !== "rejected").map((c) => c.type));
+      const missing = certs.filter((c) => !declared.has(c));
+      if (missing.length > 0) {
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          "VALIDATION_FAILED",
+          `Chưa khai báo chứng nhận ${missing.join(", ")}. Thêm chứng nhận trước khi gắn cho sản phẩm.`,
+        );
+      }
+    }
+    const profile = await this.supplierService.getSupplierProfile(supplierId);
+    const created = await this.products.create({
+      name: input.name.trim(),
+      categoryId: category.id,
+      categoryName: category.name,
+      imageUrl: null,
+      imageUrls: [],
+      description: input.description?.trim() ?? "",
+      unit: input.unit.trim(),
+      ...(input.seasonality ? { seasonality: input.seasonality.trim() } : {}),
+      inSeason: false,
+      supplier: { id: profile.id, displayName: profile.displayName, growingRegion: profile.growingRegion },
+      certifications: certs,
+      listing: null,
+      wholesale: null,
+      batchesOnSale: [],
+      similar: [],
+      status: "pending_review",
+      rejectReason: null,
+      referenceRetailPrice: input.referenceRetailPrice ?? null,
+    });
+    await this.operationsService.createReviewTask("product", created.id, `Sản phẩm ${created.name} — ${profile.displayName}`);
+    return this.toSellerProduct(created);
+  }
+
+  /** Dữ liệu cho màn duyệt sản phẩm (ReviewTaskDetail.product). */
+  async getProductReview(productId: string): Promise<NonNullable<Schema<"ReviewTaskDetail">["product"]> | null> {
+    const p = await this.products.findRecord(productId);
+    if (!p) return null;
+    return {
+      product: {
+        id: p.id,
+        name: p.name,
+        categoryId: p.categoryId ?? "",
+        categoryName: p.categoryName ?? "",
+        unit: p.unit,
+        description: p.description || null,
+        imageUrls: p.imageUrls,
+        referenceRetailPrice: p.referenceRetailPrice ?? null,
+        seasonality: p.seasonality ?? null,
+        status: p.status ?? "approved",
+      },
+      supplier: p.supplier,
+    };
+  }
+
+  async decideProduct(productId: string, approved: boolean, reason?: string): Promise<void> {
+    await this.products.update(productId, {
+      status: approved ? "approved" : "rejected",
+      rejectReason: approved ? null : (reason ?? null),
+    });
+  }
+
+  /** Gợi ý khi gõ + hiểu câu tìm (GET /search/suggest). */
+  async suggest(q: string): Promise<Schema<"SearchSuggest">> {
+    const interpretation = interpretQuery(q);
+    const keywords = interpretation.keywords;
+    const folded = fold(keywords);
+    const tree = await this.categories.findTree();
+    const flat: Category[] = tree.flatMap((c) => [c, ...c.children]);
+
+    const result = keywords ? await this.searchProducts({ q: keywords, limit: 5 }) : { items: [] as ProductCard[] };
+    const products = result.items.map((p) => ({
+      id: p.id,
+      name: p.name,
+      imageUrl: p.imageUrl ?? null,
+      unitPrice: p.listing?.unitPrice ?? null,
+      saleUnit: p.listing?.saleUnit ?? null,
+    }));
+    const categories = folded
+      ? flat
+          .filter((c) => folded.split(" ").every((w) => fold(c.name).includes(w)))
+          .slice(0, 3)
+          .map((c) => ({ id: c.id, name: c.name }))
+      : [];
+    const regions = folded ? PILOT_REGIONS.filter((r) => fold(r).includes(folded)).slice(0, 3) : [];
+
+    let correction: string | null = null;
+    if (keywords && products.length === 0) {
+      const all = await this.products.search({ limit: 100 });
+      const vocab = buildVocabulary([...all.items.map((p) => p.name), ...flat.map((c) => c.name)]);
+      correction = correctQuery(keywords, vocab);
+    }
+    return { products, categories, regions, interpretation, correction };
   }
 
   async getSellerBatch(batchId: string): Promise<Batch> {
@@ -351,7 +507,7 @@ export class CatalogService {
       enteredBy: {
         userId: user?.id ?? "201",
         displayName: isStaff
-          ? "Cán bộ hỗ trợ vùng"
+          ? "Nhân viên hỗ trợ vùng"
           : "Người đại diện nhà cung cấp",
         onBehalf: isStaff,
       },

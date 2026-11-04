@@ -6,15 +6,19 @@ import {
   type ProductCard,
   type ProductDetail,
   type ProductFilter,
+  type ProductRecord,
   type ProductSearchResult,
 } from "./product.repository";
 import { matchSearchQuery, removeVietnameseTones } from "./utils/vietnamese-search.util";
 
-type ProductWithCategory = ProductDetail & { categoryId?: string };
+type ProductWithCategory = ProductRecord;
+const isPublic = (p: ProductRecord) => (p.status ?? "approved") === "approved";
+const FIRST_NEW_PRODUCT_ID = 5000;
 
 @Injectable()
 export class InMemoryProductRepository extends ProductRepository implements Resettable {
   private products: ProductWithCategory[] = createSeed().products as ProductWithCategory[];
+  private nextId = FIRST_NEW_PRODUCT_ID;
 
   constructor(registry: DemoResetRegistry) {
     super();
@@ -23,6 +27,7 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
 
   reset(): void {
     this.products = createSeed().products as ProductWithCategory[];
+    this.nextId = FIRST_NEW_PRODUCT_ID;
   }
 
   private toCard(p: ProductWithCategory): ProductCard {
@@ -42,13 +47,19 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
     const scoredItems: { product: ProductWithCategory; score: number }[] = [];
 
     for (const p of this.products) {
-      // 1. Lọc theo q (bỏ dấu + gần đúng)
+      if (!isPublic(p)) continue;
+      // 1. Lọc theo q (bỏ dấu + gần đúng); không khớp thì thử cụm mở rộng nghĩa (điểm 40)
       let score = 0;
       if (filter.q && filter.q.trim()) {
         const searchText = `${p.name} ${p.categoryName ?? ""} ${p.description ?? ""}`;
         const matchRes = matchSearchQuery(searchText, filter.q);
-        if (!matchRes.matched) continue;
-        score = matchRes.score;
+        if (matchRes.matched) {
+          score = matchRes.score;
+        } else {
+          const text = removeVietnameseTones(`${p.name} ${p.categoryName ?? ""} ${p.certifications.join(" ")}`);
+          if (!filter.semanticTerms?.some((t) => text.includes(t))) continue;
+          score = 40;
+        }
       }
 
       // 2. Lọc theo categoryId
@@ -124,7 +135,7 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
   }
 
   async findById(id: string): Promise<ProductDetail | null> {
-    const found = this.products.find((p) => p.id === id);
+    const found = this.products.find((p) => p.id === id && isPublic(p));
     if (!found) return null;
     return structuredClone(found);
   }
@@ -136,14 +147,44 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
 
   async findBySupplierId(supplierId: string): Promise<ProductCard[]> {
     return this.products
-      .filter((p) => p.supplier.id === supplierId)
+      .filter((p) => p.supplier.id === supplierId && isPublic(p))
       .map((p) => this.toCard(p));
   }
 
   async findSimilar(categoryId: string, excludeId: string, limit = 4): Promise<ProductCard[]> {
     return this.products
-      .filter((p) => p.categoryId === categoryId && p.id !== excludeId)
+      .filter((p) => p.categoryId === categoryId && p.id !== excludeId && isPublic(p))
       .slice(0, limit)
       .map((p) => this.toCard(p));
+  }
+
+  async countByCategory(): Promise<Record<string, number>> {
+    const counts: Record<string, number> = {};
+    for (const p of this.products) {
+      if (isPublic(p) && p.categoryId) counts[p.categoryId] = (counts[p.categoryId] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  async findRecord(id: string): Promise<ProductRecord | null> {
+    const found = this.products.find((p) => p.id === id);
+    return found ? structuredClone(found) : null;
+  }
+
+  async findRecordsBySupplier(supplierId: string): Promise<ProductRecord[]> {
+    return structuredClone(this.products.filter((p) => p.supplier.id === supplierId));
+  }
+
+  async create(record: Omit<ProductRecord, "id">): Promise<ProductRecord> {
+    const created = { ...record, id: String(this.nextId++) } as ProductRecord;
+    this.products.push(created);
+    return structuredClone(created);
+  }
+
+  async update(id: string, patch: Partial<ProductRecord>): Promise<ProductRecord | null> {
+    const found = this.products.find((p) => p.id === id);
+    if (!found) return null;
+    Object.assign(found, patch);
+    return structuredClone(found);
   }
 }
