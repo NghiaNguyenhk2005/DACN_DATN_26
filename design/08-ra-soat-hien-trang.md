@@ -86,3 +86,102 @@ Còn mở: T13 (sửa báo cáo), D3 ngoài khu nhà cung cấp, D5 (component `
 - D3 phần ngoài khu nhà cung cấp, D5 component `Field` chung: làm khi chạm tới form tiếp theo.
 - T13 sửa báo cáo: cần nhóm đồng ý.
 - Sửa tại chỗ thật (cần `PATCH` sản phẩm/lô): MVP.
+
+## 9. Rà soát lệch hợp đồng và nhu cầu người dùng (lần 2, 05/11)
+
+Rà trên `develop` `c22b73e` (sau PR #47, #48), chỉ đọc mã. `pnpm generate` + `typecheck` của shop và admin qua, nên
+không lệch kiểu; các mục dưới là lệch về nghĩa (mã lỗi không có câu báo, trường bị bỏ qua, quy tắc gõ cứng) và chỗ
+chưa đáp ứng người dùng thật. Mục mức Cao đã đối chiếu lại trên `c22b73e`.
+Cột "Xử lý" ghi tuần và người nhận theo bảng phân công của nhóm: **T6** = hạn 06/11, **T7** = hạn 13/11; "HĐ" = cần
+PR sửa `openapi.yaml` riêng.
+
+### 9.1. Chung cho shop và admin
+
+| # | Lệch | Vị trí | Mức | Xử lý |
+|---|---|---|---|---|
+| R1 | `problemMessage` bỏ `detail` và `errors[]` của Problem; thiếu câu cho `RATE_LIMITED`, `OTP_INVALID`, `OTP_EXPIRED`, `CART_LIMIT_REACHED`, `ADDRESS_LIMIT_REACHED`, `ORDER_NOT_PAYABLE`, `PAYMENT_FAILED`, `IDEMPOTENCY_KEY_REUSED`, `PAYLOAD_TOO_LARGE` → người dùng chỉ thấy "Thông tin chưa hợp lệ" dù API đã trả "Dâu: chỉ còn 2 kg" | `shop/lib/problem.ts`, `admin/lib/problem.ts` | Cao | T6 · Nghĩa |
+| R2 | Giới hạn tần suất theo IP: shop gọi API từ máy chủ, không chuyển IP khách, `TRUST_PROXY=0` → mọi khách dùng chung một hạn mức (`/api/auth` 30 lần/phút cho cả shop) | `packages/contract/src/index.ts:17-26`, `api/core/security.ts` | Cao | T6 · Khải |
+| R3 | Chính sách giao (giờ chốt 16:00, miễn phí từ 300.000₫, COD tới 1.000.000₫, khung giờ) gõ cứng ở shop; `PlatformSettings` chỉ có ở `/admin/settings` → admin đổi cấu hình thì shop nói sai | `decision.ts:63-67`, `buy-box.tsx:143,151`, `announcement-bar.tsx` | TB | T7 · Khải (HĐ: cấu hình công khai) |
+| R4 | Quy tắc số lượng đoán từ chuỗi `saleUnit === "kg"`; giá quy đổi đọc "hộp 500g" bằng regex; `Listing` không có bước, lượng tối thiểu, khối lượng tịnh | `lib/decision.ts:42-55,93-100` | TB | T7 · Nghĩa (HĐ) |
+
+### 9.2. Shop — trang chủ, tìm kiếm, danh mục, chi tiết sản phẩm, truy xuất
+
+| # | Lệch | Vị trí | Mức | Xử lý |
+|---|---|---|---|---|
+| RK1 | Trên điện thoại khối mua (`hidden lg:block`) bị ẩn: mất thông tin giao, COD, hoàn tiền, "Chỉ còn N", gợi ý nhập lẻ; thanh dính đáy không có các dòng này | `buy-box.tsx:78,101,125,135-153` | Cao | T6 · Nghĩa |
+| RK2 | Lô quá hạn sử dụng hoặc bị thu hồi vẫn mua được: API không loại khỏi lô đang bán, nút mua vẫn bật dù banner "Đã quá hạn sử dụng" | `in-memory-batch.repository.ts:39-48`, `inventory.service.ts:25-26` | Cao | T6 · Nghĩa |
+| RK3 | Nhãn xanh "Lô hợp lệ" hiện cả khi không đọc được trạng thái (`trace === null`) và khi lô đã quá hạn sử dụng | `san-pham/[slug]/page.tsx:214-218`, `truy-xuat/[ma]/page.tsx:52-58` | Cao | T6 · Nghĩa |
+| RK4 | Số lượng ban đầu cố định 1, không kẹp theo tồn (`available` 0,5 kg → tạm tính sai, thêm giỏ ra 422); nút "Thêm" ở thẻ luôn thêm 1 đơn vị | `buy-box.tsx:62`, `add-to-cart.tsx:53` | TB | Đã làm: #49 |
+| RK5 | "Mua ngay" cộng dồn vào số đã có trong giỏ và đưa cả giỏ sang thanh toán; đọc rồi ghi không nguyên tử | `lib/data/account.ts:99-113` | Thấp | Mở |
+| RK6 | `GET /products` không có sắp xếp; `PageBase` không có tổng số kết quả | hợp đồng `listProducts`, `PageBase` | Cao | T7 · Nghĩa (HĐ) |
+| RK7 | "Xem thêm" mất khi bấm Back từ trang sản phẩm (danh sách giữ trong `useState`) | `product-results.tsx:22-24` | TB | T7 · Nghĩa |
+| RK8 | `/tim-kiem` không lọc được theo danh mục dù hợp đồng cho `q` + `categoryId`; chứng nhận vẽ như checkbox nhưng chỉ chọn được một; khoảng giá không kiểm min > max | `filters.ts:104-112`, `filter-sidebar.tsx:55-106` | TB | T7 · Nghĩa |
+| RK9 | Huy hiệu chứng nhận trên thẻ và dòng "Chứng nhận: VietGAP · OCOP" không xét hiệu lực (`ProductCard.certifications` là `CertType[]`), có thể đứng cạnh chứng nhận "Hết hiệu lực" | `san-pham/[slug]/page.tsx:68,128` | TB | T7 · Nghĩa (HĐ) |
+| RK10 | Dữ liệu nhà cung cấp chỉ dùng ảnh đại diện; tên nhà cung cấp không có liên kết, chưa có trang hồ sơ công khai (hợp đồng đã đủ trường) | `san-pham/[slug]/page.tsx:54,86` | TB | T7 · Dũng |
+| RK11 | Sản phẩm chưa mở bán hiện nút "Tạm hết hàng", ô "Hạn sử dụng" lấy giá trị `seasonality`; chưa có "báo khi có hàng / vào mùa" (FR5.7 thuộc MVP, nhưng `phuluc-chitiet.tex:370` ghi chỉ thiết kế) | `buy-box.tsx:70,115,187`, `san-pham/[slug]/page.tsx:129` | TB | T7 · Nghĩa (HĐ; cần thống nhất với báo cáo) |
+| RK12 | Không chọn được lô, chỉ thấy lô hết hạn sử dụng sớm nhất; giỏ theo `listingId` không có lô | `san-pham/[slug]/page.tsx:53` | TB | Mở (HĐ) |
+| RK13 | Trang chủ: lỗi tải sản phẩm làm mất cả trang, kể cả ô tra nguồn gốc | `(cua-hang)/page.tsx:25` | TB | Mở |
+| RK14 | `q` dài hơn 100 ký tự (400) và 429 ở trang công khai đều ra "máy chủ không phản hồi" | `lib/data/index.ts:38-41,57` | Thấp | Mở |
+| RK15 | Ô tra mã truy xuất không nhận cả đường dẫn quét từ QR; 404 không hướng dẫn định dạng mã | `trace-lookup.tsx` | Thấp | Mở |
+| RK16 | Cảnh báo thu hồi ghi "liên hệ Farmery" nhưng shop không có kênh liên hệ nào; chân trang hiện trạng thái API cho người mua, thiếu chính sách giao, đổi trả | `recall-alert.tsx`, `site-footer.tsx` | TB | T6 · Nghĩa |
+| RK17 | Trên điện thoại ở danh mục và chi tiết sản phẩm, ô tìm kiếm và tài khoản bị ẩn | `header-actions.tsx` | Thấp | Mở |
+
+### 9.3. Shop — đăng nhập, giỏ hàng, thanh toán, đơn hàng
+
+| # | Lệch | Vị trí | Mức | Xử lý |
+|---|---|---|---|---|
+| RG1 | Gửi lại mã gặp 429 thì form quay về ô email dù mã cũ còn hiệu lực; không đọc `Retry-After`, không đếm ngược | `login-form.tsx:24,73-78` | Cao | T6 · Khải |
+| RG2 | `OTP_INVALID` và `OTP_EXPIRED` (gồm sai quá 5 lần) chung một câu, không chỉ đường xin mã mới | `auth-actions.ts:44` | TB | T6 · Khải |
+| RG3 | Khách mới không có đường đăng ký; ngoài `DEMO_MODE` email lạ vẫn báo "Đã gửi mã" | `auth-actions.ts:25-26`, `identity.service.ts` | Cao | Mở (HĐ, cần quyết định phạm vi FR1.1) |
+| RG4 | Cập nhật giỏ lỗi (vượt tồn, mất mạng) thì ô vẫn hiện số vừa gõ, giỏ giữ số cũ | `cart-line-controls.tsx:22-31`, `quantity-input.tsx:26-37` | TB | Đã làm: #49 |
+| RG5 | Lỗi đặt hàng nằm trong cột tóm tắt cuối trang; trên điện thoại thanh "Đặt hàng" không có chỗ báo lỗi | `checkout-form.tsx:265-267,280-294` | Cao | T6 · Khải |
+| RG6 | Báo giá lỗi `CART_QTY_EXCEEDS_STOCK` hiện trong ô Khung giờ, không nêu sản phẩm, không có link về giỏ | `checkout-form.tsx:138-141` | TB | T6 · Khải |
+| RG7 | Sổ địa chỉ chỉ thêm, không sửa, xóa, đặt mặc định (FR1.5); không điền sẵn tên, SĐT từ `/me`; không có ghi chú giao hàng; không kiểm vùng giao | hợp đồng `/me/addresses`, `address-form.tsx:27-33` | Cao | T7 · Khải (HĐ) |
+| RG8 | Chỉ hủy được đơn đang chờ thanh toán; đơn COD và đơn đã trả tiền (`cancellable: true`) không có nút hủy | `payment-panel.tsx:116-134` | Cao | T6 · Khải |
+| RG9 | Hết giữ chỗ chỉ ghi "Vui lòng đặt lại", không có nút; `OrderItem` không có `listingId`, `productId` nên chưa làm được đặt lại, mua lại (FR5.6) | `payment-panel.tsx:58-66` | Cao | T7 · Khải (HĐ) |
+| RG10 | Đơn chờ thanh toán hiện "Đã đặt"; trang chờ thanh toán không tự cập nhật (`LIVE_STATUSES` thiếu `placed`) | `labels.ts:40`, `don-hang/[ma]/page.tsx:19-27` | TB | T6 · Khải |
+| RG11 | Không có lối liên hệ hay khiếu nại từ đơn (FR8.3) | `don-hang/[ma]/page.tsx` | TB | T7 · Khải (HĐ) |
+| RG12 | Tài khoản nhà cung cấp, nhân viên mở giỏ, thanh toán, đơn hàng ra màn lỗi chung thay vì báo không đúng vai trò | `lib/data/account.ts:18-24` | Thấp | Mở |
+| RG13 | Không có giỏ cho khách chưa đăng nhập (chỉ giữ một món qua `?them=`) | `session.ts:35-46` | TB | Mở |
+
+### 9.4. Shop — khu nhà cung cấp
+
+| # | Lệch | Vị trí | Mức | Xử lý |
+|---|---|---|---|---|
+| RN1 | API không kiểm lô thuộc nhà cung cấp đang đăng nhập ở xem lô, tạo lô, nhật ký; tạo lô không kiểm sản phẩm thuộc mình và đã duyệt (hợp đồng khai 403) | `seller-batch.controller.ts:35-45`, `catalog.service.ts` | Cao | T6 · Dũng |
+| RN2 | Ô sản lượng lô `min={1}` chặn 0,5 kg trong khi hợp đồng chỉ yêu cầu > 0 | `create-batch-form.tsx:146` | Cao | T6 · Dũng |
+| RN3 | Tạo lô và ghi nhật ký không gửi `Idempotency-Key`; form nhật ký giữ nội dung sau khi lưu → bấm lại là ghi trùng | `seller-actions.ts:31,65`, `farming-log-form.tsx:70-72` | Cao | T6 · Dũng |
+| RN4 | Ngày nhật ký và ngày thu hoạch so theo UTC: 00:00–07:00 giờ Việt Nam không chọn được hôm nay | `farming-log-form.tsx:67`, `catalog.service.ts:469` | TB | T6 · Dũng |
+| RN5 | Đính chính khó tìm (ô tích + dropdown cắt 45 ký tự), liệt kê cả dòng đã đính chính, chèn sẵn "Đính chính: <nội dung cũ>"; API cho đính chính một dòng hai lần | `farming-log-form.tsx:80,255-261`, `catalog.service.ts:474-486` | Cao | T6 · Dũng |
+| RN6 | In tem QR bằng `window.print()` cả trang (không có CSS in); chưa tải được ảnh QR | `batch-qr-card.tsx:14-16,63` | TB | T6 · Dũng |
+| RN7 | Chi tiết lô thu hồi chỉ hiện giờ thu hồi, không có lý do | `lo-hang/[id]/page.tsx:39` | TB | T6 · Dũng |
+| RN8 | Nút trong form nhật ký nhỏ hơn 44px, khác các form khác trong khu | `farming-log-form.tsx:123,274-283` | TB | T6 · Dũng |
+| RN9 | Lô bị từ chối chỉ khai được lô mới (mất nhật ký); không sửa, rút được lô đang chờ duyệt | `lo-hang/[id]/page.tsx:94-110` | Cao | T7 · Dũng (HĐ) |
+| RN10 | `SellerProduct` không có `rejectReason` dù API lưu sẵn; không sửa, gửi duyệt lại được; tổng quan không nhắc sản phẩm bị từ chối | `openapi.yaml` `SellerProduct`, `san-pham/page.tsx:50` | Cao | T7 · Dũng (HĐ) |
+| RN11 | `Batch` không có đã bán, đang giữ chỗ, còn lại; không có đơn vị sản lượng riêng của lô | hợp đồng `Batch`, `BatchInput` | Cao | T7 · Dũng (HĐ) |
+| RN12 | Không có ảnh: `imageIds` của nhật ký, sản phẩm và `documentId` chứng nhận không được gửi; `POST /media` trả 501 | `seller-actions.ts:63-66,117-127`, `certification-form.tsx:113` | Cao | T7 · Dũng |
+| RN13 | Mẫu nhật ký cố định nội dung dâu tây Hana cho mọi sản phẩm, ghi đè nội dung đang gõ; không lưu nháp khi rớt mạng | `farming-log-form.tsx:36-60` | TB | T7 · Dũng |
+| RN14 | Báo giá sỉ chỉ có danh sách; `QuoteRequest` không có kênh liên hệ bên mua, `status` chỉ có `sent` (FR6.2–6.4) | `bao-gia/page.tsx:15` | Cao | T7 · Dũng (HĐ) |
+| RN15 | Chứng nhận bị từ chối, sắp hết hiệu lực không có "Khai lại từ bản này"; tổng quan bỏ sót chứng nhận bị từ chối trong khi badge có đếm | `ho-so/page.tsx:75`, `nha-cung-cap/page.tsx:38-49`, `layout.tsx:38` | TB | Mở |
+| RN16 | Chip gợi ý hạn sử dụng lọc `≤ 60` ngày nên trà, cà phê (365) mất chip; ngày thu hoạch chặn quá hôm nay + 2 | `create-batch-form.tsx:92,117` | Thấp | Mở |
+
+### 9.5. Admin
+
+| # | Lệch | Vị trí | Mức | Xử lý |
+|---|---|---|---|---|
+| RA1 | Hàng đợi duyệt xếp mới nhất trước, việc quá hạn bị đẩy xuống cuối; không lọc "quá hạn" | `in-memory-review-task.repository.ts:49`, `review-tasks/list.tsx:243` | Cao | T6 · Nghĩa |
+| RA2 | Id việc duyệt sinh bằng `Date.now()` (13 chữ số) làm `nextCursor`, trái pattern `Cursor` `^[0-9]{1,9}$` → trang 2 trả 400 | `operations.service.ts:166`, `openapi.yaml:991-995` | Cao | T6 · Nghĩa |
+| RA3 | Việc loại `supplier_profile`, `flagged_review`, `product_report` không có nội dung nhưng nút Duyệt vẫn bật; duyệt không tác động lên đối tượng | `operations.service.ts:44-119`, `review-tasks/show.tsx:107` | Cao | T6 · Nghĩa (khóa nút); T7 (điền nội dung) |
+| RA4 | Duyệt xong ở lại trang, không có "việc kế tiếp" | `review-tasks/show.tsx:48-76` | Cao | T6 · Nghĩa |
+| RA5 | Không ghi ai đã quyết định (`ReviewTaskDetail`, `OrderStatusEvent` không có người thực hiện); hai kiểm duyệt viên xử lý được cùng một việc | hợp đồng | TB | T7 · Nghĩa (HĐ) |
+| RA6 | Nút "Chuyển sang…" không xét vai trò: `staff_warehouse` thấy cả bước của vận hành, bấm thì 403 câu chung | `orders/show.tsx:133-139`, `labels.ts` `nextOrderStep` | Cao | T6 · Khải |
+| RA7 | `advance` không gửi trạng thái đang xem → hai người cùng bấm làm đơn nhảy 2 bước, không báo lỗi | `orders/show.tsx:106-110`, `retail.service.ts:350-363` | Cao | T6 · Khải (HĐ nhỏ: `expectedStatus`, 409) |
+| RA8 | Danh sách đơn thiếu cột thanh toán, khung giao; không tìm theo mã đơn, SĐT; không chọn nhiều để chuyển bước | `orders/list.tsx:44-70`, hợp đồng `OrderSummary`, `listOrders` | Cao | T7 · Khải (HĐ) |
+| RA9 | "15 phút giữ chỗ" gõ cứng dù cấu hình được; chi tiết đơn không hiện mã truy xuất, đơn giá, VAT | `orders/show.tsx:148,185-212` | Thấp | Mở |
+| RA10 | `StockHolding` không có hạn sử dụng, tên nhà cung cấp; lọc tồn bằng `batchId` nội bộ; không tô dòng hết hàng | `inventory/list.tsx:30-83`, hợp đồng `StockHolding` | Cao | T6 · Khải (HĐ nhỏ: `bestBefore`) |
+| RA11 | Sổ nhập xuất hiện chung dấu +/− cho giữ chỗ và tồn thực; `sourceType #sourceId` là chữ thô tiếng Anh | `inventory/list.tsx:122-135` | TB | T7 · Khải |
+| RA12 | Form cấu hình thiếu giới hạn của hợp đồng (giờ chốt nhận 29:00, khung giờ không kiểm định dạng, trùng); lưu ngay không xác nhận, không lịch sử | `settings/index.tsx:189-243` | TB | T7 · Khải |
+| RA13 | 401 chỉ tự đăng xuất khi đi qua `dataProvider`; các lời gọi trực tiếp (tổng quan, kho, cấu hình, duyệt, chuyển bước) chỉ hiện toast | `admin/lib/api.ts`, `auth-provider.ts:56` | TB | T6 · Khải |
+| RA14 | Gửi OTP bị 429 hiện "Email chưa có tài khoản Farmery."; không có nút gửi lại mã; `CONFLICT` luôn báo "Việc duyệt này đã có quyết định" kể cả lỗi từ đơn hàng | `login/index.tsx:21-22`, `problem.ts:7` | TB | T6 · Khải (luồng), Nghĩa (câu báo, R1) |
+| RA15 | Không tự làm mới hàng đợi; tổng quan chỉ có số liệu kiểm duyệt, vai trò khác vào thấy trang trống | `dashboard/index.tsx:100-147` | TB | Mở |
+| RA16 | Quyền menu chép tay từ `x-roles`, chưa có test đối chiếu (hiện đang khớp) | `App.tsx:41-65` | Thấp | Mở |
