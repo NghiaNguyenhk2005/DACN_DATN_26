@@ -7,8 +7,8 @@ info:
     Nguồn hợp đồng duy nhất của prototype (13–21/10/2026). Kiểu TypeScript sinh bằng
     openapi-typescript, client dùng openapi-fetch; không gõ lại kiểu bằng tay.
 
-    Phạm vi: trục bán lẻ đầu–cuối theo MVP.md, rút gọn cho kịch bản demo. Không có bán sỉ,
-    đồng bộ TraceViet, thanh toán thật, 3PL thật. Tên trường bám schema.dbml (đổi sang camelCase).
+    Phạm vi: trục bán lẻ đầu–cuối theo MVP.md, rút gọn cho kịch bản demo. Bán sỉ chỉ có bảng giá
+    và gửi yêu cầu báo giá; không có đồng bộ TraceViet, thanh toán thật, 3PL thật. Tên trường bám schema.dbml (đổi sang camelCase).
 
     Quy ước:
     - ID là chuỗi chữ số ("1024"); CSDL dùng bigint, API trả chuỗi để JavaScript không tràn số.
@@ -36,6 +36,8 @@ tags:
     description: Khách lẻ (buyer_retail)
   - name: Seller
     description: Nhà cung cấp (seller), chỉ thấy dữ liệu của mình
+  - name: Wholesale
+    description: Doanh nghiệp mua sỉ (buyer_wholesale)
   - name: Moderation
     description: Kiểm duyệt viên (staff_moderation)
   - name: Operations
@@ -137,6 +139,25 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/TraceView' }
         '404': { $ref: '#/components/responses/NotFound' }
+
+  /search/suggest:
+    get:
+      tags: [Public]
+      operationId: suggestSearch
+      summary: Gợi ý khi gõ và hiểu câu tìm kiếm (FR4.5, FR12.3)
+      description: |
+        Trả gợi ý sản phẩm, danh mục, vùng trồng cho ô tìm kiếm; tách cụm lọc trong câu ("hữu cơ",
+        "dưới 200k", "Đơn Dương") thành bộ lọc của `GET /products`; gợi ý sửa từ khi gõ sai.
+        Prototype mở rộng nghĩa bằng từ điển khái niệm nông sản; giai đoạn 2 thay bằng vector BGE-M3.
+      security: []
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string, minLength: 1, maxLength: 100 } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SearchSuggest' }
 
   /suppliers/{supplierId}:
     get:
@@ -591,6 +612,83 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/FarmingLog' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /seller/certifications:
+    get:
+      tags: [Seller]
+      operationId: listSellerCertifications
+      summary: Chứng nhận của nhà cung cấp, gồm cả bản chờ duyệt và bị từ chối (FR3.1)
+      x-roles: [seller]
+      responses:
+        '200':
+          description: Mới nhất trước
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SellerCertification' }
+    post:
+      tags: [Seller]
+      operationId: createSellerCertification
+      summary: Khai báo chứng nhận mới, chờ duyệt (FR3.1, FR3.2)
+      description: Tạo một việc duyệt loại `certification`; chứng nhận chỉ hiện cho người mua sau khi duyệt.
+      x-roles: [seller]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CertificationInput' }
+      responses:
+        '201':
+          description: Đã tạo ở `pending_review`
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SellerCertification' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /seller/quote-requests:
+    get:
+      tags: [Seller]
+      operationId: listSellerQuoteRequests
+      summary: Yêu cầu báo giá sỉ gửi tới nhà cung cấp (FR6.1)
+      x-roles: [seller]
+      responses:
+        '200':
+          description: Mới nhất trước
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/QuoteRequest' }
+
+  # ---------------------------------------------------------------- Wholesale
+  /wholesale/quote-requests:
+    post:
+      tags: [Wholesale]
+      operationId: createQuoteRequest
+      summary: Doanh nghiệp mua sỉ gửi yêu cầu báo giá cho nhà cung cấp của sản phẩm (FR6.1)
+      description: |
+        Prototype chỉ ghi nhận yêu cầu (trạng thái `sent`); phản hồi, thương lượng, hợp đồng (FR6.2–6.4) thuộc MVP.
+        Lỗi: `WHOLESALE_NOT_OFFERED` (sản phẩm không có bảng giá sỉ), `BELOW_MIN_QUANTITY`.
+      x-roles: [buyer_wholesale]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/QuoteRequestInput' }
+      responses:
+        '201':
+          description: Đã gửi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '422': { $ref: '#/components/responses/Unprocessable' }
 
@@ -1064,6 +1162,8 @@ components:
         id: { $ref: '#/components/schemas/Id' }
         name: { type: string }
         isLeaf: { type: boolean }
+        imageUrl: { type: [string, 'null'], format: uri, description: Ảnh đại diện cho ô danh mục ở trang chủ }
+        productCount: { type: integer, minimum: 0, description: Số sản phẩm đang bán kể cả danh mục con }
         children:
           type: array
           items: { $ref: '#/components/schemas/Category' }
@@ -1101,6 +1201,34 @@ components:
             - $ref: '#/components/schemas/Listing'
             - type: 'null'
           description: null khi chưa có tin bán đang mở
+        saleBatch:
+          oneOf:
+            - $ref: '#/components/schemas/BatchFreshness'
+            - type: 'null'
+          description: Lô bán trước (hạn sử dụng sớm nhất) để hiện độ tươi; null khi chưa có lô đang bán
+    BatchFreshness:
+      type: object
+      required: [harvestDate, bestBefore]
+      properties:
+        harvestDate: { type: string, format: date }
+        bestBefore: { type: string, format: date }
+    WholesaleOffer:
+      type: object
+      description: Bảng giá sỉ của nhà cung cấp (3P, FR6.4); bậc giá xếp theo minQuantity tăng dần
+      required: [saleUnit, minQuantity, leadTimeDays, tiers]
+      properties:
+        saleUnit: { type: string, examples: ['kg', 'thùng 5 kg'] }
+        minQuantity: { type: number, exclusiveMinimum: 0, description: Lượng tối thiểu (MOQ) }
+        leadTimeDays: { type: integer, minimum: 0, description: Số ngày chuẩn bị hàng }
+        tiers:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [minQuantity, unitPrice]
+            properties:
+              minQuantity: { type: number, exclusiveMinimum: 0 }
+              unitPrice: { type: integer, minimum: 0, description: VND }
     BatchOnSale:
       type: object
       required: [batchCode, harvestDate, bestBefore, traceCode]
@@ -1121,6 +1249,11 @@ components:
               items: { type: string, format: uri }
             unit: { type: string }
             seasonality: { type: string, examples: ['Tháng 4–7'] }
+            wholesale:
+              oneOf:
+                - $ref: '#/components/schemas/WholesaleOffer'
+                - type: 'null'
+              description: null khi nhà cung cấp không nhận bán sỉ sản phẩm này
             batchesOnSale:
               type: array
               items: { $ref: '#/components/schemas/BatchOnSale' }
@@ -1172,6 +1305,103 @@ components:
           items: { $ref: '#/components/schemas/Id' }
         referenceRetailPrice: { type: integer, minimum: 0 }
         seasonality: { type: string, maxLength: 100 }
+        certifications:
+          type: array
+          uniqueItems: true
+          description: Chứng nhận sản phẩm đạt; phải là chứng nhận nhà cung cấp đã khai (đã duyệt hoặc chờ duyệt)
+          items: { $ref: '#/components/schemas/CertType' }
+    CertificationInput:
+      type: object
+      required: [type, certificateNumber, issuingAuthority, issuedDate, expiryDate]
+      properties:
+        type: { $ref: '#/components/schemas/CertType' }
+        certificateNumber: { type: string, minLength: 2, maxLength: 100 }
+        issuingAuthority: { type: string, minLength: 2, maxLength: 200 }
+        issuedDate: { type: string, format: date }
+        expiryDate: { type: string, format: date, description: Phải sau issuedDate }
+        documentId: { $ref: '#/components/schemas/Id', description: Ảnh/bản scan đã tải qua POST /media }
+    SellerCertification:
+      allOf:
+        - $ref: '#/components/schemas/Certification'
+        - type: object
+          required: [id, status, rejectReason, createdAt]
+          properties:
+            id: { $ref: '#/components/schemas/Id' }
+            status: { $ref: '#/components/schemas/ReviewStatus' }
+            rejectReason: { type: [string, 'null'] }
+            createdAt: { type: string, format: date-time }
+    QuoteRequestInput:
+      type: object
+      required: [productId, quantity, neededBy]
+      properties:
+        productId: { $ref: '#/components/schemas/Id' }
+        quantity: { type: number, exclusiveMinimum: 0, maximum: 10000000, description: Theo saleUnit của bảng giá sỉ }
+        neededBy: { type: string, format: date, description: Ngày cần hàng (không ở quá khứ) }
+        note: { type: string, maxLength: 1000 }
+    QuoteRequest:
+      type: object
+      required: [id, productId, productName, supplier, buyerName, quantity, saleUnit, neededBy, note, estimatedUnitPrice, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        productId: { $ref: '#/components/schemas/Id' }
+        productName: { type: string }
+        supplier: { $ref: '#/components/schemas/SupplierRef' }
+        buyerName: { type: string, description: Tên hiển thị của doanh nghiệp mua sỉ }
+        quantity: { type: number }
+        saleUnit: { type: string }
+        neededBy: { type: string, format: date }
+        note: { type: [string, 'null'] }
+        estimatedUnitPrice: { type: [integer, 'null'], description: Đơn giá theo bậc của bảng giá sỉ lúc gửi }
+        status: { type: string, enum: [sent], description: Prototype chỉ có `sent`; các bước sau thuộc MVP }
+        createdAt: { type: string, format: date-time }
+    SearchSuggest:
+      type: object
+      required: [products, categories, regions, interpretation, correction]
+      properties:
+        products:
+          type: array
+          maxItems: 5
+          items:
+            type: object
+            required: [id, name, imageUrl, unitPrice, saleUnit]
+            properties:
+              id: { $ref: '#/components/schemas/Id' }
+              name: { type: string }
+              imageUrl: { type: [string, 'null'], format: uri }
+              unitPrice: { type: [integer, 'null'] }
+              saleUnit: { type: [string, 'null'] }
+        categories:
+          type: array
+          maxItems: 3
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id: { $ref: '#/components/schemas/Id' }
+              name: { type: string }
+        regions:
+          type: array
+          maxItems: 3
+          items: { type: string }
+        interpretation: { $ref: '#/components/schemas/SearchInterpretation' }
+        correction: { type: [string, 'null'], description: Câu tìm đã sửa lỗi gõ; null khi không cần sửa }
+    SearchInterpretation:
+      type: object
+      description: Câu tìm sau khi tách cụm lọc; trường lọc vắng mặt là không nhận ra
+      required: [keywords, phrases]
+      properties:
+        keywords: { type: string, description: Phần còn lại dùng làm q }
+        phrases:
+          type: array
+          description: Cụm đã nhận ra, theo thứ tự trong câu, để hiện "Đã hiểu …"
+          items: { type: string }
+        cert: { $ref: '#/components/schemas/CertType' }
+        region: { type: string }
+        categoryId: { $ref: '#/components/schemas/Id' }
+        minPrice: { type: integer, minimum: 0 }
+        maxPrice: { type: integer, minimum: 0 }
+        inStock: { type: boolean }
+        inSeason: { type: boolean }
     SellerProduct:
       type: object
       required: [id, name, categoryId, unit, status]

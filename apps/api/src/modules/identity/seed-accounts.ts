@@ -31,10 +31,19 @@ export const SEED_ACCOUNTS: Account[] = [
     refusedCod: true,
   },
   {
+    id: "204",
+    emails: ["khachsi@example.com", "thumua@greenmart.example.com"],
+    displayName: "GreenMart — Phòng thu mua",
+    phone: "0281234567",
+    roles: ["buyer_wholesale", "buyer_retail"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
     // Tài khoản tổng hợp cho dev/e2e: thấy mọi màn nội bộ trừ thu mua, hỗ trợ. Giữ email cũ của khung (staff@, admin@).
     id: "301",
     emails: ["kiemduyet@farmery.vn", "staff@example.com", "admin@example.com", "admin@farmery.vn"],
-    displayName: "Cán bộ Kiểm duyệt",
+    displayName: "Kiểm duyệt viên",
     phone: null,
     roles: ["staff_moderation", "staff_operations", "staff_warehouse", "platform_owner"],
     supplierId: null,

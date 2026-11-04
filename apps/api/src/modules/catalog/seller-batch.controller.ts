@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { CatalogService } from "./catalog.service";
 import { CurrentUser } from "../../core/current-user.decorator";
@@ -15,17 +8,27 @@ import type { Batch, FarmingLog } from "./batch.repository";
 @Controller()
 export class SellerBatchController {
   constructor(private readonly catalog: CatalogService) {}
+
   @Get("seller/products")
-  listSellerProducts(): Promise<Schema<"SellerProduct">[]> {
-    return this.catalog.listSellerProducts();
+  listSellerProducts(@CurrentUser() user?: AuthUser): Promise<Schema<"SellerProduct">[]> {
+    return this.catalog.listSellerProducts(user);
+  }
+
+  @Post("seller/products")
+  createSellerProduct(
+    @Body() body: Schema<"ProductInput">,
+    @CurrentUser() user?: AuthUser,
+  ): Promise<Schema<"SellerProduct">> {
+    return this.catalog.createSellerProduct(user, body);
   }
 
   @Get("seller/batches")
   listSellerBatches(
     @Query("productId") productId?: string,
     @Query("status") status?: Schema<"ReviewStatus">,
+    @CurrentUser() user?: AuthUser,
   ): Promise<Batch[]> {
-    return this.catalog.listSellerBatches({ productId, status });
+    return this.catalog.listSellerBatches({ productId, status }, user);
   }
 
   @Post("seller/batches")

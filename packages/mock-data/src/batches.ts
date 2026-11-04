@@ -1,4 +1,5 @@
 import type { Schema } from "@farmery/contract";
+import { extraBatches } from "./extra";
 
 export const batches: Schema<"Batch">[] = [
   {
@@ -242,3 +243,5 @@ export const batches: Schema<"Batch">[] = [
     createdAt: "2026-10-17T06:00:00Z",
   },
 ];
+
+batches.push(...extraBatches);

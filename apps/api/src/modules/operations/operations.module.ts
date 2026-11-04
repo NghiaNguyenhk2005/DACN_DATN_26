@@ -12,7 +12,7 @@ import { SettingsController } from "./settings.controller";
 import { SettingsService } from "./settings.service";
 
 @Module({
-  imports: [forwardRef(() => CatalogModule), SupplierModule, CoreModule],
+  imports: [forwardRef(() => CatalogModule), forwardRef(() => SupplierModule), CoreModule],
   controllers: [OperationsController, SettingsController],
   providers: [
     OperationsService,

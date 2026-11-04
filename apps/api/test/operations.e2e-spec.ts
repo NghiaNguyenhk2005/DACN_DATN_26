@@ -100,7 +100,7 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
   describe("dòng tồn và sổ nhập xuất", () => {
     it("dòng tồn khớp lô đã duyệt; lọc theo lô và sản phẩm; chỉ kho và vận hành xem", async () => {
       const all = (await get("/api/admin/inventory/holdings", warehouse).expect(200)).body as { batchId: string; ownerType: string }[];
-      expect(all).toHaveLength(15); // 15 lô đã duyệt có sản phẩm
+      expect(all).toHaveLength(39); // 39 lô đã duyệt có sản phẩm (15 gốc + 24 bổ sung 05/11)
       expect(all.every((h) => h.ownerType === "farmery")).toBe(true);
       expect(await holdingOf(t, ops, "1001")).toMatchObject({ batchCode: "DTDL-2610-01", qtyOnHand: 150, qtyReserved: 0, isLocked: false, saleUnit: "hộp 500g" });
       expect((await get("/api/admin/inventory/holdings?productId=2", ops).expect(200)).body).toHaveLength(1);

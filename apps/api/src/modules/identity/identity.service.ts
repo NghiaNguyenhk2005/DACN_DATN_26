@@ -164,6 +164,10 @@ export class IdentityService implements Resettable {
     return (await this.accounts.findById(userId))?.displayName ?? null;
   }
 
+  async supplierIdOf(userId: string): Promise<string | null> {
+    return (await this.accounts.findById(userId))?.supplierId ?? null;
+  }
+
   async hasRefusedCod(userId: string): Promise<boolean> {
     return (await this.accounts.findById(userId))?.refusedCod ?? false;
   }
