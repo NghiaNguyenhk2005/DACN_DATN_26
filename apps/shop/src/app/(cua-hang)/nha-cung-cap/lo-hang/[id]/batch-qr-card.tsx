@@ -18,9 +18,9 @@ export function BatchQrCard({ batch, traceUrl }: BatchQrCardProps) {
   };
 
   return (
-    <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-leaf-soft/20 via-surface to-surface p-6 shadow-xs">
+    <div className="rounded-panel border border-success-soft bg-success-soft/40 p-6">
       <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
-        <div className="flex shrink-0 flex-col items-center rounded-2xl border border-line bg-white p-4 shadow-sm">
+        <div className="flex shrink-0 flex-col items-center rounded-panel border border-line bg-white p-4">
           <QRCodeSVG
             value={traceUrl}
             size={180}
@@ -35,13 +35,13 @@ export function BatchQrCard({ batch, traceUrl }: BatchQrCardProps) {
 
         <div className="flex flex-1 flex-col justify-between space-y-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-leaf-soft px-3 py-1 text-caption font-semibold text-primary">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-caption font-semibold text-success">
               <CheckCircle2 className="size-4" />
-              Mã QR truy xuất nguồn gốc hợp lệ
+              Lô đã duyệt — in tem QR để dán thùng
             </div>
 
-            <h3 className="mt-2 font-heading text-h2 font-bold text-ink">
-              Mã tem: {batch.traceCode}
+            <h3 className="mt-2 text-h3 font-bold text-ink">
+              Mã truy xuất {batch.traceCode}
             </h3>
             <p className="mt-1 text-small text-ink-2">
               Quét mã để xem nguồn gốc lô, nhật ký canh tác và chứng nhận của nhà cung cấp.
@@ -52,7 +52,7 @@ export function BatchQrCard({ batch, traceUrl }: BatchQrCardProps) {
             <Link
               href={traceUrl}
               target="_blank"
-              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn bg-primary px-4 text-small font-semibold text-white shadow-xs transition-colors hover:bg-primary-hover"
+              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn bg-primary px-4 text-small font-semibold text-white transition-colors hover:bg-primary-hover"
             >
               <ExternalLink className="size-4" />
               <span>Xem trang truy xuất</span>
@@ -64,7 +64,7 @@ export function BatchQrCard({ batch, traceUrl }: BatchQrCardProps) {
               className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn border border-line bg-surface px-4 text-small font-semibold text-ink transition-colors hover:bg-surface-2"
             >
               <Printer className="size-4" />
-              <span>In tem nhãn QR</span>
+              <span>In tem QR</span>
             </button>
           </div>
         </div>

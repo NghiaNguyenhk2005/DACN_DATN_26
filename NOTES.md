@@ -297,6 +297,8 @@ Status: open
 (`qToken.includes(tToken)`) nên mọi từ ngắn trong mô tả cũng khớp. Phần lớn âm tiết tiếng Việt chỉ 2–4 ký tự: "dau"
 khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so gần đúng với từ dưới 4 ký tự, bỏ chiều
 `qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
+**Cập nhật 2026-11-05:** chưa sửa. Lớp ngữ nghĩa mới (`SemanticSearch`) chỉ chạy khi từ khóa không khớp, nên độ rộng
+này còn làm gợi ý sửa từ (`correction`) hiếm khi xuất hiện — xem `design/08-ra-soat-hien-trang.md` X8.
 Status: open
 
 ### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
@@ -311,7 +313,9 @@ trong `mock-data` còn ghi "Huyện …", "TP. Đà Lạt". User chốt đổi s
 Bộ lọc vùng của shop đã đổi theo: Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh (khớp chứa chuỗi, bỏ dấu). Trước khi BE1
 sửa xong, "Lang Biang" và "Hiệp Thạnh" trả rỗng. Về lâu dài: so chuỗi trên địa chỉ đầy đủ dễ vỡ khi địa giới đổi tiếp
 — đề xuất hợp đồng có trường vùng trồng có cấu trúc (mã đơn vị hành chính hoặc danh mục vùng), sửa qua PR riêng.
-Status: open
+**Cập nhật 2026-11-05:** đã đổi `growingRegion` của 5 nhà cung cấp trong `mock-data/suppliers.ts` đúng danh sách trên;
+chip Lang Biang, Hiệp Thạnh có kết quả. Trường vùng trồng có cấu trúc vẫn là việc riêng.
+Status: resolved
 
 ### BE1: `traceUrl` gõ cứng localhost — Claude — 2026-10-16
 `batches.ts` ghi `traceUrl: "http://localhost:3000/truy-xuat/..."`, trong khi hợp đồng mô tả đây là đường dẫn in vào
@@ -402,6 +406,9 @@ Status: open
 nhật ký dựng `http://localhost:4000/api/media/...` gõ cứng; id lô, nhật ký, `challengeId` dùng `Date.now()` nên có
 thể trùng khi gọi liền nhau. Đề xuất: lấy `supplierId` qua `IdentityService`, lô của nhà cung cấp khác trả 404,
 `SellerProduct` lấy danh mục, đơn vị thật; id sinh bằng bộ đếm hoặc `randomUUID`.
+**Cập nhật 2026-11-05:** `GET /seller/products`, `/seller/batches` đã lọc theo nhà cung cấp đang đăng nhập (qua
+`IdentityService.supplierIdOf`), `SellerProduct` có danh mục, đơn vị, trạng thái thật; thêm `POST /seller/products`.
+Còn mở: `getSellerBatch`, `createBatch`, nhật ký chưa kiểm lô thuộc nhà cung cấp; id `Date.now()`.
 Status: open
 
 ### Khu nhà cung cấp trong shop lệch quyết định của shop — Claude — 2026-10-21

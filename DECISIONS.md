@@ -1147,3 +1147,42 @@ PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
 NFR2.2 hai nghĩa; ERD hai hình 31 và 34 bảng chữ nhỏ khó đọc.
 **Đánh đổi:** báo cáo dài thêm khoảng 20 trang do mỗi hình ERD một trang; hình use case và sitemap dùng một chú thích chung cho cả
 hai nhãn nét đứt thay vì thêm một kiểu nét thứ ba.
+
+### Bộ tài liệu thiết kế FE và 10 hạng mục UI/UX — 2026-11-05
+**Quyết định** (user chốt theo đề xuất):
+- Tài liệu thiết kế giao diện đặt ở `design/` (doc sống, commit): 7 file theo quy trình designer → FE dev (người dùng và
+  hành trình, kiến trúc thông tin, luồng tác vụ, hệ thống thiết kế, đặc tả màn hình, nội dung và thuật ngữ, quy ước FE)
+  và một file rà soát hiện trạng (`08`). Code lệch tài liệu thì sửa code hoặc sửa tài liệu kèm một dòng ở đây.
+- Tìm kiếm: tầng 1 làm ngay — `GET /search/suggest` (gợi ý sản phẩm, danh mục, vùng trồng; tách cụm lọc "hữu cơ",
+  "dưới 200k", "Đơn Dương" thành bộ lọc; gợi ý sửa từ), ô tìm kiếm thành combobox có tìm gần đây, trang tìm kiếm chuyển
+  câu có cụm lọc sang URL có bộ lọc và giữ link "tìm đúng nguyên văn". Ngữ nghĩa qua interface `SemanticSearch`, bản
+  prototype là từ điển khái niệm nông sản trong Node; vector BGE-M3 theo §5.2 báo cáo cân nhắc sau, thay bản cài đặt,
+  giữ hợp đồng.
+- Chứng nhận thuộc nhà cung cấp. Nhập ở tab "Hồ sơ & chứng nhận" bất kỳ lúc nào, và nhập tại chỗ (sheet) khi đăng sản
+  phẩm thiếu chứng nhận; bước khai lô hiện chứng nhận đi kèm (chỉ đọc), cảnh báo nếu hết hiệu lực trước hạn sử dụng.
+  Chứng nhận mới "Chờ duyệt", qua việc duyệt loại `certification`. Thêm `GET/POST /seller/certifications`;
+  `ProductInput.certifications` phải là loại nhà cung cấp đã khai.
+- Khu nhà cung cấp: tab là nơi đến (Tổng quan · Lô hàng · Sản phẩm · Hồ sơ & chứng nhận, gạch chân, badge việc cần xử
+  lý), hành động là nút ("Khai báo lô" cam, "Đăng sản phẩm" viền; mobile nút chính dính đáy). Trang đầu khu là Tổng quan
+  có "Việc cần làm".
+- Nút Duyệt/Từ chối của admin chuyển từ header sang thanh quyết định dính đáy vùng nội dung, kèm bảng đối chiếu tự tính
+  (chỉ tham khảo) và lý do từ chối mẫu.
+- Mua sỉ (3P): `ProductDetail.wholesale` (bậc giá, lượng tối thiểu, ngày chuẩn bị); khung mua có nút gạt Mua lẻ | Mua sỉ
+  khi có bảng giá sỉ; `POST /wholesale/quote-requests` (vai trò `buyer_wholesale`) gửi cho **nhà cung cấp** của sản
+  phẩm, nhà cung cấp xem ở `GET /seller/quote-requests` — theo FR6.1, khác phương án ban đầu "admin xem" vì luồng sỉ do
+  nhà cung cấp phản hồi. Phản hồi, thương lượng, hợp đồng (FR6.2–6.4) vẫn thuộc MVP. Tài khoản mẫu `khachsi@example.com`.
+- Thuật ngữ (bảng ở `design/06`): chứng nhận "Còn hiệu lực / Sắp hết hiệu lực / Hết hiệu lực"; nông sản "Hạn sử dụng";
+  trạng thái "Chờ duyệt / Đã duyệt / Bị từ chối" (nút là "Duyệt", "Từ chối"); chính tả dấu kiểu cũ "hủy, khóa" theo báo
+  cáo và locale `vi_VN` của antd.
+- Thông tin hỗ trợ quyết định: thẻ và trang sản phẩm có độ tươi theo lô bán trước (`ProductCard.saleBatch`), giá quy
+  đổi theo kg, "Chỉ còn N" khi tồn ≤ 10, hiệu lực chứng nhận đến ngày nào, ước tính giao theo giờ chốt 16:00 [tạm —
+  prototype]. Trang chủ có "Mua theo danh mục" (lưới 5 cột desktop, slider snap mobile); `Category` thêm `imageUrl`,
+  `productCount`.
+- Dữ liệu mẫu: thêm 9 sản phẩm, lô đã duyệt cho 15 sản phẩm đang "Hết hàng", một lô bị từ chối và một yêu cầu báo giá cho
+  demo; `growingRegion` theo địa giới mới; `createSeed()` dời ngày lô, nhật ký theo ngày chạy (mốc viết dữ liệu 16/10/2026)
+  để demo luôn có hàng còn hạn.
+**Bối cảnh:** rà soát (`design/08`) thấy thuật ngữ lệch giữa shop và admin, khu nhà cung cấp trộn tab với hành động và
+dùng màu ngoài token, nhà cung cấp không có chỗ nhập chứng nhận, `POST /seller/products` trả 501, 14/30 sản phẩm mẫu
+"Hết hàng".
+**Đánh đổi:** sửa hợp đồng ở 6 chỗ trong một PR — phải báo cả nhóm. Dời ngày dữ liệu mẫu làm ngày hiển thị khác nhau
+giữa các ngày chạy (test không phụ thuộc ngày mẫu). Hiểu câu tìm bằng luật (regex) chỉ bắt được mẫu câu đã liệt kê.

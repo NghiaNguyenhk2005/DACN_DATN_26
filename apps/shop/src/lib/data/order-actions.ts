@@ -88,7 +88,7 @@ export async function cancelOrder(orderId: string): Promise<ActionResult> {
   if (!ID.test(orderId)) return INVALID;
   const result = await mutate(
     (api) => api.POST("/orders/{orderId}/cancel", { params: { path: { orderId } } }),
-    "Chưa huỷ được đơn. Vui lòng thử lại.",
+    "Chưa hủy được đơn. Vui lòng thử lại.",
   );
   return settle(result, orderId);
 }

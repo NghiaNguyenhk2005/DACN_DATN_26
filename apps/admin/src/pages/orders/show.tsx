@@ -160,7 +160,7 @@ export function OrderShow() {
         title={next ? `Chuyển đơn sang: ${ORDER_STATUS[next].label}` : ""}
         open={open}
         okText="Chuyển bước"
-        cancelText="Huỷ"
+        cancelText="Hủy"
         okButtonProps={{ loading: busy }}
         onOk={advance}
         onCancel={() => setOpen(false)}

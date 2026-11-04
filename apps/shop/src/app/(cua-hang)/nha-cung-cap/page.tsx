@@ -1,217 +1,139 @@
 import Link from "next/link";
-import Image from "next/image";
-import {
-  AlertCircle,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Layers,
-  Package,
-  PlusCircle,
-  Sparkles,
-} from "lucide-react";
-import { getSellerProducts, getSellerBatches } from "@/lib/data/seller";
-import { REVIEW_STATUS_LABELS } from "@/lib/labels";
+import { AlertCircle, ArrowRight, MessageSquareQuote, ShieldAlert } from "lucide-react";
+import { ReviewStatusBadge } from "@/components/farmery/status-badge";
+import { getSellerBatches, getSellerCertifications, getSellerProducts, getSellerQuoteRequests } from "@/lib/data/seller";
+import { certValidity, daysBetween, todayVn } from "@/lib/decision";
+import { formatDateVi, formatQty } from "@/lib/format";
+import { CERT_LABELS } from "@/lib/labels";
 
-export default async function SellerProductsPage() {
-  const [products, batches] = await Promise.all([
+type Todo = { href: string; tone: "danger" | "warning" | "info"; icon: typeof AlertCircle; title: string; detail: string };
+
+const TODO_TONE = {
+  danger: "border-danger-line bg-danger-soft text-danger-ink",
+  warning: "border-warning-line bg-warning-soft text-ink",
+  info: "border-line bg-surface text-ink",
+};
+
+/** Tổng quan khu nhà cung cấp (design/05 N1): việc cần làm → số liệu nhanh → lô gần đây → quy trình (khi chưa có lô). */
+export default async function SellerOverviewPage() {
+  const [products, batches, certs, quotes] = await Promise.all([
     getSellerProducts(),
     getSellerBatches(),
+    getSellerCertifications().catch(() => []),
+    getSellerQuoteRequests().catch(() => []),
   ]);
+  const today = todayVn();
+  const units = new Map(products.map((p) => [p.id, p.unit]));
 
-  const approvedBatches = batches.filter((b) => b.status === "approved");
-  const pendingBatches = batches.filter((b) => b.status === "pending_review");
-  const rejectedBatches = batches.filter((b) => b.status === "rejected");
+  const todos: Todo[] = [
+    ...batches
+      .filter((b) => b.status === "rejected")
+      .map((b): Todo => ({
+        href: `/nha-cung-cap/lo-hang/${b.id}`,
+        tone: "danger",
+        icon: AlertCircle,
+        title: `Lô ${b.batchCode} bị từ chối`,
+        detail: b.rejectReason ?? "Xem lý do và bổ sung thông tin.",
+      })),
+    ...certs
+      .filter((c) => c.status === "approved" && certValidity(c, today) !== "valid")
+      .map((c): Todo => {
+        const days = daysBetween(today, c.expiryDate);
+        return {
+          href: "/nha-cung-cap/ho-so",
+          tone: days < 0 ? "danger" : "warning",
+          icon: ShieldAlert,
+          title: `Chứng nhận ${CERT_LABELS[c.type]} ${days < 0 ? "đã hết hiệu lực" : `còn ${days} ngày hiệu lực`}`,
+          detail: "Khai báo chứng nhận mới để nhãn chứng nhận tiếp tục hiện trên sản phẩm.",
+        };
+      }),
+    ...(quotes.length > 0
+      ? [
+          {
+            href: "/nha-cung-cap/bao-gia",
+            tone: "info" as const,
+            icon: MessageSquareQuote,
+            title: `${quotes.length} yêu cầu báo giá sỉ`,
+            detail: `Mới nhất: ${quotes[0]!.buyerName} hỏi ${formatQty(quotes[0]!.quantity)} ${quotes[0]!.saleUnit} ${quotes[0]!.productName}.`,
+          },
+        ]
+      : []),
+  ];
+
+  const stats = [
+    { label: "Sản phẩm", value: products.length, href: "/nha-cung-cap/san-pham" },
+    { label: "Lô đang bán", value: batches.filter((b) => b.status === "approved" && !b.recalledAt).length, href: "/nha-cung-cap/lo-hang?status=approved" },
+    { label: "Chờ duyệt", value: batches.filter((b) => b.status === "pending_review").length, href: "/nha-cung-cap/lo-hang?status=pending_review" },
+    { label: "Bị từ chối", value: batches.filter((b) => b.status === "rejected").length, href: "/nha-cung-cap/lo-hang?status=rejected" },
+  ];
 
   return (
-    <div className="space-y-8">
-      <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-          <div className="flex items-center justify-between text-subtle">
-            <span className="text-small font-medium">Sản phẩm</span>
-            <Package className="size-4 text-primary" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-heading text-h2 font-bold text-ink">{products.length}</span>
-            <span className="text-caption text-ink-2">mặt hàng</span>
-          </div>
-        </div>
+    <div className="flex flex-col gap-7">
+      {todos.length > 0 && (
+        <section aria-labelledby="viec-can-lam">
+          <h2 id="viec-can-lam" className="mb-3 text-h2-sm font-bold text-ink md:text-h2">
+            Việc cần làm
+          </h2>
+          <ul className="flex flex-col gap-2.5">
+            {todos.map((t) => (
+              <li key={t.href + t.title}>
+                <Link href={t.href} className={`flex items-start gap-3 rounded-card border px-4 py-3.5 hover:text-inherit ${TODO_TONE[t.tone]}`}>
+                  <t.icon className="mt-0.5 size-5 flex-none" aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-title font-semibold">{t.title}</span>
+                    <span className="mt-0.5 block text-small text-ink-2">{t.detail}</span>
+                  </span>
+                  <ArrowRight className="mt-0.5 size-4 flex-none text-ink-2" aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-        <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-          <div className="flex items-center justify-between text-subtle">
-            <span className="text-small font-medium">Lô đã duyệt</span>
-            <CheckCircle2 className="size-4 text-primary" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-heading text-h2 font-bold text-primary">{approvedBatches.length}</span>
-            <span className="text-caption text-ink-2">lô mở bán</span>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-          <div className="flex items-center justify-between text-subtle">
-            <span className="text-small font-medium">Đang chờ duyệt</span>
-            <Clock className="size-4 text-warning-dot" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-heading text-h2 font-bold text-warning-dot">{pendingBatches.length}</span>
-            <span className="text-caption text-ink-2">hàng đợi</span>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-          <div className="flex items-center justify-between text-subtle">
-            <span className="text-small font-medium">Cần bổ sung</span>
-            <AlertCircle className="size-4 text-danger" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-heading text-h2 font-bold text-danger">{rejectedBatches.length}</span>
-            <span className="text-caption text-ink-2">từ chối</span>
-          </div>
-        </div>
+      <section aria-label="Số liệu nhanh" className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {stats.map((s) => (
+          <Link key={s.label} href={s.href} className="rounded-card border border-line px-4 py-3.5 text-ink hover:border-primary hover:text-ink">
+            <span className="block text-small text-ink-2">{s.label}</span>
+            <span className="mt-1 block text-h1 font-bold">{s.value}</span>
+          </Link>
+        ))}
       </section>
 
-      <section className="rounded-2xl border border-line bg-surface p-6 shadow-2xs">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="font-heading text-h2 font-bold text-ink">
-              Danh mục sản phẩm đã đăng ký
-            </h2>
-            <p className="text-small text-ink-2">
-              Mặt hàng đã được duyệt dùng để khai báo lô thu hoạch.
-            </p>
-          </div>
-          <Link
-            href="/nha-cung-cap/lo-hang/tao-moi"
-            className="inline-flex items-center gap-1.5 self-start text-title font-semibold text-primary transition-colors hover:text-primary-hover sm:self-auto"
-          >
-            <span>Khai báo lô thu hoạch</span>
-            <ArrowRight className="size-4" />
+      <section aria-labelledby="lo-gan-day">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 id="lo-gan-day" className="text-h2-sm font-bold text-ink md:text-h2">
+            Lô gần đây
+          </h2>
+          <Link href="/nha-cung-cap/lo-hang" className="text-small font-semibold">
+            Xem tất cả
           </Link>
         </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => {
-            const productBatches = batches.filter((b) => b.productId === product.id);
-            const approvedCount = productBatches.filter((b) => b.status === "approved").length;
-
-            return (
-              <div
-                key={product.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-xl border border-line bg-card transition-all hover:border-primary/40 hover:shadow-sm"
-              >
-                <div className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
-                      {product.imageUrl ? (
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.name}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="64px"
-                        />
-                      ) : (
-                        <div className="flex size-full items-center justify-center text-subtle">
-                          <Package className="size-8" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        {product.status === "approved" ? (
-                          <span className="inline-flex items-center gap-1 rounded bg-leaf-soft px-2 py-0.5 text-micro font-semibold text-primary">
-                            <CheckCircle2 className="size-3" /> Đã duyệt
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 rounded bg-surface-2 px-2 py-0.5 text-micro font-semibold text-ink-2">
-                            {REVIEW_STATUS_LABELS[product.status]}
-                          </span>
-                        )}
-                        <span className="text-micro text-subtle">ID #{product.id}</span>
-                      </div>
-                      <h3 className="mt-1 line-clamp-1 font-heading text-title font-bold text-ink">
-                        {product.name}
-                      </h3>
-                      <p className="mt-0.5 text-caption text-ink-2">
-                        Quy cách đóng gói: <span className="font-medium text-ink">{product.unit}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between border-t border-line/60 pt-3 text-caption text-ink-2">
-                    <span>Tổng số lô: <strong className="text-ink">{productBatches.length}</strong></span>
-                    <span>Đang mở bán: <strong className="text-primary">{approvedCount}</strong></span>
-                  </div>
-                </div>
-
-                <div className="flex items-center divide-x divide-line border-t border-line bg-surface-2/50 text-caption font-medium">
-                  <Link
-                    href={`/nha-cung-cap/lo-hang/tao-moi?productId=${product.id}`}
-                    className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-primary transition-colors hover:bg-surface-2 hover:text-primary-hover"
-                  >
-                    <PlusCircle className="size-3.5" />
-                    <span>Tạo lô mới</span>
-                  </Link>
-                  <Link
-                    href={`/nha-cung-cap/lo-hang?productId=${product.id}`}
-                    className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
-                  >
-                    <Layers className="size-3.5" />
-                    <span>Xem các lô</span>
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="overflow-hidden rounded-2xl border border-leaf-soft bg-gradient-to-r from-leaf-soft/30 to-surface p-6">
-        <div className="flex items-center gap-2 text-primary">
-          <Sparkles className="size-5" />
-          <h3 className="font-heading text-title font-bold">
-            Quy trình vận hành chuẩn từ nông trại tới tay người tiêu dùng
-          </h3>
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-line/80 bg-surface/80 p-4">
-            <span className="flex size-7 items-center justify-center rounded-full bg-primary text-small font-bold text-white">
-              1
-            </span>
-            <h4 className="mt-2.5 font-heading text-title font-semibold text-ink">
-              Khai báo lô thu hoạch
-            </h4>
-            <p className="mt-1 text-caption text-ink-2">
-              Nhà cung cấp nhập ngày thu hoạch, hạn dùng tốt nhất và sản lượng dự kiến thực tế của đợt thu hái.
-            </p>
+        {batches.length === 0 ? (
+          <div className="rounded-card border border-dashed border-line-strong px-5 py-6 text-small text-ink-2">
+            <p className="mb-3 font-semibold text-ink">Chưa có lô nào. Ba bước để bắt đầu bán:</p>
+            <ol className="list-inside list-decimal space-y-1">
+              <li>Khai báo lô thu hoạch: ngày thu hoạch, hạn sử dụng, sản lượng.</li>
+              <li>Kiểm duyệt viên xem lô, nhật ký và chứng nhận — thường trong 48 giờ.</li>
+              <li>Lô được duyệt có mã QR để in tem; ghi tiếp nhật ký canh tác cho người mua xem.</li>
+            </ol>
           </div>
-
-          <div className="rounded-xl border border-line/80 bg-surface/80 p-4">
-            <span className="flex size-7 items-center justify-center rounded-full bg-primary text-small font-bold text-white">
-              2
-            </span>
-            <h4 className="mt-2.5 font-heading text-title font-semibold text-ink">
-              Kiểm duyệt & Cấp mã QR
-            </h4>
-            <p className="mt-1 text-caption text-ink-2">
-              Kiểm duyệt viên xem lô, nhật ký và chứng nhận; duyệt xong hệ thống sinh mã QR truy xuất cho lô.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-line/80 bg-surface/80 p-4">
-            <span className="flex size-7 items-center justify-center rounded-full bg-primary text-small font-bold text-white">
-              3
-            </span>
-            <h4 className="mt-2.5 font-heading text-title font-semibold text-ink">
-              Ghi nhật ký canh tác
-            </h4>
-            <p className="mt-1 text-caption text-ink-2">
-              Bổ sung nhật ký bón phân, thu hoạch và minh bạch thông tin trực tiếp tới người mua hàng qua mã QR.
-            </p>
-          </div>
-        </div>
+        ) : (
+          <ul className="divide-y divide-line rounded-card border border-line">
+            {batches.slice(0, 5).map((b) => (
+              <li key={b.id}>
+                <Link href={`/nha-cung-cap/lo-hang/${b.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-ink hover:bg-surface hover:text-ink">
+                  <span className="font-mono text-small font-semibold">{b.batchCode}</span>
+                  <span className="min-w-0 flex-1 basis-48 text-small text-ink-2">{b.productName}</span>
+                  <span className="text-caption text-ink-2">
+                    {formatQty(b.declaredQuantity)} {units.get(b.productId) ?? ""} · thu hoạch {formatDateVi(b.harvestDate)}
+                  </span>
+                  <ReviewStatusBadge status={b.status} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

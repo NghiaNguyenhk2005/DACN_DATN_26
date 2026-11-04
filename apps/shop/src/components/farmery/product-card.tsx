@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Leaf } from "lucide-react";
 import type { Schema } from "@farmery/contract";
+import { freshness, harvestedText, LOW_STOCK, pricePerKg, todayVn } from "@/lib/decision";
 import { formatVnd } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
 import { productHref } from "@/lib/slug";
@@ -15,6 +16,9 @@ export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) 
   const href = productHref(p);
   const cert = p.certifications[0];
   const soldOut = !p.listing || p.listing.available <= 0;
+  const fresh = freshness(p.saleBatch, todayVn());
+  const perKg = p.listing ? pricePerKg(p.listing.unitPrice, p.listing.saleUnit) : null;
+  const lowStock = p.listing && !soldOut && p.listing.available <= LOW_STOCK;
 
   return (
     <article className="flex flex-col overflow-hidden rounded-card border-[1.5px] border-line-strong bg-background">
@@ -39,10 +43,16 @@ export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) 
           </Link>
         </h3>
         <p className="truncate text-[12px] text-muted-foreground">{p.supplier.displayName}</p>
-        {p.inSeason && (
-          <p className="flex items-center gap-[5px] text-micro font-medium text-success">
-            <Leaf className="size-3" aria-hidden /> Đang vào mùa
+        {fresh && fresh.daysLeft >= 0 ? (
+          <p className={`flex items-center gap-[5px] text-micro font-medium ${fresh.tone === "good" ? "text-success" : "text-warning"}`}>
+            <Leaf className="size-3" aria-hidden /> {harvestedText(fresh.harvestedDaysAgo)}
           </p>
+        ) : (
+          p.inSeason && (
+            <p className="flex items-center gap-[5px] text-micro font-medium text-success">
+              <Leaf className="size-3" aria-hidden /> Đang vào mùa
+            </p>
+          )
         )}
         <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
           {p.listing ? (
@@ -54,7 +64,9 @@ export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) 
             <span className="text-small font-semibold text-muted-foreground">Chưa mở bán</span>
           )}
         </p>
+        {perKg && <p className="text-micro text-muted-foreground">≈ {formatVnd(perKg)}/kg</p>}
         {p.listing && soldOut && <p className="text-micro font-semibold text-danger">Hết hàng</p>}
+        {lowStock && <p className="text-micro font-semibold text-warning">Chỉ còn {p.listing!.available.toLocaleString("vi-VN")} {p.listing!.saleUnit}</p>}
         <div className="mt-auto pt-2 md:flex md:flex-col md:items-end md:pt-[9px]">
           <AddToCartButton
             listingId={p.listing?.id ?? ""}

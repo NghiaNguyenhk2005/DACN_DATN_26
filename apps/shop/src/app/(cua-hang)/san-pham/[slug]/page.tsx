@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Leaf } from "lucide-react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import type { Schema } from "@farmery/contract";
 import { Breadcrumb, type Crumb } from "@/components/farmery/breadcrumb";
 import { BuyBox } from "@/components/farmery/buy-box";
+import { CertificateList } from "@/components/farmery/certificate-list";
 import { LotInfo } from "@/components/farmery/lot-info";
 import { ProductCard } from "@/components/farmery/product-card";
 import { ProductGallery } from "@/components/farmery/product-gallery";
 import { ProductTabs } from "@/components/farmery/product-tabs";
 import { TraceQr } from "@/components/farmery/trace-qr";
 import { TraceTimeline } from "@/components/farmery/trace-timeline";
+import { WholesalePanel } from "@/components/farmery/wholesale-panel";
 import { getCategories, getProduct, getSupplier, getTrace } from "@/lib/data";
+import { deliveryEstimate, freshness, harvestedText, pricePerKg, shelfLifeText, todayVn } from "@/lib/decision";
 import { formatDateVi, formatVnd } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
 import { categoryHref, parseSlugId, traceHref } from "@/lib/slug";
@@ -45,7 +49,7 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
   const product = await load((await params).slug);
   if (!product) notFound();
 
-  // Lô đang bán có hạn dùng sớm nhất: tab nhật ký và ô thông tin lô lấy theo lô này.
+  // Lô đang bán có hạn sử dụng sớm nhất: tab nhật ký và ô thông tin lô lấy theo lô này.
   const batch = [...product.batchesOnSale].sort((a, b) => a.bestBefore.localeCompare(b.bestBefore))[0];
   const [supplier, trace, categories, h] = await Promise.all([
     getSupplier(product.supplier.id).catch(() => null),
@@ -62,6 +66,10 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
 
   const { listing } = product;
   const certs = product.certifications.map((c) => CERT_LABELS[c]).join(" · ");
+  const fresh = freshness(product.saleBatch ?? (batch ? { harvestDate: batch.harvestDate, bestBefore: batch.bestBefore } : null), todayVn());
+  const perKg = listing ? pricePerKg(listing.unitPrice, listing.saleUnit) : null;
+  // Chứng nhận của nhà cung cấp, chỉ loại sản phẩm này đạt.
+  const productCerts = (supplier?.certifications ?? []).filter((c) => product.certifications.includes(c.type));
 
   return (
     <div className="pb-28 lg:pb-6">
@@ -84,6 +92,7 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
                   {formatVnd(listing.unitPrice)}
                 </span>
                 <span className="text-title text-muted-foreground">/ {listing.saleUnit}</span>
+                {perKg && <span className="text-small text-muted-foreground">(≈ {formatVnd(perKg)}/kg)</span>}
               </p>
               <p className="mb-[18px] text-caption text-muted-foreground">
                 Giá đã gồm thuế GTGT ·{" "}
@@ -98,16 +107,47 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
             <p className="mb-[18px] text-title font-semibold text-muted-foreground">Sản phẩm chưa mở bán</p>
           )}
 
+          {fresh && (
+            <p
+              className={`mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-tile px-3.5 py-2.5 text-small font-medium ${
+                fresh.tone === "good" ? "bg-success-soft text-success" : fresh.tone === "warning" ? "bg-warning-soft text-warning" : "bg-danger-soft text-danger"
+              }`}
+            >
+              <Leaf className="size-4" aria-hidden />
+              <span>{harvestedText(fresh.harvestedDaysAgo)}</span>
+              <span aria-hidden>·</span>
+              <span>{shelfLifeText(fresh.daysLeft)}</span>
+            </p>
+          )}
+
           <div className="mb-5 md:mb-[22px]">
             <LotInfo
               facts={[
                 { label: "Ngày thu hoạch", value: batch ? formatDateVi(batch.harvestDate) : "Chưa có lô" },
                 { label: "Vùng trồng", value: product.supplier.growingRegion },
                 { label: "Chứng nhận", value: certs || "Chưa có" },
-                { label: "Hạn dùng", value: batch ? formatDateVi(batch.bestBefore) : (product.seasonality ?? "—") },
+                { label: "Hạn sử dụng", value: batch ? formatDateVi(batch.bestBefore) : (product.seasonality ?? "—") },
               ]}
             />
           </div>
+
+          {productCerts.length > 0 && (
+            <section className="mb-5 md:mb-[22px]" aria-labelledby="chung-nhan">
+              <h2 id="chung-nhan" className="mb-2.5 text-h3 font-bold text-ink">
+                Chứng nhận
+              </h2>
+              <CertificateList items={productCerts} />
+            </section>
+          )}
+
+          {product.wholesale && (
+            <section className="mb-5 rounded-panel border border-border p-4 lg:hidden" aria-labelledby="mua-si">
+              <h2 id="mua-si" className="mb-3 text-h3 font-bold text-ink">
+                Mua sỉ từ {product.supplier.displayName}
+              </h2>
+              <WholesalePanel offer={product.wholesale} productId={product.id} supplierName={product.supplier.displayName} />
+            </section>
+          )}
 
           <ProductTabs
             description={<p className="whitespace-pre-line">{product.description}</p>}
@@ -116,6 +156,9 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
         </div>
 
         <BuyBox
+          productId={product.id}
+          wholesale={product.wholesale}
+          deliveryNote={deliveryEstimate()}
           listing={listing}
           seller={{
             name: product.supplier.displayName,

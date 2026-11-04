@@ -99,3 +99,15 @@ export function toProductQuery(q: string | undefined, f: Filters, extra: Partial
   if (f.inSeason) query.inSeason = true;
   return query;
 }
+
+/** Bộ lọc tách được từ câu tìm (GET /search/suggest → interpretation). */
+export function filtersFromInterpretation(i: Schema<"SearchInterpretation">): Filters {
+  return {
+    cert: i.cert,
+    region: i.region,
+    minPrice: i.minPrice,
+    maxPrice: i.maxPrice,
+    inStock: i.inStock || undefined,
+    inSeason: i.inSeason || undefined,
+  };
+}

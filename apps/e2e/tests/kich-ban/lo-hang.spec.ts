@@ -10,11 +10,13 @@ async function newPage(browser: Browser): Promise<Page> {
 
 async function createBatch(seller: Page): Promise<string> {
   await seller.goto(`${SHOP_URL}/nha-cung-cap/lo-hang/tao-moi`);
-  await seller.getByRole("button", { name: "Gửi duyệt lô hàng" }).click();
+  await seller.getByLabel(/Sản lượng/).fill("120");
+  await seller.getByRole("button", { name: "Gửi duyệt", exact: true }).click();
   // Server Action + redirect sang trang chưa biên dịch ở chế độ dev có thể quá 5 giây.
   await expect(seller).toHaveURL(/\/nha-cung-cap\/lo-hang\/[^/?]+\?thanh-cong=1/, { timeout: 15_000 });
-  await expect(seller.getByText("Khai báo lô hàng thành công!")).toBeVisible();
-  return seller.getByText("Khai báo lô hàng thành công!").locator("xpath=..").locator("strong.font-mono").innerText();
+  const notice = seller.getByRole("status").filter({ hasText: "Đã gửi duyệt lô" });
+  await expect(notice).toBeVisible();
+  return notice.locator("strong.font-mono").innerText();
 }
 
 async function openReviewTask(staff: Page, batchCode: string) {
@@ -24,16 +26,16 @@ async function openReviewTask(staff: Page, batchCode: string) {
 }
 
 test.describe("Kịch bản lô hàng — nhà cung cấp, kiểm duyệt, truy xuất", () => {
-  test("đăng lô, ghi nhật ký, cán bộ duyệt, khách mở trang truy xuất", async ({ browser }) => {
+  test("đăng lô, ghi nhật ký, kiểm duyệt viên duyệt, khách mở trang truy xuất", async ({ browser }) => {
     const seller = await newPage(browser);
     await loginShop(seller, "nongdan@example.com");
     const batchCode = await createBatch(seller);
-    await expect(seller.getByText("Chờ kiểm định")).toBeVisible();
+    await expect(seller.getByText("Chờ duyệt", { exact: true }).first()).toBeVisible();
 
     const logText = `Tưới nhỏ giọt e2e ${Date.now()}`;
-    await seller.getByRole("button", { name: "Thêm mục nhật ký" }).click();
+    await seller.getByRole("button", { name: "Thêm nhật ký" }).click();
     await seller.getByLabel(/Mô tả chi tiết công việc canh tác/).fill(logText);
-    await seller.getByRole("button", { name: "Lưu nhật ký canh tác" }).click();
+    await seller.getByRole("button", { name: "Lưu nhật ký" }).click();
     await expect(seller.getByText(logText).first()).toBeVisible();
 
     const staff = await newPage(browser);
@@ -51,10 +53,10 @@ test.describe("Kịch bản lô hàng — nhà cung cấp, kiểm duyệt, truy 
     await expect(buyer.getByText(logText)).toBeVisible();
 
     await seller.reload();
-    await expect(seller.getByText("Đã phê duyệt mở bán")).toBeVisible();
+    await expect(seller.getByText("Đã duyệt", { exact: true }).first()).toBeVisible();
   });
 
-  test("cán bộ từ chối lô kèm lý do, nhà cung cấp thấy lô bị từ chối", async ({ browser }) => {
+  test("kiểm duyệt viên từ chối lô kèm lý do, nhà cung cấp thấy lô bị từ chối", async ({ browser }) => {
     const seller = await newPage(browser);
     await loginShop(seller, "nongdan@example.com");
     const batchCode = await createBatch(seller);
@@ -71,6 +73,6 @@ test.describe("Kịch bản lô hàng — nhà cung cấp, kiểm duyệt, truy 
     await expect(staff.locator(".ant-descriptions").getByText("Thiếu nhật ký bón phân tuần trước.")).toBeVisible();
 
     await seller.reload();
-    await expect(seller.getByText("Bị từ chối")).toBeVisible();
+    await expect(seller.getByText("Bị từ chối", { exact: true }).first()).toBeVisible();
   });
 });

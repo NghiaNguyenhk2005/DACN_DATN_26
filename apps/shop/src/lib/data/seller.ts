@@ -27,3 +27,10 @@ export async function getSellerBatch(batchId: string): Promise<Schema<"Batch"> |
 
 export const getSellerBatchLogs = (batchId: string): Promise<Schema<"FarmingLog">[]> =>
   read((api) => api.GET("/seller/batches/{batchId}/logs", { params: { path: { batchId } } }));
+
+export const getSellerCertifications = cache(
+  (): Promise<Schema<"SellerCertification">[]> => read((api) => api.GET("/seller/certifications")),
+);
+
+export const getSellerQuoteRequests = (): Promise<Schema<"QuoteRequest">[]> =>
+  read((api) => api.GET("/seller/quote-requests"));

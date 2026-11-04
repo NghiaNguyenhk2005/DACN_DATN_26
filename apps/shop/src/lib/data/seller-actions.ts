@@ -23,8 +23,8 @@ export async function createBatchAction(
 
   if (!productId) return { ok: false, message: "Vui lòng chọn sản phẩm." };
   if (!harvestDate) return { ok: false, message: "Vui lòng chọn ngày thu hoạch." };
-  if (!bestBefore) return { ok: false, message: "Vui lòng chọn hạn dùng." };
-  if (bestBefore <= harvestDate) return { ok: false, message: "Hạn dùng phải sau ngày thu hoạch." };
+  if (!bestBefore) return { ok: false, message: "Vui lòng chọn hạn sử dụng." };
+  if (bestBefore <= harvestDate) return { ok: false, message: "Hạn sử dụng phải sau ngày thu hoạch." };
   if (!(declaredQuantity > 0)) return { ok: false, message: "Sản lượng khai báo phải lớn hơn 0." };
 
   const res = await mutate(
@@ -95,6 +95,7 @@ export async function createProductAction(
   const description = text("description");
   const seasonality = text("seasonality");
   const priceText = text("referenceRetailPrice");
+  const certifications = formData.getAll("certifications").map(String) as Schema<"CertType">[];
   const referenceRetailPrice = priceText ? Number(priceText) : undefined;
 
   if (!categoryId) return { ok: false, message: "Vui lòng chọn danh mục." };
@@ -115,6 +116,7 @@ export async function createProductAction(
           description: description || undefined,
           seasonality: seasonality || undefined,
           referenceRetailPrice,
+          certifications: certifications.length ? certifications : undefined,
         },
       }),
     "Không đăng được sản phẩm. Vui lòng kiểm tra lại thông tin.",
@@ -125,5 +127,42 @@ export async function createProductAction(
   }
 
   revalidatePath("/nha-cung-cap", "layout");
-  redirect("/nha-cung-cap");
+  redirect("/nha-cung-cap/san-pham?thanh-cong=1");
+}
+
+export type CertificationResult = { ok: boolean; message?: string; certification?: Schema<"SellerCertification"> };
+
+/** Server Action: khai báo chứng nhận (POST /seller/certifications). Dùng ở trang Hồ sơ và sheet nhập tại chỗ. */
+export async function createCertificationAction(
+  _prev: CertificationResult | null,
+  formData: FormData,
+): Promise<CertificationResult> {
+  const text = (key: string) => String(formData.get(key) ?? "").trim();
+  const type = text("type") as Schema<"CertType">;
+  const certificateNumber = text("certificateNumber");
+  const issuingAuthority = text("issuingAuthority");
+  const issuedDate = text("issuedDate");
+  const expiryDate = text("expiryDate");
+  const returnTo = text("returnTo") || "/nha-cung-cap/ho-so";
+
+  if (!type) return { ok: false, message: "Vui lòng chọn loại chứng nhận." };
+  if (certificateNumber.length < 2) return { ok: false, message: "Vui lòng nhập số chứng nhận." };
+  if (issuingAuthority.length < 2) return { ok: false, message: "Vui lòng nhập cơ quan cấp." };
+  if (!issuedDate || !expiryDate) return { ok: false, message: "Vui lòng chọn ngày cấp và ngày hết hiệu lực." };
+  if (expiryDate <= issuedDate) return { ok: false, message: "Ngày hết hiệu lực phải sau ngày cấp." };
+
+  const res = await mutate(
+    (api) =>
+      api.POST("/seller/certifications", {
+        params: { header: { "Idempotency-Key": text("idempotencyKey") || undefined } },
+        body: { type, certificateNumber, issuingAuthority, issuedDate, expiryDate },
+      }),
+    "Chưa lưu được chứng nhận. Vui lòng kiểm tra lại thông tin.",
+  );
+  if (!res.ok) {
+    if (res.code === "UNAUTHENTICATED") redirect(loginHref(returnTo));
+    return { ok: false, message: res.message };
+  }
+  revalidatePath("/nha-cung-cap", "layout");
+  return { ok: true, message: "Đã gửi chứng nhận. Chứng nhận hiện cho người mua sau khi được duyệt.", certification: res.data };
 }

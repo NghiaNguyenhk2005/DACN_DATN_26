@@ -78,7 +78,7 @@ export default async function OrderPage({ params }: PageProps<"/don-hang/[ma]">)
 function StatusPanel({ order }: { order: Schema<"OrderDetail"> }) {
   if (order.status === "cancelled") {
     const cancelled = order.timeline.findLast((e) => e.toStatus === "cancelled");
-    // Đơn trả trước chưa từng thanh toán, huỷ từ lúc hết hạn giữ chỗ trở đi: báo rõ là hết giờ.
+    // Đơn trả trước chưa từng thanh toán, hủy từ lúc hết hạn giữ chỗ trở đi: báo rõ là hết giờ.
     const expired =
       order.paymentOption === "prepaid" &&
       !order.timeline.some((e) => e.toStatus === "paid") &&
@@ -88,10 +88,10 @@ function StatusPanel({ order }: { order: Schema<"OrderDetail"> }) {
     return (
       <section role="alert" className="rounded-panel border border-danger-line bg-danger-soft p-5 text-center md:p-7">
         {expired ? <TimerOff className="mx-auto mb-2 size-9 text-danger" aria-hidden /> : <CircleX className="mx-auto mb-2 size-9 text-danger" aria-hidden />}
-        <h1 className="mb-1 text-h2-sm font-bold text-danger-ink md:text-h2">{expired ? "Đã hết thời gian giữ chỗ" : "Đơn đã huỷ"}</h1>
+        <h1 className="mb-1 text-h2-sm font-bold text-danger-ink md:text-h2">{expired ? "Đã hết thời gian giữ chỗ" : "Đơn đã hủy"}</h1>
         <p className="mb-4 text-small text-danger-ink">
           {expired
-            ? "Đơn chưa được thanh toán kịp nên đã tự huỷ, hàng được trả lại kho. Vui lòng đặt lại."
+            ? "Đơn chưa được thanh toán kịp nên đã tự hủy, hàng được trả lại kho. Vui lòng đặt lại."
             : (cancelled?.note ?? "Đơn không còn hiệu lực, hàng đã được trả lại kho.")}
         </p>
         <Link href="/" className="inline-grid h-11 place-items-center rounded-btn bg-primary px-5 text-title font-semibold text-white hover:bg-primary-hover">
