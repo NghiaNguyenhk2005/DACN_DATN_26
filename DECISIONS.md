@@ -1186,3 +1186,12 @@ dùng màu ngoài token, nhà cung cấp không có chỗ nhập chứng nhận,
 "Hết hàng".
 **Đánh đổi:** sửa hợp đồng ở 6 chỗ trong một PR — phải báo cả nhóm. Dời ngày dữ liệu mẫu làm ngày hiển thị khác nhau
 giữa các ngày chạy (test không phụ thuộc ngày mẫu). Hiểu câu tìm bằng luật (regex) chỉ bắt được mẫu câu đã liệt kê.
+
+### Ô số lượng gõ tự do theo đơn vị bán — 2026-11-05
+**Quyết định:** khung mua và giỏ hàng dùng chung `QuantityInput`: gõ tự do + nút −/+. Đơn vị bán "kg" nhập lẻ tới
+0,1 kg (100 g), nút bước 0,5 kg; đơn vị đóng gói (hộp, túi, gói, bó, khay) chỉ số nguyên. "1,5" và "1.5" đều hiểu là
+1,5. Số sai quy tắc hoặc vượt tồn được làm tròn, kẹp lại và báo câu giải thích, không chặn im lặng.
+**Bối cảnh:** khung mua chỉ có nút −/+ bước 1, không gõ được, nên không mua được 1,5 kg dù hợp đồng và API đã nhận số
+lượng tới 3 chữ số thập phân.
+**Đánh đổi:** quy tắc nhận diện cân theo chuỗi `saleUnit === "kg"`; MVP nên có trường "bán theo cân" và bước số lượng
+trong tin bán thay vì đoán từ chữ.

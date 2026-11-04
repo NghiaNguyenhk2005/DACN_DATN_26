@@ -73,6 +73,6 @@ của giấy chứng nhận. Tách hai từ để người mua không nhầm "c�
 
 ### Chính tả
 
-Đặt dấu thanh **kiểu cũ**, thống nhất với báo cáo và locale `vi_VN` của Ant Design: **hủy, khóa, hóa đơn, thủy canh**.
-Không dùng "huỷ, khoá, hoá".
+Đặt dấu thanh **kiểu cũ**, thống nhất với báo cáo và locale `vi_VN` của Ant Design: **hủy, khóa, xóa, hóa đơn, thủy canh**.
+Không dùng "huỷ, khoá, hoá, xoá".
 Số: `1.250.000₫`, ngày `dd/mm/yyyy`, giờ `14:05`, khối lượng `500 g`, `1,5 kg`.

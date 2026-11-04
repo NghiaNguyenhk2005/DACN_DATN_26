@@ -48,7 +48,7 @@ export async function removeCartItem(listingId: string): Promise<ActionResult> {
   if (!ID.test(listingId)) return INVALID;
   const result = await mutate(
     (api) => api.DELETE("/cart/items/{listingId}", { params: { path: { listingId } } }),
-    "Chưa xoá được sản phẩm.",
+    "Chưa xóa được sản phẩm.",
   );
   return settle(result);
 }
