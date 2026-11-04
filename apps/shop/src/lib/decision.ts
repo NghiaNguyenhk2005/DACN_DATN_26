@@ -119,3 +119,11 @@ export function parseQtyInput(text: string): number {
   const t = text.trim().replace(/\s/g, "");
   return Number(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t);
 }
+
+/** Số lượng mặc định khi mua: 1 đơn vị, hoặc phần còn lại nếu tồn ít hơn; null khi tồn dưới mức tối thiểu (không mua được). */
+export function defaultQty(saleUnit: string, available: number): number | null {
+  const rule = quantityRule(saleUnit);
+  const f = 10 ** rule.decimals;
+  const cap = Math.floor(available * f) / f;
+  return cap < rule.min ? null : Math.min(1, cap);
+}

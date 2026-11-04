@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Leaf } from "lucide-react";
 import type { Schema } from "@farmery/contract";
-import { freshness, harvestedText, LOW_STOCK, pricePerKg, todayVn } from "@/lib/decision";
+import { defaultQty, freshness, harvestedText, LOW_STOCK, pricePerKg, todayVn } from "@/lib/decision";
 import { formatVnd } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
 import { productHref } from "@/lib/slug";
@@ -15,7 +15,8 @@ import { SafeImage } from "./safe-image";
 export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) {
   const href = productHref(p);
   const cert = p.certifications[0];
-  const soldOut = !p.listing || p.listing.available <= 0;
+  const quickQty = p.listing ? defaultQty(p.listing.saleUnit, p.listing.available) : null;
+  const soldOut = quickQty === null;
   const fresh = freshness(p.saleBatch, todayVn());
   const perKg = p.listing ? pricePerKg(p.listing.unitPrice, p.listing.saleUnit) : null;
   const lowStock = p.listing && !soldOut && p.listing.available <= LOW_STOCK;
@@ -70,6 +71,7 @@ export function ProductCard({ product: p }: { product: Schema<"ProductCard"> }) 
         <div className="mt-auto pt-2 md:flex md:flex-col md:items-end md:pt-[9px]">
           <AddToCartButton
             listingId={p.listing?.id ?? ""}
+            quantity={quickQty ?? 1}
             disabled={soldOut}
             className="h-10 w-full rounded-[7px] border-chip bg-transparent px-[11px] text-[13px] font-semibold text-primary hover:bg-surface hover:text-primary md:h-auto md:min-h-8 md:w-auto md:py-1.5 md:text-[12px]"
           />
