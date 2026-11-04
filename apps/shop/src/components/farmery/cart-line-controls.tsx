@@ -18,11 +18,14 @@ interface Props {
 export function CartLineControls({ listingId, productName, quantity, available, saleUnit }: Props) {
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
+  // Tăng khi cập nhật lỗi: dựng lại ô số lượng để bỏ số vừa gõ, hiện lại số đang có trong giỏ.
+  const [revision, setRevision] = useState(0);
 
   function run(action: () => Promise<{ ok: boolean; code?: string; message?: string }>) {
     startTransition(async () => {
-      const r = await action();
+      const r = await action().catch(() => ({ ok: false, code: "NETWORK", message: "Không kết nối được máy chủ, số lượng chưa đổi." }));
       if (r.ok) return;
+      setRevision((n) => n + 1);
       setMessage(
         r.code === "CART_QTY_EXCEEDS_STOCK"
           ? `Chỉ còn ${formatQty(available)} ${saleUnit}, không đặt thêm được.`
@@ -35,6 +38,7 @@ export function CartLineControls({ listingId, productName, quantity, available, 
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2" aria-busy={pending}>
         <QuantityInput
+          key={revision}
           value={quantity}
           saleUnit={saleUnit}
           max={available}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Clock, CreditCard, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
 import type { Schema } from "@farmery/contract";
 import { Button } from "@/components/ui/button";
-import { LOW_STOCK, quantityRule } from "@/lib/decision";
+import { defaultQty, LOW_STOCK, quantityRule } from "@/lib/decision";
 import { formatVnd } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { FeedbackText, useAddToCart } from "./add-to-cart";
@@ -59,7 +59,8 @@ function ModeSwitch({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void 
  */
 export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: Props) {
   const [mode, setMode] = useState<Mode>(listing || !wholesale ? "retail" : "wholesale");
-  const [qty, setQty] = useState(1);
+  const startQty = listing ? defaultQty(listing.saleUnit, listing.available) : null;
+  const [qty, setQty] = useState(startQty ?? 1);
   const [qtyNote, setQtyNote] = useState<string | null>(null);
   const max = listing ? listing.available : 1;
   const byWeight = listing ? quantityRule(listing.saleUnit).byWeight : false;
@@ -67,7 +68,7 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
     setQty(n);
     setQtyNote(note);
   };
-  const soldOut = !listing || listing.available <= 0;
+  const soldOut = startQty === null;
   const total = listing ? Math.round(listing.unitPrice * qty) : 0;
   const { add, pending, feedback } = useAddToCart();
   const buy = (buyNow: boolean) => listing && add(listing.id, qty, buyNow);
