@@ -30,7 +30,7 @@ test.describe("Admin — đăng nhập OTP", () => {
   });
 
   test("menu theo vai trò: chủ nền tảng thấy Cấu hình, không thấy Tồn kho", async ({ page }) => {
-    const code = await requestOtp(page, "staff@example.com");
+    const code = await requestOtp(page, "chu@farmery.vn");
     await submitOtp(page, code);
 
     await expect(page.getByRole("menuitem", { name: /Cấu hình/ })).toBeVisible();

@@ -8,7 +8,8 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "test:blackbox": "nest build && jest -c jest.blackbox.config.cjs"
   },
   "dependencies": {
     "@farmery/contract": "workspace:*",
@@ -20,6 +21,9 @@
     "@nestjs/swagger": "11.4.7",
     "express": "5.2.1",
     "express-openapi-validator": "5.6.2",
+    "express-rate-limit": "8.7.1",
+    "helmet": "8.3.0",
+    "nodemailer": "10.2.1",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
     "yaml": "2.9.1"
@@ -32,10 +36,13 @@
     "@types/express": "5.0.6",
     "@types/jest": "30.0.0",
     "@types/node": "22.20.4",
+    "@types/nodemailer": "8.0.2",
+    "@types/smtp-server": "3.5.13",
     "@types/supertest": "7.2.1",
     "eslint": "9.39.5",
     "globals": "17.12.0",
     "jest": "30.5.2",
+    "smtp-server": "3.21.1",
     "supertest": "7.3.0",
     "ts-jest": "29.4.14",
     "typescript": "5.9.3",
@@ -62,6 +69,9 @@
       "ts",
       "js",
       "json"
+    ],
+    "setupFiles": [
+      "<rootDir>/test/setup-env.ts"
     ]
   }
 }

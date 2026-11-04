@@ -17,10 +17,28 @@ import {
 import { SupplierService } from "../supplier/supplier.service";
 import { OperationsService } from "../operations/operations.service";
 import { APP_CONFIG, type AppConfig } from "../../core/app-config";
+import { InventoryService } from "../inventory/inventory.service";
 import type { AuthUser } from "../../core/token.service";
 
 export type TraceView = Schema<"TraceView">;
 export type PublicFarmingLog = Schema<"PublicFarmingLog">;
+
+/** Ảnh chụp tin bán cho giỏ hàng: tên, giá, đơn vị tại thời điểm đọc. */
+export interface ListingSnapshot {
+  listingId: string;
+  productId: string;
+  productName: string;
+  imageUrl: string | null;
+  saleUnit: string;
+  unitPrice: number;
+}
+
+type WithListing = { listing?: Schema<"Listing"> | null };
+
+function withStock<T extends WithListing>(item: T, availability: Map<string, number>): T {
+  if (!item.listing) return item;
+  return { ...item, listing: { ...item.listing, available: availability.get(item.listing.id) ?? 0 } };
+}
 
 @Injectable()
 export class CatalogService {
@@ -32,14 +50,55 @@ export class CatalogService {
     @Inject(forwardRef(() => OperationsService))
     private readonly operationsService: OperationsService,
     @Inject(APP_CONFIG) private readonly config: AppConfig,
+    private readonly inventory: InventoryService,
   ) {}
 
   listCategories(): Promise<Category[]> {
     return this.categories.findTree();
   }
 
-  searchProducts(filter: ProductFilter): Promise<ProductSearchResult> {
-    return this.products.search(filter);
+  // Lượng còn bán được lấy từ dòng tồn (inventory), không dùng số tĩnh trong dữ liệu mẫu.
+  async searchProducts(filter: ProductFilter): Promise<ProductSearchResult> {
+    const availability = await this.inventory.availabilityByListing();
+    if (filter.inStock === undefined) {
+      const result = await this.products.search(filter);
+      return { ...result, items: result.items.map((c) => withStock(c, availability)) };
+    }
+
+    // Lọc "còn hàng" theo tồn thật: lấy hết kết quả khớp, lọc rồi phân trang lại.
+    const { inStock, cursor, limit, ...rest } = filter;
+    const matched: ProductSearchResult["items"] = [];
+    let next: string | undefined;
+    do {
+      const page = await this.products.search({ ...rest, cursor: next, limit: 100 });
+      matched.push(...page.items);
+      next = page.nextCursor ?? undefined;
+    } while (next);
+
+    const filtered = matched
+      .map((c) => withStock(c, availability))
+      .filter((c) => (c.listing ? c.listing.available > 0 : false) === inStock);
+    const pageSize = limit && limit > 0 ? Math.min(limit, 100) : 20;
+    const parsed = cursor ? parseInt(cursor, 10) : 0;
+    const offset = Number.isNaN(parsed) || parsed < 0 ? 0 : parsed;
+    return {
+      items: filtered.slice(offset, offset + pageSize),
+      nextCursor: offset + pageSize < filtered.length ? String(offset + pageSize) : null,
+    };
+  }
+
+  /** Tin bán theo `listingId` cho giỏ hàng; null khi không có. */
+  async getListing(listingId: string): Promise<ListingSnapshot | null> {
+    const product = await this.products.findByListingId(listingId);
+    if (!product?.listing) return null;
+    return {
+      listingId,
+      productId: product.id,
+      productName: product.name,
+      imageUrl: product.imageUrl ?? null,
+      saleUnit: product.listing.saleUnit,
+      unitPrice: product.listing.unitPrice,
+    };
   }
 
   async getProduct(productId: string): Promise<ProductDetail> {
@@ -56,12 +115,16 @@ export class CatalogService {
     const categoryId = (product as { categoryId?: string }).categoryId ?? "";
     const similar = await this.products.findSimilar(categoryId, productId, 4);
 
-    return {
-      ...product,
-      batchesOnSale:
-        batchesOnSale.length > 0 ? batchesOnSale : product.batchesOnSale,
-      similar,
-    };
+    const availability = await this.inventory.availabilityByListing();
+    return withStock(
+      {
+        ...product,
+        batchesOnSale:
+          batchesOnSale.length > 0 ? batchesOnSale : product.batchesOnSale,
+        similar: similar.map((c) => withStock(c, availability)),
+      },
+      availability,
+    );
   }
 
   async getPublicTrace(traceCode: string): Promise<TraceView> {
@@ -318,6 +381,22 @@ export class CatalogService {
       traceCode,
       traceUrl,
     });
+
+    // Lô được duyệt thì có hàng để bán: mở dòng tồn của Farmery bằng số lượng khai báo.
+    const product = await this.products.findById(batch.productId);
+    if (product?.listing) {
+      await this.inventory.openFromBatch({
+        batchId: batch.id,
+        batchCode: batch.batchCode,
+        productId: product.id,
+        listingId: product.listing.id,
+        productName: batch.productName,
+        saleUnit: product.listing.saleUnit,
+        quantity: batch.declaredQuantity,
+        harvestDate: batch.harvestDate,
+        bestBefore: batch.bestBefore,
+      });
+    }
     return updated!;
   }
 

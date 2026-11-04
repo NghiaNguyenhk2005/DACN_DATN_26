@@ -25,6 +25,7 @@ export interface ProductSearchResult {
 export abstract class ProductRepository {
   abstract search(filter: ProductFilter): Promise<ProductSearchResult>;
   abstract findById(id: string): Promise<ProductDetail | null>;
+  abstract findByListingId(listingId: string): Promise<ProductDetail | null>;
   abstract findBySupplierId(supplierId: string): Promise<ProductCard[]>;
   abstract findSimilar(categoryId: string, excludeId: string, limit?: number): Promise<ProductCard[]>;
 }

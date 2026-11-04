@@ -1,0 +1,88 @@
+import type { Account } from "./account.repository";
+
+// Mỗi vai trò một tài khoản giả (openapi.yaml, POST /auth/login). Mã OTP của mọi tài khoản là `devCode`.
+// ID 2xx là người dùng ngoài (nhà cung cấp, khách), 3xx là nhân sự nội bộ. Email lạ không đăng nhập được (404).
+export const SEED_ACCOUNTS: Account[] = [
+  {
+    id: "201",
+    emails: ["seller@farmery.vn", "nongdan@example.com"],
+    displayName: "HTX Dâu tây Đà Lạt (Nguyễn Văn Nông)",
+    phone: "0912345678",
+    roles: ["seller", "buyer_retail"],
+    supplierId: "101",
+    refusedCod: false,
+  },
+  {
+    id: "202",
+    emails: ["khachle@example.com", "khach@example.com", "buyer@farmery.vn"],
+    displayName: "Khách lẻ Trần Minh Anh",
+    phone: "0987654321",
+    roles: ["buyer_retail"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "203",
+    emails: ["khachtuchoi@example.com"],
+    displayName: "Khách từng từ chối nhận COD",
+    phone: "0976543210",
+    roles: ["buyer_retail"],
+    supplierId: null,
+    refusedCod: true,
+  },
+  {
+    // Tài khoản tổng hợp cho dev/e2e: thấy mọi màn nội bộ trừ thu mua, hỗ trợ. Giữ email cũ của khung (staff@, admin@).
+    id: "301",
+    emails: ["kiemduyet@farmery.vn", "staff@example.com", "admin@example.com", "admin@farmery.vn"],
+    displayName: "Cán bộ Kiểm duyệt",
+    phone: null,
+    roles: ["staff_moderation", "staff_operations", "staff_warehouse", "platform_owner"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "302",
+    emails: ["vanhanh@farmery.vn"],
+    displayName: "Nhân viên Vận hành",
+    phone: null,
+    roles: ["staff_operations"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "303",
+    emails: ["kho@farmery.vn"],
+    displayName: "Thủ kho",
+    phone: null,
+    roles: ["staff_warehouse"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "304",
+    emails: ["thumua@farmery.vn"],
+    displayName: "Nhân viên Thu mua",
+    phone: null,
+    roles: ["staff_sourcing"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "305",
+    emails: ["hotro@farmery.vn"],
+    displayName: "Nhân viên Hỗ trợ",
+    phone: null,
+    roles: ["staff_support"],
+    supplierId: null,
+    refusedCod: false,
+  },
+  {
+    id: "306",
+    emails: ["chu@farmery.vn"],
+    displayName: "Chủ nền tảng",
+    phone: null,
+    roles: ["platform_owner"],
+    supplierId: null,
+    refusedCod: false,
+  },
+];
