@@ -9,7 +9,7 @@ import {
   type ProductRecord,
   type ProductSearchResult,
 } from "./product.repository";
-import { matchSearchQuery, removeVietnameseTones } from "./utils/vietnamese-search.util";
+import { fold } from "./search/text-match";
 
 type ProductWithCategory = ProductRecord;
 const isPublic = (p: ProductRecord) => (p.status ?? "approved") === "approved";
@@ -43,45 +43,40 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
     };
   }
 
+  async listPublicRecords(): Promise<ProductRecord[]> {
+    return structuredClone(this.products.filter(isPublic));
+  }
+
   async search(filter: ProductFilter): Promise<ProductSearchResult> {
-    const scoredItems: { product: ProductWithCategory; score: number }[] = [];
+    const matched: ProductWithCategory[] = [];
+    const byId = new Map(this.products.map((p) => [p.id, p]));
+    const candidates = filter.rankedIds
+      ? filter.rankedIds.map((id) => byId.get(id)).filter((p): p is ProductWithCategory => p !== undefined)
+      : this.products;
 
-    for (const p of this.products) {
+    for (const p of candidates) {
       if (!isPublic(p)) continue;
-      // 1. Lọc theo q (bỏ dấu + gần đúng); không khớp thì thử cụm mở rộng nghĩa (điểm 40)
-      let score = 0;
-      if (filter.q && filter.q.trim()) {
-        const searchText = `${p.name} ${p.categoryName ?? ""} ${p.description ?? ""}`;
-        const matchRes = matchSearchQuery(searchText, filter.q);
-        if (matchRes.matched) {
-          score = matchRes.score;
-        } else {
-          const text = removeVietnameseTones(`${p.name} ${p.categoryName ?? ""} ${p.certifications.join(" ")}`);
-          if (!filter.semanticTerms?.some((t) => text.includes(t))) continue;
-          score = 40;
-        }
-      }
 
-      // 2. Lọc theo categoryId
+      // Lọc theo categoryId
       if (filter.categoryId && p.categoryId !== filter.categoryId) {
         continue;
       }
 
-      // 3. Lọc theo region (vùng trồng)
+      // Lọc theo region (vùng trồng)
       if (filter.region && filter.region.trim()) {
-        const normRegion = removeVietnameseTones(filter.region);
-        const normSupplierRegion = removeVietnameseTones(p.supplier.growingRegion);
+        const normRegion = fold(filter.region.trim());
+        const normSupplierRegion = fold(p.supplier.growingRegion);
         if (!normSupplierRegion.includes(normRegion)) {
           continue;
         }
       }
 
-      // 4. Lọc theo chứng nhận (cert)
+      // Lọc theo chứng nhận (cert)
       if (filter.cert && !p.certifications.includes(filter.cert)) {
         continue;
       }
 
-      // 5. Lọc theo tồn kho (inStock)
+      // Lọc theo tồn kho (inStock)
       if (filter.inStock !== undefined) {
         const hasStock = Boolean(p.listing && p.listing.available > 0);
         if (filter.inStock !== hasStock) {
@@ -89,12 +84,12 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
         }
       }
 
-      // 6. Lọc theo mùa vụ (inSeason)
+      // Lọc theo mùa vụ (inSeason)
       if (filter.inSeason !== undefined && p.inSeason !== filter.inSeason) {
         continue;
       }
 
-      // 7. Lọc theo khoảng giá
+      // Lọc theo khoảng giá
       if (filter.minPrice !== undefined) {
         if (!p.listing || p.listing.unitPrice < filter.minPrice) {
           continue;
@@ -106,12 +101,7 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
         }
       }
 
-      scoredItems.push({ product: p, score });
-    }
-
-    // Sắp xếp ưu tiên độ khớp tìm kiếm nếu có q
-    if (filter.q && filter.q.trim()) {
-      scoredItems.sort((a, b) => b.score - a.score);
+      matched.push(p);
     }
 
     // Phân trang cursor (dạng số thứ tự offset)
@@ -124,12 +114,12 @@ export class InMemoryProductRepository extends ProductRepository implements Rese
       }
     }
 
-    const paged = scoredItems.slice(offset, offset + limit);
-    const hasNext = offset + limit < scoredItems.length;
+    const paged = matched.slice(offset, offset + limit);
+    const hasNext = offset + limit < matched.length;
     const nextCursor = hasNext ? String(offset + limit) : null;
 
     return {
-      items: paged.map((item) => this.toCard(item.product)),
+      items: paged.map((p) => this.toCard(p)),
       nextCursor,
     };
   }

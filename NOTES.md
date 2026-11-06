@@ -299,7 +299,9 @@ khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so g
 `qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
 **Cập nhật 2026-11-05:** chưa sửa. Lớp ngữ nghĩa mới (`SemanticSearch`) chỉ chạy khi từ khóa không khớp, nên độ rộng
 này còn làm gợi ý sửa từ (`correction`) hiếm khi xuất hiện — xem `design/08-ra-soat-hien-trang.md` X8.
-Status: open
+**Cập nhật 2026-11-06:** đã sửa — khớp theo từ, gần đúng chỉ là đường lùi, ngữ nghĩa chạy song song gộp RRF; xem
+DECISIONS "Tìm kiếm sản phẩm: hai bộ tìm gộp bằng RRF…". `q=dau tay` còn 4 sản phẩm, đều là dâu tây.
+Status: resolved
 
 ### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
 Từ 1/7/2025 không còn cấp huyện (Nghị quyết 1671/NQ-UBTVQH15 sắp xếp cấp xã tỉnh Lâm Đồng), nhưng `growingRegion`
@@ -441,4 +443,24 @@ Status: open
 bật tự xoá nhánh sau gộp (còn các nhánh `origin/docs/…`, `origin/feat/…` cũ). `ci.yml` chưa chạy e2e Playwright (cần API
 cổng 4000). Đề xuất: bật protection cho `develop`/`main` (CI xanh, ≥1 review, cấm force-push), bật tự xoá nhánh, đặt
 `git config pull.rebase true`, thêm job e2e riêng không chặn gộp ở bước đầu. Việc trên GitHub do chủ repo bấm.
+Status: open
+
+### BE1: giới hạn còn lại của tìm kiếm sau bản RRF — Claude — 2026-11-06
+Đo bằng bộ kiểm tra độc lập (`apps/api/test/search-eval/queries.ts`, `HELDOUT_QUERIES`):
+- Khái niệm ngắn bắt cả trong cụm dài: "rau thơm" khớp cả khóa "rau" nên kéo theo 9 sản phẩm rau lá. Đề xuất: khóa
+  dài nhất thắng (khóa nằm gọn trong một khóa dài hơn đã khớp thì bỏ).
+- Đường lùi gần đúng nhiễu với âm tiết 3 ký tự: "gạo" ra "Bảo Lộc", "gà", "cao nguyên"; "cá hồi" ra "(Hộp 500g)",
+  "ôn đới". Đề xuất: bỏ phần quy cách trong ngoặc khỏi tên khi khớp gần đúng; cân nhắc chỉ cho sai với từ ≥ 4 ký tự
+  (đổi lại "khoai tya", "bong cia" sẽ không ra).
+- Từ điển không phủ: "quà tết" rỗng; "làm sinh tố" thiếu bơ. Đây là phần bản BGE-M3 phải giải.
+- Gõ liền kèm sai ("bongcaii") trả rỗng và không có gợi ý sửa.
+- Khi lên vector: thay `ConceptSemanticSearch` bằng lớp gọi dịch vụ nhúng, giữ `SemanticSearch.rank`; chạy lại
+  `search-eval.e2e-spec.ts` để so — bộ kiểm tra độc lập là số đối chiếu chính, bộ chính đã lạc quan vì từ điển viết khi
+  đã biết nhãn.
+Status: open
+
+### BE2: test blackbox "Hành trình mua bán" lệch dữ liệu mẫu — Claude — 2026-11-06
+`npm run test:blackbox` hỏng 6/79 ở `journey.bb-spec.ts`: test giả định sản phẩm 3 chưa có lô đã duyệt (`available`
+= 0), nhưng dữ liệu mẫu `packages/mock-data/src/extra.ts` đã có lô `DTBT-2610-41` cho sản phẩm 3. Không liên quan
+tìm kiếm. Đề xuất: đổi test sang một sản phẩm chưa có lô, hoặc tạo sản phẩm mới trong test.
 Status: open
