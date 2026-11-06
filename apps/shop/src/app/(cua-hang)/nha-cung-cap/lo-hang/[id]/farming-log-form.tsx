@@ -100,10 +100,12 @@ export function FarmingLogForm({ batchId, existingLogs, initialEditLogId }: Farm
     setSupersedesId("");
   }, []);
 
-  // Sau khi submit thành công: xóa nội dung form (reset DOM trực tiếp)
+  // Sau khi submit thành công: đóng form và xóa nội dung (reset DOM)
   useEffect(() => {
     if (state?.ok && savedRef.current !== state.message) {
       savedRef.current = state.message ?? "ok";
+      setIsOpen(false);
+      setSupersedesId("");
       formRef.current?.reset();
       if (descRef.current) descRef.current.value = "";
     }
@@ -288,8 +290,7 @@ export function FarmingLogForm({ batchId, existingLogs, initialEditLogId }: Farm
                 <option value="">— Không (đây là nhật ký thông thường) —</option>
                 {correctableL.map((log) => (
                   <option key={log.id} value={log.id}>
-                    {formatDateVi(log.activityDate)} · {ACTIVITY_LABELS[log.activity]}
-                    {log.description ? ` — ${log.description.slice(0, 45)}…` : ""}
+                    #{log.id} ({formatDateVi(log.activityDate)} · {ACTIVITY_LABELS[log.activity]})
                   </option>
                 ))}
               </select>
