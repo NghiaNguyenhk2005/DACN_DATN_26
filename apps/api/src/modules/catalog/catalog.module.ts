@@ -13,6 +13,8 @@ import { OperationsModule } from "../operations/operations.module";
 import { CoreModule } from "../../core/core.module";
 import { InventoryModule } from "../inventory/inventory.module";
 import { ConceptSemanticSearch, SemanticSearch } from "./search/semantic-search";
+import { InMemoryKeywordSearch, KeywordSearch } from "./search/keyword-search";
+import { SearchCorpus } from "./search/search-corpus";
 
 // Mô-đun catalog: danh mục, sản phẩm, lô hàng và truy xuất công khai
 @Module({
@@ -28,6 +30,8 @@ import { ConceptSemanticSearch, SemanticSearch } from "./search/semantic-search"
     { provide: CategoryRepository, useClass: InMemoryCategoryRepository },
     { provide: ProductRepository, useClass: InMemoryProductRepository },
     { provide: BatchRepository, useClass: InMemoryBatchRepository },
+    SearchCorpus,
+    { provide: KeywordSearch, useClass: InMemoryKeywordSearch },
     { provide: SemanticSearch, useClass: ConceptSemanticSearch },
   ],
   exports: [CatalogService, ProductRepository, BatchRepository],

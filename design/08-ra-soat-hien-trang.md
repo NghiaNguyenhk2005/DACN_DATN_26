@@ -74,12 +74,12 @@ Cột "Xử lý" trỏ tới hạng mục của phiên 05/11 (B2–B11) hoặc "
 | X5 | Ngày lô mẫu cố định quanh 16/10 → sau mốc đó mọi lô quá hạn sử dụng | `mock-data` | TB | Đã làm 05/11 (`createSeed` dời ngày) |
 | X6 | Nút đầu trang chi tiết admin hiện khóa dịch thô `review-tasks.titles.list` | `admin/providers/i18n-provider.ts` | Thấp | Đã làm 05/11 |
 | X7 | Việc duyệt mẫu có hạn xử lý cố định 19/10 → luôn "Quá hạn" khi demo | `operations/in-memory-review-task.repository.ts` | Thấp | Mở |
-| X8 | So khớp gần đúng của API quá rộng ("bongcaii" ra cà chua) nên gợi ý sửa từ ít khi xuất hiện | `catalog/utils/vietnamese-search.util.ts` | TB | Mở (NOTES 16/10) |
+| X8 | So khớp gần đúng của API quá rộng ("bongcaii" ra cà chua) nên gợi ý sửa từ ít khi xuất hiện | `catalog/search/keyword-search.ts` | TB | Đã sửa 06/11 (DECISIONS) |
 
 ## 7. Trạng thái sau phiên 05/11
 
 Đã xử lý: T1–T12, D1, D2 và D3, D6 trong khu nhà cung cấp, D4, I1–I5, U1–U6, M1–M3, X1–X6.
-Còn mở: T13 (sửa báo cáo), D3 ngoài khu nhà cung cấp, D5 (component `Field` chung), U7 (sửa tại chỗ cần `PATCH`), X7, X8.
+Còn mở: T13 (sửa báo cáo), D3 ngoài khu nhà cung cấp, D5 (component `Field` chung), U7 (sửa tại chỗ cần `PATCH`), X7.
 
 ## 8. Ngoài phạm vi phiên này (ghi lại)
 

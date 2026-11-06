@@ -22,7 +22,10 @@ import { APP_CONFIG, type AppConfig } from "../../core/app-config";
 import { InventoryService } from "../inventory/inventory.service";
 import type { AuthUser } from "../../core/token.service";
 import { SemanticSearch } from "./search/semantic-search";
-import { buildVocabulary, correctQuery, fold, interpretQuery, PILOT_REGIONS } from "./search/query-understanding";
+import { KeywordSearch } from "./search/keyword-search";
+import { fuseRrf } from "./search/fusion";
+import { containsAllTokens, fold, tokenize } from "./search/text-match";
+import { buildVocabulary, correctQuery, interpretQuery, PILOT_REGIONS } from "./search/query-understanding";
 
 export type TraceView = Schema<"TraceView">;
 export type PublicFarmingLog = Schema<"PublicFarmingLog">;
@@ -58,7 +61,22 @@ export class CatalogService {
     @Inject(APP_CONFIG) private readonly config: AppConfig,
     private readonly inventory: InventoryService,
     private readonly semantic: SemanticSearch,
+    private readonly keyword: KeywordSearch,
   ) {}
+
+  /**
+   * Xếp hạng theo câu tìm: bộ từ khóa và bộ ngữ nghĩa chạy song song, hợp nhất bằng RRF.
+   * Khớp từ khóa yếu (chỉ ở mô tả) nặng bằng nửa. Cả hai rỗng thì lùi về khớp gần đúng.
+   */
+  private async rankByQuery(q: string): Promise<string[]> {
+    const [keywordHits, semanticHits] = await Promise.all([this.keyword.rank(q), this.semantic.rank(q)]);
+    const ids = fuseRrf([
+      { hits: keywordHits, weight: (h) => (h.score >= 70 ? 1 : 0.5) },
+      { hits: semanticHits, weight: () => 1 },
+    ]);
+    if (ids.length) return ids;
+    return (await this.keyword.rank(q, { fuzzy: true })).map((h) => h.productId);
+  }
 
   /** Cây danh mục kèm số sản phẩm đang bán (danh mục cha cộng cả danh mục con). */
   async listCategories(): Promise<Category[]> {
@@ -89,7 +107,7 @@ export class CatalogService {
 
   // Lượng còn bán được lấy từ dòng tồn (inventory), không dùng số tĩnh trong dữ liệu mẫu.
   async searchProducts(rawFilter: ProductFilter): Promise<ProductSearchResult> {
-    const filter: ProductFilter = rawFilter.q ? { ...rawFilter, semanticTerms: this.semantic.expand(rawFilter.q) } : rawFilter;
+    const filter: ProductFilter = rawFilter.q?.trim() ? { ...rawFilter, rankedIds: await this.rankByQuery(rawFilter.q) } : rawFilter;
     const [availability, freshness] = await Promise.all([this.inventory.availabilityByListing(), this.freshnessByProduct()]);
     if (filter.inStock === undefined) {
       const result = await this.products.search(filter);
@@ -350,9 +368,10 @@ export class CatalogService {
       unitPrice: p.listing?.unitPrice ?? null,
       saleUnit: p.listing?.saleUnit ?? null,
     }));
+    const keywordTokens = tokenize(keywords);
     const categories = folded
       ? flat
-          .filter((c) => folded.split(" ").every((w) => fold(c.name).includes(w)))
+          .filter((c) => containsAllTokens(tokenize(c.name), keywordTokens))
           .slice(0, 3)
           .map((c) => ({ id: c.id, name: c.name }))
       : [];
