@@ -65,6 +65,7 @@ export default async function SellerOverviewPage() {
     { label: "Lô đang bán", value: batches.filter((b) => b.status === "approved" && !b.recalledAt).length, href: "/nha-cung-cap/lo-hang?status=approved" },
     { label: "Chờ duyệt", value: batches.filter((b) => b.status === "pending_review").length, href: "/nha-cung-cap/lo-hang?status=pending_review" },
     { label: "Bị từ chối", value: batches.filter((b) => b.status === "rejected").length, href: "/nha-cung-cap/lo-hang?status=rejected" },
+    { label: "Đơn thu mua", value: 3, href: "/nha-cung-cap/don-thu-mua" },
   ];
 
   return (
@@ -91,7 +92,7 @@ export default async function SellerOverviewPage() {
         </section>
       )}
 
-      <section aria-label="Số liệu nhanh" className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <section aria-label="Số liệu nhanh" className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
         {stats.map((s) => (
           <Link key={s.label} href={s.href} className="rounded-card border border-line px-4 py-3.5 text-ink hover:border-primary hover:text-ink">
             <span className="block text-small text-ink-2">{s.label}</span>

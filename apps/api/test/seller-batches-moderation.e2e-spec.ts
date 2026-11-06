@@ -135,6 +135,48 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
         .send(nonExistent)
         .expect(422);
     });
+
+    it("từ chối tạo lô cho sản phẩm không thuộc nhà cung cấp (403)", async () => {
+      const otherProductBatch = {
+        productId: "5", // Sản phẩm 5 thuộc NCC 102
+        harvestDate: "2026-10-25",
+        bestBefore: "2026-11-05",
+        declaredQuantity: 50,
+      };
+
+      await request(app.getHttpServer())
+        .post("/api/seller/batches")
+        .auth(sellerToken, { type: "bearer" })
+        .send(otherProductBatch)
+        .expect(403);
+    });
+
+    it("chống tạo lô trùng khi gửi cùng Idempotency-Key", async () => {
+      const payload = {
+        productId: "1",
+        harvestDate: "2026-10-25",
+        bestBefore: "2026-11-05",
+        declaredQuantity: 80,
+      };
+      const key = "a0000000-0000-4000-8000-000000000001";
+
+      const res1 = await request(app.getHttpServer())
+        .post("/api/seller/batches")
+        .set("idempotency-key", key)
+        .auth(sellerToken, { type: "bearer" })
+        .send(payload)
+        .expect(201);
+
+      const res2 = await request(app.getHttpServer())
+        .post("/api/seller/batches")
+        .set("idempotency-key", key)
+        .auth(sellerToken, { type: "bearer" })
+        .send(payload)
+        .expect(201);
+
+      expect(res1.body.id).toBe(res2.body.id);
+      expect(res1.body.batchCode).toBe(res2.body.batchCode);
+    });
   });
 
   describe("3. Xem danh sách và chi tiết lô", () => {
@@ -165,6 +207,13 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
         .get("/api/seller/batches/99999")
         .auth(sellerToken, { type: "bearer" })
         .expect(404);
+    });
+
+    it("từ chối xem lô không thuộc nhà cung cấp đang đăng nhập (403)", async () => {
+      await request(app.getHttpServer())
+        .get("/api/seller/batches/1003") // Lô 1003 thuộc NCC 102, seller 201 là NCC 101
+        .auth(sellerToken, { type: "bearer" })
+        .expect(403);
     });
   });
 
@@ -264,6 +313,91 @@ describe("E2E - Nhiệm vụ 17/10 (Nhà cung cấp tạo lô, Nhật ký canh t
         .expect(422);
 
       expect(res.body.code).toBe("LOG_SUPERSEDES_INVALID");
+    });
+
+    it("từ chối xem nhật ký của lô không thuộc nhà cung cấp (403)", async () => {
+      await request(app.getHttpServer())
+        .get("/api/seller/batches/1003/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .expect(403);
+    });
+
+    it("từ chối ghi nhật ký cho lô không thuộc nhà cung cấp (403)", async () => {
+      await request(app.getHttpServer())
+        .post("/api/seller/batches/1003/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .send({
+          activityDate: "2026-10-10",
+          activity: "care",
+          description: "Ghi trái phép cho lô của NCC khác",
+        })
+        .expect(403);
+    });
+
+    it("chặn đính chính một dòng hai lần (422 LOG_ALREADY_SUPERSEDED)", async () => {
+      // 1. Tạo một dòng log ban đầu
+      const initialRes = await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .send({
+          activityDate: "2026-10-10",
+          activity: "care",
+          description: "Log ban đầu để đính chính",
+        })
+        .expect(201);
+      const targetId = initialRes.body.id;
+
+      // 2. Đính chính lần 1 -> Thành công
+      await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .send({
+          activityDate: "2026-10-10",
+          activity: "care",
+          description: "Đính chính lần 1",
+          supersedesId: targetId,
+        })
+        .expect(201);
+
+      // 3. Đính chính lần 2 trỏ vào cùng targetId -> Bị chặn 422
+      const res = await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .auth(sellerToken, { type: "bearer" })
+        .send({
+          activityDate: "2026-10-10",
+          activity: "care",
+          description: "Đính chính lần 2 cho cùng dòng",
+          supersedesId: targetId,
+        })
+        .expect(422);
+
+      expect(res.body.code).toBe("LOG_ALREADY_SUPERSEDED");
+    });
+
+    it("chống ghi nhật ký trùng khi gửi cùng Idempotency-Key", async () => {
+      const payload = {
+        activityDate: "2026-10-10",
+        activity: "treatment",
+        description: "Phun thuốc sinh học Trichoderma",
+      };
+      const key = "b0000000-0000-4000-8000-000000000002";
+
+      const res1 = await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .set("idempotency-key", key)
+        .auth(sellerToken, { type: "bearer" })
+        .send(payload)
+        .expect(201);
+
+      const res2 = await request(app.getHttpServer())
+        .post("/api/seller/batches/1016/logs")
+        .set("idempotency-key", key)
+        .auth(sellerToken, { type: "bearer" })
+        .send(payload)
+        .expect(201);
+
+      expect(res1.body.id).toBe(res2.body.id);
+      expect(res1.body.createdAt).toBe(res2.body.createdAt);
     });
   });
 

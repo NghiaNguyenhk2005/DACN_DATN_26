@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertCircle, ArrowLeft, CheckCircle2, Clock, Droplets, FileText, ShieldAlert, Scissors, Sprout, type LucideIcon } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  Droplets,
+  FileText,
+  Pencil,
+  ShieldAlert,
+  Scissors,
+  Sprout,
+  type LucideIcon,
+} from "lucide-react";
 import type { Schema } from "@farmery/contract";
 import { SafeImage } from "@/components/farmery/safe-image";
 import { Badge, ReviewStatusBadge } from "@/components/farmery/status-badge";
@@ -25,7 +37,10 @@ const ACTIVITY_ICON: Record<Schema<"FarmingActivity">, LucideIcon> = {
 /** Chi tiết lô (design/05 N4): trạng thái + bước tiếp theo ở đầu → QR (khi đã duyệt) → nhật ký canh tác. */
 export default async function SellerBatchDetailPage({ params, searchParams }: PageProps<"/nha-cung-cap/lo-hang/[id]">) {
   const { id } = await params;
-  const created = (await searchParams)["thanh-cong"] === "1";
+  const sp = await searchParams;
+  const created = sp["thanh-cong"] === "1";
+  /** Khi nhấn "Sửa dòng này" → URL ?edit=<logId> → form tự mở ở chế độ đính chính */
+  const editLogId = typeof sp["edit"] === "string" ? sp["edit"] : undefined;
 
   const batch = await getSellerBatch(id);
   if (!batch) notFound();
@@ -36,8 +51,17 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
     { label: "Ngày thu hoạch", value: formatDateVi(batch.harvestDate) },
     { label: "Hạn sử dụng", value: formatDateVi(batch.bestBefore) },
     { label: "Sản lượng khai báo", value: `${formatQty(batch.declaredQuantity)} ${unit}` },
-    { label: "Thu hồi", value: batch.recalledAt ? `Đã thu hồi ${formatTimeVi(batch.recalledAt)}` : "Không", danger: Boolean(batch.recalledAt) },
+    {
+      label: "Thu hồi",
+      value: batch.recalledAt ? `Đã thu hồi ${formatTimeVi(batch.recalledAt)}` : "Không",
+      danger: Boolean(batch.recalledAt),
+    },
   ];
+
+  /** Dòng đang hiển thị (không bị superseded) */
+  const activeLogs = logs.filter((l) => !l.superseded);
+  /** Dòng lịch sử đã bị đính chính */
+  const supersededLogs = logs.filter((l) => l.superseded);
 
   return (
     <div className="flex flex-col gap-6">
@@ -110,35 +134,64 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
         </section>
       )}
 
+      {/* Thu hồi: hiện lý do rõ ràng */}
+      {batch.recalledAt && (
+        <section className="flex items-start gap-3 rounded-panel border border-danger-line bg-danger-soft px-5 py-4 text-danger-ink">
+          <AlertCircle className="mt-0.5 size-5 flex-none text-danger" aria-hidden />
+          <div>
+            <h3 className="text-title font-semibold text-danger">
+              Lô đã bị thu hồi — {formatTimeVi(batch.recalledAt)}
+            </h3>
+            {batch.rejectReason && (
+              <p className="mt-0.5 text-small">
+                <strong>Lý do thu hồi:</strong> {batch.rejectReason}
+              </p>
+            )}
+            <p className="mt-1.5 text-small text-ink-2">
+              Lô thu hồi không còn được phân phối; mã QR vẫn còn hiệu lực để người mua xem thông tin.
+            </p>
+          </div>
+        </section>
+      )}
+
       <section className="flex flex-col gap-4" aria-labelledby="nhat-ky">
         <div className="flex items-baseline justify-between">
           <h2 id="nhat-ky" className="text-h2-sm font-bold text-ink md:text-h2">
             Nhật ký canh tác
           </h2>
-          <span className="text-small text-ink-2">{logs.length} dòng</span>
+          <span className="text-small text-ink-2">{activeLogs.length} dòng hoạt động</span>
         </div>
 
-        <FarmingLogForm batchId={batch.id} existingLogs={logs} />
+        <FarmingLogForm batchId={batch.id} existingLogs={logs} initialEditLogId={editLogId} />
 
-        {logs.length === 0 ? (
+        {activeLogs.length === 0 ? (
           <p className="rounded-card border border-dashed border-line-strong px-5 py-6 text-center text-small text-ink-2">
             Chưa có nhật ký. Thêm dòng đầu tiên (gieo trồng, chăm sóc, thu hoạch…) để người mua thấy quá trình canh tác.
           </p>
         ) : (
           <ol className="flex flex-col gap-3">
-            {logs.map((log) => {
+            {activeLogs.map((log) => {
               const Icon = ACTIVITY_ICON[log.activity] ?? FileText;
               return (
-                <li key={log.id} className={`rounded-card border border-line p-4 ${log.superseded ? "bg-surface" : ""}`}>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge tone="neutral" icon={Icon}>
-                      {ACTIVITY_LABELS[log.activity]}
-                    </Badge>
-                    <span className="text-small font-medium text-ink">{formatDateVi(log.activityDate)}</span>
-                    {log.supersedesId && <Badge tone="warning">Bản đính chính</Badge>}
-                    {log.superseded && <Badge tone="neutral">Đã được đính chính</Badge>}
+                <li key={log.id} className="rounded-card border border-line p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge tone="neutral" icon={Icon}>
+                        {ACTIVITY_LABELS[log.activity]}
+                      </Badge>
+                      <span className="text-small font-medium text-ink">{formatDateVi(log.activityDate)}</span>
+                      {log.supersedesId && <Badge tone="warning">Bản đính chính</Badge>}
+                    </div>
+                    {/* Nút "Sửa dòng này" — mở form đính chính */}
+                    <Link
+                      href={`/nha-cung-cap/lo-hang/${id}?edit=${log.id}#nhat-ky`}
+                      className="inline-flex min-h-[40px] items-center gap-1.5 rounded-btn border border-line px-3.5 py-2 text-small font-medium text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
+                    >
+                      <Pencil className="size-3.5" aria-hidden />
+                      Sửa dòng này
+                    </Link>
                   </div>
-                  <p className={`mt-2 whitespace-pre-line text-small ${log.superseded ? "text-subtle line-through" : "text-ink"}`}>
+                  <p className="mt-2 whitespace-pre-line text-small text-ink">
                     {log.description ?? "Không có mô tả."}
                   </p>
                   {log.imageUrls.length > 0 && (
@@ -158,6 +211,34 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
               );
             })}
           </ol>
+        )}
+
+        {/* Lịch sử đính chính — thu gọn */}
+        {supersededLogs.length > 0 && (
+          <details className="rounded-card border border-line/60">
+            <summary className="cursor-pointer select-none px-4 py-3 text-small font-medium text-ink-2 hover:text-ink">
+              Lịch sử đính chính ({supersededLogs.length} dòng đã được thay thế)
+            </summary>
+            <ol className="flex flex-col gap-2 border-t border-line/40 p-4">
+              {supersededLogs.map((log) => {
+                const Icon = ACTIVITY_ICON[log.activity] ?? FileText;
+                return (
+                  <li key={log.id} className="rounded-card border border-line/40 bg-surface-2/50 p-3 opacity-70">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge tone="neutral" icon={Icon}>
+                        {ACTIVITY_LABELS[log.activity]}
+                      </Badge>
+                      <span className="text-small text-subtle">{formatDateVi(log.activityDate)}</span>
+                      <Badge tone="neutral">Đã được đính chính</Badge>
+                    </div>
+                    <p className="mt-1.5 whitespace-pre-line text-small text-subtle line-through">
+                      {log.description ?? "Không có mô tả."}
+                    </p>
+                  </li>
+                );
+              })}
+            </ol>
+          </details>
         )}
       </section>
     </div>

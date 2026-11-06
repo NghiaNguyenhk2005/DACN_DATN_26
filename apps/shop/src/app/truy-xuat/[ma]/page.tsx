@@ -84,7 +84,14 @@ export default async function TracePage({ params }: PageProps<"/truy-xuat/[ma]">
             <SafeImage src={supplier?.avatarUrl} alt="" fill sizes="52px" className="object-cover" />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-body font-bold text-ink md:text-h3">{trace.supplier.displayName}</h2>
+            <h2 className="text-body font-bold text-ink md:text-h3">
+              <Link
+                href={`/ho-so-nha-cung-cap/${trace.supplier.id}`}
+                className="hover:underline hover:text-primary transition-colors"
+              >
+                {trace.supplier.displayName}
+              </Link>
+            </h2>
             <p className="mt-0.5 line-clamp-2 text-caption text-muted-foreground md:mt-[3px] md:text-small">
               {supplier?.description ?? region}
             </p>

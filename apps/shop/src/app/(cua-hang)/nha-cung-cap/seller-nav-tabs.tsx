@@ -9,6 +9,7 @@ const TABS = [
   { href: "/nha-cung-cap", label: "Tổng quan", match: (p: string) => p === "/nha-cung-cap" || p.startsWith("/nha-cung-cap/bao-gia") },
   { href: "/nha-cung-cap/lo-hang", label: "Lô hàng", badge: "batches", match: (p: string) => p.startsWith("/nha-cung-cap/lo-hang") },
   { href: "/nha-cung-cap/san-pham", label: "Sản phẩm", match: (p: string) => p.startsWith("/nha-cung-cap/san-pham") },
+  { href: "/nha-cung-cap/don-thu-mua", label: "Đơn thu mua", match: (p: string) => p.startsWith("/nha-cung-cap/don-thu-mua") },
   { href: "/nha-cung-cap/ho-so", label: "Hồ sơ & chứng nhận", badge: "profile", match: (p: string) => p.startsWith("/nha-cung-cap/ho-so") },
 ] as const;
 
