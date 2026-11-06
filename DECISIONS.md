@@ -1223,3 +1223,6 @@ nghĩa chỉ chạy khi từ khóa không khớp nên gần như không bao gi�
 **Đánh đổi:** từ điển khái niệm viết tay — câu ngoài từ điển ("quà tết") không được mở rộng, đây là phần bản vector
 phải giải. Đường lùi gần đúng còn nhiễu với âm tiết ngắn ("gạo" ra "gà", "cá hồi" ra "hộp"). Bậc và trọng số chọn theo
 bộ đánh giá nhỏ, cần đo lại khi có dữ liệu thật.
+SỬA 2026-11-06: bổ sung số "trước" của bộ kiểm tra độc lập (đo trên code cũ, cùng 18 câu): P@5 0,47 · R@10 0,67 ·
+MRR 0,60 · độ sạch 0,18 · câu ngoài danh mục trả rỗng 0/3. So sánh công bằng là 0,47 → 0,87 (P@5), 0,18 → 0,85 (độ
+sạch); dòng "Trước (bộ chính)" ở bảng trên đo trên bộ câu khác.
