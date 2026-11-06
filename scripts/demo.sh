@@ -18,9 +18,13 @@ PID=""; ALL=1
 for u in "${URLS[@]}"; do up "$u" || ALL=0; done
 cleanup() { [ -n "$PID" ] && { echo ">> Tắt server"; kill -- -"$PID" 2>/dev/null || kill "$PID" 2>/dev/null; }; }
 trap cleanup EXIT; trap 'exit 130' INT TERM
-if [ $ALL -eq 1 ]; then echo ">> Server đã chạy sẵn, dùng lại (không tắt khi xong)"
+if [ $ALL -eq 1 ]; then
+  echo ">> Server đã chạy sẵn, dùng lại (không tắt khi xong)"
+  echo "!! Giới hạn đăng nhập theo cấu hình của server đang chạy (mặc định 30 lượt/phút); e2e có thể gặp 429 — tắt server để script tự bật với RATE_LIMIT_AUTH_MAX=300"
 else
   echo ">> Bật server (log: scripts/.demo-dev.log)"
+  # Như webServer của playwright.config.ts: cả bộ e2e cần hơn 30 lượt /api/auth mỗi phút.
+  [ $SERVE -eq 0 ] && export RATE_LIMIT_AUTH_MAX="${RATE_LIMIT_AUTH_MAX:-300}"
   set -m; pnpm dev > "$ROOT/scripts/.demo-dev.log" 2>&1 & PID=$!; set +m
   END=$((SECONDS+240))
   for i in 0 1 2; do
