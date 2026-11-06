@@ -203,3 +203,33 @@
     display: none;
   }
 }
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #tem-qr-print,
+  #tem-qr-print * {
+    visibility: visible;
+  }
+  #tem-qr-print {
+    position: fixed;
+    top: 20mm;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100mm;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #16241e;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff !important;
+    box-sizing: border-box;
+  }
+}
+

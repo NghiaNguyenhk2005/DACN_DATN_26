@@ -27,6 +27,11 @@ import { buildVocabulary, correctQuery, fold, interpretQuery, PILOT_REGIONS } fr
 export type TraceView = Schema<"TraceView">;
 export type PublicFarmingLog = Schema<"PublicFarmingLog">;
 
+/** Ngày hôm nay theo giờ Việt Nam (UTC+7), dạng "YYYY-MM-DD". */
+function todayVN(): string {
+  return new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+}
+
 /** Ảnh chụp tin bán cho giỏ hàng: tên, giá, đơn vị tại thời điểm đọc. */
 export interface ListingSnapshot {
   listingId: string;
@@ -59,6 +64,41 @@ export class CatalogService {
     private readonly inventory: InventoryService,
     private readonly semantic: SemanticSearch,
   ) {}
+
+  /** Cache idempotency đơn giản trong bộ nhớ; key = Idempotency-Key header, value = kết quả đã lưu. */
+  private readonly idempotencyCache = new Map<string, { result: unknown; expiresAt: number }>();
+
+  private idempotencyGet<T>(key: string | undefined): T | undefined {
+    if (!key) return undefined;
+    const entry = this.idempotencyCache.get(key);
+    if (!entry) return undefined;
+    if (Date.now() > entry.expiresAt) { this.idempotencyCache.delete(key); return undefined; }
+    return entry.result as T;
+  }
+
+  private idempotencySet<T>(key: string | undefined, value: T): void {
+    if (!key) return;
+    // TTL 24 giờ
+    this.idempotencyCache.set(key, { result: value, expiresAt: Date.now() + 86_400_000 });
+  }
+
+  /** Kiểm tra lô `batchId` thuộc nhà cung cấp đang đăng nhập; ném 403 nếu không phải. */
+  private async assertBatchOwnership(batchId: string, batch: Batch, user?: AuthUser): Promise<void> {
+    if (!user) return; // anonymous / staff sẽ không qua controller này
+    // staff roles bỏ qua ownership check
+    if (user.roles?.some((r) => r.startsWith("staff_"))) return;
+    try {
+      const supplierId = await this.supplierService.requireSupplierId(user.id);
+      const ownProductIds = new Set((await this.products.findRecordsBySupplier(supplierId)).map((p) => p.id));
+      if (!ownProductIds.has(batch.productId)) {
+        throw new ProblemException(HttpStatus.FORBIDDEN, "FORBIDDEN", `Lô hàng ${batchId} không thuộc tài khoản của bạn`);
+      }
+    } catch (e) {
+      if (e instanceof ProblemException) throw e;
+      // requireSupplierId ném lỗi khi không tìm được nhà cung cấp → 403
+      throw new ProblemException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Không tìm thấy hồ sơ nhà cung cấp cho tài khoản này");
+    }
+  }
 
   /** Cây danh mục kèm số sản phẩm đang bán (danh mục cha cộng cả danh mục con). */
   async listCategories(): Promise<Category[]> {
@@ -367,7 +407,7 @@ export class CatalogService {
     return { products, categories, regions, interpretation, correction };
   }
 
-  async getSellerBatch(batchId: string): Promise<Batch> {
+  async getSellerBatch(batchId: string, user?: AuthUser): Promise<Batch> {
     const batch = await this.batches.findById(batchId);
     if (!batch) {
       throw new ProblemException(
@@ -376,10 +416,16 @@ export class CatalogService {
         `Không tìm thấy lô hàng với ID: ${batchId}`,
       );
     }
+    await this.assertBatchOwnership(batchId, batch, user);
     return batch;
   }
 
-  async createBatch(input: Schema<"BatchInput">): Promise<Batch> {
+  async createBatch(input: Schema<"BatchInput">, user?: AuthUser, idempotencyKey?: string): Promise<Batch> {
+    // Idempotency: nếu đã xử lý cùng key → trả lại kết quả cũ
+    const cached = this.idempotencyGet<Batch>(idempotencyKey);
+    if (cached) return cached;
+
+    const supplierId = user ? await this.supplierService.requireSupplierId(user.id) : undefined;
     const product = await this.products.findById(input.productId);
     if (!product) {
       throw new ProblemException(
@@ -387,6 +433,17 @@ export class CatalogService {
         "VALIDATION_FAILED",
         `Không tìm thấy sản phẩm với ID: ${input.productId}`,
       );
+    }
+
+    // Bảo mật: chỉ được tạo lô cho sản phẩm đã duyệt của chính mình
+    if (supplierId) {
+      const record = await this.products.findRecord(input.productId);
+      if (!record || record.supplier?.id !== supplierId) {
+        throw new ProblemException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Sản phẩm không thuộc hồ sơ nhà cung cấp của bạn");
+      }
+      if ((record.status ?? "approved") !== "approved") {
+        throw new ProblemException(HttpStatus.UNPROCESSABLE_ENTITY, "PRODUCT_NOT_APPROVED", "Chỉ được khai báo lô cho sản phẩm đã được duyệt");
+      }
     }
 
     if (input.bestBefore <= input.harvestDate) {
@@ -414,7 +471,7 @@ export class CatalogService {
         .filter(Boolean)
         .slice(0, 4)
         .join("") || "LO";
-    const yymm = new Date().toISOString().slice(2, 7).replace("-", "");
+    const yymm = todayVN().slice(2, 7).replace("-", "");
     const existing = await this.batches.findBatches({ productId: product.id });
     const seq = String(existing.length + 1).padStart(2, "0");
     const batchCode = `${initials}-${yymm}-${seq}`;
@@ -440,10 +497,11 @@ export class CatalogService {
 
     const created = await this.batches.createBatch(batch);
     await this.operationsService.createBatchReviewTask(created);
+    this.idempotencySet(idempotencyKey, created);
     return created;
   }
 
-  async listFarmingLogs(batchId: string): Promise<FarmingLog[]> {
+  async listFarmingLogs(batchId: string, user?: AuthUser): Promise<FarmingLog[]> {
     const batch = await this.batches.findById(batchId);
     if (!batch) {
       throw new ProblemException(
@@ -452,6 +510,7 @@ export class CatalogService {
         `Không tìm thấy lô hàng với ID: ${batchId}`,
       );
     }
+    await this.assertBatchOwnership(batchId, batch, user);
     return this.batches.findFarmingLogsByBatchId(batchId);
   }
 
@@ -459,7 +518,12 @@ export class CatalogService {
     batchId: string,
     input: Schema<"FarmingLogInput">,
     user?: AuthUser,
+    idempotencyKey?: string,
   ): Promise<FarmingLog> {
+    // Idempotency: trả lại kết quả cũ nếu đã xử lý
+    const cached = this.idempotencyGet<FarmingLog>(idempotencyKey);
+    if (cached) return cached;
+
     const batch = await this.batches.findById(batchId);
     if (!batch) {
       throw new ProblemException(
@@ -468,8 +532,9 @@ export class CatalogService {
         `Không tìm thấy lô hàng với ID: ${batchId}`,
       );
     }
+    await this.assertBatchOwnership(batchId, batch, user);
 
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayVN(); // YYYY-MM-DD theo giờ Việt Nam
     if (input.activityDate > today) {
       throw new ProblemException(
         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -485,6 +550,14 @@ export class CatalogService {
           HttpStatus.UNPROCESSABLE_ENTITY,
           "LOG_SUPERSEDES_INVALID",
           "Bản ghi nhật ký cần đính chính không tồn tại hoặc không thuộc cùng lô hàng",
+        );
+      }
+      // Chặn đính chính một dòng hai lần
+      if (oldLog.superseded) {
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          "LOG_ALREADY_SUPERSEDED",
+          "Dòng nhật ký này đã được đính chính rồi. Không thể đính chính thêm lần nữa.",
         );
       }
       await this.batches.markFarmingLogSuperseded(input.supersedesId);
@@ -514,7 +587,9 @@ export class CatalogService {
       createdAt: now,
     };
 
-    return this.batches.appendFarmingLog(newLog);
+    const result = await this.batches.appendFarmingLog(newLog);
+    this.idempotencySet(idempotencyKey, result);
+    return result;
   }
 
   async approveBatch(batchId: string): Promise<Batch> {

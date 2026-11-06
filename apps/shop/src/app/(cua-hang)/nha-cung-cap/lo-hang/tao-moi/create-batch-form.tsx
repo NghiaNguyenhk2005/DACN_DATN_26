@@ -24,7 +24,17 @@ function addDays(date: string, days: number) {
  * Khai báo lô (design/05 N3): sản phẩm → ngày thu hoạch → hạn sử dụng (gợi ý theo danh mục, chip +N ngày) → sản lượng
  * theo đơn vị bán → chứng nhận đi kèm lô (chỉ đọc, cảnh báo nếu hết hiệu lực trước hạn sử dụng).
  */
-export function CreateBatchForm({
+function newUuid(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+    (+c ^ (Math.floor(Math.random() * 16) & (15 >> (+c / 4)))).toString(16),
+  );
+}
+
+export function CreateBatchForm(
+{
   products,
   initialProductId,
   certifications,
@@ -36,6 +46,8 @@ export function CreateBatchForm({
   today: string;
 }) {
   const [state, formAction, isPending] = useActionState(createBatchAction, null);
+  // Idempotency key ổn định trong vòng đời render, tránh gửi trùng khi mạng chập chờn
+  const [idempotencyKey] = useState(() => newUuid());
   const [productId, setProductId] = useState(
     initialProductId && products.some((p) => p.id === initialProductId) ? initialProductId : (products[0]?.id ?? ""),
   );
@@ -56,6 +68,7 @@ export function CreateBatchForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
       {state && !state.ok && state.message && (
         <p role="alert" className="flex items-start gap-2.5 rounded-card border border-danger-line bg-danger-soft px-4 py-3 text-small text-danger-ink">
           <AlertCircle className="mt-0.5 size-5 flex-none text-danger" aria-hidden />
@@ -143,10 +156,10 @@ export function CreateBatchForm({
             name="declaredQuantity"
             type="number"
             inputMode="decimal"
-            min={1}
+            min={0.001}
             step="any"
             required
-            placeholder="Ví dụ: 250"
+            placeholder="Ví dụ: 250 hoặc 0,5"
             className="w-full min-w-0 rounded-btn bg-transparent px-3.5 py-2.5 text-title text-ink outline-none"
           />
           <span className="flex-none px-3.5 text-title text-ink-2">{product?.unit}</span>

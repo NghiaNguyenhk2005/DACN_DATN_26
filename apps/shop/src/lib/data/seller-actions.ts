@@ -19,16 +19,21 @@ export async function createBatchAction(
   const productId = String(formData.get("productId") ?? "").trim();
   const harvestDate = String(formData.get("harvestDate") ?? "").trim();
   const bestBefore = String(formData.get("bestBefore") ?? "").trim();
-  const declaredQuantity = Number(formData.get("declaredQuantity") ?? 0);
+  const rawQty = String(formData.get("declaredQuantity") ?? "").trim().replace(",", ".");
+  const declaredQuantity = Number(rawQty);
+  const idempotencyKey = String(formData.get("idempotencyKey") ?? "").trim();
 
   if (!productId) return { ok: false, message: "Vui lòng chọn sản phẩm." };
   if (!harvestDate) return { ok: false, message: "Vui lòng chọn ngày thu hoạch." };
   if (!bestBefore) return { ok: false, message: "Vui lòng chọn hạn sử dụng." };
   if (bestBefore <= harvestDate) return { ok: false, message: "Hạn sử dụng phải sau ngày thu hoạch." };
-  if (!(declaredQuantity > 0)) return { ok: false, message: "Sản lượng khai báo phải lớn hơn 0." };
+  if (!(declaredQuantity > 0)) return { ok: false, message: "Sản lượng khai báo phải lớn hơn 0 (số lẻ hợp lệ, ví dụ 0,5)." };
 
   const res = await mutate(
-    (api) => api.POST("/seller/batches", { body: { productId, harvestDate, bestBefore, declaredQuantity } }),
+    (api) => api.POST("/seller/batches", {
+      params: { header: { "Idempotency-Key": idempotencyKey || undefined } },
+      body: { productId, harvestDate, bestBefore, declaredQuantity },
+    }),
     "Không tạo được lô hàng. Vui lòng kiểm tra lại thông tin.",
   );
   if (!res.ok) {
@@ -55,6 +60,7 @@ export async function appendFarmingLogAction(
   const activity = String(formData.get("activity") ?? "other") as Schema<"FarmingActivity">;
   const description = String(formData.get("description") ?? "").trim();
   const supersedesId = String(formData.get("supersedesId") ?? "").trim() || undefined;
+  const idempotencyKey = String(formData.get("idempotencyKey") ?? "").trim();
 
   if (!batchId) return { ok: false, message: "Thiếu mã lô hàng." };
   if (!activityDate) return { ok: false, message: "Vui lòng chọn ngày thực hiện." };
@@ -63,7 +69,10 @@ export async function appendFarmingLogAction(
   const res = await mutate(
     (api) =>
       api.POST("/seller/batches/{batchId}/logs", {
-        params: { path: { batchId } },
+        params: {
+          path: { batchId },
+          header: { "Idempotency-Key": idempotencyKey || undefined },
+        },
         body: { activityDate, activity, description, supersedesId },
       }),
     "Chưa ghi được nhật ký. Vui lòng thử lại.",

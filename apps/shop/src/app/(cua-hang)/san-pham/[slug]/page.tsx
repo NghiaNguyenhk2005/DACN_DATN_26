@@ -83,7 +83,13 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
         <div className="min-w-0">
           <h1 className="mb-2.5 font-serif text-[22px] font-bold leading-[1.3] text-ink md:text-h1">{product.name}</h1>
           <p className="mb-3 text-small text-muted-foreground">
-            {product.supplier.displayName} · {product.supplier.growingRegion}
+            <Link
+              href={`/ho-so-nha-cung-cap/${product.supplier.id}`}
+              className="font-medium text-ink hover:underline hover:text-primary transition-colors"
+            >
+              {product.supplier.displayName}
+            </Link>{" "}
+            · {product.supplier.growingRegion}
           </p>
           {listing ? (
             <>
@@ -161,6 +167,7 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
           deliveryNote={deliveryEstimate()}
           listing={listing}
           seller={{
+            id: product.supplier.id,
             name: product.supplier.displayName,
             region: product.supplier.growingRegion,
             avatarUrl: supplier?.avatarUrl,

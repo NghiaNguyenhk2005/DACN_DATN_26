@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Clock, CreditCard, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
 import type { Schema } from "@farmery/contract";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ interface Props {
     saleUnit: string;
     available: number;
   } | null;
-  seller: { name: string; region: string; avatarUrl?: string | null };
+  seller: { id?: string; name: string; region: string; avatarUrl?: string | null };
   productId: string;
   /** Bảng giá sỉ của nhà cung cấp; có thì khung mua có nút gạt Mua lẻ | Mua sỉ */
   wholesale?: Schema<"WholesaleOffer"> | null;
@@ -83,7 +84,16 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
               <SafeImage src={seller.avatarUrl} alt="" fill sizes="42px" className="object-cover" />
             </span>
             <div className="min-w-0">
-              <p className="text-body font-bold text-ink">{seller.name}</p>
+              {seller.id ? (
+                <Link
+                  href={`/ho-so-nha-cung-cap/${seller.id}`}
+                  className="text-body font-bold text-ink hover:underline hover:text-primary transition-colors"
+                >
+                  {seller.name}
+                </Link>
+              ) : (
+                <p className="text-body font-bold text-ink">{seller.name}</p>
+              )}
               <p className="truncate text-micro text-muted-foreground">{seller.region}</p>
             </div>
           </div>

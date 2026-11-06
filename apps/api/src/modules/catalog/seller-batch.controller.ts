@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Post, Query } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { CatalogService } from "./catalog.service";
 import { CurrentUser } from "../../core/current-user.decorator";
@@ -32,18 +32,28 @@ export class SellerBatchController {
   }
 
   @Post("seller/batches")
-  createBatch(@Body() body: Schema<"BatchInput">): Promise<Batch> {
-    return this.catalog.createBatch(body);
+  createBatch(
+    @Body() body: Schema<"BatchInput">,
+    @CurrentUser() user?: AuthUser,
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ): Promise<Batch> {
+    return this.catalog.createBatch(body, user, idempotencyKey);
   }
 
   @Get("seller/batches/:batchId")
-  getSellerBatch(@Param("batchId") batchId: string): Promise<Batch> {
-    return this.catalog.getSellerBatch(batchId);
+  getSellerBatch(
+    @Param("batchId") batchId: string,
+    @CurrentUser() user?: AuthUser,
+  ): Promise<Batch> {
+    return this.catalog.getSellerBatch(batchId, user);
   }
 
   @Get("seller/batches/:batchId/logs")
-  listFarmingLogs(@Param("batchId") batchId: string): Promise<FarmingLog[]> {
-    return this.catalog.listFarmingLogs(batchId);
+  listFarmingLogs(
+    @Param("batchId") batchId: string,
+    @CurrentUser() user?: AuthUser,
+  ): Promise<FarmingLog[]> {
+    return this.catalog.listFarmingLogs(batchId, user);
   }
 
   @Post("seller/batches/:batchId/logs")
@@ -51,7 +61,8 @@ export class SellerBatchController {
     @Param("batchId") batchId: string,
     @Body() body: Schema<"FarmingLogInput">,
     @CurrentUser() user?: AuthUser,
+    @Headers("idempotency-key") idempotencyKey?: string,
   ): Promise<FarmingLog> {
-    return this.catalog.appendFarmingLog(batchId, body, user);
+    return this.catalog.appendFarmingLog(batchId, body, user, idempotencyKey);
   }
 }
