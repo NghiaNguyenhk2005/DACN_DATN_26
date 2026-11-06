@@ -67,7 +67,7 @@ export class CatalogService {
     private readonly inventory: InventoryService,
     private readonly semantic: SemanticSearch,
     private readonly keyword: KeywordSearch,
-  ) {}
+  ) { }
 
   /** Cache idempotency đơn giản trong bộ nhớ; key = Idempotency-Key header, value = kết quả đã lưu. */
   private readonly idempotencyCache = new Map<string, { result: unknown; expiresAt: number }>();
@@ -397,9 +397,9 @@ export class CatalogService {
     const keywordTokens = tokenize(keywords);
     const categories = folded
       ? flat
-          .filter((c) => containsAllTokens(tokenize(c.name), keywordTokens))
-          .slice(0, 3)
-          .map((c) => ({ id: c.id, name: c.name }))
+        .filter((c) => containsAllTokens(tokenize(c.name), keywordTokens))
+        .slice(0, 3)
+        .map((c) => ({ id: c.id, name: c.name }))
       : [];
     const regions = folded ? PILOT_REGIONS.filter((r) => fold(r).includes(folded)).slice(0, 3) : [];
 
