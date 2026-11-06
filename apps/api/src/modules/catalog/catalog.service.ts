@@ -67,7 +67,21 @@ export class CatalogService {
     private readonly inventory: InventoryService,
     private readonly semantic: SemanticSearch,
     private readonly keyword: KeywordSearch,
-  ) { }
+  ) {}
+
+  /**
+   * Xếp hạng theo câu tìm: bộ từ khóa và bộ ngữ nghĩa chạy song song, hợp nhất bằng RRF.
+   * Khớp từ khóa yếu (chỉ ở mô tả) nặng bằng nửa. Cả hai rỗng thì lùi về khớp gần đúng.
+   */
+  private async rankByQuery(q: string): Promise<string[]> {
+    const [keywordHits, semanticHits] = await Promise.all([this.keyword.rank(q), this.semantic.rank(q)]);
+    const ids = fuseRrf([
+      { hits: keywordHits, weight: (h) => (h.score >= 70 ? 1 : 0.5) },
+      { hits: semanticHits, weight: () => 1 },
+    ]);
+    if (ids.length) return ids;
+    return (await this.keyword.rank(q, { fuzzy: true })).map((h) => h.productId);
+  }
 
   /** Cache idempotency đơn giản trong bộ nhớ; key = Idempotency-Key header, value = kết quả đã lưu. */
   private readonly idempotencyCache = new Map<string, { result: unknown; expiresAt: number }>();
