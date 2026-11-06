@@ -123,7 +123,7 @@ export const suppliersData: SupplierSeedItem[] = [
     growingRegion: "Xã Hiệp Thạnh, Lâm Đồng",
     description: "Liên minh nông dân công nghệ cao Đức Trọng, chuyên cung ứng ớt chuông ngọt nhiều màu, khoai tây vàng, cà rốt baby cho các chuỗi phân phối cao cấp.",
     growingAreaCode: "VN-35-DT-AT05",
-    avatarUrl: "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/470229948_619664327060303_4610780822718131710_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x576&ctp=s960x960&_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=KXKFLrv_mLwQ7kNvwGedWeb&_nc_oc=AdpGcQBnCNIiM-xSvqi9MzfQyG_NlaQgro-go22vLJdR1x_GPHPc6lGutJYCNB5pw-A&_nc_zt=23&_nc_ht=scontent.fsgn2-8.fna&_nc_gid=w348qPCTw5Rg5TNQfuODCw&_nc_ss=7b289&oh=00_AQMQ7P49P0N1bzfcpdzvWpkwYJQpKp4ChQMJdCnTTPjDXw&oe=6AD67A38&w=300",
+    avatarUrl: null,
     reputationScore: 4.8,
     certifications: [
       {
