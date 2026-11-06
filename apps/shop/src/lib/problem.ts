@@ -4,6 +4,8 @@ import type { Problem } from "@farmery/contract";
 export type ActionResult<T = null> = { ok: true; data: T } | { ok: false; message: string; code?: string };
 
 const MESSAGES: Record<string, string> = {
+  OTP_INVALID: "Mã OTP không đúng.",
+  OTP_EXPIRED: "Mã OTP đã hết hạn, vui lòng gửi lại mã.",
   CART_QTY_EXCEEDS_STOCK: "Số lượng vượt quá lượng còn bán được.",
   STOCK_CONFLICT: "Một số sản phẩm vừa hết hàng trong lúc đặt. Vui lòng kiểm tra lại giỏ hàng.",
   COD_NOT_ALLOWED: "Đơn này không áp dụng thanh toán khi nhận hàng (COD).",
