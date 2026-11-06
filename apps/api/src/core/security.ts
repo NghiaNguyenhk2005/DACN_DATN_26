@@ -55,7 +55,7 @@ function limiter(config: AppConfig, limit: number): RequestHandler {
   });
 }
 
-/** Mã yêu cầu, header bảo mật, không cache, giới hạn tần suất theo IP. Đặt trước bộ đọc body và bộ kiểm hợp đồng. */
+/** Mã yêu cầu, header bảo mật, không cache. Đặt trước CORS, bộ đọc body và bộ kiểm hợp đồng. */
 export function applySecurity(app: INestApplication, config: AppConfig): void {
   const express = app.getHttpAdapter().getInstance();
   express.disable("x-powered-by");
@@ -92,9 +92,11 @@ export function applySecurity(app: INestApplication, config: AppConfig): void {
     }),
   );
   app.use("/api", noStore());
+}
 
-  if (config.rateLimit.enabled) {
-    app.use("/api/auth", limiter(config, config.rateLimit.authMax));
-    app.use(limiter(config, config.rateLimit.max));
-  }
+/** Giới hạn tần suất theo IP. Đặt sau CORS để phản hồi 429 vẫn có header CORS cho trình duyệt đọc được. */
+export function applyRateLimit(app: INestApplication, config: AppConfig): void {
+  if (!config.rateLimit.enabled) return;
+  app.use("/api/auth", limiter(config, config.rateLimit.authMax));
+  app.use(limiter(config, config.rateLimit.max));
 }

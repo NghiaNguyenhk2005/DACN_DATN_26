@@ -19,6 +19,7 @@ const MESSAGES: Record<string, string> = {
   BELOW_MIN_QUANTITY: "Sản lượng chưa đạt lượng tối thiểu của bảng giá sỉ.",
   VALIDATION_FAILED: "Thông tin chưa hợp lệ, vui lòng kiểm tra lại.",
   NOT_IMPLEMENTED: "Chức năng này đang được hoàn thiện phía máy chủ. Vui lòng thử lại sau.",
+  RATE_LIMITED: "Bạn thao tác quá nhanh, vui lòng thử lại sau ít phút.",
 };
 
 export const NETWORK_MESSAGE = "Không kết nối được máy chủ Farmery. Vui lòng thử lại sau ít phút.";
@@ -26,6 +27,7 @@ export const NETWORK_MESSAGE = "Không kết nối được máy chủ Farmery. 
 /** Câu báo lỗi tiếng Việt theo `Problem.code`; mã lạ thì dùng câu dự phòng của từng thao tác. */
 export function problemMessage(problem: Partial<Problem> | undefined, status: number, fallback: string): string {
   if (problem?.code && MESSAGES[problem.code]) return MESSAGES[problem.code];
+  if (status === 429) return MESSAGES.RATE_LIMITED;
   if (status === 501) return MESSAGES.NOT_IMPLEMENTED;
   if (status >= 500) return "Máy chủ Farmery đang gặp sự cố. Vui lòng thử lại sau ít phút.";
   return fallback;

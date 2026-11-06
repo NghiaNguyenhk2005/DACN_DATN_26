@@ -6,7 +6,7 @@ import { APP_CONFIG, type AppConfig } from "./core/app-config";
 import { CONTRACT_DOCUMENT } from "./core/contract-document";
 import { hardenServer } from "./core/http-server";
 import { openApiValidator } from "./core/openapi-validator";
-import { applySecurity } from "./core/security";
+import { applyRateLimit, applySecurity } from "./core/security";
 
 // Dùng chung cho main.ts và test e2e. App tạo với bodyParser: false để body được đọc trước bộ kiểm hợp đồng.
 export function configureApp(app: INestApplication): void {
@@ -22,6 +22,7 @@ export function configureApp(app: INestApplication): void {
     exposedHeaders: ["X-Request-Id", "Retry-After"],
     maxAge: 600,
   });
+  applyRateLimit(app, config);
   // Hợp đồng chỉ có JSON nhỏ; tải tệp (multipart) chưa hiện thực nên không mở bộ đọc form.
   app.use(json({ limit: "100kb", strict: true }));
   app.use(openApiValidator(document, config));
