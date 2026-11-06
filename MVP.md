@@ -2,6 +2,7 @@
 
 Chốt ngày 2026-10-01, viết lại 2026-10-08 theo phiên siết phạm vi 7/10 (trục thương mại điện tử).
 Cập nhật 2026-10-13: OTP chỉ gửi qua email; thêm mục 6 về prototype và đường đi tiếp lên MVP.
+Cập nhật 2026-11-06: FR2.2, FR4.7, FR5.3, FR9.2, FR10.4 chốt *(chỉ thiết kế)*; FR11.2 làm nếu kịp.
 Tài liệu này xác định phần nào của bộ yêu cầu trong báo cáo (mục 4.3, FR1–FR13 và NFR1–NFR9)
 được hiện thực ở phiên bản nộp cuối kỳ, phần nào để sau. Mã yêu cầu dùng đúng mã trong báo cáo.
 
@@ -42,16 +43,16 @@ Một yêu cầu **để sau MVP** khi rơi vào ít nhất một trường hợ
 | Nhóm | Thuộc MVP | Để sau MVP hoặc chỉ thiết kế | Lý do |
 |---|---|---|---|
 | FR1 Tài khoản | 1.1 (email; số điện thoại khai để liên hệ, giao hàng), 1.2 (OTP qua email), 1.3, 1.4 (duyệt ảnh giấy tờ thủ công), 1.5, 1.6 đồng ý và quyền dữ liệu | Đăng nhập mạng xã hội *(chỉ thiết kế)*; xác minh số điện thoại, OTP qua SMS *(chỉ thiết kế)*; eKYC đối chiếu khuôn mặt tự động | Không trên trục chính; cần dịch vụ ngoài; SMS tính phí theo tin |
-| FR2 Nhà cung cấp | 2.1, 2.3, 2.4 khai báo loại người bán | 2.2 thống kê cho nhà cung cấp | Không trên trục chính |
-| FR3 Chứng nhận | 3.1, 3.2, 3.3 (tự đánh dấu hết hạn) | Nhắc gia hạn (đi theo FR11.2) | Phụ thuộc FR11.2 |
-| FR4 Sản phẩm, truy xuất | 4.1–4.6 | 4.7 báo cáo sai danh mục | Không trên trục chính |
-| FR5 Bán lẻ | 5.1, 5.2, 5.4, 5.5, 5.6 mua lại, 5.7 báo vào mùa | 5.3 mã giảm giá | Không trên trục chính |
+| FR2 Nhà cung cấp | 2.1, 2.3, 2.4 khai báo loại người bán | 2.2 thống kê cho nhà cung cấp *(chỉ thiết kế)* | Không trên trục chính; dữ liệu mô phỏng chưa đủ để thống kê có ý nghĩa |
+| FR3 Chứng nhận | 3.1, 3.2, 3.3 (tự đánh dấu hết hạn) | Nhắc gia hạn (đi theo FR11.2: làm nếu kịp, không thì *(chỉ thiết kế)*) | Phụ thuộc FR11.2 |
+| FR4 Sản phẩm, truy xuất | 4.1–4.6 | 4.7 báo cáo sai danh mục *(chỉ thiết kế)* | Không trên trục chính |
+| FR5 Bán lẻ | 5.1, 5.2, 5.4, 5.5, 5.6 mua lại, 5.7 báo vào mùa | 5.3 mã giảm giá *(chỉ thiết kế)* | Không trên trục chính |
 | FR6 Bán sỉ | 6.1–6.4 (giao một đợt) | 6.5 giao nhiều đợt *(chỉ thiết kế)* | Sỉ giữ tối giản |
 | FR7 Thanh toán, hóa đơn | 7.1 (thử nghiệm, COD điều kiện, hoàn tiền), 7.2 hóa đơn giả lập, 7.4 phần tính hoa hồng | 7.3 ký quỹ *(chỉ thiết kế)*; 7.4 phần khấu trừ thuế *(chỉ thiết kế)*; kết nối nhà cung cấp hóa đơn thật | Cần hợp đồng, chứng thư số của doanh nghiệp |
 | FR8 Giao hàng, khiếu nại | 8.1 ba chặng, 8.2, 8.3 | Xe gom chặng đầu *(chỉ thiết kế)* | Nhà cung cấp tự đưa hàng ở bản hiện thực |
-| FR9 Tương tác | 9.1 trao đổi theo đơn | 9.2 yêu thích | Không trên trục chính |
-| FR10 Vận hành | 10.1, 10.2, 10.3, 10.5, 10.6, 10.7 | 10.4 báo cáo tổng quan | Không trên trục chính |
-| FR11 Thông báo | 11.1 (web, thông báo đẩy, email) | Kênh SMS *(chỉ thiết kế)*; 11.2 cảnh báo hết hạn, tồn thấp | SMS tính phí theo tin |
+| FR9 Tương tác | 9.1 trao đổi theo đơn | 9.2 yêu thích *(chỉ thiết kế)* | Không trên trục chính |
+| FR10 Vận hành | 10.1, 10.2, 10.3, 10.5, 10.6, 10.7 | 10.4 báo cáo tổng quan *(chỉ thiết kế)* | Không trên trục chính; dữ liệu mô phỏng chưa đủ để thống kê có ý nghĩa |
+| FR11 Thông báo | 11.1 (web, thông báo đẩy, email) | Kênh SMS *(chỉ thiết kế)*; 11.2 cảnh báo hết hạn, tồn thấp (làm nếu kịp ở tuần 10, không thì *(chỉ thiết kế)*) | SMS tính phí theo tin; 11.2 chỉ cần nối sự kiện có sẵn vào mô-đun thông báo |
 | FR12 AI | 12.1 sản phẩm tương tự; 12.2 dự báo giá chạy offline; 12.3 tìm sản phẩm theo ngữ nghĩa | Gợi ý cá nhân hóa theo hành vi; tìm nhà cung cấp theo ngữ nghĩa *(chỉ thiết kế)* | Cần dữ liệu tương tác chưa có |
 | FR13 Thu mua, kho | 13.1, 13.2, 13.3, 13.4 (đóng gói một bước), 13.6 thu hồi lô | Sơ chế, phân loại nhiều bước; kiểm kê định kỳ *(chỉ thiết kế)* | Kho rút gọn |
 
@@ -76,10 +77,11 @@ NFR3.6: xác thực hai lớp của nhân sự nội bộ dùng ứng dụng xá
 
 ## 4. Thứ tự ưu tiên sau MVP
 
-1. FR11.2 cảnh báo hết hạn chứng nhận và tồn thấp (sự kiện `CertExpired`, `StockLow` đã có sẵn).
+1. FR11.2 cảnh báo hết hạn chứng nhận và tồn thấp (sự kiện `CertExpired`, `StockLow` đã có sẵn). Là việc phụ
+   của tuần 10 trong bản nộp; mọi mục dưới đây đã chốt *(chỉ thiết kế)* ngày 2026-11-06.
 2. FR10.4 báo cáo tổng quan và FR2.2 thống kê cho nhà cung cấp.
 3. FR5.3 mã giảm giá, FR9.2 yêu thích, FR4.7 báo cáo sai danh mục.
-4. Các mục chỉ thiết kế và hướng phát triển ở Chương 8.
+4. Các mục chỉ thiết kế còn lại và hướng phát triển ở Chương 8.
 
 ## 5. Việc cần làm theo tài liệu này
 

@@ -328,7 +328,8 @@ Trước giao hàng & Hồ sơ nhà cung cấp, eKYC, chứng nhận & Kiểm du
 Trong giao hàng & Trạng thái chuyến và vận đơn, xử lý ngoại lệ giao hàng & Nhân viên vận hành & Đã hiện thực: nhân viên chuyển trạng thái đơn \\
  & Kiểm khi xuất kho, bàn giao cho đơn vị vận chuyển (3PL) & Nhân viên kho & \emph{Chỉ thiết kế} \\
 Sau giao hàng & Khiếu nại, đổi trả & Nhân viên vận hành; hạn khiếu nại rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày; quyết định trong 3 ngày làm việc & \emph{Để sau prototype}, làm khi mô-đun bán lẻ và thanh toán nối vào API \\
- & Đánh giá nghi vấn, báo cáo sai danh mục & Kiểm duyệt viên & \emph{Để sau prototype}, làm cùng đánh giá của người mua \\
+ & Đánh giá nghi vấn & Kiểm duyệt viên & \emph{Để sau prototype}, làm cùng đánh giá của người mua \\
+ & Báo cáo sai danh mục từ người mua & Kiểm duyệt viên & \emph{Chỉ thiết kế} \\
  & Vi phạm và thu hồi lô & Kiểm duyệt viên (vi phạm nội dung), nhân viên vận hành (vi phạm từ đơn hàng, thu hồi lô) & \emph{Để sau prototype}, làm cùng mô-đun tồn kho \\
 \end{longtable}
 \endgroup
@@ -640,11 +641,11 @@ Xe gom chặng đầu & Ở bản hiện thực nhà cung cấp tự đưa hàng
 Sơ chế nhiều bước, kiểm kê định kỳ & Kho được rút gọn về nhập, đóng gói một bước và xuất & Kho vận hành thật với nhiều công đoạn & Các bảng tồn kho, sổ kho và đóng gói \\
 Gợi ý cá nhân hóa, tìm nhà cung cấp theo ngữ nghĩa & Cần dữ liệu tương tác mà nền tảng mới chưa có & Đủ dữ liệu lượt xem, mua, đánh giá & Hàng đợi sự kiện thu thập hành vi, vector sản phẩm dùng chung \\
 Đồng bộ TraceViet & Phụ thuộc quyền kết nối vào hệ thống của Bộ Nông nghiệp và Môi trường & Được cấp quyền và chuẩn kết nối & Mã truy xuất theo lô và khối hệ thống ngoài ở sơ đồ \\
+Mã giảm giá, danh sách yêu thích, báo cáo sai danh mục (FR5.3, FR9.2, FR4.7) & Không nằm trên trục bán lẻ đầu--cuối và không có chỉ số đánh giá ở Chương~\ref{chap:danhgia}; thời gian dành cho kiểm thử trục chính & Trục bán lẻ đã chạy trọn và đo xong & Yêu cầu, bảng mã giảm giá và yêu thích, hàng đợi xử lý của kiểm duyệt viên \\
+Báo cáo tổng quan và thống kê cho nhà cung cấp (FR10.4, FR2.2) & Không nằm trên trục bán lẻ đầu--cuối; dữ liệu mô phỏng chưa đủ để số thống kê có ý nghĩa & Có dữ liệu giao dịch thật & Dữ liệu đơn, thanh toán và sổ nhập xuất \\
 \multicolumn{4}{l}{\cellcolor{tblaltbg}\textbf{Để sau prototype} (thuộc MVP hoặc đã cam kết, sẽ làm sau)} \\
 Thông báo đẩy của trình duyệt (Web Push, FR11.1) & Prototype chưa gửi thông báo đẩy mà hỏi lại trạng thái đơn mỗi 5 giây; cần khóa VAPID và service worker & Làm cùng FR11.1 ở bản MVP; dịch vụ đẩy do hãng trình duyệt vận hành, miễn phí, không cần hợp đồng & Bảng \texttt{push\_subscriptions} lưu đăng ký của từng trình duyệt \\
 Đánh giá của người mua, đăng ký báo khi có hàng hoặc vào mùa (FR5.5, FR5.7) & Trục bán lẻ ưu tiên xem, chọn và thêm vào giỏ; chưa có màn hình và API & Bổ sung màn hình và API; đánh giá cần dữ liệu đơn đã giao & Yêu cầu FR5.5, FR5.7 và bảng đăng ký báo vào mùa \\
-Mã giảm giá, danh sách yêu thích, báo cáo sai danh mục (FR5.3, FR9.2, FR4.7) & Không nằm trên trục bán lẻ đầu--cuối & Làm sau khi trục bán lẻ chạy trọn & Yêu cầu và hàng đợi xử lý của kiểm duyệt viên \\
-Báo cáo tổng quan và thống kê cho nhà cung cấp (FR10.4, FR2.2) & Không nằm trên trục bán lẻ đầu--cuối & Có đủ dữ liệu giao dịch để thống kê & Dữ liệu đơn, thanh toán và sổ nhập xuất \\
 Cảnh báo chứng nhận sắp hết hạn, tồn thấp, nhắc gia hạn (FR11.2, phần nhắc của FR3.3) & Đi theo kênh thông báo; chưa có bộ gửi cảnh báo & Làm cùng FR11.1 & Sự kiện \texttt{CertExpired}, \texttt{StockLow} đã có sẵn \\
 Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ sơ nhà cung cấp, eKYC thủ công, chứng nhận, nghiệm thu nhập kho, khiếu nại, thu hồi lô) & Prototype tập trung trục bán lẻ và duyệt lô; chi tiết từng khâu ở Bảng~\ref{tab:kiemduyet-giaidoan} & Hoàn thiện mô-đun tương ứng ở bản MVP & Hợp đồng API và lược đồ cơ sở dữ liệu của các mô-đun này \\
 \end{longtable}
@@ -682,7 +683,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     không phải gian hàng riêng của nhà cung cấp.
     \item \textbf{FR2.2:} Báo cáo thống kê cơ bản cho nhà cung cấp: doanh
     thu, số đơn hàng, sản phẩm bán chạy theo mốc thời gian
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR2.3:} Nhà cung cấp theo dõi tồn kho của mình theo lô
     hàng (chi tiết tại FR13).
     \item \textbf{FR2.4:} Khai báo loại người bán cho nghĩa vụ thuế (tự sản
@@ -728,7 +729,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     nhóm hàng bị loại trừ (mục~\ref{sec:quytrinhnghiepvu}).
     \item \textbf{FR4.7:} Tiếp nhận báo cáo từ người mua về sản phẩm sai
     danh mục hoặc không thuộc nhóm nông sản, đưa vào hàng đợi xử lý của
-    kiểm duyệt viên (liên hệ FR10.2) \emph{(để sau prototype)}.
+    kiểm duyệt viên (liên hệ FR10.2) \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR5: Giao dịch bán lẻ (B2C)}
@@ -740,7 +741,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     giữ chỗ tồn cho đơn chờ thanh toán và tự nhả khi đơn quá hạn hoặc bị hủy;
     đơn sau giờ chốt đơn chuyển sang chuyến trung chuyển kế tiếp.
     \item \textbf{FR5.3:} Áp dụng mã giảm giá của gian hàng bán lẻ
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR5.4:} Theo dõi đơn trên dòng thời gian tám trạng thái
     (Đã đặt, Đã thanh toán, Đang đóng gói, Lên chuyến trung chuyển, 3PL đã
     nhận, Đang giao, Đã giao, Hoàn tất hoặc Khiếu nại); hủy đơn trước khi đóng
@@ -822,7 +823,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     yêu cầu khiếu nại, giữa khách và nhân viên vận hành, có đính kèm ảnh.
     Không có kênh nhắn tin tự do giữa người dùng; đàm phán sỉ dùng kênh của
     FR6.2.
-    \item \textbf{FR9.2:} Danh sách sản phẩm yêu thích \emph{(để sau prototype)}.
+    \item \textbf{FR9.2:} Danh sách sản phẩm yêu thích \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR10: Vận hành và quản trị nền tảng}
@@ -837,7 +838,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     trung gian phân xử khi có tranh chấp giữa các bên.
     \item \textbf{FR10.4:} Báo cáo thống kê tổng quan hệ thống: tổng giá trị
     giao dịch, số lượng người dùng hoạt động, tỷ lệ hoàn tất đơn hàng
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR10.5:} Bảng điều khiển giám sát tồn kho và giao hàng:
     lô sắp hết hạn hoặc tồn thấp (liên hệ FR2.3, FR11.2), chuyến trung chuyển
     trong ngày, đơn trễ và sự cố với đơn vị vận chuyển (FR8.1).

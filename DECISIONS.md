@@ -1195,3 +1195,49 @@ giữa các ngày chạy (test không phụ thuộc ngày mẫu). Hiểu câu t�
 lượng tới 3 chữ số thập phân.
 **Đánh đổi:** quy tắc nhận diện cân theo chuỗi `saleUnit === "kg"`; MVP nên có trường "bán theo cân" và bước số lượng
 trong tin bán thay vì đoán từ chữ.
+
+### Tìm kiếm sản phẩm: hai bộ tìm gộp bằng RRF, khớp theo từ, bộ đánh giá — 2026-11-06
+**Quyết định:**
+- `GET /products?q=` chạy hai bộ tìm song song rồi hợp nhất bằng RRF có trọng số (`Σ w / (60 + hạng)`), giống kiến
+  trúc Ch.5 §5.2 nhưng chạy trong bộ nhớ: `KeywordSearch` (bản sau: `unaccent` + trigram) và `SemanticSearch` (bản sau:
+  BGE-M3 + pgvector). Interface mới trả `{productId, score}[]` — đổi từ `expand(q): string[]` vì bản vector trả sản
+  phẩm, không trả từ. Repository không tự chấm điểm nữa, nhận `rankedIds` rồi lọc cứng + phân trang giữ thứ tự.
+- Từ khóa: khớp theo từ, không theo chuỗi con. Bậc: cụm trong tên 100, gõ liền ("dautay") 90, cụm trong danh mục lá 80,
+  đủ từ ở tên/danh mục 70, cụm ở mô tả 40. Chỉ trả tầng tốt nhất có kết quả (tên → danh mục → mô tả). Tiền tố chỉ với
+  từ ≥ 3 ký tự. Gõ có dấu thì so có dấu ("đồ" ≠ "đỏ"), gõ không dấu thì so bỏ dấu.
+- Khớp gần đúng chỉ là đường lùi khi cả hai bộ tìm rỗng: từ ≥ 3 ký tự sai 1, ≥ 7 ký tự sai 2, đảo hai ký tự kề tính
+  là 1 lỗi; chỉ giữ kết quả ít lỗi nhất. Khớp từ khóa chỉ ở mô tả có trọng số 0,5 khi gộp.
+- Khái niệm ngữ nghĩa trỏ vào **danh mục** (gồm cả sản phẩm đăng sau), tên sản phẩm chỉ dùng cho trường hợp đặc thù,
+  thêm chứng nhận (quà biếu → OCOP). "Rau sạch" trỏ về danh mục rau, không trỏ về chứng nhận.
+- Bộ đánh giá `apps/api/test/search-eval/` chạy trong e2e, khóa ngưỡng chặn hồi quy: bộ chính 36 câu và bộ kiểm tra độc
+  lập 18 câu (viết sau bản cài đặt đầu, không dùng để chỉnh).
+
+| Đo trên 39 sản phẩm mẫu | P@5 | R@10 | MRR | Độ sạch | Câu ngoài danh mục trả rỗng |
+|---|---|---|---|---|---|
+| Trước (bộ chính) | 0,60 | 0,76 | 0,70 | 0,27 | 0/3 |
+| Sau (bộ chính — từ điển viết khi đã biết nhãn, số lạc quan) | 1,00 | 1,00 | 1,00 | 0,99 | 3/3 |
+| Sau (bộ kiểm tra độc lập) | 0,87 | 0,92 | 0,89 | 0,85 | 1/3 |
+
+**Bối cảnh:** khớp chuỗi con hai chiều trên cả mô tả làm "nướng" ra 36/39 sản phẩm, "củ" ra dâu tây 100 điểm; lớp ngữ
+nghĩa chỉ chạy khi từ khóa không khớp nên gần như không bao giờ chạy (NOTES 2026-10-16, design/08 X8).
+**Đánh đổi:** từ điển khái niệm viết tay — câu ngoài từ điển ("quà tết") không được mở rộng, đây là phần bản vector
+phải giải. Đường lùi gần đúng còn nhiễu với âm tiết ngắn ("gạo" ra "gà", "cá hồi" ra "hộp"). Bậc và trọng số chọn theo
+bộ đánh giá nhỏ, cần đo lại khi có dữ liệu thật.
+SỬA 2026-11-06: bổ sung số "trước" của bộ kiểm tra độc lập (đo trên code cũ, cùng 18 câu): P@5 0,47 · R@10 0,67 ·
+MRR 0,60 · độ sạch 0,18 · câu ngoài danh mục trả rỗng 0/3. So sánh công bằng là 0,47 → 0,87 (P@5), 0,18 → 0,85 (độ
+sạch); dòng "Trước (bộ chính)" ở bảng trên đo trên bộ câu khác.
+
+### Chốt 5 yêu cầu phụ thành chỉ thiết kế, FR11.2 làm nếu kịp — 2026-11-06
+**Quyết định:**
+- FR2.2 thống kê cho nhà cung cấp, FR4.7 báo cáo sai danh mục, FR5.3 mã giảm giá, FR9.2 yêu thích, FR10.4 báo cáo tổng
+  quan đổi nhãn từ *(để sau prototype)* sang *(chỉ thiết kế)*: Chương 4 (từng FR, `tab:chi-thiet-ke`, bảng các khâu
+  kiểm duyệt theo giai đoạn), Phụ lục sitemap và ma trận FR, `MVP.md`.
+- FR11.2 (cảnh báo chứng nhận hết hạn, tồn thấp, kèm phần nhắc gia hạn của FR3.3) giữ *(để sau prototype)*; là việc phụ
+  tuần 10 của Nghĩa, không kịp thì đổi sang *(chỉ thiết kế)* trước khi nộp.
+- MT7 (Chương 1) đổi thành "kiểm duyệt và giám sát vi phạm; thiết kế phần báo cáo thống kê".
+- §1.3.4 Phạm vi hiện thực không đổi: không mục nào trong số trên nằm trong ba mức ở đó.
+**Bối cảnh:** báo cáo gắn *(để sau prototype)* (tức cam kết làm) cho các mục này trong khi `MVP.md` xếp chúng vào "để sau
+MVP"; phân công tuần 8–10 trên sheet nhóm không có chỗ cho chúng. Bản nộp cuối kỳ không bắt buộc là MVP đầy đủ.
+**Đánh đổi:** bỏ phần "báo cáo thống kê" của MT7 khỏi phần hiện thực. Đổi lại giữ thời gian tuần 12–13 cho bộ test case,
+kiểm thử tải, chống bán vượt và thử khả dụng; các mục này không có chỉ số đánh giá ở Chương 7, đúng nguyên tắc chọn
+phạm vi ở §1.2 (không đo được bằng số thì không đưa vào). Đặc tả, lược đồ CSDL và sitemap của các mục vẫn giữ.

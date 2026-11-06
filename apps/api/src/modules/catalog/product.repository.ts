@@ -14,9 +14,10 @@ export type ProductRecord = ProductDetail & {
 };
 
 export interface ProductFilter {
+  /** Câu tìm từ HTTP; `CatalogService` đổi thành `rankedIds`, repository không đọc trường này. */
   q?: string;
-  /** Cụm từ mở rộng nghĩa của `q` (SemanticSearch); khớp cụm nào cũng được tính, điểm thấp hơn khớp từ khóa. */
-  semanticTerms?: string[];
+  /** Id sản phẩm đã xếp hạng theo độ liên quan: chỉ trả các id này, giữ đúng thứ tự. */
+  rankedIds?: string[];
   categoryId?: string;
   region?: string;
   cert?: CertType;
@@ -36,6 +37,8 @@ export interface ProductSearchResult {
 export abstract class ProductRepository {
   /** Các thao tác công khai chỉ thấy sản phẩm đã duyệt. */
   abstract search(filter: ProductFilter): Promise<ProductSearchResult>;
+  /** Mọi sản phẩm đã duyệt — nguồn cho bộ tìm trong bộ nhớ. */
+  abstract listPublicRecords(): Promise<ProductRecord[]>;
   abstract findById(id: string): Promise<ProductDetail | null>;
   abstract findByListingId(listingId: string): Promise<ProductDetail | null>;
   abstract findBySupplierId(supplierId: string): Promise<ProductCard[]>;

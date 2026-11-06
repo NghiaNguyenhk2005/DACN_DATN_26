@@ -299,7 +299,9 @@ khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so g
 `qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
 **Cập nhật 2026-11-05:** chưa sửa. Lớp ngữ nghĩa mới (`SemanticSearch`) chỉ chạy khi từ khóa không khớp, nên độ rộng
 này còn làm gợi ý sửa từ (`correction`) hiếm khi xuất hiện — xem `design/08-ra-soat-hien-trang.md` X8.
-Status: open
+**Cập nhật 2026-11-06:** đã sửa — khớp theo từ, gần đúng chỉ là đường lùi, ngữ nghĩa chạy song song gộp RRF; xem
+DECISIONS "Tìm kiếm sản phẩm: hai bộ tìm gộp bằng RRF…". `q=dau tay` còn 4 sản phẩm, đều là dâu tây.
+Status: resolved
 
 ### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
 Từ 1/7/2025 không còn cấp huyện (Nghị quyết 1671/NQ-UBTVQH15 sắp xếp cấp xã tỉnh Lâm Đồng), nhưng `growingRegion`
@@ -350,6 +352,10 @@ Cập nhật 2026-10-27 (kiểm trên `develop` sau PR #38): mô-đun `identity`
 và `GET /me`, cả ba chạy (kèm sửa trả 200 đúng hợp đồng); `retail`, `payment` vẫn chỉ có file module. Các thao tác còn
 lại (`/me/addresses`, `/cart*`, `/checkout/quote`, `/orders*`) chưa có handler nên vẫn là 501; đã gọi thử `GET
 /me/addresses` và `GET /cart` đều 501.
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46, gộp BE2). Cả 13 thao tác có handler trong `identity`, `retail`,
+`payment`, không mô-đun nào còn trả 501. e2e `kich-ban/mua-hang.spec.ts` (PR #53) đi qua giỏ, báo giá, đặt đơn, trả tiền
+giả lập, xoá dòng giỏ trên API thật.
+Status: resolved
 
 ### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
 `mock-data` chưa có người dùng nào, trong khi hợp đồng cho `POST /auth/otp` trả 404 với email lạ, nên chưa ai đăng
@@ -359,6 +365,10 @@ dùng thông tin người thật.
 **Cập nhật 2026-10-21:** đăng nhập được với mọi email nhờ bản tạm của `identity`, nhưng chưa có tài khoản riêng cho
 khách lẻ — xem mục "identity bản tạm" bên dưới.
 Status: open
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46). `khachle@example.com` là tài khoản `buyer_retail` riêng trong
+`apps/api/src/modules/identity/seed-accounts.ts`, có sẵn một địa chỉ mặc định (`in-memory-address.repository.ts`).
+Tài khoản giả nằm ở `apps/api` chứ không ở `mock-data` như đề xuất.
+Status: resolved
 
 ### Hợp đồng: thao tác cần đăng nhập không khai phản hồi 401/403 — Claude — 2026-10-17
 Chỉ `/auth/login` và `/me` khai 401. Khi chạy server giả có bộ kiểm phản hồi theo `openapi.yaml`, `GET /cart`
@@ -368,11 +378,17 @@ không có token trả 401 thì bộ kiểm báo "no schema defined for status c
 xuất thêm `401`/`403` (`Unauthorized`, `Forbidden`) cho mọi thao tác có `security`, qua PR sửa hợp đồng riêng.
 Shop hiện coi 500 là lỗi máy chủ nên vẫn báo được, nhưng không chuyển được sang trang đăng nhập khi token hết hạn.
 Status: open
+Cập nhật 2026-11-06 (kiểm trên `develop` sau PR #46): phần chạy đã ổn, `GET /cart` không token trả đúng 401
+`UNAUTHENTICATED`, không thành 500. Phần hợp đồng thì chưa làm: trong 35 thao tác có `security`, chỉ 1 khai `401`
+và 4 khai `403`. Vẫn cần PR sửa hợp đồng thêm `Unauthorized`/`Forbidden` cho cả 35, để client sinh kiểu biết hai mã này.
 
 ### Hợp đồng: OTP sai chưa có mã lỗi riêng — Claude — 2026-10-17
 `POST /auth/login` chỉ khai 401 chung. Đề xuất thêm `OTP_INVALID`, `OTP_EXPIRED` vào danh sách `Problem.code` (PR
 sửa hợp đồng riêng) để báo "mã sai" khác "mã hết hạn". Hiện shop báo chung "Mã OTP không đúng hoặc đã hết hạn".
 Status: open
+Cập nhật 2026-11-06: hợp đồng có `OTP_INVALID`, `OTP_EXPIRED` từ `1f7e16b` (PR #46). Sai quá 5 lần cũng trả
+`OTP_EXPIRED`. Shop và admin báo hai câu riêng ở PR #52, kèm e2e.
+Status: resolved
 
 ### BE2: hành vi API mà shop đang dựa vào — Claude — 2026-10-17
 - `PUT /cart/items/{id}` đặt số lượng tuyệt đối (shop tự cộng dồn khi bấm Thêm); vượt lượng còn bán trả 422
@@ -399,6 +415,10 @@ PR #30 (BE1) thêm `POST /auth/otp`, `/auth/login`, `GET /me` ở `identity.serv
 (gồm `khachle@example.com`), email lạ 404, `GET /me` đọc theo token; báo BE1 vì `/seller/*` cần `supplierId` qua
 `IdentityService`.
 Status: open
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46). `seed-accounts.ts` có 10 tài khoản theo vai trò (có
+`staff_operations` `vanhanh@farmery.vn`, `staff_warehouse` `kho@farmery.vn`). Ở DEMO_MODE email lạ trả 404, `GET /me`
+đọc theo token. Phần `/seller/*` lấy `supplierId` qua `IdentityService` theo dõi ở mục BE1 bên dưới.
+Status: resolved
 
 ### BE1: `/seller/*` chưa theo nhà cung cấp đang đăng nhập — Claude — 2026-10-21
 `catalog.service.ts`: `listSellerProducts` gõ cứng nhà cung cấp `"101"`, `categoryId: "1"`, `unit: "kg"`;
@@ -441,4 +461,24 @@ Status: open
 bật tự xoá nhánh sau gộp (còn các nhánh `origin/docs/…`, `origin/feat/…` cũ). `ci.yml` chưa chạy e2e Playwright (cần API
 cổng 4000). Đề xuất: bật protection cho `develop`/`main` (CI xanh, ≥1 review, cấm force-push), bật tự xoá nhánh, đặt
 `git config pull.rebase true`, thêm job e2e riêng không chặn gộp ở bước đầu. Việc trên GitHub do chủ repo bấm.
+Status: open
+
+### BE1: giới hạn còn lại của tìm kiếm sau bản RRF — Claude — 2026-11-06
+Đo bằng bộ kiểm tra độc lập (`apps/api/test/search-eval/queries.ts`, `HELDOUT_QUERIES`):
+- Khái niệm ngắn bắt cả trong cụm dài: "rau thơm" khớp cả khóa "rau" nên kéo theo 9 sản phẩm rau lá. Đề xuất: khóa
+  dài nhất thắng (khóa nằm gọn trong một khóa dài hơn đã khớp thì bỏ).
+- Đường lùi gần đúng nhiễu với âm tiết 3 ký tự: "gạo" ra "Bảo Lộc", "gà", "cao nguyên"; "cá hồi" ra "(Hộp 500g)",
+  "ôn đới". Đề xuất: bỏ phần quy cách trong ngoặc khỏi tên khi khớp gần đúng; cân nhắc chỉ cho sai với từ ≥ 4 ký tự
+  (đổi lại "khoai tya", "bong cia" sẽ không ra).
+- Từ điển không phủ: "quà tết" rỗng; "làm sinh tố" thiếu bơ. Đây là phần bản BGE-M3 phải giải.
+- Gõ liền kèm sai ("bongcaii") trả rỗng và không có gợi ý sửa.
+- Khi lên vector: thay `ConceptSemanticSearch` bằng lớp gọi dịch vụ nhúng, giữ `SemanticSearch.rank`; chạy lại
+  `search-eval.e2e-spec.ts` để so — bộ kiểm tra độc lập là số đối chiếu chính, bộ chính đã lạc quan vì từ điển viết khi
+  đã biết nhãn.
+Status: open
+
+### BE2: test blackbox "Hành trình mua bán" lệch dữ liệu mẫu — Claude — 2026-11-06
+`npm run test:blackbox` hỏng 6/79 ở `journey.bb-spec.ts`: test giả định sản phẩm 3 chưa có lô đã duyệt (`available`
+= 0), nhưng dữ liệu mẫu `packages/mock-data/src/extra.ts` đã có lô `DTBT-2610-41` cho sản phẩm 3. Không liên quan
+tìm kiếm. Đề xuất: đổi test sang một sản phẩm chưa có lô, hoặc tạo sản phẩm mới trong test.
 Status: open

@@ -41,8 +41,9 @@ export async function verifyOtp(_prev: { message: string } | null, formData: For
   try {
     const { data, error, response } = await api.POST("/auth/login", { body: { challengeId, code } });
     if (!data) {
-      if (response.status === 401) return { message: "Mã OTP không đúng hoặc đã hết hạn." };
-      return { message: problemMessage(error as Schema<"Problem">, response.status, "Chưa đăng nhập được. Vui lòng thử lại.") };
+      const fallback =
+        response.status === 401 ? "Mã OTP không đúng hoặc đã hết hạn." : "Chưa đăng nhập được. Vui lòng thử lại.";
+      return { message: problemMessage(error as Schema<"Problem">, response.status, fallback) };
     }
     await setSession(data.accessToken);
 

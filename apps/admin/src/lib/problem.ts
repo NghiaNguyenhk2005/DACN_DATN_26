@@ -2,6 +2,8 @@ import type { Problem } from "@farmery/contract";
 import type { HttpError } from "@refinedev/core";
 
 const MESSAGES: Record<string, string> = {
+  OTP_INVALID: "Mã OTP không đúng.",
+  OTP_EXPIRED: "Mã OTP đã hết hạn, vui lòng gửi lại mã.",
   UNAUTHENTICATED: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
   FORBIDDEN_ROLE: "Tài khoản của bạn không có quyền thực hiện thao tác này.",
   TASK_ALREADY_DECIDED: "Việc duyệt này đã có quyết định trước đó.",

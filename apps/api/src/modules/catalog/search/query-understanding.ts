@@ -1,5 +1,5 @@
 import type { Schema } from "@farmery/contract";
-import { levenshteinDistance } from "../utils/vietnamese-search.util";
+import { allowedTypos, editDistance, fold } from "./text-match";
 
 export type SearchInterpretation = Schema<"SearchInterpretation">;
 
@@ -11,16 +11,6 @@ const REGION_ALIASES: [string, string][] = [
   ["lac duong|langbiang", "Lang Biang"],
   ["duc trong|hiep an", "Hiệp Thạnh"],
 ];
-
-/** Bỏ dấu từng ký tự, giữ nguyên độ dài để vị trí khớp trên chuỗi bỏ dấu dùng lại được cho chuỗi gốc. */
-export function fold(text: string): string {
-  return text
-    .normalize("NFC")
-    .split("")
-    .map((c) => (c === "đ" || c === "Đ" ? "d" : c.normalize("NFD").charAt(0)))
-    .join("")
-    .toLowerCase();
-}
 
 const NUM = String.raw`(\d+(?:[.,]\d+)?)\s*(k|nghin|ngan|tr|trieu|dong|vnd|d)?(?![a-z])`;
 const W = (s: string) => String.raw`(?<![a-z0-9])(?:${s})(?![a-z])`;
@@ -103,11 +93,11 @@ export function correctQuery(keywords: string, vocabulary: Map<string, string>):
   const fixed = words.map((w) => {
     const key = fold(w);
     if (vocabulary.has(key) || key.length < 3) return w;
-    const limit = key.length <= 4 ? 1 : 2;
+    const limit = allowedTypos(key.length);
     let best: { word: string; d: number } | null = null;
     for (const [candidate, display] of vocabulary) {
       if (Math.abs(candidate.length - key.length) > limit) continue;
-      const d = levenshteinDistance(key, candidate);
+      const d = editDistance(key, candidate);
       if (d <= limit && (!best || d < best.d)) best = { word: display, d };
     }
     if (!best) return w;
