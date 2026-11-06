@@ -54,6 +54,7 @@ export function LoginPage() {
           </Form>
         ) : (
           <Form
+            key={challenge.challengeId}
             layout="vertical"
             requiredMark={false}
             onFinish={({ code }: { code: string }) => login({ challengeId: challenge.challengeId, code })}
@@ -64,6 +65,7 @@ export function LoginPage() {
             {challenge.devCode && (
               <Alert type="info" showIcon message={`Bản demo — mã OTP: ${challenge.devCode}`} style={{ marginBottom: 16 }} />
             )}
+            {error && <Alert type="error" showIcon message={error} style={{ marginBottom: 16 }} />}
             <Form.Item
               name="code"
               label="Mã OTP"
@@ -74,9 +76,14 @@ export function LoginPage() {
             <Button type="primary" htmlType="submit" size="large" block loading={isPending}>
               Đăng nhập
             </Button>
-            <Button type="link" block onClick={() => setChallenge(null)} style={{ marginTop: 8 }}>
-              Dùng email khác
-            </Button>
+            <Flex justify="space-between" style={{ marginTop: 8 }}>
+              <Button type="link" loading={sending} onClick={() => requestOtp({ email: challenge.email })}>
+                Gửi lại mã
+              </Button>
+              <Button type="link" onClick={() => setChallenge(null)}>
+                Dùng email khác
+              </Button>
+            </Flex>
           </Form>
         )}
       </Card>
