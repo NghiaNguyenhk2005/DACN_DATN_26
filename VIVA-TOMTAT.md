@@ -5,7 +5,7 @@ Soạn 2026-10-28 (mở rộng cùng ngày; đồng bộ lại với báo cáo 2
 Số mục kiểu "5.3.1" suy từ thứ tự mục trong LaTeX (các mục 5.3.1, 5.3.3, 5.3.4, 6.1.3, 6.2 có trong `DECISIONS.md`/`kehoach.tex`); có thể lệch 1 so với bản PDF, nên mở PDF đối chiếu trước khi trích số mục.
 Ký hiệu nguồn: `Ch4 §4.1.2` = chương 4, mục 4.1.2; `PL-L` = Phụ lục L; `tab:` / `fig:` = nhãn LaTeX.
 Ba nhãn của báo cáo (định nghĩa ở Ch4 §4.3.1, thống nhất toàn báo cáo): **Đã hiện thực** (mục không ghi chú) / **Chỉ thiết kế** (đặc tả đầy đủ nhưng cố ý không làm trong đồ án) / **Để sau prototype** (thuộc MVP hoặc đã cam kết, chưa làm ở prototype, sẽ làm khi có điều kiện nêu ở `tab:chi-thiet-ke`).
-Nhãn dùng trong file này (hiện trạng mã 28/10): **[Hiện thực]** = chạy trên API thật; **[Giao diện]** = nhãn riêng của file viva: giao diện dựng theo hợp đồng nhưng API còn 501; **[Để sau prototype]** = đúng nhãn báo cáo; **[Chỉ thiết kế]** = đúng nhãn báo cáo (cố ý không làm); **[Chưa có mã]** = nhãn riêng của file viva: thuộc bản nộp (báo cáo không gắn nhãn) nhưng chưa có mã ở prototype; **[Ngoài phạm vi]** = hướng phát triển (Ch8). Chỉ hai nhãn "Chỉ thiết kế" và "Để sau prototype" được phép nói với hội đồng như nhãn của báo cáo.
+Nhãn dùng trong file này (hiện trạng mã 28/10; luồng khách lẻ cập nhật 06/11 sau PR #46): **[Hiện thực]** = chạy trên API thật; **[Giao diện]** = nhãn riêng của file viva: giao diện dựng theo hợp đồng nhưng API còn 501; **[Để sau prototype]** = đúng nhãn báo cáo; **[Chỉ thiết kế]** = đúng nhãn báo cáo (cố ý không làm); **[Chưa có mã]** = nhãn riêng của file viva: thuộc bản nộp (báo cáo không gắn nhãn) nhưng chưa có mã ở prototype; **[Ngoài phạm vi]** = hướng phát triển (Ch8). Chỉ hai nhãn "Chỉ thiết kế" và "Để sau prototype" được phép nói với hội đồng như nhãn của báo cáo.
 Phần hỏi đáp dài: xem `VIVA-HOI-DAP.md` (100 câu). File này chỉ giữ câu hỏi hội đồng ngắn mỗi chương và 10 câu khó.
 
 ## Mục lục
@@ -479,7 +479,7 @@ NCC tạo lô (pending_review) + ghi nhật ký (chỉ nối thêm)
 
 Nhãn như ở đầu file: **[Hiện thực]**, **[Giao diện]** (có màn hình, API 501), **[Để sau prototype]**, **[Chỉ thiết kế]** (cố ý không làm), **[Chưa có mã]** (thuộc bản nộp, chưa có mã), **[Ngoài phạm vi]**.
 
-**E1. Đơn lẻ 1P, 19 bước (`fig:luong-don-le`) — [Giao diện], API `retail`/`payment`/`inventory` rỗng**
+**E1. Đơn lẻ 1P, 19 bước (`fig:luong-don-le`) — [Hiện thực] (từ PR #46, cập nhật 06/11)**
 
 | Bước | Ai → ai | Nội dung |
 |---|---|---|
@@ -545,14 +545,14 @@ Nhãn như ở đầu file: **[Hiện thực]**, **[Giao diện]** (có màn hì
 7. Thanh toán qua cổng khi nhận; Farmery thu hoa hồng + hóa đơn dịch vụ.
 - Chỉ thiết kế: ký số (FR6.6 đã rút), giao nhiều đợt (FR6.5), ký quỹ (FR7.3), khấu trừ thuế.
 
-**E6. Thanh toán và hoàn tiền — [Giao diện] (cổng giả); thật là [Chỉ thiết kế]**
+**E6. Thanh toán và hoàn tiền — [Hiện thực] với cổng giả lập (từ PR #46); cổng thật là [Chỉ thiết kế]**
 
 - Thanh toán: giữ chỗ 15 phút → cổng → webhook (chữ ký, xử lý một lần) → `PaymentSucceeded` → trừ tồn. Quá 15 phút hoặc thất bại → nhả giữ chỗ, tự hủy.
 - COD: chỉ đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng; báo giá trả `codReason` khi không đủ điều kiện.
 - Hoàn tiền: qua cổng, cam kết hoàn trong 7 ngày làm việc; hoàn không cần trả hàng dưới ngưỡng → bút toán hủy; sự kiện `Refunded`.
 - Farmery không giữ tiền; không lưu dữ liệu thẻ (NFR3.4); hóa đơn điện tử thật [Chỉ thiết kế], bản giả lập cùng giao diện.
 
-**E7. Giao ba chặng — [Giao diện] chỉ phần nhân viên chuyển trạng thái**
+**E7. Giao ba chặng — [Hiện thực] chỉ phần nhân viên chuyển trạng thái (từ PR #46)**
 
 1. Chặng 1: nhà cung cấp tự đưa hàng về kho sơ chế Lâm Đồng (xe gom chặng đầu là [Chỉ thiết kế]).
 2. Chặng 2: xe lạnh Lâm Đồng–TP.HCM theo chuyến cố định; manifest lập sau giờ chốt (`transfer_trips`, `trip_orders`).
@@ -663,8 +663,8 @@ Phần hỏi đáp đầy đủ (100 câu) nằm ở `VIVA-HOI-DAP.md`; ở đâ
 6. `NOTES.md` còn mục mở: TODO trích dẫn (văn bản pháp lý Ch2), kiểm tra lại Ch1 mục tiêu/phạm vi. (Tôi không rà lại toàn bộ `NOTES.md` nên có thể còn mục khác.)
 
 **B. Phần chưa hiện thực nhưng báo cáo viết như trục chính**
-7. **Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.** `retail`, `payment`, `inventory`, `fulfillment`, `procurement`, `wholesale`, `engagement`, `notification`, `media` chỉ có file module rỗng; hợp đồng 40 thao tác, **20 có handler**, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng **server giả ngoài repo, không commit** (`DECISIONS.md` 17/10, 21/10). `NOTES.md` mục "BE2" (27/10) vẫn `Status: open`.
-8. **Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:** `apps/api/README.md` nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun `inventory`/`retail` rỗng.
+7. **Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.** `retail`, `payment`, `inventory`, `fulfillment`, `procurement`, `wholesale`, `engagement`, `notification`, `media` chỉ có file module rỗng; hợp đồng 40 thao tác, **20 có handler**, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng **server giả ngoài repo, không commit** (`DECISIONS.md` 17/10, 21/10). `NOTES.md` mục "BE2" (27/10) vẫn `Status: open`. **Cập nhật 06/11: đã chạy trên API thật từ PR #46. `retail`, `payment`, `inventory` có handler; các thao tác của luồng khách lẻ (địa chỉ, giỏ, báo giá, đặt đơn, trả tiền giả lập, hủy, vận hành chuyển bước) không còn 501; e2e `kich-ban/mua-hang.spec.ts` (PR #53) đi trọn trên API thật.**
+8. **Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:** `apps/api/README.md` nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun `inventory`/`retail` rỗng. **Cập nhật 06/11: đã có mã và test từ PR #46 (`apps/api/test/retail-checkout.e2e-spec.ts`, `order-state-machine.e2e-spec.ts`): giữ chỗ đúng 15 phút rồi tự hủy, hai khách giành phần hàng cuối thì một người nhận 409 `STOCK_CONFLICT`, lấy lô hết hạn trước, máy trạng thái theo vai trò.**
 9. **Nhập liệu thay nhà cung cấp** (thuật ngữ mới của báo cáo): service đã gán `onBehalf` cho `staff_*`, nhưng `x-roles` của `appendFarmingLog` chỉ có `seller` → nhân viên hỗ trợ vùng sẽ bị 403; chưa có test. (Tôi suy từ đọc mã, chưa chạy.)
 10. **AI:** không có dịch vụ Python/FastAPI nào trong `apps/`; tìm kiếm là bỏ dấu + Levenshtein trong bộ nhớ, "tương tự" là cùng danh mục lấy 4 sản phẩm đầu, **không có** ngữ nghĩa/vector/dự báo giá/mã `product_embeddings`/`price_forecasts` thật.
 11. **Không có Web Push (Để sau prototype), SMTP gửi thư, SMS (chỉ thiết kế), hóa đơn giả lập, GHN, hoàn tiền** nào chạy; theo dõi đơn dùng hỏi lại 5 giây. Trong 5 hệ thống ngoài thuộc phạm vi MVP, mã chỉ có 2 đứng sau interface kèm bản giả (cổng thanh toán, gửi OTP qua email).
@@ -805,9 +805,9 @@ Use case có mã riêng trong báo cáo chỉ gồm UC-B2, B4, B5, C4, C6, C7, D
 
 | FR | Nội dung | Use case | Mô-đun | Bảng chính | Trạng thái mã 28/10 |
 |---|---|---|---|---|---|
-| FR1.1–1.2 | Đăng ký/đăng nhập theo vai trò, OTP email | — | identity | users, user_roles, otp_challenges | [Hiện thực] bản tạm (đăng nhập bằng email; bằng số điện thoại và Google/Facebook [Chỉ thiết kế]) |
+| FR1.1–1.2 | Đăng ký/đăng nhập theo vai trò, OTP email | — | identity | users, user_roles, otp_challenges | [Hiện thực] (đăng nhập bằng email; bằng số điện thoại và Google/Facebook [Chỉ thiết kế]) |
 | FR1.3–1.4 | Tài khoản doanh nghiệp mua sỉ (kiểm duyệt viên xác minh GPKD, MST); eKYC người bán (duyệt thủ công ảnh giấy tờ) | — | identity | businesses, ekyc_documents | FR1.3 [Chưa có mã]; FR1.4 [Để sau prototype] (đối chiếu khuôn mặt tự động [Chỉ thiết kế]) |
-| FR1.5–1.6 | Sổ địa chỉ; đồng ý và quyền dữ liệu | — | identity | addresses, consent_records, data_requests | [Giao diện] địa chỉ (501) |
+| FR1.5–1.6 | Sổ địa chỉ; đồng ý và quyền dữ liệu | — | identity | addresses, consent_records, data_requests | [Hiện thực] sổ địa chỉ; đồng ý và quyền dữ liệu [Chưa có mã] |
 | FR2.1–2.4 | Hồ sơ NCC; thống kê; theo dõi tồn; loại người bán thuế | — | supplier | suppliers | [Hiện thực] chỉ đọc hồ sơ; FR2.2 thống kê [Để sau prototype] |
 | FR3.1–3.3 | Chứng nhận: tải, duyệt, theo dõi hạn | — | supplier | certifications | [Hiện thực] hiển thị trên trang QR; tải/duyệt chứng nhận và nhắc gia hạn (FR3.3) [Để sau prototype] |
 | FR4.1 | Đăng sản phẩm | UC-B4 | catalog | products, batches | [Hiện thực] lô; [Giao diện] sản phẩm mới |
@@ -815,14 +815,14 @@ Use case có mã riêng trong báo cáo chỉ gồm UC-B2, B4, B5, C4, C6, C7, D
 | FR4.3 | Giữ chỗ/trừ tồn khi phát sinh giao dịch | UC-C4 | inventory | reservations, stock_holdings | [Chưa có mã] |
 | FR4.4–4.6 | Danh mục đa cấp, tìm kiếm–lọc, ràng buộc hợp lệ | — | catalog | categories, products | [Hiện thực] |
 | FR4.7 | Báo cáo sai danh mục | — | catalog | — | [Để sau prototype] |
-| FR5.1–5.2, 5.4 | Giỏ, đặt hàng, theo dõi 8 trạng thái | UC-C4 | retail | carts, cart_items, orders, order_status_events | [Giao diện] |
+| FR5.1–5.2, 5.4 | Giỏ, đặt hàng, theo dõi 8 trạng thái | UC-C4 | retail | carts, cart_items, orders, order_status_events | [Hiện thực] |
 | FR5.3, 5.6, 5.7 | Mã giảm giá; mua lại; báo khi có hàng | — | retail | vouchers, restock_subscriptions | FR5.3, FR5.7 [Để sau prototype]; FR5.6 [Chưa có mã] |
 | FR5.5 | Đánh giá sản phẩm | UC-C7 | engagement | reviews, review_replies, supplier_reputation | [Để sau prototype] |
 | FR6.1–6.4 | RFQ, báo giá, hợp đồng, giá bậc | UC-D4 | wholesale | rfqs, rfq_messages, contracts, contract_versions, contract_confirmations, price_tiers | [Chưa có mã] |
 | FR6.5 | Giao nhiều đợt | — | wholesale | wholesale_orders | [Chỉ thiết kế] |
-| FR7.1–7.2 | Thanh toán, hóa đơn | UC-C4 | payment | payments, refunds, invoices | [Giao diện] (cổng giả) |
+| FR7.1–7.2 | Thanh toán, hóa đơn | UC-C4 | payment | payments, refunds, invoices | [Hiện thực] thanh toán qua cổng giả lập; hóa đơn [Chưa có mã] |
 | FR7.3–7.4 | Ký quỹ; đối soát–hoa hồng–thuế | — | payment | commission_settlements, supplier_payouts | [Chỉ thiết kế] |
-| FR8.1–8.2 | Giao ba chặng; phí giao | — | fulfillment | transfer_trips, trip_orders, shipments, shipment_events | [Giao diện] chuyển trạng thái; xe gom chặng đầu, kiểm khi xuất kho [Chỉ thiết kế]; còn lại [Chưa có mã] |
+| FR8.1–8.2 | Giao ba chặng; phí giao | — | fulfillment | transfer_trips, trip_orders, shipments, shipment_events | [Hiện thực] chuyển trạng thái, phí giao; xe gom chặng đầu, kiểm khi xuất kho [Chỉ thiết kế]; còn lại [Chưa có mã] |
 | FR8.3 | Đổi trả, hoàn tiền, khiếu nại | UC-C6 | fulfillment, payment | return_requests, refunds | [Để sau prototype] |
 | FR9.1–9.2 | Trao đổi theo đơn; yêu thích | — | fulfillment, engagement | messages, wishlist_items | FR9.1 [Chưa có mã]; FR9.2 [Để sau prototype] |
 | FR10.1 | Duyệt hồ sơ (NCC, doanh nghiệp mua sỉ), sản phẩm, lô | UC-B4 | operations | review_tasks | [Hiện thực] phần lô; hồ sơ NCC [Để sau prototype] |
