@@ -17,7 +17,7 @@ Gốc repo chứa tài liệu dự án dùng chung cho cả báo cáo lẫn mã 
 
 | File | Vai trò |
 |---|---|
-| `README.md` | Giới thiệu ngắn và bố cục repo |
+| `README.md` | Giới thiệu, bố cục repo, phạm vi (hiện thực / chỉ thiết kế theo nhóm FR, AI, NFR, hướng phát triển), hiện trạng mã nguồn theo mô-đun, cách chạy, quy trình git |
 | `DECISIONS.md` | Log quyết định kỹ thuật/nội dung đã chốt (append-only) |
 | `MVP.md` | Phạm vi MVP chi tiết theo mã FR/NFR; báo cáo ghi phạm vi hiện thực ở mục 1.3.4 và đánh dấu *(chỉ thiết kế)* trong từng FR — ba chỗ phải khớp nhau. Mục 6: phần giả lập ở prototype và bản thật ở MVP, bốn điều kiện rà ở mốc 21/10 |
 | `NOTES.md` | Việc đang mở, chưa chốt |
