@@ -57,6 +57,9 @@
       "dependsOn": [
         "^build"
       ],
+      "passThroughEnv": [
+        "RATE_LIMIT_*"
+      ],
       "cache": false,
       "persistent": true
     }

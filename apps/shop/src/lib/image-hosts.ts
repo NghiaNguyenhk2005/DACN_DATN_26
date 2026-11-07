@@ -14,7 +14,6 @@ export const IMAGE_HOSTS = [
   "k-gardennongsandalat.com",
   "namxanh.vn",
   "nongid.vn",
-  "scontent.fsgn2-8.fna.fbcdn.net",
   "trucvufarm.com.vn",
   "vnn.1cdn.vn",
 ] as const;

@@ -17,11 +17,17 @@ if (-not $Serve) { Write-Host ">> Đảm bảo có trình duyệt Chromium"; pnp
 
 $proc = $null
 $allUp = -not ($targets.Values | Where-Object { -not (Test-Up $_) })
-if ($allUp) { Write-Host ">> Server đã chạy sẵn, dùng lại (không tắt khi xong)" }
+if ($allUp) {
+  Write-Host ">> Server đã chạy sẵn, dùng lại (không tắt khi xong)"
+  Write-Host "!! Giới hạn đăng nhập theo cấu hình của server đang chạy (mặc định 30 lượt/phút); e2e có thể gặp 429 — tắt server để script tự bật với RATE_LIMIT_AUTH_MAX=300"
+}
 else {
   Write-Host ">> Bật server (log: scripts/.demo-dev.log)"
   $log = Join-Path $PSScriptRoot ".demo-dev.log"
-  $proc = Start-Process cmd -ArgumentList "/c", "pnpm dev > `"$log`" 2>&1" -WorkingDirectory $root -WindowStyle Hidden -PassThru
+  # Như webServer của playwright.config.ts: cả bộ e2e cần hơn 30 lượt /api/auth mỗi phút.
+  $authMax = if ($env:RATE_LIMIT_AUTH_MAX) { $env:RATE_LIMIT_AUTH_MAX } else { "300" }
+  $dev = if ($Serve) { "pnpm dev" } else { "set `"RATE_LIMIT_AUTH_MAX=$authMax`" && pnpm dev" }
+  $proc = Start-Process cmd -ArgumentList "/c", "$dev > `"$log`" 2>&1" -WorkingDirectory $root -WindowStyle Hidden -PassThru
 }
 $code = 0
 try {
