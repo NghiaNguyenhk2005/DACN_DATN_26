@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { CatalogService } from "./catalog.service";
 import { CurrentUser } from "../../core/current-user.decorator";
@@ -35,9 +35,8 @@ export class SellerBatchController {
   createBatch(
     @Body() body: Schema<"BatchInput">,
     @CurrentUser() user?: AuthUser,
-    @Headers("idempotency-key") idempotencyKey?: string,
   ): Promise<Batch> {
-    return this.catalog.createBatch(body, user, idempotencyKey);
+    return this.catalog.createBatch(body, user);
   }
 
   @Get("seller/batches/:batchId")
@@ -61,8 +60,7 @@ export class SellerBatchController {
     @Param("batchId") batchId: string,
     @Body() body: Schema<"FarmingLogInput">,
     @CurrentUser() user?: AuthUser,
-    @Headers("idempotency-key") idempotencyKey?: string,
   ): Promise<FarmingLog> {
-    return this.catalog.appendFarmingLog(batchId, body, user, idempotencyKey);
+    return this.catalog.appendFarmingLog(batchId, body, user);
   }
 }

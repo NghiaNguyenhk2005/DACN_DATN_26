@@ -134,7 +134,7 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
         </section>
       )}
 
-      {/* Thu hồi: hiện lý do rõ ràng */}
+      {/* Thu hồi: hiện lý do rõ ràng (FR13.6) */}
       {batch.recalledAt && (
         <section className="flex items-start gap-3 rounded-panel border border-danger-line bg-danger-soft px-5 py-4 text-danger-ink">
           <AlertCircle className="mt-0.5 size-5 flex-none text-danger" aria-hidden />
@@ -142,9 +142,11 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
             <h3 className="text-title font-semibold text-danger">
               Lô đã bị thu hồi — {formatTimeVi(batch.recalledAt)}
             </h3>
-            {batch.rejectReason && (
+            {/* Sử dụng trường lý do thu hồi riêng nếu có, dự phòng rejectReason (FR13.6) */}
+            {((batch as unknown as { recallReason?: string }).recallReason || batch.rejectReason) && (
               <p className="mt-0.5 text-small">
-                <strong>Lý do thu hồi:</strong> {batch.rejectReason}
+                <strong>Lý do thu hồi:</strong>{" "}
+                {((batch as unknown as { recallReason?: string }).recallReason || batch.rejectReason)}
               </p>
             )}
             <p className="mt-1.5 text-small text-ink-2">
@@ -162,7 +164,12 @@ export default async function SellerBatchDetailPage({ params, searchParams }: Pa
           <span className="text-small text-ink-2">{activeLogs.length} dòng hoạt động</span>
         </div>
 
-        <FarmingLogForm batchId={batch.id} existingLogs={logs} initialEditLogId={editLogId} />
+        <FarmingLogForm
+          batchId={batch.id}
+          productName={batch.productName}
+          existingLogs={logs}
+          initialEditLogId={editLogId}
+        />
 
         {activeLogs.length === 0 ? (
           <p className="rounded-card border border-dashed border-line-strong px-5 py-6 text-center text-small text-ink-2">

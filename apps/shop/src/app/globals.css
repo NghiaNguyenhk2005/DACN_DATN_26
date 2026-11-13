@@ -205,15 +205,16 @@
 }
 
 @media print {
-  body {
+  /* Chỉ áp dụng bố cục in tem riêng khi trang có #tem-qr-print (trang chi tiết lô hàng) */
+  body:has(#tem-qr-print) {
     background: #fff !important;
     color: #000 !important;
   }
-  body * {
+  body:has(#tem-qr-print) * {
     visibility: hidden;
   }
-  #tem-qr-print,
-  #tem-qr-print * {
+  body:has(#tem-qr-print) #tem-qr-print,
+  body:has(#tem-qr-print) #tem-qr-print * {
     visibility: visible;
   }
   #tem-qr-print {
