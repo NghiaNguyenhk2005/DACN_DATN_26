@@ -83,23 +83,6 @@ export class CatalogService {
     return (await this.keyword.rank(q, { fuzzy: true })).map((h) => h.productId);
   }
 
-  /** Cache idempotency đơn giản trong bộ nhớ; key = Idempotency-Key header, value = kết quả đã lưu. */
-  private readonly idempotencyCache = new Map<string, { result: unknown; expiresAt: number }>();
-
-  private idempotencyGet<T>(key: string | undefined): T | undefined {
-    if (!key) return undefined;
-    const entry = this.idempotencyCache.get(key);
-    if (!entry) return undefined;
-    if (Date.now() > entry.expiresAt) { this.idempotencyCache.delete(key); return undefined; }
-    return entry.result as T;
-  }
-
-  private idempotencySet<T>(key: string | undefined, value: T): void {
-    if (!key) return;
-    // TTL 24 giờ
-    this.idempotencyCache.set(key, { result: value, expiresAt: Date.now() + 86_400_000 });
-  }
-
   /** Kiểm tra lô `batchId` thuộc nhà cung cấp đang đăng nhập; ném 403 nếu không phải. */
   private async assertBatchOwnership(batchId: string, batch: Batch, user?: AuthUser): Promise<void> {
     if (!user) return; // anonymous / staff sẽ không qua controller này
@@ -439,11 +422,7 @@ export class CatalogService {
     return batch;
   }
 
-  async createBatch(input: Schema<"BatchInput">, user?: AuthUser, idempotencyKey?: string): Promise<Batch> {
-    // Idempotency: nếu đã xử lý cùng key → trả lại kết quả cũ
-    const cached = this.idempotencyGet<Batch>(idempotencyKey);
-    if (cached) return cached;
-
+  async createBatch(input: Schema<"BatchInput">, user?: AuthUser): Promise<Batch> {
     const supplierId = user ? await this.supplierService.requireSupplierId(user.id) : undefined;
     const product = await this.products.findById(input.productId);
     if (!product) {
@@ -516,7 +495,6 @@ export class CatalogService {
 
     const created = await this.batches.createBatch(batch);
     await this.operationsService.createBatchReviewTask(created);
-    this.idempotencySet(idempotencyKey, created);
     return created;
   }
 
@@ -537,12 +515,7 @@ export class CatalogService {
     batchId: string,
     input: Schema<"FarmingLogInput">,
     user?: AuthUser,
-    idempotencyKey?: string,
   ): Promise<FarmingLog> {
-    // Idempotency: trả lại kết quả cũ nếu đã xử lý
-    const cached = this.idempotencyGet<FarmingLog>(idempotencyKey);
-    if (cached) return cached;
-
     const batch = await this.batches.findById(batchId);
     if (!batch) {
       throw new ProblemException(
@@ -607,7 +580,6 @@ export class CatalogService {
     };
 
     const result = await this.batches.appendFarmingLog(newLog);
-    this.idempotencySet(idempotencyKey, result);
     return result;
   }
 

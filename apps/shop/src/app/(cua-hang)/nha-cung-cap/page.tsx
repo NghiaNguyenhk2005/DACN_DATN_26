@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AlertCircle, ArrowRight, MessageSquareQuote, ShieldAlert } from "lucide-react";
 import { ReviewStatusBadge } from "@/components/farmery/status-badge";
 import { getSellerBatches, getSellerCertifications, getSellerProducts, getSellerQuoteRequests } from "@/lib/data/seller";
+import { INITIAL_PURCHASE_ORDERS } from "@/lib/data/mock-purchase-orders";
 import { certValidity, daysBetween, todayVn } from "@/lib/decision";
 import { formatDateVi, formatQty } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
@@ -65,7 +66,7 @@ export default async function SellerOverviewPage() {
     { label: "Lô đang bán", value: batches.filter((b) => b.status === "approved" && !b.recalledAt).length, href: "/nha-cung-cap/lo-hang?status=approved" },
     { label: "Chờ duyệt", value: batches.filter((b) => b.status === "pending_review").length, href: "/nha-cung-cap/lo-hang?status=pending_review" },
     { label: "Bị từ chối", value: batches.filter((b) => b.status === "rejected").length, href: "/nha-cung-cap/lo-hang?status=rejected" },
-    { label: "Đơn thu mua", value: 3, href: "/nha-cung-cap/don-thu-mua" },
+    { label: "Đơn thu mua", value: INITIAL_PURCHASE_ORDERS.length, href: "/nha-cung-cap/don-thu-mua" },
   ];
 
   return (
