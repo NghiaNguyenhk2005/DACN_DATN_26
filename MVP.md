@@ -3,6 +3,9 @@
 Chốt ngày 2026-10-01, viết lại 2026-10-08 theo phiên siết phạm vi 7/10 (trục thương mại điện tử).
 Cập nhật 2026-10-13: OTP chỉ gửi qua email; thêm mục 6 về prototype và đường đi tiếp lên MVP.
 Cập nhật 2026-11-06: FR2.2, FR4.7, FR5.3, FR9.2, FR10.4 chốt *(chỉ thiết kế)*; FR11.2 làm nếu kịp.
+Cập nhật 2026-11-06 (lần 2): báo cáo bỏ nhãn *(để sau prototype)*, chỉ còn hiện thực (mặc định) và *(chỉ thiết kế)*.
+Chuyển sang *(chỉ thiết kế)*: kết nối VNPay, GHN, Web Push, FR11.2, FR9.1, FR5.7; dự báo giá chỉ chạy offline;
+bán sỉ một vòng phản hồi giá.
 Tài liệu này xác định phần nào của bộ yêu cầu trong báo cáo (mục 4.3, FR1–FR13 và NFR1–NFR9)
 được hiện thực ở phiên bản nộp cuối kỳ, phần nào để sau. Mã yêu cầu dùng đúng mã trong báo cáo.
 
@@ -16,10 +19,12 @@ MVP làm sâu **trục bán lẻ đầu–cuối** và giữ tối giản hai ph
 **Trục bán lẻ (1P) — làm sâu**
 
 1. Khách tìm kiếm (từ khóa không dấu, gõ sai, tìm theo ngữ nghĩa), xem sản phẩm và sản phẩm tương tự.
-2. Giỏ hàng, thanh toán: khung giờ giao, COD có điều kiện, giữ chỗ tồn 15 phút có khóa dòng.
-3. Theo dõi đơn trên dòng thời gian tám trạng thái, thông báo đẩy hoặc email ở mỗi bước.
-4. Giao ba chặng: nhà cung cấp tự đưa hàng về kho, chuyến trung chuyển xe lạnh, 3PL nội thành (GHN thử nghiệm).
-5. Đổi trả, hoàn tiền kèm trao đổi theo đơn; đánh giá; mua lại; báo khi có hàng hoặc vào mùa.
+2. Giỏ hàng, thanh toán qua bản giả lập của cổng thanh toán: khung giờ giao, COD có điều kiện, giữ chỗ tồn 15 phút
+   có khóa dòng.
+3. Theo dõi đơn trên dòng thời gian tám trạng thái, thông báo trong web và email ở mỗi bước.
+4. Giao ba chặng: nhà cung cấp tự đưa hàng về kho, chuyến trung chuyển xe lạnh, chặng cuối nội thành do nhân viên
+   vận hành cập nhật trạng thái (kết nối 3PL chỉ thiết kế).
+5. Đổi trả, hoàn tiền; đánh giá; mua lại.
 6. Hóa đơn điện tử giả lập khi đơn hoàn tất; trang truy xuất QR công khai.
 
 **Nguồn hàng — rút gọn**
@@ -29,8 +34,8 @@ xác nhận của nhà cung cấp, nghiệm thu, nhập dòng tồn, đóng gói
 
 **Bán sỉ (3P) — tối giản**
 
-RFQ → phản hồi, thương lượng → chốt → sinh hợp đồng, xác nhận giao kết bằng OTP → giao **một đợt**,
-thanh toán thường qua cổng khi bên mua xác nhận nhận hàng.
+RFQ → phản hồi giá **một vòng** (chấp nhận hoặc từ chối) → sinh hợp đồng, xác nhận giao kết bằng OTP → giao
+**một đợt**, thanh toán thường qua bản giả lập của cổng khi bên mua xác nhận nhận hàng.
 
 Một yêu cầu **để sau MVP** khi rơi vào ít nhất một trường hợp:
 
@@ -44,16 +49,16 @@ Một yêu cầu **để sau MVP** khi rơi vào ít nhất một trường hợ
 |---|---|---|---|
 | FR1 Tài khoản | 1.1 (email; số điện thoại khai để liên hệ, giao hàng), 1.2 (OTP qua email), 1.3, 1.4 (duyệt ảnh giấy tờ thủ công), 1.5, 1.6 đồng ý và quyền dữ liệu | Đăng nhập mạng xã hội *(chỉ thiết kế)*; xác minh số điện thoại, OTP qua SMS *(chỉ thiết kế)*; eKYC đối chiếu khuôn mặt tự động | Không trên trục chính; cần dịch vụ ngoài; SMS tính phí theo tin |
 | FR2 Nhà cung cấp | 2.1, 2.3, 2.4 khai báo loại người bán | 2.2 thống kê cho nhà cung cấp *(chỉ thiết kế)* | Không trên trục chính; dữ liệu mô phỏng chưa đủ để thống kê có ý nghĩa |
-| FR3 Chứng nhận | 3.1, 3.2, 3.3 (tự đánh dấu hết hạn) | Nhắc gia hạn (đi theo FR11.2: làm nếu kịp, không thì *(chỉ thiết kế)*) | Phụ thuộc FR11.2 |
+| FR3 Chứng nhận | 3.1, 3.2, 3.3 (tự đánh dấu hết hạn) | Nhắc gia hạn *(chỉ thiết kế)* | Đi theo FR11.2 |
 | FR4 Sản phẩm, truy xuất | 4.1–4.6 | 4.7 báo cáo sai danh mục *(chỉ thiết kế)* | Không trên trục chính |
-| FR5 Bán lẻ | 5.1, 5.2, 5.4, 5.5, 5.6 mua lại, 5.7 báo vào mùa | 5.3 mã giảm giá *(chỉ thiết kế)* | Không trên trục chính |
-| FR6 Bán sỉ | 6.1–6.4 (giao một đợt) | 6.5 giao nhiều đợt *(chỉ thiết kế)* | Sỉ giữ tối giản |
-| FR7 Thanh toán, hóa đơn | 7.1 (thử nghiệm, COD điều kiện, hoàn tiền), 7.2 hóa đơn giả lập, 7.4 phần tính hoa hồng | 7.3 ký quỹ *(chỉ thiết kế)*; 7.4 phần khấu trừ thuế *(chỉ thiết kế)*; kết nối nhà cung cấp hóa đơn thật | Cần hợp đồng, chứng thư số của doanh nghiệp |
-| FR8 Giao hàng, khiếu nại | 8.1 ba chặng, 8.2, 8.3 | Xe gom chặng đầu *(chỉ thiết kế)* | Nhà cung cấp tự đưa hàng ở bản hiện thực |
-| FR9 Tương tác | 9.1 trao đổi theo đơn | 9.2 yêu thích *(chỉ thiết kế)* | Không trên trục chính |
+| FR5 Bán lẻ | 5.1, 5.2, 5.4, 5.5, 5.6 mua lại; khối "Sắp vào mùa" chỉ hiển thị | 5.3 mã giảm giá, 5.7 đăng ký báo khi có hàng hoặc vào mùa, phản hồi công khai dưới đánh giá (5.5) *(chỉ thiết kế)* | Không trên trục chính; 5.7 cần kênh thông báo chủ động |
+| FR6 Bán sỉ | 6.1–6.4 (một vòng phản hồi giá, hợp đồng sinh một lần, giao một đợt) | Thương lượng nhiều vòng, sửa hợp đồng nhiều phiên bản; 6.5 giao nhiều đợt *(chỉ thiết kế)* | Sỉ giữ tối giản |
+| FR7 Thanh toán, hóa đơn | 7.1 (bản giả lập của cổng sau interface, COD điều kiện, hoàn tiền), 7.2 hóa đơn giả lập, 7.4 phần tính hoa hồng | Kết nối cổng VNPay thử nghiệm *(chỉ thiết kế)*; 7.3 ký quỹ *(chỉ thiết kế)*; 7.4 phần khấu trừ thuế *(chỉ thiết kế)*; kết nối nhà cung cấp hóa đơn thật | Phụ thuộc bên ngoài, Chương 7 không đo; cần hợp đồng, chứng thư số của doanh nghiệp |
+| FR8 Giao hàng, khiếu nại | 8.1 ba chặng (chặng cuối nhân viên cập nhật), 8.2, 8.3 | Kết nối GHN thử nghiệm và webhook *(chỉ thiết kế)*; xe gom chặng đầu *(chỉ thiết kế)* | Phụ thuộc bên ngoài, Chương 7 không đo; nhà cung cấp tự đưa hàng |
+| FR9 Tương tác | — | 9.1 trao đổi theo đơn, 9.2 yêu thích *(chỉ thiết kế)* | Không trên trục chính, không đo |
 | FR10 Vận hành | 10.1, 10.2, 10.3, 10.5, 10.6, 10.7 | 10.4 báo cáo tổng quan *(chỉ thiết kế)* | Không trên trục chính; dữ liệu mô phỏng chưa đủ để thống kê có ý nghĩa |
-| FR11 Thông báo | 11.1 (web, thông báo đẩy, email) | Kênh SMS *(chỉ thiết kế)*; 11.2 cảnh báo hết hạn, tồn thấp (làm nếu kịp ở tuần 10, không thì *(chỉ thiết kế)*) | SMS tính phí theo tin; 11.2 chỉ cần nối sự kiện có sẵn vào mô-đun thông báo |
-| FR12 AI | 12.1 sản phẩm tương tự; 12.2 dự báo giá chạy offline; 12.3 tìm sản phẩm theo ngữ nghĩa | Gợi ý cá nhân hóa theo hành vi; tìm nhà cung cấp theo ngữ nghĩa *(chỉ thiết kế)* | Cần dữ liệu tương tác chưa có |
+| FR11 Thông báo | 11.1 (thông báo trong web, email) | Thông báo đẩy Web Push, kênh SMS *(chỉ thiết kế)*; 11.2 cảnh báo hết hạn, tồn thấp *(chỉ thiết kế)* | Web Push cần service worker, khóa VAPID; SMS tính phí theo tin; 11.2 không đo |
+| FR12 AI | 12.1 sản phẩm tương tự; 12.2 dự báo giá chạy offline, đo MAPE (không có endpoint, không có trang admin); 12.3 tìm sản phẩm theo ngữ nghĩa | Hiển thị dự báo cho nhân viên thu mua; gợi ý cá nhân hóa theo hành vi; tìm nhà cung cấp theo ngữ nghĩa *(chỉ thiết kế)* | Cần dữ liệu tương tác chưa có; dự báo chỉ cần số đo cho Chương 7 |
 | FR13 Thu mua, kho | 13.1, 13.2, 13.3, 13.4 (đóng gói một bước), 13.6 thu hồi lô | Sơ chế, phân loại nhiều bước; kiểm kê định kỳ *(chỉ thiết kế)* | Kho rút gọn |
 
 **Đã rút khỏi bộ FR, chuyển hướng phát triển (Chương 8):** FR4.8 đồng bộ TraceViet, FR6.6 ký số,
@@ -77,11 +82,15 @@ NFR3.6: xác thực hai lớp của nhân sự nội bộ dùng ứng dụng xá
 
 ## 4. Thứ tự ưu tiên sau MVP
 
-1. FR11.2 cảnh báo hết hạn chứng nhận và tồn thấp (sự kiện `CertExpired`, `StockLow` đã có sẵn). Là việc phụ
-   của tuần 10 trong bản nộp; mọi mục dưới đây đã chốt *(chỉ thiết kế)* ngày 2026-11-06.
-2. FR10.4 báo cáo tổng quan và FR2.2 thống kê cho nhà cung cấp.
-3. FR5.3 mã giảm giá, FR9.2 yêu thích, FR4.7 báo cáo sai danh mục.
-4. Các mục chỉ thiết kế còn lại và hướng phát triển ở Chương 8.
+Mọi mục dưới đây đã chốt *(chỉ thiết kế)* ngày 2026-11-06, không nằm trong bản nộp.
+
+1. Kết nối VNPay, GHN thử nghiệm (đã có interface và bản giả lập, chỉ thay phần kết nối).
+2. Thông báo đẩy Web Push, FR11.2 cảnh báo hết hạn chứng nhận và tồn thấp (sự kiện `CertExpired`, `StockLow` đã có
+   sẵn), FR5.7 báo khi có hàng hoặc vào mùa.
+3. FR9.1 trao đổi theo đơn; hiển thị dự báo giá cho nhân viên thu mua.
+4. FR10.4 báo cáo tổng quan và FR2.2 thống kê cho nhà cung cấp.
+5. FR5.3 mã giảm giá, FR9.2 yêu thích, FR4.7 báo cáo sai danh mục.
+6. Các mục chỉ thiết kế còn lại và hướng phát triển ở Chương 8.
 
 ## 5. Việc cần làm theo tài liệu này
 
@@ -99,9 +108,9 @@ bản hoàn chỉnh. Khác biệt chỉ nằm ở các phần giả lập dướ
 |---|---|---|
 | Lưu trữ | Trong bộ nhớ, mỗi mô-đun một repository, nạp từ `packages/mock-data`; `POST /api/dev/reset` | Prisma + PostgreSQL, 13 schema; repository bản Prisma, cùng interface |
 | Đăng nhập | OTP cố định `123456` trả trong `devCode`; JWT ký thật | OTP qua email (SMTP); xác thực hai lớp TOTP cho nội bộ (NFR3.6) |
-| Thanh toán | Bản giả `DemoPaymentGateway`, trả tiền giả lập | Môi trường thử nghiệm của cổng thanh toán, kết quả về qua webhook |
-| Giao hàng | Nhân viên bấm chuyển bước thay webhook 3PL | GHN thử nghiệm, webhook; chuyến trung chuyển do nhân viên kho cập nhật |
-| Theo dõi đơn | Hỏi lại mỗi 5 giây | Thông báo đẩy, email ở mỗi bước (FR11.1) |
+| Thanh toán | Bản giả `DemoPaymentGateway`, trả tiền giả lập | Giữ bản giả sau interface, đủ ca thất bại, hết hạn, hoàn tiền; kết nối cổng thật chỉ thiết kế |
+| Giao hàng | Nhân viên bấm chuyển bước thay webhook 3PL | Chuyến trung chuyển do nhân viên kho cập nhật; chặng cuối vẫn do nhân viên cập nhật; GHN chỉ thiết kế |
+| Theo dõi đơn | Hỏi lại mỗi 5 giây | Thông báo trong web, email ở mỗi bước (FR11.1) |
 | Tìm kiếm, tương tự | Bỏ dấu + so khớp gần đúng; cùng danh mục | `unaccent` + trigram + vector BGE-M3 (FR12.1, FR12.3) |
 | Tệp | Nhận trực tiếp (Could) | URL ký trước lên MinIO |
 | Ứng dụng mua hàng | Web | PWA, ghi nhật ký canh tác khi mất sóng (NFR7.3) |
