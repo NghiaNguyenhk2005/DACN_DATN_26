@@ -685,6 +685,8 @@ SỬA 2026-10-07 (phiên siết phạm vi, mục cuối file):
 - Một ứng dụng PWA chung → hai ứng dụng (mua hàng: Next.js PWA; nội bộ: React, Vite, Refine) trên một API.
 - "MVP không ghi vào báo cáo" đảo một phần: báo cáo vẫn thiết kế hai luồng, thêm mục 1.3.4 Phạm vi hiện thực và quy ước "(chỉ thiết kế)" trong FR; bảng chi tiết vẫn ở `MVP.md`.
 - AI search (FR12.3) chỉ tìm sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế.
+SỬA 2026-11-16: bỏ SonarQube Cloud khỏi CI và khỏi trụ cột chất lượng mã nguồn (mục "Bỏ SonarQube Cloud..." 2026-11-16); việc kiểm
+giới hạn bản miễn phí SonarQube Cloud ở "Còn mở" không còn cần làm.
 
 ### Quy ước bảng thống nhất và rút thân báo cáo về 102 trang — 2026-10-01
 **Bối cảnh:** 36 bảng dùng 5 mức giãn dòng, 4 mức khoảng cách cột và tô màu xen kẽ viết tay (đã lệch ở vài bảng). Thân báo cáo 119 trang, mục tiêu lâu dài khoảng 100 trang.
@@ -955,6 +957,8 @@ chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm �
 tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
 đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
 build lại sau các sửa đổi báo cáo.
+SỬA 2026-11-16: Redis không còn nằm trong bản nộp, kể cả cho Idempotency: Redis chuyển sang *(chỉ thiết kế)* (mục "Bus sự kiện trong
+tiến trình..." 2026-11-16); Idempotency-Key vẫn lưu trong bộ nhớ của tiến trình.
 
 ### Giao diện công khai `apps/shop`: token, route, dữ liệu — 2026-10-16
 **Quyết định** (user chốt theo đề xuất). Đánh dấu **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10, phải
@@ -1147,6 +1151,8 @@ PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
 NFR2.2 hai nghĩa; ERD hai hình 31 và 34 bảng chữ nhỏ khó đọc.
 **Đánh đổi:** báo cáo dài thêm khoảng 20 trang do mỗi hình ERD một trang; hình use case và sitemap dùng một chú thích chung cho cả
 hai nhãn nét đứt thay vì thêm một kiểu nét thứ ba.
+SỬA 2026-11-16: tên gọi "Hàng đợi sự kiện và cache (Redis)" chỉ còn đúng với kiến trúc thiết kế; bản nộp dùng bus trong tiến trình
+(mục "Bus sự kiện trong tiến trình..." 2026-11-16). Báo cáo (Phụ lục V, Chương 5) chưa sửa theo, làm ở tuần 9.
 
 ### Bộ tài liệu thiết kế FE và 10 hạng mục UI/UX — 2026-11-05
 **Quyết định** (user chốt theo đề xuất):
@@ -1274,6 +1280,8 @@ Bổ sung cùng ngày, sau khi rà toàn báo cáo:
 - `tab:kiemduyet-giaidoan` giữ cột trạng thái với hai giá trị. NFR7.1 giữ, đo trên lớp tích hợp với bản giả lập.
   NFR7.3 bỏ phần "nhận thông báo đẩy". Theo dõi đơn ở bản nộp: hỏi lại định kỳ, chuông thông báo trong web, email.
 - Phản hồi công khai dưới đánh giá do Farmery thực hiện (bán lẻ 1P), không phải nhà cung cấp; sửa các chỗ lệch.
+SỬA 2026-11-16: SonarQube bị bỏ khỏi danh sách "giữ hiện thực" (mục "Bỏ SonarQube Cloud..." 2026-11-16); email của FR11.1 chuyển
+từ "giữ hiện thực" sang "làm nếu còn thời gian, không kịp thì chỉ thiết kế" (mục "Ghi bổ sung các quyết định ngày 16/11" cuối file).
 
 ### Phản hồi công khai dưới đánh giá chỉ thiết kế; NFR7.1 đo trên bản giả lập — 2026-11-16
 **Quyết định:**
@@ -1299,6 +1307,10 @@ cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi k
 trên sheet đã kín; ba công cụ thay thế đều đã chạy trong CI. Mốc đóng băng nội dung 15/12, báo cáo nộp 31/12.
 **Đánh đổi:** mất các chỉ số độ phức tạp, tỷ lệ trùng lặp và nợ kỹ thuật; đổi lại không phụ thuộc dịch vụ ngoài và bớt một
 việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện tại, việc khoảng nửa ngày ở tuần 8.
+Bổ sung 2026-11-16 (sau khi đo): ngưỡng đặt ở statements 88 / branches 70 / functions 90 / lines 89 cho toàn `apps/api/src` (`pnpm test`
+chạy `jest --coverage`), thấp hơn số đo cùng ngày 91,46 / 73,21 / 93,79 / 92,81 để chặn tụt chứ không phải mục tiêu; branches là điểm yếu.
+Ngưỡng áp cho mọi file `src/**/*.ts` (không chỉ "phần nghiệp vụ lõi" như viết ở trên), trừ client Prisma sinh ra và các file chỉ
+chạy được khi có PostgreSQL. Chỉ `apps/api` có Jest nên các gói khác chưa có ngưỡng; CI GitHub đã chạy cổng này và qua.
 
 ### Nền Prisma + PostgreSQL: Prisma 7.10.1, schema trong apps/api, seed hẹp — 2026-11-16
 **Quyết định:**
@@ -1319,6 +1331,11 @@ việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện 
 **Bối cảnh:** lớp lưu trữ Prisma là việc chặn cả nhóm ở tuần 8 (W8-5) và là điều kiện để k6 đo trên PostgreSQL (NFR1.1, NFR1.2, NFR4.1).
 **Đánh đổi:** hai mô hình dữ liệu song song (bộ nhớ và PostgreSQL) cho tới khi chuyển hết repository; seed hẹp nên
 `STORAGE=prisma` chưa chạy được toàn bộ API, chỉ danh mục. Đổi lại nền dựng xong sớm, nhóm viết repository từng mô-đun độc lập.
+Bổ sung 2026-11-16 (sau khi chạy thật trên PostgreSQL 17 và job `ci-pg` qua):
+- Prisma 7.10.1 không khai báo được chỉ mục HNSW nên `migrate dev` luôn đề xuất xóa chỉ mục vector; phải xóa tay dòng DROP INDEX đó khỏi
+  migration mới, và không đưa `migrate diff --exit-code` vào CI vì sẽ đỏ vì lý do này. Chỉ mục GIN của tsvector đã khai nên khớp.
+- Hiện có hai nguồn mô tả cấu trúc bảng: `schema.prisma` (chạy thật) và `schema.dbml` (sinh Phụ lục K và ERD, mục 2026-10-13). Chưa có kiểm tự
+  động lệch; sửa cấu trúc bảng phải sửa cả hai.
 
 ### Bus sự kiện trong tiến trình, 17 sự kiện khai kiểu theo Phụ lục V — 2026-11-16
 **Quyết định:**
@@ -1338,6 +1355,9 @@ việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện 
 fulfillment, notification, procurement) nên phần lớn bên nhận chưa tồn tại.
 **Đánh đổi:** không bền qua khởi động lại và không có thử lại, chưa chứng minh được giao nhận qua tiến trình khác; đổi lại không thêm
 hạ tầng. Bên nhận chạy đồng bộ nên bên nhận chậm làm chậm yêu cầu của bên phát (chấp nhận được ở quy mô đồ án).
+SỬA 2026-11-16 (rà soát): các bên nhận của cùng một sự kiện chạy ĐỒNG THỜI, không tuần tự như ghi ở trên: `emitAsync` của eventemitter2
+gọi mọi bên nhận rồi chờ `Promise.all`. `publish` vẫn chỉ trả khi tất cả xong; bên nhận không được giả định thứ tự giữa các bên nhận.
+
 ### Hình ERD theo miền: định tuyến trực giao, trục dọc theo bảng cha, ký hiệu chân chim đủ tùy chọn — 2026-11-16
 **Quyết định:**
 - `report/tools/diagrams/gen_erd.py` định tuyến lại các hình ERD theo miền: đoạn thẳng ≥ 50px ra khỏi mép bảng trước khi rẽ,
@@ -1353,3 +1373,17 @@ V1 = V2 = V3 = V5 = 0, V4 = 24, trong đó 3 điểm do vòng tự tham chiếu 
 **Đánh đổi:** chiều rộng hình tăng từ 960 lên 1002px nên chữ co khoảng 4% khi ép về 16 cm; phía con đổi từ một-hoặc-nhiều sang
 không-hoặc-nhiều vì cơ sở dữ liệu không ép mỗi bản ghi cha có bản ghi con. Điểm neo phụ ở vùng tiêu đề thay vì dòng cột,
 tránh đọc nhầm là quan hệ của cột đó; đổi lại điểm neo không còn cùng hàng với `id`.
+
+### Ghi bổ sung các quyết định ngày 16/11: ToS có ghi nhận đồng ý, email FR11.1 làm nếu kịp, máy demo — 2026-11-16
+**Quyết định:**
+- Trang công khai `/dieu-khoan` (nguồn Phụ lục D) làm kèm ghi nhận đồng ý khi đăng ký nhà cung cấp và khách sỉ: hộp chọn, lưu phiên bản
+  và thời điểm đồng ý trên tài khoản, cần sửa hợp đồng API. Ước lượng 3 ngày công thay vì 2 nếu chỉ hiển thị trang.
+- SỬA mục 2026-11-06 (FR11.1 "còn thông báo trong web và email"): email của FR11.1 hạ từ "giữ hiện thực" xuống "làm nếu còn thời gian, không
+  kịp thì đổi sang *(chỉ thiết kế)*"; thông báo trong web giữ nguyên.
+- Máy demo là máy của Nghĩa. Đo mô hình BGE-M3 trên máy này (CPU, bản đầy đủ): nạp 51 giây, đỉnh working set 2,2 GB, đỉnh cam kết bộ nhớ
+  4,9 GB; chạy được khi đóng bớt ứng dụng (cần khoảng 3 GB trống). Khi demo làm nóng mô hình trước và giữ đường lùi từ điển khái niệm.
+**Bối cảnh:** tuần 8–10 của Nghĩa trên sheet nhóm đã kín (nền Prisma, bus sự kiện, dịch vụ AI, tìm kiếm vector, PWA, test case), cộng thêm
+việc báo cáo thì quá tải nên phải hạ mức việc nào không có chỉ số ở Chương 7. Máy demo chưa từng được xác định nên chưa có số bộ nhớ thật.
+**Đánh đổi:** ToS thêm một ngày và một thay đổi hợp đồng API; email FR11.1 có thể rơi xuống chỉ thiết kế thì báo cáo phải đổi nhãn trước 15/12.
+Số đo độ trễ BGE-M3 chưa dùng được (lúc đo RAM trống chỉ khoảng 2,5 GB nên bị đẩy sang swap); chỉ số bộ nhớ ở trên đáng tin, độ trễ phải đo lại khi máy rảnh.
+
