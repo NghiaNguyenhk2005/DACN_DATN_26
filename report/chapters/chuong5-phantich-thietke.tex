@@ -551,10 +551,10 @@ Lược đồ gồm 65 bảng; hai bảng \texttt{identity.users} và \texttt{me
 
 Sơ đồ quan hệ thực thể của cơ sở dữ liệu (65 bảng, 13 schema, 565 cột, 48 khóa ngoại) được trình bày theo ba lớp từ tổng quát đến chi tiết. Hình~\ref{fig:erd-tong-quan} là ma trận phụ thuộc giữa các schema: mỗi hàng là một schema có cột tham chiếu, mỗi cột là schema được tham chiếu, số trong ô là số cột tham chiếu xuyên schema, kèm số bảng của từng schema; hai schema identity và media không đưa vào cột vì hầu hết schema đều tham chiếu tới. Các Hình~\ref{fig:erd-dinh-danh} đến~\ref{fig:erd-danh-gia-van-hanh} vẽ từng miền; mỗi bảng chỉ hiện khóa chính, khóa ngoại, tối đa một hai cột định danh (mã, trạng thái) và một dòng mô tả, các cột còn lại ghi dưới dạng ``+N cột khác''. Từ điển đầy đủ mọi cột nằm ở Phụ lục K. Hai loại đường phản ánh trực tiếp ràng buộc RB3:
 \begin{itemize}
-    \item \textbf{Nét liền} --- khóa ngoại thật giữa hai bảng trong cùng schema, ký hiệu chân chim ở phía nhiều.
+    \item \textbf{Nét liền} --- khóa ngoại thật giữa hai bảng trong cùng schema.
     \item \textbf{Nét đứt} --- tham chiếu sang schema khác bằng định danh, không có khóa ngoại vật lý; mô-đun sở hữu bảng đích bảo đảm tính nhất quán qua giao diện công khai và sự kiện. Dòng tham chiếu ghi rõ \texttt{schema.bảng} đích; đường nét đứt chỉ vẽ khi đích nằm cùng hình, và không vẽ đường tới bảng được từ bốn bảng trở lên trỏ vào (như \texttt{identity.users}) để hình đọc được.
 \end{itemize}
-Bảng chỉ thiết kế vẽ nét đứt nền xám.
+Hai đầu mỗi đường theo ký hiệu chân chim (crow's foot). Ở phía bảng cha, hai gạch nghĩa là đúng một (khóa ngoại \texttt{NOT NULL}), gạch kèm vòng tròn nghĩa là không hoặc một (khóa ngoại cho phép \texttt{NULL}). Ở phía bảng con, chân chim kèm vòng tròn nghĩa là không hoặc nhiều, vì cơ sở dữ liệu không ép mỗi bản ghi cha phải có bản ghi con. Vòng nhỏ sát mép một bảng là khóa ngoại trỏ về chính bảng đó, như quan hệ danh mục cha--con. Bảng chỉ thiết kế vẽ nét đứt nền xám.
 
 \begin{figure}[p]
 \centering
