@@ -60,7 +60,7 @@ Xây dựng Farmery --- một nền tảng thương mại điện tử chuyên b
     \item[\textbf{MT3.}] Hiện thực luồng bán sỉ ở mức tối giản cho doanh nghiệp mua sỉ: yêu cầu báo giá, hợp đồng có xác nhận giao kết, giá bậc theo sản lượng tối thiểu (MOQ) và giao hàng một đợt; thiết kế đầy đủ phần giao nhiều đợt và ký quỹ.
     \item[\textbf{MT4.}] Hiện thực luồng bán lẻ theo mô hình nền tảng tự thu mua và bán lại, gồm đơn thu mua, nghiệm thu, tồn kho theo lô, đóng gói kèm tem QR và định giá bán.
     \item[\textbf{MT5.}] Hiện thực trọn trục bán lẻ phía khách hàng --- giỏ hàng, thanh toán, theo dõi đơn, giao hàng ba chặng, đổi trả và hoàn tiền --- phù hợp đặc thù hàng nông sản dễ hư hỏng.
-    \item[\textbf{MT6.}] Tích hợp các tính năng AI hỗ trợ ra quyết định: tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm tương tự và dự báo giá nông sản cho khâu thu mua.
+    \item[\textbf{MT6.}] Tích hợp các tính năng AI hỗ trợ ra quyết định: tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm tương tự; xây dựng và đo sai số mô hình dự báo giá nông sản phục vụ khâu thu mua (chạy offline).
     \item[\textbf{MT7.}] Xây dựng công cụ quản trị gồm kiểm duyệt và giám sát vi phạm để vận hành nền tảng; thiết kế phần báo cáo thống kê.
 \end{enumerate}
 
@@ -103,9 +103,9 @@ Báo cáo thiết kế đủ cả hai luồng, nhưng phần hiện thực tập
 \begin{itemize}
     \item \textbf{Trục chính, làm sâu:} tìm kiếm và lọc kèm tìm kiếm theo ngữ nghĩa, sản phẩm tương tự, giỏ hàng, đặt hàng có giữ chỗ tồn, thanh toán, theo dõi đơn, giao hàng ba chặng, đổi trả--hoàn tiền, đánh giá, thông báo, và trang truy xuất nguồn gốc qua mã QR.
     \item \textbf{Nguồn hàng, rút gọn:} đăng ký và xác thực nhà cung cấp, chứng nhận, đăng sản phẩm và lô kèm mã QR, đơn thu mua có nhà cung cấp xác nhận, nghiệm thu nhập kho, dòng tồn và sổ nhập xuất, một bước đóng gói ra đơn vị bán lẻ, thu hồi lô. Sơ chế, phân loại nhiều bước và kiểm kê chỉ được thiết kế.
-    \item \textbf{Bán sỉ, tối giản:} yêu cầu báo giá, phản hồi, chốt giá, sinh hợp đồng và xác nhận giao kết, giao một đợt với thanh toán thường. Giao nhiều đợt và ký quỹ trung gian chỉ được thiết kế.
+    \item \textbf{Bán sỉ, tối giản:} yêu cầu báo giá, một vòng phản hồi giá (nhà cung cấp báo giá, khách sỉ chấp nhận hoặc từ chối), sinh hợp đồng từ báo giá đã chấp nhận và xác nhận giao kết, giao một đợt với thanh toán thường. Thương lượng nhiều vòng, giao nhiều đợt và ký quỹ trung gian chỉ được thiết kế.
 \end{itemize}
-Ba mức trên là mức độ làm sâu. Trạng thái của từng yêu cầu được ghi bằng ba nhãn dùng thống nhất trong báo cáo: \emph{đã hiện thực}; \emph{chỉ thiết kế}, tức đặc tả đầy đủ nhưng cố ý không làm trong đồ án; và \emph{để sau prototype}, tức thuộc phạm vi sản phẩm khả dụng tối thiểu nhưng chưa làm ở bản prototype. Các nhãn được ghi ngay trong danh sách yêu cầu và định nghĩa ở mục~\ref{sec:yeucauchucnang}; các hạng mục đã rút khỏi bộ yêu cầu được nêu ở hướng phát triển (Chương~\ref{chap:ketluan}).
+Ba mức trên là mức độ làm sâu. Trạng thái của từng yêu cầu dùng hai nhãn thống nhất trong báo cáo: mặc định là \emph{đã hiện thực} (không ghi chú); và \emph{chỉ thiết kế}, tức đặc tả đầy đủ nhưng cố ý không làm trong đồ án. Các nhãn được ghi ngay trong danh sách yêu cầu và định nghĩa ở mục~\ref{sec:yeucauchucnang}; các hạng mục đã rút khỏi bộ yêu cầu được nêu ở hướng phát triển (Chương~\ref{chap:ketluan}).
 
 \subsection{Giới hạn kỹ thuật}
 
@@ -113,9 +113,9 @@ Trong khuôn khổ một đồ án chuyên ngành, hệ thống dừng ở phiê
 \begin{itemize}
     \item \textbf{Xác minh chứng nhận và mã số vùng trồng thực hiện thủ công}, do cơ quan cấp chưa có giao diện tra cứu cho bên ngoài.
     \item \textbf{Không ứng dụng blockchain} cho truy xuất nguồn gốc --- lý do phân tích tại mục~\ref{subsec:gs1blockchain}.
-    \item \textbf{Không vận hành kho bãi quy mô lớn và không có đội giao hàng riêng}: Farmery chỉ duy trì kho sơ chế và đóng gói nhỏ tại vùng trồng. Đơn lẻ đi bằng xe lạnh thuê theo chuyến cố định về TP.HCM rồi giao qua đơn vị vận chuyển nội thành; trong đồ án, đơn vị vận chuyển được kết nối qua môi trường thử nghiệm và chuyến trung chuyển do nhân viên kho cập nhật trên hệ thống.
+    \item \textbf{Không vận hành kho bãi quy mô lớn và không có đội giao hàng riêng}: Farmery chỉ duy trì kho sơ chế và đóng gói nhỏ tại vùng trồng. Đơn lẻ đi bằng xe lạnh thuê theo chuyến cố định về TP.HCM rồi giao qua đơn vị vận chuyển nội thành; trong đồ án, chuyến trung chuyển do nhân viên kho cập nhật và trạng thái chặng cuối do nhân viên vận hành chuyển bước trên hệ thống; kết nối đơn vị vận chuyển qua môi trường thử nghiệm chỉ được thiết kế.
     \item \textbf{Không xử lý giấy tờ xuất khẩu} như kiểm dịch thực vật hay chứng nhận xuất xứ; hệ thống chỉ quản lý nhóm chứng nhận thực hành sản xuất và an toàn thực phẩm (mục~\ref{subsec:chungnhan}).
-    \item \textbf{Thanh toán và hóa đơn chạy trên môi trường thử nghiệm}: thanh toán qua môi trường thử của cổng thanh toán, không phải giao dịch tài chính thật; hóa đơn điện tử là bản giả lập kèm mã tra cứu, kết nối nhà cung cấp hóa đơn thật chỉ được thiết kế.
+    \item \textbf{Thanh toán và hóa đơn ở dạng giả lập}: thanh toán trực tuyến đi qua bản giả lập cổng thanh toán đặt sau giao diện tích hợp, không phải giao dịch tài chính thật; kết nối môi trường thử nghiệm của cổng thanh toán và nhận kết quả qua IPN chỉ được thiết kế; hóa đơn điện tử là bản giả lập kèm mã tra cứu, kết nối nhà cung cấp hóa đơn thật chỉ được thiết kế.
     \item \textbf{Không phát triển ứng dụng di động gốc}: người dùng bên ngoài dùng ứng dụng mua hàng dạng ứng dụng web cài đặt được (PWA), nhân sự nội bộ dùng một ứng dụng web nội bộ riêng; hai ứng dụng gọi chung một giao diện lập trình.
     \item \textbf{Không kết nối hệ thống truy xuất nguồn gốc của Nhà nước}: đồng bộ dữ liệu lô lên TraceViet được để ở hướng phát triển, vì phụ thuộc quyền kết nối mà đồ án chưa có.
 \end{itemize}
@@ -130,7 +130,7 @@ Hệ thống hướng tới hỗ trợ trực tiếp các nhóm người dùng �
     \item \textbf{Nhà cung cấp:} có hai lựa chọn đầu ra thay vì phụ thuộc vào thương lái --- tự bán sỉ để giữ toàn bộ giá bán, hoặc bán cả lô để nhận tiền ngay.
     \item \textbf{Khách sỉ:} có kênh đặt hàng theo hợp đồng với nguồn cung đã được xác minh chứng nhận.
     \item \textbf{Khách lẻ:} mua được nông sản truy xuất được nguồn gốc, với một đầu mối duy nhất chịu trách nhiệm về chất lượng.
-    \item \textbf{Đội ngũ vận hành:} có công cụ thu mua, kiểm duyệt, giám sát và báo cáo để vận hành nền tảng.
+    \item \textbf{Đội ngũ vận hành:} có công cụ thu mua, kiểm duyệt và giám sát để vận hành nền tảng; báo cáo thống kê ở mức thiết kế.
 \end{itemize}
 
 \subsection{Ý nghĩa khoa học}

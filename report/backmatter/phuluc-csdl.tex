@@ -144,10 +144,10 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{read\_\allowbreak{}at} & \texttt{timestamp} &  \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{deliveries}} --- Mỗi lần gửi qua kênh đẩy, email (FR11.1)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{deliveries}} --- Mỗi lần gửi qua email (FR11.1); kênh đẩy, SMS chỉ thiết kế} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{notification\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{notifications}, bắt buộc &  \\
-\texttt{channel} & \texttt{enum}; bắt buộc & Giá trị: in\_app, push (Để sau prototype), email, sms (Chỉ thiết kế) \\
+\texttt{channel} & \texttt{enum}; bắt buộc & Giá trị: in\_app, push (Chỉ thiết kế), email, sms (Chỉ thiết kế) \\
 \texttt{status} & \texttt{varchar}; bắt buộc & queued, sent, failed \\
 \texttt{attempts} & \texttt{int}; bắt buộc & Mặc định: 0 \\
 \texttt{sent\_\allowbreak{}at} & \texttt{timestamp} &  \\
@@ -155,10 +155,10 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{preferences}} --- Kênh người dùng chọn cho từng nhóm thông báo} \\
 \texttt{user\_\allowbreak{}id} & \texttt{bigint}; PK, $\to$ \texttt{identity.users} &  \\
 \texttt{event\_\allowbreak{}group} & \texttt{varchar}; PK & Nhóm sự kiện: đơn hàng, khiếu nại, có hàng, RFQ... \\
-\texttt{channel} & \texttt{enum}; PK & Giá trị: in\_app, push (Để sau prototype), email, sms (Chỉ thiết kế) \\
+\texttt{channel} & \texttt{enum}; PK & Giá trị: in\_app, push (Chỉ thiết kế), email, sms (Chỉ thiết kế) \\
 \texttt{enabled} & \texttt{boolean}; bắt buộc & Mặc định: true \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{push\_\allowbreak{}subscriptions}} --- Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{push\_\allowbreak{}subscriptions}} --- Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt (FR11.1, chỉ thiết kế)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc &  \\
 \texttt{endpoint} & \texttt{varchar}; duy nhất, bắt buộc &  \\
@@ -467,7 +467,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{inspected\_\allowbreak{}by} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc & Nhân viên kho \\
 \texttt{inspected\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{price\_\allowbreak{}forecasts}} --- Kết quả dự báo giá do dịch vụ AI trả về, hiển thị ở màn hình lập đơn thu mua (FR12.2)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{price\_\allowbreak{}forecasts}} --- Kết quả dự báo giá để hiển thị ở màn hình lập đơn thu mua; bản hiện thực chạy dự báo offline, không ghi bảng này (FR12.2, chỉ thiết kế)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{category\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{catalog.categories}, bắt buộc &  \\
 \texttt{region} & \texttt{varchar}; bắt buộc &  \\
@@ -541,7 +541,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{tax\_\allowbreak{}amount} & \texttt{decimal(14,2)}; bắt buộc & Mặc định: 0 \\
 \texttt{shipping\_\allowbreak{}fee} & \texttt{decimal(14,2)}; bắt buộc & Cước 3PL cộng phần bù chặng giữa (FR8.2) \\
 \texttt{total\_\allowbreak{}amount} & \texttt{decimal(14,2)}; bắt buộc &  \\
-\texttt{status} & \texttt{enum}; bắt buộc & Giá trị: placed (Đã đặt), paid (Đã thanh toán, hoặc COD đủ điều kiện), packing (Đang đóng gói), on\_trip (Lên chuyến trung chuyển), handed\_to\_3pl (3PL đã nhận), delivering, delivered, completed, disputed (Khiếu nại), cancelled, returned (Hoàn hàng). Mặc định: placed \\
+\texttt{status} & \texttt{enum}; bắt buộc & Giá trị: placed (Đã đặt), paid (Đã thanh toán, hoặc COD đủ điều kiện), packing (Đang đóng gói), on\_trip (Lên chuyến trung chuyển), handed\_to\_3pl (Chặng cuối đã nhận hàng), delivering, delivered, completed, disputed (Khiếu nại), cancelled, returned (Hoàn hàng). Mặc định: placed \\
 \texttt{reserve\_\allowbreak{}expires\_\allowbreak{}at} & \texttt{timestamp} & Đơn trả trước quá 15 phút chưa thanh toán thì tự hủy \\
 \texttt{cod\_\allowbreak{}refused\_\allowbreak{}at} & \texttt{timestamp} & Khách từ chối nhận COD không vì chất lượng; mất quyền COD \\
 \texttt{reorder\_\allowbreak{}of} & \texttt{bigint}; FK $\to$ \texttt{orders} & Đơn gốc khi mua lại (FR5.6) \\
@@ -562,13 +562,13 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{order\_\allowbreak{}status\_\allowbreak{}events}} --- Mốc trên dòng thời gian tám trạng thái (FR5.4); mỗi mốc phát một thông báo} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{order\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{orders}, bắt buộc &  \\
-\texttt{to\_\allowbreak{}status} & \texttt{enum}; bắt buộc & Giá trị: placed (Đã đặt), paid (Đã thanh toán, hoặc COD đủ điều kiện), packing (Đang đóng gói), on\_trip (Lên chuyến trung chuyển), handed\_to\_3pl (3PL đã nhận), delivering, delivered, completed, disputed (Khiếu nại), cancelled, returned (Hoàn hàng) \\
-\texttt{source} & \texttt{varchar}; bắt buộc & system, staff, payment\_webhook, carrier\_webhook \\
+\texttt{to\_\allowbreak{}status} & \texttt{enum}; bắt buộc & Giá trị: placed (Đã đặt), paid (Đã thanh toán, hoặc COD đủ điều kiện), packing (Đang đóng gói), on\_trip (Lên chuyến trung chuyển), handed\_to\_3pl (Chặng cuối đã nhận hàng), delivering, delivered, completed, disputed (Khiếu nại), cancelled, returned (Hoàn hàng) \\
+\texttt{source} & \texttt{varchar}; bắt buộc & system, staff, payment\_webhook (kết quả từ bản giả lập cổng thanh toán); carrier\_webhook chỉ thiết kế \\
 \texttt{actor\_\allowbreak{}user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users} &  \\
 \texttt{note} & \texttt{text} &  \\
 \texttt{occurred\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{restock\_\allowbreak{}subscriptions}} --- Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{restock\_\allowbreak{}subscriptions}} --- Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7, chỉ thiết kế)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc &  \\
 \texttt{product\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{catalog.products}, bắt buộc &  \\
@@ -612,10 +612,10 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{requested\_\allowbreak{}qty} & \texttt{decimal(12,2)}; bắt buộc & Đối chiếu MOQ \\
 \texttt{quality\_\allowbreak{}standard} & \texttt{varchar} &  \\
 \texttt{desired\_\allowbreak{}delivery} & \texttt{date}; bắt buộc &  \\
-\texttt{status} & \texttt{enum}; bắt buộc & Giá trị: open, negotiating, agreed, rejected, expired. Mặc định: open \\
+\texttt{status} & \texttt{enum}; bắt buộc & Giá trị: open, negotiating (Đã báo giá, chờ bên mua chấp nhận hoặc từ chối (một vòng)), agreed, rejected, expired. Mặc định: open \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{rfq\_\allowbreak{}messages}} --- Báo giá và trao đổi trong kênh gắn với RFQ (FR6.2)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{rfq\_\allowbreak{}messages}} --- Báo giá phản hồi RFQ, một vòng (FR6.2); tin trao đổi nhiều vòng chỉ thiết kế} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{rfq\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{rfqs}, bắt buộc &  \\
 \texttt{sender\_\allowbreak{}user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc &  \\
@@ -627,7 +627,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{attachment\_\allowbreak{}ids} & \texttt{bigint[]}; $\to$ \texttt{media.media\_\allowbreak{}files} &  \\
 \texttt{sent\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{contracts}} --- Hợp đồng sinh từ mẫu chuẩn khi RFQ được chốt (FR6.3)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{contracts}} --- Hợp đồng sinh một lần từ mẫu chuẩn khi bên mua chấp nhận báo giá (FR6.3)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{rfq\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{rfqs}, duy nhất, bắt buộc &  \\
 \texttt{contract\_\allowbreak{}code} & \texttt{varchar}; duy nhất, bắt buộc &  \\
@@ -635,11 +635,11 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{agreed\_\allowbreak{}unit\_\allowbreak{}price} & \texttt{decimal(14,2)}; bắt buộc & Áp khung giá sỉ khi đạt MOQ (FR6.4) \\
 \texttt{total\_\allowbreak{}amount} & \texttt{decimal(14,2)}; bắt buộc &  \\
 \texttt{delivery\_\allowbreak{}date} & \texttt{date}; bắt buộc & Giao một đợt; giao nhiều đợt chỉ thiết kế (FR6.5) \\
-\texttt{current\_\allowbreak{}version} & \texttt{int}; bắt buộc & Mặc định: 1 \\
+\texttt{current\_\allowbreak{}version} & \texttt{int}; bắt buộc & Luôn là 1 ở bản hiện thực; nhiều phiên bản chỉ thiết kế. Mặc định: 1 \\
 \texttt{status} & \texttt{enum}; bắt buộc & Giá trị: draft, awaiting\_confirmation, concluded (Đã xác nhận giao kết), delivered, completed, cancelled. Mặc định: draft \\
 \texttt{concluded\_\allowbreak{}at} & \texttt{timestamp} & Khi cả hai bên đã xác nhận cùng một phiên bản \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{contract\_\allowbreak{}versions}} --- Mỗi lần sửa bản nháp tạo một phiên bản mới} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{contract\_\allowbreak{}versions}} --- Bản hiện thực sinh một phiên bản kèm mã băm; sửa bản nháp tạo phiên bản mới chỉ thiết kế} \\
 \texttt{contract\_\allowbreak{}id} & \texttt{bigint}; PK, FK $\to$ \texttt{contracts} &  \\
 \texttt{version} & \texttt{int}; PK &  \\
 \texttt{document\_\allowbreak{}file\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{media.media\_\allowbreak{}files}, bắt buộc & Tệp PDF, mức truy cập riêng tư \\
@@ -689,10 +689,10 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{source\_\allowbreak{}type} & \texttt{varchar}; bắt buộc & retail\_order hoặc wholesale\_order \\
 \texttt{source\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{retail.orders}, bắt buộc & Hoặc wholesale.wholesale\_orders, tùy source\_type \\
 \texttt{method} & \texttt{enum}; bắt buộc & Giá trị: cod, vietqr, card, e\_wallet \\
-\texttt{gateway} & \texttt{varchar} & vnpay, payos; trống với COD \\
+\texttt{gateway} & \texttt{varchar} & mock ở bản hiện thực; vnpay, payos chỉ thiết kế; trống với COD \\
 \texttt{amount} & \texttt{decimal(14,2)}; bắt buộc &  \\
 \texttt{status} & \texttt{enum}; bắt buộc & Giá trị: pending, succeeded, failed, cancelled, refunded, partially\_refunded. Mặc định: pending \\
-\texttt{gateway\_\allowbreak{}txn\_\allowbreak{}ref} & \texttt{varchar}; duy nhất & Mã đối soát; webhook xử lý lặp không đổi kết quả \\
+\texttt{gateway\_\allowbreak{}txn\_\allowbreak{}ref} & \texttt{varchar}; duy nhất & Mã đối soát; kết quả gửi lặp chỉ xử lý một lần \\
 \texttt{paid\_\allowbreak{}at} & \texttt{timestamp} &  \\
 \texttt{escrow\_\allowbreak{}status} & \texttt{varchar} & Ký quỹ trung gian cho đơn sỉ lớn (FR7.3, chỉ thiết kế) \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
@@ -784,8 +784,8 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{order\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{retail.orders}, duy nhất, bắt buộc &  \\
 \texttt{trip\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{transfer\_\allowbreak{}trips} &  \\
-\texttt{carrier} & \texttt{varchar}; bắt buộc & Mặc định: ghn \\
-\texttt{carrier\_\allowbreak{}order\_\allowbreak{}code} & \texttt{varchar}; duy nhất & Mã vận đơn của 3PL \\
+\texttt{carrier} & \texttt{varchar}; bắt buộc & internal: nhân viên vận hành chuyển bước chặng cuối; ghn chỉ thiết kế. Mặc định: internal \\
+\texttt{carrier\_\allowbreak{}order\_\allowbreak{}code} & \texttt{varchar}; duy nhất & Mã vận đơn của 3PL (chỉ thiết kế) \\
 \texttt{carrier\_\allowbreak{}fee} & \texttt{decimal(14,2)}; bắt buộc &  \\
 \texttt{middle\_\allowbreak{}leg\_\allowbreak{}fee} & \texttt{decimal(14,2)}; bắt buộc & Phần bù chặng giữa chia theo đơn (FR8.2) \\
 \texttt{slot\_\allowbreak{}start} & \texttt{timestamp}; bắt buộc &  \\
@@ -793,11 +793,11 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{status} & \texttt{enum}; bắt buộc & Giá trị: created, picked\_up, delivering, delivered, failed, returned. Mặc định: created \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{shipment\_\allowbreak{}events}} --- Trạng thái 3PL đẩy về qua webhook} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{shipment\_\allowbreak{}events}} --- Lịch sử trạng thái chặng cuối do nhân viên vận hành chuyển bước; 3PL đẩy về qua webhook chỉ thiết kế} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{shipment\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{shipments}, bắt buộc &  \\
 \texttt{status} & \texttt{enum}; bắt buộc & Giá trị: created, picked\_up, delivering, delivered, failed, returned \\
-\texttt{carrier\_\allowbreak{}event\_\allowbreak{}id} & \texttt{varchar}; duy nhất & Chống xử lý lặp webhook \\
+\texttt{carrier\_\allowbreak{}event\_\allowbreak{}id} & \texttt{varchar}; duy nhất & Chống xử lý lặp webhook (chỉ thiết kế) \\
 \texttt{payload} & \texttt{jsonb} &  \\
 \texttt{occurred\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \texttt{received\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
@@ -823,7 +823,7 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \texttt{decided\_\allowbreak{}at} & \texttt{timestamp} &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{messages}} --- Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1)} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{messages}} --- Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1, chỉ thiết kế)} \\
 \texttt{id} & \texttt{bigint}; PK &  \\
 \texttt{order\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{retail.orders}, bắt buộc &  \\
 \texttt{return\_\allowbreak{}request\_\allowbreak{}id} & \texttt{bigint}; FK $\to$ \texttt{return\_\allowbreak{}requests} & Trống khi trao đổi về đơn, chưa có khiếu nại \\
@@ -867,9 +867,9 @@ Bảng, cột ghi \emph{chỉ thiết kế} có trong lược đồ để không
 \texttt{moderated\_\allowbreak{}by} & \texttt{bigint}; $\to$ \texttt{identity.users} &  \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule
-\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{review\_\allowbreak{}replies}} --- Phản hồi công khai một lần dưới mỗi đánh giá} \\
+\multicolumn{3}{@{}L{15.30cm}}{\cellcolor{tblaltbg}\textbf{\texttt{review\_\allowbreak{}replies}} --- Farmery phản hồi công khai một lần dưới mỗi đánh giá (FR5.5, chỉ thiết kế)} \\
 \texttt{review\_\allowbreak{}id} & \texttt{bigint}; PK, FK $\to$ \texttt{reviews} &  \\
-\texttt{responder\_\allowbreak{}user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc &  \\
+\texttt{responder\_\allowbreak{}user\_\allowbreak{}id} & \texttt{bigint}; $\to$ \texttt{identity.users}, bắt buộc & Nhân viên vận hành \\
 \texttt{content} & \texttt{text}; bắt buộc &  \\
 \texttt{created\_\allowbreak{}at} & \texttt{timestamp}; bắt buộc &  \\
 \midrule

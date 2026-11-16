@@ -171,7 +171,7 @@ Căn cứ thật nằm ở nhóm rào cản khác. Một nghiên cứu năm 2025
     \item \textbf{Chiều dữ liệu:} chuẩn mô tả chiều \emph{đẩy} dữ liệu --- doanh nghiệp, vùng trồng, nông hộ, sản phẩm, nhật ký sản xuất, lô thu hoạch, vận chuyển --- dưới dạng tệp XML có ký số; chuẩn không mô tả giao diện tra cứu cho bên ngoài.
     \item \textbf{Mã truy xuất:} mã lô do đơn vị giải pháp tự gán, còn mã truy xuất chính thức do hệ thống của Bộ cấp sau khi phê duyệt dữ liệu.
 \end{itemize}
-Văn bản chuẩn kết nối tại thời điểm tham khảo còn để trống số quyết định ban hành, và chỉ công bố địa chỉ môi trường chính thức. Vì vậy Farmery thiết kế lớp tích hợp theo đúng chuẩn đã công bố nhưng hiện thực bằng bản giả lập; kết nối thật chỉ bật khi nhóm được cấp quyền. Mỗi lô vẫn có mã QR riêng của Farmery sinh ngay khi được duyệt nội bộ, và việc mở bán không phụ thuộc vào kết quả đồng bộ lên hệ thống của Bộ. Điều này giải quyết một phần giới hạn đã nêu ở trên về blockchain: dữ liệu đầu vào được đối chiếu thêm một lần bởi cơ quan quản lý chuyên ngành, thay vì chỉ được bảo đảm không bị sửa sau khi ghi.
+Văn bản chuẩn kết nối tại thời điểm tham khảo còn để trống số quyết định ban hành, và chỉ công bố địa chỉ môi trường chính thức. Vì vậy Farmery thiết kế lớp tích hợp theo đúng chuẩn đã công bố (chỉ thiết kế trong đồ án); kết nối thật chỉ bật khi nhóm được cấp quyền. Mỗi lô vẫn có mã QR riêng của Farmery sinh ngay khi được duyệt nội bộ, và việc mở bán không phụ thuộc vào kết quả đồng bộ lên hệ thống của Bộ. Điều này giải quyết một phần giới hạn đã nêu ở trên về blockchain: dữ liệu đầu vào được đối chiếu thêm một lần bởi cơ quan quản lý chuyên ngành, thay vì chỉ được bảo đảm không bị sửa sau khi ghi.
 
 \subsection{Nguồn dữ liệu nông sản cho phân tích và mô hình AI}
 \label{subsec:nguondulieunongsan}
@@ -220,7 +220,7 @@ Về vận chuyển, nhiều nền tảng thương mại điện tử không t�
 
 \section{Ứng dụng AI trong phân tích dữ liệu và ra quyết định thương mại điện tử}
 
-Bên cạnh các cơ sở lý thuyết về mô hình kinh doanh và niềm tin, Farmery còn tích hợp các nhóm bài toán trí tuệ nhân tạo (AI) nhằm hỗ trợ ra quyết định cho cả người dùng và đội ngũ vận hành, được thiết kế chi tiết tại mục~\ref{sec:thietkeAI} và hiện thực tại mục~\ref{sec:hienthucAI}.
+Bên cạnh các cơ sở lý thuyết về mô hình kinh doanh và niềm tin, Farmery còn tích hợp các nhóm bài toán trí tuệ nhân tạo (AI) nhằm hỗ trợ ra quyết định cho cả người dùng và đội ngũ vận hành; phần dành cho đội ngũ vận hành (dự báo giá) dừng ở mức đánh giá offline trong đồ án. Các bài toán này được thiết kế chi tiết tại mục~\ref{sec:thietkeAI} và hiện thực tại mục~\ref{sec:hienthucAI}.
 
 \subsection{Tìm kiếm theo ngữ nghĩa (semantic search)}
 \label{subsec:semanticsearch}

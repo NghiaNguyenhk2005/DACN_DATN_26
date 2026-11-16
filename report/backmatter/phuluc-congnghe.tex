@@ -61,16 +61,16 @@ Hàng đợi sự kiện và cache & Redis & Một thành phần phục vụ c�
 Dịch vụ AI & Python với FastAPI & Toàn bộ thư viện học máy thuộc hệ sinh thái Python; khai báo API có kiểu, tài liệu tự sinh & \textbf{Chọn} \\
 & Python với Flask & Nhẹ, nhưng phải tự thêm kiểm tra kiểu và tài liệu API & Không chọn \\
 & Chạy mô hình ngay trong NestJS & Bớt một dịch vụ, nhưng thư viện dự báo chuỗi thời gian trên Node rất hạn chế & Không chọn \\
-Thanh toán & VNPay (môi trường thử nghiệm) & Gom thẻ nội địa, mã QR, ví sau một lần tích hợp; có môi trường thử và tài liệu tiếng Việt & \textbf{Chọn} \\
+Thanh toán & VNPay (môi trường thử nghiệm) & Gom thẻ nội địa, mã QR, ví sau một lần tích hợp; có môi trường thử và tài liệu tiếng Việt; kết nối \emph{chỉ thiết kế}, bản hiện thực dùng bản giả lập & \textbf{Chọn} \\
 & MoMo & Phổ biến, nhưng xoay quanh ví của chính MoMo & Không chọn \\
 & PayOS (VietQR) & Chuyển khoản qua mã QR, tích hợp nhẹ, chỉ một phương thức & Phương án bổ sung \\
-Vận chuyển chặng cuối & Giao Hàng Nhanh (môi trường thử nghiệm) & API tạo vận đơn, webhook trạng thái và môi trường thử công khai, đủ kiểm thử trọn dòng thời gian đơn & \textbf{Chọn} \\
+Vận chuyển chặng cuối & Giao Hàng Nhanh (môi trường thử nghiệm) & API tạo vận đơn, webhook trạng thái và môi trường thử công khai; kết nối \emph{chỉ thiết kế} & \textbf{Chọn} \\
 & Giao Hàng Tiết Kiệm & Năng lực API tương tự; dùng làm đơn vị dự phòng & Không chọn \\
 & Ahamove & Giao tức thời trong nội thành, hợp với đơn gấp hơn là giao theo khung giờ hằng ngày & Để dành cho khung giờ gấp \\
 Hóa đơn điện tử & Lớp tích hợp với bản giả lập & Kiểm thử được luồng phát hành, tra cứu mà không cần hợp đồng và chứng thư số & \textbf{Chọn} \\
 & VNPT, Viettel, MISA & Nhà cung cấp hóa đơn có API; cần hợp đồng và chứng thư số của doanh nghiệp & Chỉ thiết kế \\
-Thông báo & Dịch vụ đẩy của trình duyệt (Web Push, chuẩn W3C xác thực bằng VAPID) và email qua SMTP & Web Push dùng hạ tầng do hãng trình duyệt vận hành, miễn phí, Farmery không ký hợp đồng; không tốn phí theo tin; để sau prototype & \textbf{Chọn} \\
-& SMS & Tới được người không cài ứng dụng, nhưng tính phí theo tin & Để sau \\
+Thông báo & Dịch vụ đẩy của trình duyệt (Web Push, chuẩn W3C xác thực bằng VAPID) và email qua SMTP & Web Push dùng hạ tầng do hãng trình duyệt vận hành, miễn phí, Farmery không ký hợp đồng; không tốn phí theo tin; Web Push \emph{chỉ thiết kế}, email hiện thực & \textbf{Chọn} \\
+& SMS & Tới được người không cài ứng dụng, nhưng tính phí theo tin & Chỉ thiết kế \\
 Ký số hợp đồng & Tổ chức cung cấp dịch vụ chứng thực chữ ký số công cộng & Cần hợp đồng dịch vụ; thay bằng xác nhận giao kết trong hệ thống & Hướng phát triển \\
 Truy xuất nhà nước & TraceViet theo chuẩn kết nối đã công bố & Phụ thuộc quyền kết nối chưa được cấp & Hướng phát triển \\
 \end{longtable}
