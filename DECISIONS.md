@@ -1131,6 +1131,8 @@ SỬA 2026-10-27: bỏ yêu cầu "một người duyệt" (README cũ) và ngo�
 người viết PR tự merge; mọi thành viên đã là collaborator. Quy tắc "không tự merge PR" ở trên chỉ còn áp dụng cho Claude: chỉ
 merge khi người dùng nói rõ. Lý do: nhóm nhỏ, duyệt chéo làm chậm; đánh đổi là không còn chốt kiểm người thứ hai, nên
 PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
+SỬA 2026-11-16: quy tắc "`develop` vào `main` bằng merge commit" đã bị vi phạm ở #43 và #45 (squash), gây xung đột kéo dài; xem mục
+"Merge vào `main` phải là merge commit..." 2026-11-16.
 
 
 ### Sửa báo cáo theo rà soát 28/10: ba nhãn trạng thái, làm rõ Web Push, ERD 11 hình — 2026-10-28
@@ -1386,4 +1388,18 @@ tránh đọc nhầm là quan hệ của cột đó; đổi lại điểm neo kh
 việc báo cáo thì quá tải nên phải hạ mức việc nào không có chỉ số ở Chương 7. Máy demo chưa từng được xác định nên chưa có số bộ nhớ thật.
 **Đánh đổi:** ToS thêm một ngày và một thay đổi hợp đồng API; email FR11.1 có thể rơi xuống chỉ thiết kế thì báo cáo phải đổi nhãn trước 15/12.
 Số đo độ trễ BGE-M3 chưa dùng được (lúc đo RAM trống chỉ khoảng 2,5 GB nên bị đẩy sang swap); chỉ số bộ nhớ ở trên đáng tin, độ trễ phải đo lại khi máy rảnh.
+
+### Merge vào `main` phải là merge commit; nối lại lịch sử `main` sau hai lần squash — 2026-11-16
+**Quyết định:**
+- PR `develop → main` chỉ gộp bằng "Create a merge commit", không squash, không rebase (quy tắc đã ghi ngày 2026-10-27, nay nhắc lại vì đã bị
+  vi phạm). Mô tả mọi PR vào `main` ghi dòng cảnh báo này ở đầu.
+- Nối lại lịch sử bằng PR #67: một merge kiểu `ours` có cây thư mục đúng bằng `develop`, cha là `develop` và `main`, gộp bằng merge commit;
+  sau đó PR #68 `develop → main` không xung đột và `main` có cùng cây với `develop`.
+- Sau mỗi lần gộp bằng merge commit, `main` hơn `develop` đúng một commit (chính merge commit đó); chấp nhận, không cần đồng bộ ngược.
+- Nếu lịch sử lệch lần nữa mà `main` không có nội dung riêng (kiểm: cây của `main` trùng cây của một commit trong `develop`), dựng commit nối bằng
+  `git commit-tree origin/develop^{tree} -p origin/develop -p origin/main` rồi gộp bằng merge commit; không force-push `main`.
+**Bối cảnh:** #43 và #45 (`develop → main`) bị squash nên `main` có commit `ad531aa` không nối với lịch sử `develop`; khi `develop` đi thêm 30 commit,
+merge vào `main` xung đột 81 điểm trong ít nhất 40 file (báo cáo, e2e, admin, shop) dù cây của `main` trùng từng byte với `75e9b1f` của `develop`.
+**Đánh đổi:** hai lần squash cũ vẫn nằm trong lịch sử `main` (không sửa vì không force-push). Repo vẫn cho phép squash và rebase, `main` và
+`develop` không có branch protection nên GitHub không chặn nếu bấm nhầm; có thể dùng ruleset giới hạn kiểu gộp cho `main` (chưa làm).
 
