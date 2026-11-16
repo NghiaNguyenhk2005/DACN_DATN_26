@@ -503,3 +503,15 @@ trigram biểu thức, trigger và CHECK Prisma không báo lệch. Còn lệch 
 `product_embeddings_embedding_hnsw_idx` luôn bị đề xuất DROP; mỗi lần `migrate dev` sinh migration mới phải xóa dòng DROP INDEX đó
 trước khi áp. Không đưa `migrate diff --exit-code` vào CI vì sẽ đỏ vì lý do này.
 Status: open
+
+### Bus sự kiện: việc phải làm khi lên PostgreSQL và khi thêm bên nhận — Claude — 2026-11-16
+- Phát sự kiện phải xảy ra SAU khi giao dịch PostgreSQL commit (hoặc dùng outbox); hiện phát ngay sau khi ghi bộ nhớ nên chưa có vấn đề.
+  Cần chốt trước khi chuyển retail/payment sang Prisma (tuần 9).
+- Phụ lục V và Ch.5 vẫn ghi "phát vào Redis" và "gửi lại nhiều lần chỉ có tác dụng một lần"; cần sửa thành bus trong tiến trình, chống lặp
+  trong bộ nhớ, Redis chỉ thiết kế. Chưa sửa (tuần 9).
+- Payload của 11 sự kiện chưa có bên phát là dự kiến (`core/events/events.ts`); bên phát đầu tiên được chỉnh và cập nhật Phụ lục V cho khớp.
+- `RfqUpdated`, `UserVerified`, `BatchRecalled`, `CertExpired`, `StockLow` chưa phát vì mã chưa có bước tương ứng (wholesale mới có tạo yêu cầu báo giá,
+  chưa có báo giá, chấp nhận, từ chối).
+- Bên nhận chạy trong yêu cầu của bên phát: không đặt việc nặng (gọi dịch vụ ngoài) trong bên nhận; AI W8-8 nghe `ProductChanged` phải đẩy việc
+  nhúng ra nền, không chờ.
+Status: open

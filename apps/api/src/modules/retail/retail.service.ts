@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { Clock } from "../../core/clock";
+import { EventBus } from "../../core/events/event-bus";
 import { KeyedMutex } from "../../core/mutex";
 import { ProblemException } from "../../core/problem";
 import { addDays, vnClock } from "../../core/vn-time";
@@ -66,6 +67,7 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
     private readonly payments: PaymentService,
     private readonly settings: SettingsService,
     private readonly clock: Clock,
+    private readonly events: EventBus,
   ) {}
 
   // Đơn quá hạn giữ chỗ tự hủy: quét định kỳ, và quét lại mỗi lần đọc/ghi đơn nên không phụ thuộc vào bộ đếm giờ.
@@ -272,6 +274,13 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
         }
         await this.orders.create(order);
         await this.carts.clear(userId);
+        await this.events.publish("OrderPlaced", {
+          orderId: order.id,
+          orderCode: order.orderCode,
+          userId,
+          paymentOption: order.paymentOption,
+          totalAmount: order.totalAmount,
+        });
         return this.toDetail(order);
       } catch (error) {
         await this.inventory.release(id, "Đặt đơn thất bại, nhả giữ chỗ");
@@ -320,15 +329,17 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
       if (!isCancellable(order.status)) {
         throw problem(HttpStatus.CONFLICT, "ORDER_NOT_CANCELLABLE", "Đơn đã đóng gói hoặc đã kết thúc, không hủy được");
       }
-      if (order.status === "placed") {
-        await this.inventory.release(order.id, "Khách hủy đơn");
-      } else {
+      const refundDue = order.status !== "placed";
+      if (refundDue) {
         await this.inventory.returnIn(order.id, "Khách hủy đơn đã thanh toán, hoàn tồn");
         await this.payments.refund(order.id);
+      } else {
+        await this.inventory.release(order.id, "Khách hủy đơn");
       }
       order.cancelReason = "buyer_cancelled";
       this.transition(order, "cancelled", "system", "Khách hủy đơn");
       await this.orders.update(order);
+      await this.publishCancelled(order, refundDue);
       return this.toDetail(order);
     });
   }
@@ -382,7 +393,18 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
     order.cancelReason = "reservation_expired";
     this.transition(order, "cancelled", "system", "Quá hạn giữ chỗ, đơn tự hủy", order.reserveExpiresAt ?? undefined);
     await this.orders.update(order);
+    await this.publishCancelled(order, false);
     return order;
+  }
+
+  private async publishCancelled(order: OrderRecord, refundDue: boolean): Promise<void> {
+    await this.events.publish("OrderCancelled", {
+      orderId: order.id,
+      orderCode: order.orderCode,
+      userId: order.userId,
+      reason: order.cancelReason,
+      refundDue,
+    });
   }
 
   /** Đọc đơn, tự hủy nếu đã quá hạn. */

@@ -28,6 +28,13 @@ Schema ở `prisma/schema/` (mỗi mô-đun một file `<mô-đun>.prisma`, 13 s
 Muốn một repository dùng được trên PostgreSQL: viết `prisma-<thực-thể>.repository.ts` cùng interface và nối bằng
 `storageProvider(Token, InMemoryX, PrismaX)` (`src/core/storage.ts`) thay cho `useClass`.
 
+## Sự kiện giữa các mô-đun
+
+Mô-đun phát sự kiện bằng `EventBus.publish("BatchApproved", payload)` (`src/core/events/`), mô-đun nhận khai một provider có hàm gắn
+`@OnDomainEvent("BatchApproved")` (mẫu: `modules/inventory/inventory-events.ts`). Kiểu của 17 sự kiện nằm ở `events.ts`, khớp Phụ lục V
+của báo cáo (test `events.e2e-spec.ts` đối chiếu). `publish` chờ bên nhận xong; lỗi bên nhận chỉ ghi log; gửi lại cùng sự kiện chỉ xử lý một lần.
+Bus chạy trong tiến trình, chưa qua Redis.
+
 ## Cấu trúc
 
 | Thư mục | Nội dung |

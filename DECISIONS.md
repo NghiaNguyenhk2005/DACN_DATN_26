@@ -1319,3 +1319,22 @@ việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện 
 **Bối cảnh:** lớp lưu trữ Prisma là việc chặn cả nhóm ở tuần 8 (W8-5) và là điều kiện để k6 đo trên PostgreSQL (NFR1.1, NFR1.2, NFR4.1).
 **Đánh đổi:** hai mô hình dữ liệu song song (bộ nhớ và PostgreSQL) cho tới khi chuyển hết repository; seed hẹp nên
 `STORAGE=prisma` chưa chạy được toàn bộ API, chỉ danh mục. Đổi lại nền dựng xong sớm, nhóm viết repository từng mô-đun độc lập.
+
+### Bus sự kiện trong tiến trình, 17 sự kiện khai kiểu theo Phụ lục V — 2026-11-16
+**Quyết định:**
+- Bản nộp dùng bus trong tiến trình (`@nestjs/event-emitter` 3.1.0), không dùng Redis. Phụ lục V và mục "Hàng đợi sự kiện và cache (Redis)"
+  mô tả Redis nên Redis là phần *(chỉ thiết kế)*; cổng `EventBus` (`core/events/event-bus.ts`) cho phép thay bản Redis mà không sửa nơi gọi.
+  Việc sửa Phụ lục V và Ch.5 làm ở tuần 9.
+- Thư viện ghim 3.1.0, không phải 12.0.3: dòng 12.x chỉ phát hành ESM (`"type": "module"`), `apps/api` biên dịch CommonJS và Jest không nạp được.
+- Phong bì `{ id, name, occurredAt, payload }`; `EventPayloads` khai kiểu đủ 17 sự kiện, `EVENT_NAMES` đối chiếu với Phụ lục V bằng test để mã và báo cáo không lệch.
+- `publish` chờ mọi bên nhận xử lý xong rồi mới trả (xử lý tuần tự trong cùng tiến trình, kết quả xác định, test không phải đợi); lỗi ở bên nhận được
+  ghi log và không ném về bên phát. Không thử lại. `@OnDomainEvent` bỏ qua bản gửi lại theo (id sự kiện, bên nhận); lỗi thì lần gửi lại chạy lại.
+  Bộ nhớ chống lặp mất khi khởi động lại (giữ tối đa 10.000 mục).
+- Chuyển một lời gọi trực tiếp sang sự kiện làm mẫu: `approveBatch` phát `BatchApproved`, `InventoryEvents` nhận và mở dòng tồn. Các lời gọi
+  trực tiếp còn lại (giữ chỗ, trừ tồn, tạo giao dịch thanh toán) giữ nguyên theo Phụ lục V.
+- Đã phát tại điểm có mã: `BatchApproved`, `ProductChanged` (tạo, duyệt, từ chối), `OrderPlaced`, `OrderCancelled` (khách hủy và quá hạn giữ chỗ),
+  `PaymentSucceeded`, `Refunded`. 11 sự kiện còn lại mới khai kiểu, chờ mô-đun phát được hiện thực.
+**Bối cảnh:** W8-6 chặn cả nhóm: notification, AI và payment cần điểm cắm trước khi viết bên nhận. Bốn mô-đun còn rỗng (engagement,
+fulfillment, notification, procurement) nên phần lớn bên nhận chưa tồn tại.
+**Đánh đổi:** không bền qua khởi động lại và không có thử lại, chưa chứng minh được giao nhận qua tiến trình khác; đổi lại không thêm
+hạ tầng. Bên nhận chạy đồng bộ nên bên nhận chậm làm chậm yêu cầu của bên phát (chấp nhận được ở quy mô đồ án).
