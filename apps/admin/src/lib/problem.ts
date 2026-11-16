@@ -1,6 +1,8 @@
 import type { Problem } from "@farmery/contract";
 import type { HttpError } from "@refinedev/core";
 
+const RATE_LIMITED_MESSAGE = "Bạn thao tác quá nhanh, vui lòng thử lại sau ít phút.";
+
 const MESSAGES: Record<string, string> = {
   OTP_INVALID: "Mã OTP không đúng.",
   OTP_EXPIRED: "Mã OTP đã hết hạn, vui lòng gửi lại mã.",
@@ -12,6 +14,7 @@ const MESSAGES: Record<string, string> = {
   NOT_FOUND: "Không tìm thấy dữ liệu yêu cầu.",
   VALIDATION_FAILED: "Thông tin chưa hợp lệ, vui lòng kiểm tra lại.",
   NOT_IMPLEMENTED: "Chức năng đang được hoàn thiện phía máy chủ.",
+  RATE_LIMITED: RATE_LIMITED_MESSAGE,
 };
 
 export const NETWORK_MESSAGE = "Không kết nối được máy chủ Farmery. Vui lòng thử lại sau ít phút.";
@@ -20,6 +23,7 @@ export const NETWORK_MESSAGE = "Không kết nối được máy chủ Farmery. 
 export function problemMessage(problem: Partial<Problem> | undefined, status: number, fallback: string): string {
   const known = problem?.code ? MESSAGES[problem.code] : undefined;
   if (known) return known;
+  if (status === 429) return RATE_LIMITED_MESSAGE;
   if (status === 501) return "Chức năng đang được hoàn thiện phía máy chủ.";
   if (status >= 500) return "Máy chủ Farmery đang gặp sự cố. Vui lòng thử lại sau ít phút.";
   return fallback;

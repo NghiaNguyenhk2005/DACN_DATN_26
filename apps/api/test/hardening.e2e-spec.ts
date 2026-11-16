@@ -50,6 +50,33 @@ describe("Trần OTP theo giờ (đồng hồ chỉnh tay)", () => {
   });
 });
 
+describe("Giới hạn tần suất theo IP trả 429 kèm header CORS", () => {
+  it("trình duyệt của shop/admin đọc được 429 RATE_LIMITED; nguồn lạ vẫn không được CORS", async () => {
+    process.env.RATE_LIMIT_ENABLED = "true";
+    process.env.RATE_LIMIT_AUTH_MAX = "2";
+    const t = await createTestApp();
+    try {
+      const ask = (origin: string) =>
+        request(t.http()).post("/api/auth/otp").set("Origin", origin).send({ email: "khachle@example.com" });
+      await ask("http://localhost:3000").expect(200);
+      await ask("http://localhost:5173").expect(200);
+      for (const origin of ["http://localhost:3000", "http://localhost:5173"]) {
+        const blocked = await ask(origin).expect(429);
+        expect(blocked.headers["access-control-allow-origin"]).toBe(origin);
+        expect(blocked.headers["access-control-expose-headers"]).toContain("Retry-After");
+        expect(blocked.headers["content-type"]).toContain("application/problem+json");
+        expect(blocked.body).toMatchObject({ status: 429, code: "RATE_LIMITED" });
+      }
+      const stranger = await ask("http://evil.example").expect(429);
+      expect(stranger.headers["access-control-allow-origin"]).toBeUndefined();
+    } finally {
+      process.env.RATE_LIMIT_ENABLED = "false";
+      delete process.env.RATE_LIMIT_AUTH_MAX;
+      await t.app.close();
+    }
+  });
+});
+
 describe("Cổng thanh toán từ chối", () => {
   it("trả 409 PAYMENT_FAILED, đơn vẫn chờ thanh toán và giữ chỗ; thử lại được", async () => {
     let approve = false;

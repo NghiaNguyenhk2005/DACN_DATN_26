@@ -1299,3 +1299,18 @@ cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi k
 trên sheet đã kín; ba công cụ thay thế đều đã chạy trong CI. Mốc đóng băng nội dung 15/12, báo cáo nộp 31/12.
 **Đánh đổi:** mất các chỉ số độ phức tạp, tỷ lệ trùng lặp và nợ kỹ thuật; đổi lại không phụ thuộc dịch vụ ngoài và bớt một
 việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện tại, việc khoảng nửa ngày ở tuần 8.
+### Hình ERD theo miền: định tuyến trực giao, trục dọc theo bảng cha, ký hiệu chân chim đủ tùy chọn — 2026-11-16
+**Quyết định:**
+- `report/tools/diagrams/gen_erd.py` định tuyến lại các hình ERD theo miền: đoạn thẳng ≥ 50px ra khỏi mép bảng trước khi rẽ,
+  mỗi bảng cha một trục dọc trong rãnh giữa hai cột (rãnh tự giãn theo số trục, bảng giữ nguyên 410px), đầu nối phía cha
+  tách nhau ≥ 20px và ưu tiên dòng `id`, điểm neo phụ đặt ở vùng tiêu đề bảng; chỗ cắt nhau vẽ dấu bắc cầu.
+- Ký hiệu: phía cha `||` (khóa ngoại NOT NULL) hoặc `o|` (cho phép NULL); phía con `o<` (không hoặc nhiều), `o|` khi quan hệ 1-1;
+  khóa ngoại tự tham chiếu vẽ vòng nhỏ sát mép bảng; tham chiếu định danh (RB3) giữ nét đứt, đậm hơn bản cũ.
+- Bộ kiểm tra V1-V5 chạy trong generator mỗi lần sinh hình; có vi phạm V1/V2/V3/V5 thì thoát mã 1.
+- Giữ ngưỡng lược đường tới bảng có từ 4 bảng con trỏ vào.
+**Bối cảnh:** hình cũ rẽ cách mép 12px trong khi chân chim dài 19px, các đường vào cùng bảng cha lệch nhau 7px nên ký hiệu chồng
+nhau; đo trên 10 hình: V1 (rẽ sát mép) 27, V2 (đoạn chồng/sát) 13, V3 (ký hiệu chạm đường khác) 31, V4 (điểm cắt) 36. Sau khi sửa:
+V1 = V2 = V3 = V5 = 0, V4 = 24, trong đó 3 điểm do vòng tự tham chiếu mà bản cũ không vẽ.
+**Đánh đổi:** chiều rộng hình tăng từ 960 lên 1002px nên chữ co khoảng 4% khi ép về 16 cm; phía con đổi từ một-hoặc-nhiều sang
+không-hoặc-nhiều vì cơ sở dữ liệu không ép mỗi bản ghi cha có bản ghi con. Điểm neo phụ ở vùng tiêu đề thay vì dòng cột,
+tránh đọc nhầm là quan hệ của cột đó; đổi lại điểm neo không còn cùng hàng với `id`.
