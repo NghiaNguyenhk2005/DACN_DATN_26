@@ -1,0 +1,65 @@
+enum ModerationStatus {
+  published
+  flagged
+  hidden
+
+  @@map("moderation_status")
+  @@schema("engagement")
+}
+
+/// Đánh giá sau đơn hoàn tất (FR5.5); phát ReviewPosted
+model Review {
+  id          BigInt           @id @default(autoincrement())
+  orderId     BigInt           @map("order_id")
+  orderItemId BigInt           @unique @map("order_item_id")
+  productId   BigInt           @map("product_id")
+  supplierId  BigInt           @map("supplier_id")
+  buyerUserId BigInt           @map("buyer_user_id")
+  rating      Int              @db.SmallInt
+  content     String?          @db.Text
+  imageIds    BigInt[]         @map("image_ids")
+  status      ModerationStatus @default(published)
+  flagReasons Json?            @map("flag_reasons") @db.JsonB
+  moderatedBy BigInt?          @map("moderated_by")
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+
+  reviewReply ReviewReply? @relation("ReviewReply_review")
+
+  @@map("reviews")
+  @@schema("engagement")
+}
+
+/// Farmery phản hồi công khai một lần dưới mỗi đánh giá (FR5.5, chỉ thiết kế)
+model ReviewReply {
+  reviewId        BigInt   @id @map("review_id")
+  responderUserId BigInt   @map("responder_user_id")
+  content         String   @db.Text
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  review Review @relation("ReviewReply_review", fields: [reviewId], references: [id])
+
+  @@map("review_replies")
+  @@schema("engagement")
+}
+
+/// Điểm uy tín tính lại sau mỗi đánh giá hợp lệ; từ 80 được hậu kiểm nhanh
+model SupplierReputation {
+  supplierId       BigInt   @id @map("supplier_id")
+  score            Decimal  @db.Decimal(5, 2)
+  validReviewCount Int      @map("valid_review_count")
+  computedAt       DateTime @default(now()) @map("computed_at") @db.Timestamp(6)
+
+  @@map("supplier_reputation")
+  @@schema("engagement")
+}
+
+/// Danh sách yêu thích (FR9.2, chỉ thiết kế)
+model WishlistItem {
+  userId    BigInt   @map("user_id")
+  productId BigInt   @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@id([userId, productId])
+  @@map("wishlist_items")
+  @@schema("engagement")
+}

@@ -13,6 +13,10 @@
     "generate": "turbo run generate",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "db:up": "docker compose up -d --wait db",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter @farmery/api db:migrate",
+    "db:seed": "pnpm --filter @farmery/api db:seed",
     "e2e": "turbo run build --filter=@farmery/contract --filter=@farmery/mock-data && pnpm --filter @farmery/e2e e2e"
   },
   "devDependencies": {

@@ -1299,3 +1299,23 @@ cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi k
 trên sheet đã kín; ba công cụ thay thế đều đã chạy trong CI. Mốc đóng băng nội dung 15/12, báo cáo nộp 31/12.
 **Đánh đổi:** mất các chỉ số độ phức tạp, tỷ lệ trùng lặp và nợ kỹ thuật; đổi lại không phụ thuộc dịch vụ ngoài và bớt một
 việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện tại, việc khoảng nửa ngày ở tuần 8.
+
+### Nền Prisma + PostgreSQL: Prisma 7.10.1, schema trong apps/api, seed hẹp — 2026-11-16
+**Quyết định:**
+- Prisma ghim 7.10.1 (bản ổn định; tag `latest` trên npm lúc đó là 8.0.0-rc.33, bản RC). Dùng driver adapter `@prisma/adapter-pg`.
+- Schema đặt ở `apps/api/prisma/schema/`: `base.prisma` (generator, datasource, danh sách 13 schema) và mỗi mô-đun một file
+  `<mô-đun>.prisma`; không tạo package riêng vì chỉ `apps/api` dùng cơ sở dữ liệu. Bản nháp sinh một lần từ
+  `report/schema.dbml` (65 bảng, 41 enum, 565 cột, đối chiếu khớp); từ nay `.prisma` là nguồn chính, dbml còn dùng cho báo cáo.
+- PostgreSQL 17 kèm pgvector (`pgvector/pgvector:pg17`) chạy bằng `docker-compose.yml` ở cổng 5433 (đổi bằng `PG_PORT`; máy dev có PostgreSQL cài sẵn chiếm 5432); migration tạo extension `vector`,
+  `unaccent`, `pg_trgm`, hàm bọc `f_unaccent`, chỉ mục HNSW cho vector, trigram và tsvector cho tìm từ khóa, và CHECK
+  `stock_holdings` (tồn và giữ chỗ không âm, giữ chỗ không vượt tồn).
+- `STORAGE=memory|prisma` (mặc định `memory`); `storageProvider(Token, InMemoryX, PrismaX)` chọn lớp lưu trữ lúc khởi động.
+  `STORAGE=prisma` thiếu `DATABASE_URL` thì từ chối khởi động. Mới có `CategoryRepository` bản Prisma làm thí điểm.
+- Seed (`pnpm db:seed`, chạy lại được) chỉ nạp danh mục và tài khoản kèm vai trò. Nhà cung cấp, sản phẩm, lô, nhật ký canh tác,
+  tồn kho để cùng repository của chúng ở tuần 9.
+- CI thêm job `ci-pg` (PostgreSQL thật: migrate, seed hai lần, test `STORAGE=prisma`); job `ci` giữ chạy bản bộ nhớ.
+  Client Prisma sinh bằng `pnpm generate` (không commit) và bị loại khỏi cổng độ phủ Jest cùng các file `prisma-*.ts`
+  (chỉ chạy được khi có PostgreSQL).
+**Bối cảnh:** lớp lưu trữ Prisma là việc chặn cả nhóm ở tuần 8 (W8-5) và là điều kiện để k6 đo trên PostgreSQL (NFR1.1, NFR1.2, NFR4.1).
+**Đánh đổi:** hai mô hình dữ liệu song song (bộ nhớ và PostgreSQL) cho tới khi chuyển hết repository; seed hẹp nên
+`STORAGE=prisma` chưa chạy được toàn bộ API, chỉ danh mục. Đổi lại nền dựng xong sớm, nhóm viết repository từng mô-đun độc lập.

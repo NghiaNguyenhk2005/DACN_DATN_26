@@ -7,6 +7,7 @@ import { Clock, SystemClock } from "./clock";
 import { CONTRACT_DOCUMENT, loadContractDocument } from "./contract-document";
 import { DemoResetRegistry } from "./demo-reset.registry";
 import { IdempotencyInterceptor } from "./idempotency.interceptor";
+import { prismaProviders, PRISMA_CLIENT } from "./prisma";
 import { ProblemFilter } from "./problem.filter";
 import { TokenService } from "./token.service";
 
@@ -22,11 +23,12 @@ import { TokenService } from "./token.service";
     { provide: CONTRACT_DOCUMENT, useFactory: loadContractDocument },
     TokenService,
     DemoResetRegistry,
+    ...prismaProviders,
     { provide: Clock, useClass: SystemClock },
     { provide: APP_FILTER, useClass: ProblemFilter },
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },
   ],
-  exports: [APP_CONFIG, CONTRACT_DOCUMENT, TokenService, DemoResetRegistry, Clock],
+  exports: [APP_CONFIG, CONTRACT_DOCUMENT, TokenService, DemoResetRegistry, Clock, PRISMA_CLIENT],
 })
 export class CoreModule {}

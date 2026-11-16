@@ -1,0 +1,68 @@
+enum Channel {
+  in_app
+  push
+  email
+  sms
+
+  @@map("channel")
+  @@schema("notification")
+}
+
+/// Thông báo trên giao diện; bản gửi qua kênh khác ghi ở deliveries
+model Notification {
+  id         BigInt    @id @default(autoincrement())
+  userId     BigInt    @map("user_id")
+  eventType  String    @map("event_type") @db.VarChar
+  title      String    @db.VarChar
+  body       String    @db.Text
+  linkTarget String?   @map("link_target") @db.VarChar
+  readAt     DateTime? @map("read_at") @db.Timestamp(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  deliveries Delivery[] @relation("Delivery_notification")
+
+  @@map("notifications")
+  @@schema("notification")
+}
+
+/// Mỗi lần gửi qua email (FR11.1); kênh đẩy, SMS chỉ thiết kế
+model Delivery {
+  id             BigInt    @id @default(autoincrement())
+  notificationId BigInt    @map("notification_id")
+  channel        Channel
+  status         String    @db.VarChar
+  attempts       Int       @default(0)
+  sentAt         DateTime? @map("sent_at") @db.Timestamp(6)
+
+  notification Notification @relation("Delivery_notification", fields: [notificationId], references: [id])
+
+  @@map("deliveries")
+  @@schema("notification")
+}
+
+/// Kênh người dùng chọn cho từng nhóm thông báo
+model Preference {
+  userId     BigInt  @map("user_id")
+  eventGroup String  @map("event_group") @db.VarChar
+  channel    Channel
+  enabled    Boolean @default(true)
+
+  @@id([userId, eventGroup, channel])
+  @@map("preferences")
+  @@schema("notification")
+}
+
+/// Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt (FR11.1, chỉ thiết kế)
+model PushSubscription {
+  id         BigInt    @id @default(autoincrement())
+  userId     BigInt    @map("user_id")
+  endpoint   String    @unique @db.VarChar
+  p256dh     String    @db.VarChar
+  authSecret String    @map("auth_secret") @db.VarChar
+  userAgent  String?   @map("user_agent") @db.VarChar
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamp(6)
+
+  @@map("push_subscriptions")
+  @@schema("notification")
+}

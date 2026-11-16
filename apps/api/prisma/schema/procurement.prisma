@@ -1,0 +1,108 @@
+enum OfferStatus {
+  open
+  accepted
+  withdrawn
+  expired
+
+  @@map("offer_status")
+  @@schema("procurement")
+}
+
+enum PoStatus {
+  draft
+  sent
+  supplier_confirmed
+  receiving
+  completed
+  cancelled
+  expired
+
+  @@map("po_status")
+  @@schema("procurement")
+}
+
+enum InspectionResult {
+  accepted
+  partially_accepted
+  rejected
+
+  @@map("inspection_result")
+  @@schema("procurement")
+}
+
+/// Chào giá lô sắp thu hoạch
+model SupplierOffer {
+  id              BigInt      @id @default(autoincrement())
+  supplierId      BigInt      @map("supplier_id")
+  batchId         BigInt      @map("batch_id")
+  offeredQty      Decimal     @map("offered_qty") @db.Decimal(12, 2)
+  unitPrice       Decimal     @map("unit_price") @db.Decimal(14, 2)
+  expectedHarvest DateTime    @map("expected_harvest") @db.Date
+  status          OfferStatus @default(open)
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+
+  purchaseOrders PurchaseOrder[] @relation("PurchaseOrder_offer")
+
+  @@map("supplier_offers")
+  @@schema("procurement")
+}
+
+/// Đơn thu mua; chỉ có hiệu lực khi nhà cung cấp xác nhận (FR13.1)
+model PurchaseOrder {
+  id                  BigInt    @id @default(autoincrement())
+  offerId             BigInt?   @map("offer_id")
+  supplierId          BigInt    @map("supplier_id")
+  batchId             BigInt    @map("batch_id")
+  orderedQty          Decimal   @map("ordered_qty") @db.Decimal(12, 2)
+  unitPrice           Decimal   @map("unit_price") @db.Decimal(14, 2)
+  deliveryDue         DateTime  @map("delivery_due") @db.Date
+  status              PoStatus  @default(draft)
+  confirmDeadline     DateTime  @map("confirm_deadline") @db.Timestamp(6)
+  supplierConfirmedAt DateTime? @map("supplier_confirmed_at") @db.Timestamp(6)
+  createdBy           BigInt    @map("created_by")
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  offer         SupplierOffer? @relation("PurchaseOrder_offer", fields: [offerId], references: [id])
+  goodsReceipts GoodsReceipt[] @relation("GoodsReceipt_purchaseOrder")
+
+  @@map("purchase_orders")
+  @@schema("procurement")
+}
+
+/// Nghiệm thu tại kho sơ chế (FR13.2); phát ProcurementReceived
+model GoodsReceipt {
+  id                BigInt           @id @default(autoincrement())
+  purchaseOrderId   BigInt           @map("purchase_order_id")
+  acceptedQty       Decimal          @map("accepted_qty") @db.Decimal(12, 2)
+  rejectedQty       Decimal          @default(0) @map("rejected_qty") @db.Decimal(12, 2)
+  shrinkageQty      Decimal          @default(0) @map("shrinkage_qty") @db.Decimal(12, 2)
+  adjustedUnitPrice Decimal?         @map("adjusted_unit_price") @db.Decimal(14, 2)
+  result            InspectionResult
+  note              String?          @db.Text
+  imageIds          BigInt[]         @map("image_ids")
+  targetHoldingId   BigInt?          @map("target_holding_id")
+  inspectedBy       BigInt           @map("inspected_by")
+  inspectedAt       DateTime         @default(now()) @map("inspected_at") @db.Timestamp(6)
+
+  purchaseOrder PurchaseOrder @relation("GoodsReceipt_purchaseOrder", fields: [purchaseOrderId], references: [id])
+
+  @@map("goods_receipts")
+  @@schema("procurement")
+}
+
+/// Kết quả dự báo giá để hiển thị ở màn hình lập đơn thu mua; bản hiện thực chạy dự báo offline, không ghi bảng này (FR12.2, chỉ thiết kế)
+model PriceForecast {
+  id             BigInt   @id @default(autoincrement())
+  categoryId     BigInt   @map("category_id")
+  region         String   @db.VarChar
+  weekStart      DateTime @map("week_start") @db.Date
+  predictedPrice Decimal  @map("predicted_price") @db.Decimal(14, 2)
+  lowerBound     Decimal  @map("lower_bound") @db.Decimal(14, 2)
+  upperBound     Decimal  @map("upper_bound") @db.Decimal(14, 2)
+  modelName      String   @map("model_name") @db.VarChar
+  generatedAt    DateTime @default(now()) @map("generated_at") @db.Timestamp(6)
+
+  @@unique([categoryId, region, weekStart, modelName])
+  @@map("price_forecasts")
+  @@schema("procurement")
+}

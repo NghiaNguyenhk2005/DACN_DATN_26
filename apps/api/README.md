@@ -1,7 +1,7 @@
 # apps/api — ứng dụng lõi (NestJS)
 
 NestJS 11, mọi đường dẫn nằm dưới `/api`. Prototype giữ dữ liệu trong bộ nhớ; giai đoạn 2 chỉ thay lớp lưu trữ
-bằng Prisma, phần còn lại giữ nguyên (`MVP.md` mục 6).
+bằng Prisma, phần còn lại giữ nguyên (`MVP.md` mục 6). Kho dữ liệu chọn bằng `STORAGE=memory|prisma` (xem mục Lưu trữ).
 
 ```bash
 pnpm --filter @farmery/api dev    # http://localhost:4000/api, Swagger ở http://localhost:4000/docs
@@ -9,13 +9,31 @@ pnpm --filter @farmery/api test   # test e2e trong test/
 ```
 
 Đổi cấu hình: sao `.env.example` thành `.env` trong thư mục này (`PORT`, `CORS_ORIGINS`, `DEMO_MODE`,
-`VALIDATE_RESPONSES`, `JWT_SECRET`).
+`VALIDATE_RESPONSES`, `JWT_SECRET`, `STORAGE`, `DATABASE_URL`).
+
+## Lưu trữ: bộ nhớ hoặc PostgreSQL
+
+Mặc định `STORAGE=memory` (không cần cơ sở dữ liệu). Chạy trên PostgreSQL (hiện mới `GET /api/categories` đọc từ cơ sở dữ liệu):
+
+```bash
+pnpm generate     # sinh client Prisma vào src/generated (không commit; CI chạy sẵn)
+pnpm db:up        # PostgreSQL 17 + pgvector bằng docker-compose.yml, cần Docker
+pnpm db:migrate   # áp prisma/migrations
+pnpm db:seed      # danh mục + tài khoản mẫu, chạy lại được
+# trong apps/api/.env: STORAGE=prisma, DATABASE_URL=postgresql://farmery:farmery@localhost:5433/farmery
+pnpm --filter @farmery/api exec jest test/storage.e2e-spec.ts --coverage=false   # test trên PostgreSQL
+```
+
+Schema ở `prisma/schema/` (mỗi mô-đun một file `<mô-đun>.prisma`, 13 schema PostgreSQL). Sửa schema: `pnpm --filter @farmery/api db:migrate:dev`.
+Muốn một repository dùng được trên PostgreSQL: viết `prisma-<thực-thể>.repository.ts` cùng interface và nối bằng
+`storageProvider(Token, InMemoryX, PrismaX)` (`src/core/storage.ts`) thay cho `useClass`.
 
 ## Cấu trúc
 
 | Thư mục | Nội dung |
 |---|---|
 | `src/core/` | Nền chung: cấu hình, đọc `openapi.yaml`, bộ kiểm dữ liệu theo hợp đồng, `AuthGuard`, JWT (`TokenService`), lỗi RFC 9457, `Idempotency-Key`, `DemoResetRegistry` |
+| `prisma/` | `schema/*.prisma`, `migrations/`, `seed.ts`; cấu hình CLI ở `prisma.config.ts` |
 | `src/modules/` | 13 mô-đun nghiệp vụ theo báo cáo (bảng `tab:module-io`); `catalog` là mô-đun mẫu |
 | `src/integrations/` | Interface dịch vụ bên ngoài (`OtpSender`, `PaymentGateway`) kèm bản giả cho prototype |
 | `src/system/` | `GET /api/health`, `POST /api/dev/reset` |

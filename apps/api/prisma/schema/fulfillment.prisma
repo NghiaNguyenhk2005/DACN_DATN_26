@@ -1,0 +1,166 @@
+enum TripStatus {
+  planned
+  loading
+  departed
+  handed_over
+  cancelled
+
+  @@map("trip_status")
+  @@schema("fulfillment")
+}
+
+enum ShipmentStatus {
+  created
+  picked_up
+  delivering
+  delivered
+  failed
+  returned
+
+  @@map("shipment_status")
+  @@schema("fulfillment")
+}
+
+enum RequestType {
+  quality
+  wrong_or_missing
+  change_of_mind
+  refused_at_door
+
+  @@map("request_type")
+  @@schema("fulfillment")
+}
+
+enum Cause {
+  supply
+  packing
+  transport
+  recipient
+
+  @@map("cause")
+  @@schema("fulfillment")
+}
+
+enum Decision {
+  full_refund
+  partial_refund
+  replacement
+  rejected
+
+  @@map("decision")
+  @@schema("fulfillment")
+}
+
+/// Chuyến trung chuyển xe lạnh Lâm Đồng–TP.HCM — chặng giữa (FR8.1)
+model TransferTrip {
+  id           BigInt     @id @default(autoincrement())
+  tripCode     String     @unique @map("trip_code") @db.VarChar
+  tripDate     DateTime   @map("trip_date") @db.Date
+  vehiclePlate String?    @map("vehicle_plate") @db.VarChar
+  carrierName  String?    @map("carrier_name") @db.VarChar
+  status       TripStatus @default(planned)
+  departedAt   DateTime?  @map("departed_at") @db.Timestamp(6)
+  handedOverAt DateTime?  @map("handed_over_at") @db.Timestamp(6)
+  createdBy    BigInt     @map("created_by")
+
+  tripOrders TripOrder[] @relation("TripOrder_trip")
+  shipments  Shipment[]  @relation("Shipment_trip")
+
+  @@map("transfer_trips")
+  @@schema("fulfillment")
+}
+
+/// Danh sách đơn của chuyến (manifest), lập sau giờ chốt đơn
+model TripOrder {
+  tripId   BigInt    @map("trip_id")
+  orderId  BigInt    @map("order_id")
+  loadedAt DateTime? @map("loaded_at") @db.Timestamp(6)
+
+  trip TransferTrip @relation("TripOrder_trip", fields: [tripId], references: [id])
+
+  @@id([tripId, orderId])
+  @@map("trip_orders")
+  @@schema("fulfillment")
+}
+
+/// Vận đơn chặng cuối; phát ShipmentStatusChanged
+model Shipment {
+  id               BigInt         @id @default(autoincrement())
+  orderId          BigInt         @unique @map("order_id")
+  tripId           BigInt?        @map("trip_id")
+  carrier          String         @default("internal") @db.VarChar
+  carrierOrderCode String?        @unique @map("carrier_order_code") @db.VarChar
+  carrierFee       Decimal        @map("carrier_fee") @db.Decimal(14, 2)
+  middleLegFee     Decimal        @map("middle_leg_fee") @db.Decimal(14, 2)
+  slotStart        DateTime       @map("slot_start") @db.Timestamp(6)
+  slotEnd          DateTime       @map("slot_end") @db.Timestamp(6)
+  status           ShipmentStatus @default(created)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+
+  trip           TransferTrip?   @relation("Shipment_trip", fields: [tripId], references: [id])
+  shipmentEvents ShipmentEvent[] @relation("ShipmentEvent_shipment")
+
+  @@map("shipments")
+  @@schema("fulfillment")
+}
+
+/// Lịch sử trạng thái chặng cuối do nhân viên vận hành chuyển bước; 3PL đẩy về qua webhook chỉ thiết kế
+model ShipmentEvent {
+  id             BigInt         @id @default(autoincrement())
+  shipmentId     BigInt         @map("shipment_id")
+  status         ShipmentStatus
+  carrierEventId String?        @unique @map("carrier_event_id") @db.VarChar
+  payload        Json?          @db.JsonB
+  occurredAt     DateTime       @map("occurred_at") @db.Timestamp(6)
+  receivedAt     DateTime       @default(now()) @map("received_at") @db.Timestamp(6)
+
+  shipment Shipment @relation("ShipmentEvent_shipment", fields: [shipmentId], references: [id])
+
+  @@map("shipment_events")
+  @@schema("fulfillment")
+}
+
+/// Yêu cầu đổi trả, hoàn tiền, khiếu nại đơn lẻ (FR8.3); phát CaseResolved
+model ReturnRequest {
+  id             BigInt      @id @default(autoincrement())
+  orderId        BigInt      @map("order_id")
+  buyerUserId    BigInt      @map("buyer_user_id")
+  requestType    RequestType @map("request_type")
+  claimDeadline  DateTime    @map("claim_deadline") @db.Timestamp(6)
+  description    String?     @db.Text
+  evidenceIds    BigInt[]    @map("evidence_ids")
+  claimedAmount  Decimal     @map("claimed_amount") @db.Decimal(14, 2)
+  suggestedCause Cause?      @map("suggested_cause")
+  cause          Cause?
+  decision       Decision?
+  refundAmount   Decimal?    @map("refund_amount") @db.Decimal(14, 2)
+  returnRequired Boolean?    @map("return_required")
+  priority       String      @default("normal") @db.VarChar
+  dueAt          DateTime    @map("due_at") @db.Timestamp(6)
+  handledBy      BigInt?     @map("handled_by")
+  status         String      @default("received") @db.VarChar
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  decidedAt      DateTime?   @map("decided_at") @db.Timestamp(6)
+
+  messages Message[] @relation("Message_returnRequest")
+
+  @@map("return_requests")
+  @@schema("fulfillment")
+}
+
+/// Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1, chỉ thiết kế)
+model Message {
+  id              BigInt    @id @default(autoincrement())
+  orderId         BigInt    @map("order_id")
+  returnRequestId BigInt?   @map("return_request_id")
+  senderUserId    BigInt    @map("sender_user_id")
+  content         String    @db.Text
+  attachmentIds   BigInt[]  @map("attachment_ids")
+  sentAt          DateTime  @default(now()) @map("sent_at") @db.Timestamp(6)
+  readAt          DateTime? @map("read_at") @db.Timestamp(6)
+
+  returnRequest ReturnRequest? @relation("Message_returnRequest", fields: [returnRequestId], references: [id])
+
+  @@map("messages")
+  @@schema("fulfillment")
+}
