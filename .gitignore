@@ -50,3 +50,6 @@ packages/contract/src/generated/
 
 # Log của scripts/demo
 scripts/.demo-dev.log
+
+# Jest coverage
+coverage/

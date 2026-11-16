@@ -8,7 +8,7 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
-    "test": "jest",
+    "test": "jest --coverage",
     "test:blackbox": "nest build && jest -c jest.blackbox.config.cjs"
   },
   "dependencies": {
@@ -63,6 +63,21 @@
           }
         }
       ]
+    },
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 88,
+        "branches": 70,
+        "functions": 90,
+        "lines": 89
+      }
     },
     "testEnvironment": "node",
     "moduleFileExtensions": [
