@@ -1,0 +1,182 @@
+enum ListingStatus {
+  draft
+  active
+  paused
+  sold_out
+
+  @@map("listing_status")
+  @@schema("retail")
+}
+
+enum OrderStatus {
+  placed
+  paid
+  packing
+  on_trip
+  handed_to_3pl
+  delivering
+  delivered
+  completed
+  disputed
+  cancelled
+  returned
+
+  @@map("order_status")
+  @@schema("retail")
+}
+
+enum PaymentOption {
+  prepaid
+  cod
+
+  @@map("payment_option")
+  @@schema("retail")
+}
+
+enum RestockKind {
+  back_in_stock
+  in_season
+
+  @@map("restock_kind")
+  @@schema("retail")
+}
+
+/// Tin bán lẻ trên gian hàng của Farmery — bên bán duy nhất ở luồng này (FR5.1)
+model Listing {
+  id        BigInt        @id @default(autoincrement())
+  productId BigInt        @map("product_id")
+  saleUnit  String        @map("sale_unit") @db.VarChar
+  unitPrice Decimal       @map("unit_price") @db.Decimal(14, 2)
+  status    ListingStatus @default(draft)
+  pricedBy  BigInt        @map("priced_by")
+  updatedAt DateTime      @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  cartItems  CartItem[]  @relation("CartItem_listing")
+  orderItems OrderItem[] @relation("OrderItem_listing")
+
+  @@map("listings")
+  @@schema("retail")
+}
+
+/// Mã giảm giá của gian hàng bán lẻ (FR5.3)
+model Voucher {
+  id              BigInt   @id @default(autoincrement())
+  code            String   @unique @db.VarChar
+  discountPercent Decimal  @map("discount_percent") @db.Decimal(5, 2)
+  maxDiscount     Decimal? @map("max_discount") @db.Decimal(14, 2)
+  minOrderAmount  Decimal  @default(0) @map("min_order_amount") @db.Decimal(14, 2)
+  usageLimit      Int?     @map("usage_limit")
+  usedCount       Int      @default(0) @map("used_count")
+  startsAt        DateTime @map("starts_at") @db.Timestamp(6)
+  expiresAt       DateTime @map("expires_at") @db.Timestamp(6)
+
+  orders Order[] @relation("Order_voucher")
+
+  @@map("vouchers")
+  @@schema("retail")
+}
+
+model Cart {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @unique @map("user_id")
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  cartItems CartItem[] @relation("CartItem_cart")
+
+  @@map("carts")
+  @@schema("retail")
+}
+
+/// FR5.1; mua lại tạo các dòng này từ đơn cũ (FR5.6)
+model CartItem {
+  cartId    BigInt  @map("cart_id")
+  listingId BigInt  @map("listing_id")
+  quantity  Decimal @db.Decimal(12, 2)
+
+  cart    Cart    @relation("CartItem_cart", fields: [cartId], references: [id])
+  listing Listing @relation("CartItem_listing", fields: [listingId], references: [id])
+
+  @@id([cartId, listingId])
+  @@map("cart_items")
+  @@schema("retail")
+}
+
+/// Đơn lẻ; COD chỉ mở khi dưới ngưỡng và tài khoản chưa có cod_refused_at (FR7.1)
+model Order {
+  id               BigInt        @id @default(autoincrement())
+  orderCode        String        @unique @map("order_code") @db.VarChar
+  buyerUserId      BigInt        @map("buyer_user_id")
+  addressSnapshot  Json          @map("address_snapshot") @db.JsonB
+  deliveryDate     DateTime      @map("delivery_date") @db.Date
+  deliverySlot     String        @map("delivery_slot") @db.VarChar
+  paymentOption    PaymentOption @map("payment_option")
+  voucherId        BigInt?       @map("voucher_id")
+  subtotal         Decimal       @db.Decimal(14, 2)
+  discountAmount   Decimal       @default(0) @map("discount_amount") @db.Decimal(14, 2)
+  taxAmount        Decimal       @default(0) @map("tax_amount") @db.Decimal(14, 2)
+  shippingFee      Decimal       @map("shipping_fee") @db.Decimal(14, 2)
+  totalAmount      Decimal       @map("total_amount") @db.Decimal(14, 2)
+  status           OrderStatus   @default(placed)
+  reserveExpiresAt DateTime?     @map("reserve_expires_at") @db.Timestamp(6)
+  codRefusedAt     DateTime?     @map("cod_refused_at") @db.Timestamp(6)
+  reorderOf        BigInt?       @map("reorder_of")
+  placedAt         DateTime      @default(now()) @map("placed_at") @db.Timestamp(6)
+  completedAt      DateTime?     @map("completed_at") @db.Timestamp(6)
+
+  voucher           Voucher?           @relation("Order_voucher", fields: [voucherId], references: [id])
+  reorderOfRel      Order?             @relation("Order_reorderOfRel", fields: [reorderOf], references: [id])
+  orders            Order[]            @relation("Order_reorderOfRel")
+  orderItems        OrderItem[]        @relation("OrderItem_order")
+  orderStatusEvents OrderStatusEvent[] @relation("OrderStatusEvent_order")
+
+  @@map("orders")
+  @@schema("retail")
+}
+
+model OrderItem {
+  id          BigInt  @id @default(autoincrement())
+  orderId     BigInt  @map("order_id")
+  listingId   BigInt  @map("listing_id")
+  holdingId   BigInt  @map("holding_id")
+  batchId     BigInt  @map("batch_id")
+  productName String  @map("product_name") @db.VarChar
+  quantity    Decimal @db.Decimal(12, 2)
+  unitPrice   Decimal @map("unit_price") @db.Decimal(14, 2)
+  lineTotal   Decimal @map("line_total") @db.Decimal(14, 2)
+
+  order   Order   @relation("OrderItem_order", fields: [orderId], references: [id])
+  listing Listing @relation("OrderItem_listing", fields: [listingId], references: [id])
+
+  @@map("order_items")
+  @@schema("retail")
+}
+
+/// Mốc trên dòng thời gian tám trạng thái (FR5.4); mỗi mốc phát một thông báo
+model OrderStatusEvent {
+  id          BigInt      @id @default(autoincrement())
+  orderId     BigInt      @map("order_id")
+  toStatus    OrderStatus @map("to_status")
+  source      String      @db.VarChar
+  actorUserId BigInt?     @map("actor_user_id")
+  note        String?     @db.Text
+  occurredAt  DateTime    @default(now()) @map("occurred_at") @db.Timestamp(6)
+
+  order Order @relation("OrderStatusEvent_order", fields: [orderId], references: [id])
+
+  @@map("order_status_events")
+  @@schema("retail")
+}
+
+/// Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7, chỉ thiết kế)
+model RestockSubscription {
+  id         BigInt      @id @default(autoincrement())
+  userId     BigInt      @map("user_id")
+  productId  BigInt      @map("product_id")
+  kind       RestockKind
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  notifiedAt DateTime?   @map("notified_at") @db.Timestamp(6)
+
+  @@unique([userId, productId, kind])
+  @@map("restock_subscriptions")
+  @@schema("retail")
+}

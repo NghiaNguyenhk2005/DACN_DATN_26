@@ -1,0 +1,119 @@
+enum ProductGroup {
+  leafy_veg
+  root_fruit
+  dry_goods
+
+  @@map("product_group")
+  @@schema("catalog")
+}
+
+enum ReviewStatus {
+  draft
+  pending_review
+  approved
+  rejected
+  hidden
+
+  @@map("review_status")
+  @@schema("catalog")
+}
+
+/// Cây danh mục nông sản đóng, do quản trị viên hệ thống định nghĩa (FR10.6)
+model Category {
+  id             BigInt        @id @default(autoincrement())
+  parentId       BigInt?       @map("parent_id")
+  name           String        @db.VarChar
+  isLeaf         Boolean       @default(false) @map("is_leaf")
+  productGroup   ProductGroup? @map("product_group")
+  allowedUnits   String[]      @map("allowed_units") @db.VarChar
+  requiredFields Json?         @map("required_fields") @db.JsonB
+
+  parent   Category?  @relation("Category_parent", fields: [parentId], references: [id])
+  children Category[] @relation("Category_parent")
+  products Product[]  @relation("Product_category")
+
+  @@map("categories")
+  @@schema("catalog")
+}
+
+/// Sản phẩm do nhà cung cấp đăng (FR4.1); đổi giá trên 20% thì chờ duyệt lại
+model Product {
+  id                   BigInt                   @id @default(autoincrement())
+  supplierId           BigInt                   @map("supplier_id")
+  categoryId           BigInt                   @map("category_id")
+  name                 String                   @db.VarChar
+  description          String?                  @db.Text
+  unit                 String                   @db.VarChar
+  imageIds             BigInt[]                 @map("image_ids")
+  referenceRetailPrice Decimal?                 @map("reference_retail_price") @db.Decimal(14, 2)
+  taxGroup             String?                  @map("tax_group") @db.VarChar
+  seasonality          String?                  @db.VarChar
+  searchTsv            Unsupported("tsvector")? @map("search_tsv")
+  status               ReviewStatus             @default(draft)
+  reviewedBy           BigInt?                  @map("reviewed_by")
+  createdAt            DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime?                @map("updated_at") @db.Timestamp(6)
+
+  category         Category          @relation("Product_category", fields: [categoryId], references: [id])
+  batches          Batch[]           @relation("Batch_product")
+  productEmbedding ProductEmbedding? @relation("ProductEmbedding_product")
+
+  @@index([searchTsv], type: Gin, map: "products_search_tsv_idx")
+  @@map("products")
+  @@schema("catalog")
+}
+
+/// Lô hàng — đơn vị truy xuất nguồn gốc
+model Batch {
+  id               BigInt       @id @default(autoincrement())
+  productId        BigInt       @map("product_id")
+  batchCode        String       @unique @map("batch_code") @db.VarChar
+  harvestDate      DateTime     @map("harvest_date") @db.Date
+  bestBefore       DateTime     @map("best_before") @db.Date
+  declaredQuantity Decimal      @map("declared_quantity") @db.Decimal(12, 2)
+  qrToken          String       @unique @map("qr_token") @db.VarChar
+  status           ReviewStatus @default(pending_review)
+  approvedBy       BigInt?      @map("approved_by")
+  approvedAt       DateTime?    @map("approved_at") @db.Timestamp(6)
+  recalledAt       DateTime?    @map("recalled_at") @db.Timestamp(6)
+
+  product     Product      @relation("Batch_product", fields: [productId], references: [id])
+  farmingLogs FarmingLog[] @relation("FarmingLog_batch")
+
+  @@map("batches")
+  @@schema("catalog")
+}
+
+/// Nhật ký canh tác theo lô (FR4.2)
+model FarmingLog {
+  id           BigInt    @id @default(autoincrement())
+  batchId      BigInt    @map("batch_id")
+  activityDate DateTime  @map("activity_date") @db.Date
+  activity     String    @db.VarChar
+  description  String?   @db.Text
+  imageIds     BigInt[]  @map("image_ids")
+  publishedAt  DateTime? @map("published_at") @db.Timestamp(6)
+  supersedesId BigInt?   @map("supersedes_id")
+  enteredBy    BigInt    @map("entered_by")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  batch       Batch        @relation("FarmingLog_batch", fields: [batchId], references: [id])
+  supersedes  FarmingLog?  @relation("FarmingLog_supersedes", fields: [supersedesId], references: [id])
+  farmingLogs FarmingLog[] @relation("FarmingLog_supersedes")
+
+  @@map("farming_logs")
+  @@schema("catalog")
+}
+
+/// Ghi khi nhận sự kiện ProductEmbedded; dùng cho tìm kiếm ngữ nghĩa (FR12.3) và sản phẩm tương tự (FR12.1)
+model ProductEmbedding {
+  productId    BigInt                      @id @map("product_id")
+  embedding    Unsupported("vector(1024)")
+  modelVersion String                      @map("model_version") @db.VarChar
+  updatedAt    DateTime                    @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  product Product @relation("ProductEmbedding_product", fields: [productId], references: [id])
+
+  @@map("product_embeddings")
+  @@schema("catalog")
+}

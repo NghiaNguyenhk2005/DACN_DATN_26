@@ -4,6 +4,8 @@ import { SellerBatchController } from "./seller-batch.controller";
 import { CatalogService } from "./catalog.service";
 import { CategoryRepository } from "./category.repository";
 import { InMemoryCategoryRepository } from "./in-memory-category.repository";
+import { PrismaCategoryRepository } from "./prisma-category.repository";
+import { storageProvider } from "../../core/storage";
 import { ProductRepository } from "./product.repository";
 import { InMemoryProductRepository } from "./in-memory-product.repository";
 import { BatchRepository } from "./batch.repository";
@@ -27,7 +29,7 @@ import { SearchCorpus } from "./search/search-corpus";
   controllers: [CatalogController, SellerBatchController],
   providers: [
     CatalogService,
-    { provide: CategoryRepository, useClass: InMemoryCategoryRepository },
+    storageProvider(CategoryRepository, InMemoryCategoryRepository, PrismaCategoryRepository),
     { provide: ProductRepository, useClass: InMemoryProductRepository },
     { provide: BatchRepository, useClass: InMemoryBatchRepository },
     SearchCorpus,

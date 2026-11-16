@@ -19,7 +19,13 @@ export interface AppConfig {
   /** null thì OTP không gửi thật (chỉ hợp lệ ở DEMO_MODE). */
   smtp: SmtpConfig | null;
   accessLog: boolean;
+  /** Kho dữ liệu của các repository: bộ nhớ (mặc định, có dữ liệu mẫu) hoặc Prisma + PostgreSQL. */
+  storage: StorageKind;
+  /** Chỉ có khi storage = "prisma". */
+  databaseUrl: string | null;
 }
+
+export type StorageKind = "memory" | "prisma";
 
 export const APP_CONFIG = Symbol("APP_CONFIG");
 
@@ -61,6 +67,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const smtp = smtpUrl ? { url: smtpUrl, from: env.SMTP_FROM?.trim() || "Farmery <no-reply@farmery.local>" } : null;
   if (!demoMode && !smtp) throw new Error("Thiếu SMTP_URL: ngoài DEMO_MODE, OTP phải gửi qua email thật");
 
+  const storageRaw = env.STORAGE?.trim() || "memory";
+  if (storageRaw !== "memory" && storageRaw !== "prisma") throw new Error("STORAGE phải là memory hoặc prisma");
+  const databaseUrl = env.DATABASE_URL?.trim() || null;
+  if (storageRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi STORAGE=prisma");
+
   return {
     production,
     port: int(env, "PORT", 4000, 1, 65535),
@@ -84,5 +95,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     },
     smtp,
     accessLog: flag(env, "LOG_REQUESTS", production),
+    storage: storageRaw,
+    databaseUrl,
   };
 }

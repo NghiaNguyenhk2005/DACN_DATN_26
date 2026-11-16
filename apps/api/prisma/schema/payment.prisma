@@ -1,0 +1,121 @@
+enum PaymentMethod {
+  cod
+  vietqr
+  card
+  e_wallet
+
+  @@map("payment_method")
+  @@schema("payment")
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  cancelled
+  refunded
+  partially_refunded
+
+  @@map("payment_status")
+  @@schema("payment")
+}
+
+enum InvoiceKind {
+  retail_sale
+  commission_service
+
+  @@map("invoice_kind")
+  @@schema("payment")
+}
+
+/// Farmery chỉ ghi trạng thái, tiền đi qua cổng thanh toán (NFR3.4); phát PaymentSucceeded
+model Payment {
+  id            BigInt        @id @default(autoincrement())
+  sourceType    String        @map("source_type") @db.VarChar
+  sourceId      BigInt        @map("source_id")
+  method        PaymentMethod
+  gateway       String?       @db.VarChar
+  amount        Decimal       @db.Decimal(14, 2)
+  status        PaymentStatus @default(pending)
+  gatewayTxnRef String?       @unique @map("gateway_txn_ref") @db.VarChar
+  paidAt        DateTime?     @map("paid_at") @db.Timestamp(6)
+  escrowStatus  String?       @map("escrow_status") @db.VarChar
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+
+  refunds Refund[] @relation("Refund_payment")
+
+  @@map("payments")
+  @@schema("payment")
+}
+
+/// Hoàn tiền qua cổng theo quyết định xử lý khiếu nại (FR7.1); phát Refunded
+model Refund {
+  id               BigInt        @id @default(autoincrement())
+  paymentId        BigInt        @map("payment_id")
+  returnRequestId  BigInt?       @map("return_request_id")
+  amount           Decimal       @db.Decimal(14, 2)
+  status           PaymentStatus @default(pending)
+  gatewayRefundRef String?       @map("gateway_refund_ref") @db.VarChar
+  requestedBy      BigInt        @map("requested_by")
+  completedAt      DateTime?     @map("completed_at") @db.Timestamp(6)
+
+  payment Payment @relation("Refund_payment", fields: [paymentId], references: [id])
+
+  @@map("refunds")
+  @@schema("payment")
+}
+
+/// Hóa đơn điện tử (FR7.2), phát hành khi đơn lẻ hoàn tất
+model Invoice {
+  id           BigInt      @id @default(autoincrement())
+  kind         InvoiceKind
+  sourceType   String      @map("source_type") @db.VarChar
+  sourceId     BigInt      @map("source_id")
+  buyerName    String      @map("buyer_name") @db.VarChar
+  buyerTaxCode String?     @map("buyer_tax_code") @db.VarChar
+  subtotal     Decimal     @db.Decimal(14, 2)
+  taxAmount    Decimal     @map("tax_amount") @db.Decimal(14, 2)
+  total        Decimal     @db.Decimal(14, 2)
+  lookupCode   String      @unique @map("lookup_code") @db.VarChar
+  pdfFileId    BigInt?     @map("pdf_file_id")
+  provider     String      @default("mock") @db.VarChar
+  issuedAt     DateTime    @default(now()) @map("issued_at") @db.Timestamp(6)
+
+  commissionSettlements CommissionSettlement[] @relation("CommissionSettlement_serviceInvoice")
+
+  @@map("invoices")
+  @@schema("payment")
+}
+
+/// Đối soát hoa hồng đơn sỉ (FR7.4); trang đối soát của nhà cung cấp đọc từ đây
+model CommissionSettlement {
+  id                BigInt    @id @default(autoincrement())
+  wholesaleOrderId  BigInt    @unique @map("wholesale_order_id")
+  supplierId        BigInt    @map("supplier_id")
+  grossAmount       Decimal   @map("gross_amount") @db.Decimal(14, 2)
+  commissionRate    Decimal   @map("commission_rate") @db.Decimal(5, 4)
+  commissionAmount  Decimal   @map("commission_amount") @db.Decimal(14, 2)
+  withholdingRate   Decimal?  @map("withholding_rate") @db.Decimal(5, 4)
+  withholdingAmount Decimal?  @map("withholding_amount") @db.Decimal(14, 2)
+  serviceInvoiceId  BigInt?   @map("service_invoice_id")
+  settledAt         DateTime? @map("settled_at") @db.Timestamp(6)
+
+  serviceInvoice Invoice? @relation("CommissionSettlement_serviceInvoice", fields: [serviceInvoiceId], references: [id])
+
+  @@map("commission_settlements")
+  @@schema("payment")
+}
+
+/// Chi trả cho nhà cung cấp sau nghiệm thu thu mua, không chờ hàng bán được
+model SupplierPayout {
+  id              BigInt        @id @default(autoincrement())
+  purchaseOrderId BigInt        @unique @map("purchase_order_id")
+  supplierId      BigInt        @map("supplier_id")
+  amount          Decimal       @db.Decimal(14, 2)
+  status          PaymentStatus @default(pending)
+  bankReference   String?       @map("bank_reference") @db.VarChar
+  paidAt          DateTime?     @map("paid_at") @db.Timestamp(6)
+
+  @@map("supplier_payouts")
+  @@schema("payment")
+}

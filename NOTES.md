@@ -483,3 +483,23 @@ Status: open
 = 0), nhưng dữ liệu mẫu `packages/mock-data/src/extra.ts` đã có lô `DTBT-2610-41` cho sản phẩm 3. Không liên quan
 tìm kiếm. Đề xuất: đổi test sang một sản phẩm chưa có lô, hoặc tạo sản phẩm mới trong test.
 Status: open
+
+### Nền Prisma: các lệch giữa lược đồ và mã khi chuyển repository — Claude — 2026-11-16
+Phát hiện lúc chuyển `schema.dbml` sang Prisma; cần chốt trước khi viết repository Prisma tương ứng (tuần 9):
+- `catalog.categories` không có cột ảnh nên `Category.imageUrl` của hợp đồng không có chỗ lưu (bản Prisma đang bỏ imageUrl và
+  productCount). Đề xuất: lấy ảnh qua `media`, hoặc thêm cột `image_file_id`.
+- `identity.users.email` chỉ một giá trị, trong khi tài khoản mẫu có nhiều email bí danh (`admin@example.com`, `staff@example.com`...)
+  mà test e2e và Playwright đang dùng để đăng nhập. Seed chỉ nạp email đầu. Đề xuất: bảng bí danh hoặc đổi dữ liệu mẫu và test.
+- Số lượng tồn `decimal(12,2)` trong khi mã làm tròn 3 chữ số (`round3`). Chốt 2 hay 3 chữ số trước khi viết `inventory`.
+- Khóa chính là `bigint` còn hợp đồng dùng id chuỗi; đơn hàng có thêm `order_code` (FM-yymmdd-NNNN). Cần chốt hợp đồng trả `id`
+  hay `order_code` và cách ánh xạ.
+- Chống bán vượt hiện dựa `KeyedMutex` trong tiến trình; trên PostgreSQL phải đổi sang khóa dòng (`SELECT ... FOR UPDATE`) hoặc
+  cập nhật có điều kiện, CHECK `stock_holdings_qty_check` là lớp chặn cuối.
+- Chưa có chỉ mục cho cột khóa ngoại (Prisma không tự tạo); chiến lược index đưa vào mục ánh xạ ERD (A3) sau khi k6 đo.
+- Chưa kiểm `prisma migrate diff` giữa migration và schema (chỉ mục biểu thức, trigger viết tay có thể bị coi là lệch khi `migrate dev`);
+  kiểm khi có Docker, nếu lệch thì dùng `migrate dev --create-only` rồi sửa tay.
+Cập nhật 2026-11-16 (đã kiểm trên PostgreSQL thật): chỉ mục GIN của `search_tsv` đã khai trong `catalog.prisma` nên khớp; chỉ mục
+trigram biểu thức, trigger và CHECK Prisma không báo lệch. Còn lệch một chỗ: Prisma 7.10.1 không có kiểu index HNSW nên
+`product_embeddings_embedding_hnsw_idx` luôn bị đề xuất DROP; mỗi lần `migrate dev` sinh migration mới phải xóa dòng DROP INDEX đó
+trước khi áp. Không đưa `migrate diff --exit-code` vào CI vì sẽ đỏ vì lý do này.
+Status: open
