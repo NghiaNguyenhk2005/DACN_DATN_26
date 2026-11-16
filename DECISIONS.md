@@ -1241,3 +1241,49 @@ MVP"; phân công tuần 8–10 trên sheet nhóm không có chỗ cho chúng. B
 **Đánh đổi:** bỏ phần "báo cáo thống kê" của MT7 khỏi phần hiện thực. Đổi lại giữ thời gian tuần 12–13 cho bộ test case,
 kiểm thử tải, chống bán vượt và thử khả dụng; các mục này không có chỉ số đánh giá ở Chương 7, đúng nguyên tắc chọn
 phạm vi ở §1.2 (không đo được bằng số thì không đưa vào). Đặc tả, lược đồ CSDL và sitemap của các mục vẫn giữ.
+
+### Hai nhãn trạng thái; cắt phần kết nối bên ngoài để trả nợ Prisma — 2026-11-06
+**Quyết định:**
+- Báo cáo bỏ nhãn *(để sau prototype)*, chỉ còn hai trạng thái: hiện thực (mặc định, không ghi chú) và
+  *(chỉ thiết kế)*. Giai đoạn prototype đã qua; báo cáo nộp ngày 31/12 mô tả trạng thái của bản nộp. Mục nào trễ thì
+  đổi sang *(chỉ thiết kế)* trước khi nộp, không giữ nhãn trung gian.
+- Chuyển sang *(chỉ thiết kế)*: kết nối cổng VNPay thử nghiệm (FR7.1 dùng `DemoPaymentGateway` sau interface, vẫn đủ
+  COD có điều kiện, hoàn tiền, hóa đơn giả lập, hoa hồng); kết nối GHN thử nghiệm và webhook (ba chặng vẫn đủ trạng
+  thái, chặng cuối do nhân viên cập nhật); thông báo đẩy Web Push (FR11.1 còn thông báo trong web và email); FR11.2
+  cùng phần nhắc gia hạn của FR3.3; FR9.1 trao đổi theo đơn; FR5.7 đăng ký báo khi có hàng hoặc vào mùa (khối "Sắp vào
+  mùa" chỉ hiển thị).
+- Dự báo giá FR12.2 chỉ chạy offline và đo MAPE, không làm endpoint, không làm trang admin.
+- Bán sỉ một vòng phản hồi giá (chấp nhận hoặc từ chối), không thương lượng nhiều vòng; giao một đợt như cũ.
+- Giữ hiện thực: Prisma + PostgreSQL (pgvector), chống bán vượt, thu mua và nhập kho, `POST /media`, đổi trả và hoàn
+  tiền, đánh giá, mua lại, tìm kiếm ngữ nghĩa, sản phẩm tương tự, SonarQube, PWA và ghi nhật ký khi mất sóng, TOTP.
+  Nếu tuần 10 vẫn căng thì ghi nhật ký khi mất sóng (NFR7.3) là mục cắt tiếp theo.
+**Bối cảnh:** lớp lưu trữ Prisma (tuần 5 trong `kehoach.tex`) chưa bắt đầu, sheet nhóm dời sang tuần 8–10. Chương 7
+cần PostgreSQL cho `pg_stat_statements`, kiểm thử chống bán vượt có khóa dòng và pgvector, nên Prisma không cắt được;
+phải gỡ việc ở chỗ khác. Các mục cắt đều phụ thuộc dịch vụ bên ngoài hoặc không có chỉ số ở Chương 7.
+**Đánh đổi:** demo không có thanh toán và vận đơn thật, theo dõi đơn không có thông báo đẩy; FR9 không còn mục nào
+hiện thực. Đổi lại Khải bỏ được việc đăng ký và chờ duyệt VNPay, GHN; tuần 8–10 có chỗ cho Prisma và bộ test case.
+Các phần cắt đều đã có interface hoặc bảng dữ liệu, chỉ cần thay phần kết nối khi làm tiếp.
+Bổ sung cùng ngày, sau khi rà toàn báo cáo:
+- Đổi trả không có FR9.1: khách ghi lý do và ảnh trên yêu cầu, nhân viên vận hành ghi kết quả hoặc yêu cầu bổ sung trên
+  chính yêu cầu, mỗi lần đổi trạng thái gửi email. FR9 giữ mức Should, hiện chỉ ở mức thiết kế.
+- Hợp đồng sỉ sinh một lần từ báo giá đã chấp nhận, kèm mã băm, xác nhận bằng OTP qua email; sai thì hủy và tạo yêu cầu
+  mới. Sửa bản nháp nhiều phiên bản là chỉ thiết kế.
+- Sản phẩm tương tự hiển thị 5 (khớp hợp đồng API và Precision@5). Kết quả dự báo giá không ghi vào
+  `procurement.price_forecasts`; bảng này chỉ thiết kế.
+- Phụ lục D (Điều khoản dịch vụ) mô tả nền tảng đầy đủ, không cắt theo bản nộp; riêng mã xác nhận giao kết gửi qua email.
+- `tab:kiemduyet-giaidoan` giữ cột trạng thái với hai giá trị. NFR7.1 giữ, đo trên lớp tích hợp với bản giả lập.
+  NFR7.3 bỏ phần "nhận thông báo đẩy". Theo dõi đơn ở bản nộp: hỏi lại định kỳ, chuông thông báo trong web, email.
+- Phản hồi công khai dưới đánh giá do Farmery thực hiện (bán lẻ 1P), không phải nhà cung cấp; sửa các chỗ lệch.
+
+### Phản hồi công khai dưới đánh giá chỉ thiết kế; NFR7.1 đo trên bản giả lập — 2026-11-16
+**Quyết định:**
+- Phần phản hồi công khai của Farmery dưới đánh giá (FR5.5) chuyển sang *(chỉ thiết kế)*. Viết đánh giá, điểm uy tín và
+  gắn cờ đánh giá nghi vấn vẫn hiện thực.
+- NFR7.1 giữ: lời gọi qua interface `PaymentGateway` có thời gian chờ 5 giây, thử lại 2 lần có giãn cách; bản giả lập
+  có tham số độ trễ để kiểm ca vượt ngưỡng. Giao Khải ở tuần 8 trên sheet nhóm.
+- `kehoach.tex` dòng tuần 5 ghi rõ các việc đã dời (TOTP, SonarQube, chứng nhận và tệp, nhật ký khi mất sóng), không
+  để bảng khẳng định việc chưa làm.
+**Bối cảnh:** sau khi rà báo cáo, phần phản hồi đánh giá được ghi là hiện thực nhưng chưa có trong mã nguồn và chưa giao
+cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi kết nối VNPay chuyển chỉ thiết kế.
+**Đánh đổi:** FR5.5 thiếu một phần tương tác của bên bán; đổi lại không phải sửa hợp đồng và thêm màn hình admin. NFR7.1
+đo trên bản giả lập chỉ chứng minh cơ chế chờ và thử lại, không đo độ trễ của cổng thật.

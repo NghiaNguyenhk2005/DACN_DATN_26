@@ -8,6 +8,7 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'design')
 W = 1340
 WHITE = '#ffffff'
 PERSON = ('#1f5f3a', '#12351f')
+STAFF = ('#3d4a43', '#1f2924')
 SYSTEM = ('#1a5fa8', '#0f3d6e')
 CONT = ('#dcebf8', '#1a5fa8')
 EXT = ('#e4e7e5', '#3d4a43')        # hệ thống ngoài có trong bản hiện thực
@@ -20,11 +21,11 @@ ARR = '#44524b'
 
 # (tên, mô tả/công nghệ, chỉ thiết kế?, hai chiều?)
 EXTS = [
-    ('Cổng thanh toán', 'VNPay, môi trường thử nghiệm', False, True),
-    ('Đơn vị vận chuyển nội thành', 'GHN, môi trường thử nghiệm', False, True),
-    ('Dịch vụ hóa đơn điện tử', 'Bản hiện thực: giả lập', False, True),
+    ('Cổng thanh toán', 'Bản giả lập; VNPay chỉ thiết kế', False, True),
+    ('Dịch vụ hóa đơn điện tử', 'Bản giả lập', False, True),
     ('Dịch vụ email', 'SMTP', False, False),
-    ('Dịch vụ đẩy của trình duyệt (Web Push)', 'Hãng trình duyệt vận hành, miễn phí', False, False),
+    ('Đơn vị vận chuyển nội thành', 'GHN, môi trường thử nghiệm', True, True),
+    ('Dịch vụ đẩy của trình duyệt (Web Push)', 'Hãng trình duyệt vận hành, miễn phí', True, False),
     ('Dịch vụ SMS', 'OTP, thông báo qua tin nhắn', True, False),
     ('TraceViet', 'Truy xuất nguồn gốc quốc gia (Bộ NN&MT)', True, True),
     ('Tổ chức chứng thực chữ ký số', 'Ký số hợp đồng sỉ', True, True),
@@ -32,7 +33,7 @@ EXTS = [
     ('Facebook', 'Đăng nhập OAuth 2.0', True, True),
 ]
 
-SHORT = ['Cổng thanh toán', 'Vận chuyển nội thành', 'Hóa đơn điện tử', 'Email', 'Đẩy của trình duyệt (Web Push)',
+SHORT = ['Cổng thanh toán', 'Hóa đơn điện tử', 'Email', 'Vận chuyển nội thành', 'Đẩy của trình duyệt (Web Push)',
          'SMS', 'TraceViet', 'Chữ ký số', 'Google', 'Facebook']
 
 
@@ -68,7 +69,7 @@ def icon(both=False, dash=False, color=ARR, w=3):
 LEG_ARROWS = ('<span>%sMột chiều: chỉ gửi đi</span>' % icon() +
               '<span>%sHai chiều: có dữ liệu trả về, nhãn ghi "phần gửi; phần nhận về" theo bên gọi</span>' % icon(both=True) +
               '<span>%sTới hệ thống chỉ thiết kế</span>' % icon(both=True, dash=True, color=GREY))
-LEG_EXT = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực (MVP)</span>' % EXT +
+LEG_EXT = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực</span>' % EXT +
            '<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>Hệ thống ngoài chỉ thiết kế</span>' % DES)
 LEG_PERSON = '<span><i class="sw" style="background:%s;border-color:%s;border-radius:14px"></i>Người dùng</span>' % PERSON
 
@@ -107,10 +108,11 @@ link(s, [(FX, SY + SH / 2), (SX + SW_, SY + SH / 2)])
 s.label((FX + SX + SW_) / 2, SY + SH / 2, 'Duyệt, lập đơn thu mua, nghiệm thu, lập chuyến, xử lý khiếu nại, cấu hình; nhận hàng đợi việc, báo cáo', 200)
 
 bw, gap = 248, 20
-labs = ['Gửi lệnh thanh toán, hoàn tiền; nhận kết quả qua webhook',
-        'Tạo vận đơn chặng cuối; nhận trạng thái qua webhook',
+labs = ['Gửi lệnh thanh toán, hoàn tiền; nhận kết quả',
         'Gửi dữ liệu hóa đơn; nhận số hóa đơn, mã tra cứu',
-        'Gửi mã OTP, thư thông báo', 'Gửi thông báo đẩy qua dịch vụ của hãng trình duyệt',
+        'Gửi mã OTP, thư thông báo',
+        'Tạo vận đơn chặng cuối; nhận trạng thái qua webhook',
+        'Gửi thông báo đẩy qua dịch vụ của hãng trình duyệt',
         'Gửi OTP, thông báo', 'Gửi dữ liệu lô; nhận mã truy xuất',
         'Gửi hợp đồng; nhận bản ký số', 'Xác thực đăng nhập; nhận định danh', 'Xác thực đăng nhập; nhận định danh']
 for i, (n, d, des, two) in enumerate(EXTS):
@@ -119,10 +121,10 @@ for i, (n, d, des, two) in enumerate(EXTS):
     cx = x + bw / 2
     sx = SX + 30 + col * (SW_ - 60) / 4
     t = 0.36
-    if not des:
+    if i < 5:
         ext(s, x, 10, bw, 160, n, d, des, name_size=18 if i == 4 else 24, tag=(i != 4))
-        link(s, [(sx, SY), (cx, 170)], both=two)
-        s.label(cx + t * (sx - cx), 170 + t * (SY - 170), labs[i], 182)
+        link(s, [(sx, SY), (cx, 170)], design=des, both=two)
+        s.label(cx + t * (sx - cx), 170 + t * (SY - 170), labs[i], 182, color=GREY if des else '#33413a')
     else:
         ext(s, x, 1120, bw, 160, n, d, des)
         link(s, [(sx, SY + SH), (cx, 1120)], design=True, both=two)
@@ -131,7 +133,7 @@ for i, (n, d, des, two) in enumerate(EXTS):
 leg = ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống đang thiết kế</span>' % SYSTEM) + LEG_PERSON + LEG_EXT + LEG_ARROWS
 io.open(os.path.join(OUT, 'c4-ngu-canh.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Nhãn mũi tên của người dùng viết theo góc nhìn người dùng; nhãn mũi tên tới hệ thống ngoài viết theo góc nhìn Farmery. Trong mã nguồn hiện nay mới có giao diện kèm bản giả cho cổng thanh toán và kênh gửi OTP qua email.'))
+    'Nhãn mũi tên của người dùng viết theo góc nhìn người dùng; nhãn mũi tên tới hệ thống ngoài viết theo góc nhìn Farmery. Cổng thanh toán và hóa đơn điện tử chạy bản giả lập đặt sau cùng giao diện tích hợp; kết nối VNPay, GHN thử nghiệm và Web Push chỉ thiết kế.'))
 
 # ======================= MỨC 2: CONTAINER =======================
 RHT = 186
@@ -170,7 +172,7 @@ extra = [('', 8, 400, INK, False), ('13 mô-đun, 5 khối (mức 3):', 22, 700,
 for b, m in blocks:
     extra += [(b, 22, 700, '#1a4f86', False), (m, 22, 400, INK, True)]
 cont(CX, CY0, CW_, CY1 - CY0, 'Máy chủ nghiệp vụ (modular monolith)', 'NestJS',
-     'API REST: /api cho ứng dụng mua hàng, /api/admin cho ứng dụng nội bộ; nhận webhook của cổng thanh toán và 3PL', hot=True, extra=extra)
+     'API REST: /api cho ứng dụng mua hàng, /api/admin cho ứng dụng nội bộ; nhận kết quả từ bản giả lập cổng thanh toán', hot=True, extra=extra)
 
 # Người dùng (ngoài ranh giới) -> hai ứng dụng
 y0, h = rows['app']
@@ -203,8 +205,8 @@ for key, (y0, h) in rows.items():
     s.label((CX + LX + LW) / 2, yy, labs[key], 128, pos='above')
 
 # Hệ thống ngoài: mỗi hệ thống một khung, một mũi tên riêng
-ex_labs = ['Lệnh thanh toán; webhook kết quả', 'Vận đơn; webhook trạng thái', 'Dữ liệu hóa đơn; số HĐ, mã tra cứu',
-           'Thư, OTP [SMTP]', 'Thông báo đẩy [Web Push]', 'OTP, thông báo', 'Dữ liệu lô; mã truy xuất',
+ex_labs = ['Lệnh thanh toán; kết quả', 'Dữ liệu hóa đơn; số HĐ, mã tra cứu', 'Thư, OTP [SMTP]',
+           'Vận đơn; webhook trạng thái', 'Thông báo đẩy [Web Push]', 'OTP, thông báo', 'Dữ liệu lô; mã truy xuất',
            'Hợp đồng; bản ký số', 'Đăng nhập; định danh', 'Đăng nhập; định danh']
 n = len(EXTS)
 eh = 100
@@ -239,7 +241,7 @@ s = Svg(W, YB + 104)
 s.rect(200, 10, 944, CF_BOT - 10, 'none', HOT, 2.5, 18, '12 8')
 s.text(218, 42, 'Máy chủ nghiệp vụ  [Container: NestJS]', 24, 700, HOT, 'start')
 s.box(COLX[0], 54, COLX[3] + CWD - COLX[0], 76,
-      [('Lớp API: /api (ứng dụng mua hàng), /api/admin (ứng dụng nội bộ, 2FA), webhook; guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
+      [('Lớp API: /api (ứng dụng mua hàng), /api/admin (ứng dụng nội bộ, 2FA); guard theo vai trò, định tuyến tới mô-đun', 22, 600, INK, False)],
       fill=CONT[0], stroke=CONT[1])
 
 def frame(c0, c1, row, title, key):
@@ -262,14 +264,14 @@ mod(1, 1, 'Tồn kho', 'inventory', 'FR4.3, FR13.2–13.6', 'Dòng tồn, sổ k
 mod(2, 1, 'Nhà cung cấp', 'supplier', 'FR2, FR3', 'Hồ sơ, chứng nhận, loại thuế', 'cung')
 mod(3, 1, 'Vận hành', 'operations', 'FR10', 'Duyệt, leo thang, cấu hình', 'vh')
 mod(0, 2, 'Thu mua', 'procurement', 'FR13.1–13.2', 'Chào giá lô, đơn thu mua', 'gd')
-mod(1, 2, 'Bán lẻ', 'retail', 'FR5', 'Giỏ, đơn lẻ, mua lại, báo vào mùa', 'gd')
+mod(1, 2, 'Bán lẻ', 'retail', 'FR5', 'Giỏ, đơn lẻ, mua lại', 'gd')
 mod(2, 2, 'Thanh toán', 'payment', 'FR7', 'Thanh toán, hoàn tiền, HĐĐT', 'gd')
 mod(3, 2, 'Bán sỉ', 'wholesale', 'FR6', 'RFQ, hợp đồng, giao 1 đợt', 'gd')
 mod(0, 3, 'Đánh giá', 'engagement', 'FR5.5, FR9.2', 'Đánh giá của khách, điểm uy tín', 'sau')
-mod(1, 3, 'Giao hàng', 'fulfillment', 'FR8, FR9.1', 'Chuyến, vận đơn, đổi trả, khiếu nại', 'sau')
+mod(1, 3, 'Giao hàng', 'fulfillment', 'FR8', 'Chuyến, vận đơn, đổi trả, khiếu nại', 'sau')
 mod(0, 4, 'Tài khoản', 'identity', 'FR1', 'OTP, eKYC, vai trò, đồng ý dữ liệu, 2FA', 'chung')
 mod(1, 4, 'Tệp', 'media', 'NFR1, NFR3', 'URL ký trước, kiểm tra tệp, WebP, hạn lưu', 'chung')
-mod(2, 4, 'Thông báo', 'notification', 'FR11', 'Web, đẩy, email theo kênh đăng ký', 'chung')
+mod(2, 4, 'Thông báo', 'notification', 'FR11', 'Trong web, email theo kênh đăng ký', 'chung')
 
 cx = lambda c: COLX[c] + CWD / 2
 # Ba lời gọi khóa dòng tồn: mỗi mô-đun một mũi tên riêng, chạm ba điểm khác nhau của Tồn kho
@@ -312,13 +314,13 @@ ytt, yhd = R[2] + MH + 56, R[2] + MH + 160
 ext(s, RX, ytt, RW, 70, 'Cổng thanh toán', '', False, name_size=22, tag=False)
 ext(s, RX, yhd, RW, 70, 'Hóa đơn điện tử', '', False, name_size=22, tag=False)
 link(s, [(cx(2) + 30, R[2] + MH), (cx(2) + 30, ytt + 35), (RX, ytt + 35)])
-s.label(1000, ytt + 35, 'lệnh thanh toán; webhook kết quả', 200, pos='above')
+s.label(1000, ytt + 35, 'lệnh thanh toán; kết quả (bản giả lập)', 200, pos='above')
 link(s, [(cx(2) - 30, R[2] + MH), (cx(2) - 30, yhd + 35), (RX, yhd + 35)])
 s.label(1000, yhd + 35, 'dữ liệu hóa đơn; số HĐ, mã tra cứu', 200, pos='above')
-ext(s, RX, R[3] + 70, RW, 130, 'Vận chuyển nội thành', '', False, name_size=22)
-link(s, [(COLX[1] + CWD, R[3] + 95), (RX, R[3] + 95)])
-s.label((COLX[1] + CWD + RX) / 2, R[3] + 95, 'vận đơn; webhook trạng thái', 240, pos='above')
-for j, (nm, des) in enumerate([('Email', False), ('Đẩy của trình duyệt (Web Push)', False), ('SMS', True)]):
+ext(s, RX, R[3] + 70, RW, 130, 'Vận chuyển nội thành', '', True, name_size=22)
+link(s, [(COLX[1] + CWD, R[3] + 95), (RX, R[3] + 95)], design=True)
+s.label((COLX[1] + CWD + RX) / 2, R[3] + 95, 'vận đơn; webhook trạng thái', 240, pos='above', color=GREY)
+for j, (nm, des) in enumerate([('Email', False), ('Đẩy của trình duyệt (Web Push)', True), ('SMS', True)]):
     yy = R[4] + [0, 64, 154][j]
     hh = [56, 84, 56][j]
     ext(s, RX, yy, RW, hh, nm, '', des, name_size=19 if j == 1 else 22, tag=False)
@@ -336,7 +338,7 @@ s.label(cx(3) + 105, CF_BOT + 30, 'đọc/ghi [SQL]', 160)
 leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-width:1.5px"></i>%s</span>' % (BLK[k][0], BLK[k][1], t)
               for k, t in [('cung', 'Nguồn cung'), ('gd', 'Giao dịch'), ('sau', 'Sau bán'), ('chung', 'Nền tảng chung'), ('vh', 'Vận hành')]) + \
       ('<span><i class="sw" style="background:%s;border-color:%s"></i>Container</span>' % CONT) + \
-      ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực (MVP)</span>' % EXT) + \
+      ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài thuộc phạm vi hiện thực</span>' % EXT) + \
       ('<span><i class="sw" style="background:%s;border-color:%s;border-style:dashed"></i>Hệ thống ngoài chỉ thiết kế</span>' % DES) + \
       ('<span>%sGọi có khóa dòng tồn</span>' % icon(color=HOT, w=4)) + \
       ('<span>%sMột chiều</span><span>%sHai chiều</span>' % (icon(), icon(both=True)))
@@ -348,8 +350,8 @@ io.open(os.path.join(OUT, 'c4-module.html'), 'w', encoding='utf-8').write(page(
 # (khóa, tên, schema/ghi chú, kiểu): kiểu = person | mod:<khối> | ext
 LANES = [('kh', 'Khách lẻ', 'ứng dụng mua hàng', 'person'), ('rt', 'Bán lẻ', 'retail', 'mod:gd'),
          ('iv', 'Tồn kho', 'inventory', 'mod:cung'), ('pm', 'Thanh toán', 'payment', 'mod:gd'),
-         ('tt', 'Cổng thanh toán', 'VNPay', 'ext'), ('fu', 'Giao hàng', 'fulfillment', 'mod:sau'),
-         ('pl', '3PL', 'GHN', 'ext'), ('nt', 'Thông báo', 'notification', 'mod:chung')]
+         ('tt', 'Cổng thanh toán', 'bản giả lập', 'ext'), ('fu', 'Giao hàng', 'fulfillment', 'mod:sau'),
+         ('vh', 'Nhân viên vận hành', 'ứng dụng nội bộ', 'staff'), ('nt', 'Thông báo', 'notification', 'mod:chung')]
 LWD = W / len(LANES)
 LX_ = {k: LWD * i + LWD / 2 for i, (k, _, _, _) in enumerate(LANES)}
 # bước: ('call'|'event', từ, tới, nhãn, hai chiều?) hoặc ('self', lane, nhãn)
@@ -360,27 +362,28 @@ STEPS = [
     ('call', 'rt', 'pm', 'Tạo giao dịch; đường dẫn thanh toán', True),
     ('call', 'pm', 'tt', 'Lệnh thanh toán; mã giao dịch', True),
     ('call', 'kh', 'tt', 'Khách thanh toán trên trang của cổng', False),
-    ('call', 'tt', 'pm', 'Webhook kết quả', False),
+    ('call', 'tt', 'pm', 'Bản giả lập cổng trả kết quả', False),
     ('event', 'pm', 'rt', 'PaymentSucceeded', False),
     ('event', 'pm', 'nt', 'PaymentSucceeded', False),
     ('call', 'rt', 'iv', 'Chuyển giữ chỗ thành trừ tồn, ghi sổ xuất', False),
     ('call', 'rt', 'fu', 'Tạo giao hàng cho đơn đã thanh toán', False),
     ('self', 'fu', 'NV kho đóng gói, in tem QR'),
     ('self', 'fu', 'Sau giờ chốt: xếp lên chuyến'),
-    ('call', 'fu', 'pl', 'Tạo vận đơn chặng cuối; mã vận đơn', True),
-    ('call', 'pl', 'fu', 'Webhook: đã nhận, đang giao, đã giao', False),
+    ('call', 'fu', 'vh', 'Bàn giao chặng cuối', False),
+    ('call', 'vh', 'fu', 'Nhân viên vận hành chuyển bước: đã nhận, đang giao, đã giao', False),
     ('event', 'fu', 'rt', 'ShipmentStatusChanged', False),
     ('event', 'fu', 'nt', 'ShipmentStatusChanged', False),
-    ('call', 'nt', 'kh', 'Thông báo đẩy, email ở mỗi trạng thái', False),
+    ('call', 'nt', 'kh', 'Thông báo trong web, email ở mỗi trạng thái', False),
     ('call', 'rt', 'pm', 'Đơn hoàn tất: Thanh toán lập hóa đơn', False),
 ]
-HH, RH_ = 120, 70
+HH, RH_ = 136, 70
 H_ = HH + 30 + len(STEPS) * RH_ + 20
 s = Svg(W, H_)
 for k, name, sub, kind in LANES:
     x = LX_[k] - LWD / 2 + 6
-    if kind == 'person':
-        s.box(x, 10, LWD - 12, HH - 10, [(name, 23, 700, WHITE, False), (sub, 22, 400, '#e3f1e8', False)], fill=PERSON[0], stroke=PERSON[1], rx=22, pad=8)
+    if kind in ('person', 'staff'):
+        c = PERSON if kind == 'person' else STAFF
+        s.box(x, 10, LWD - 12, HH - 10, [(name, 23, 700, WHITE, False), (sub, 22, 400, '#e3f1e8', False)], fill=c[0], stroke=c[1], rx=22, pad=8)
     elif kind == 'ext':
         s.box(x, 10, LWD - 12, HH - 10, [(name, 23, 700, INK, False), (sub, 22, 400, MUTED, False)], fill=EXT[0], stroke=EXT[1], pad=8)
     else:
@@ -400,15 +403,18 @@ for i, st in enumerate(STEPS, 1):
         s.arrow([(xa, yy), (xb, yy)], color='#6b4fa0' if ev else ARR, dash='9 6' if ev else None, both=two)
         mid = (xa + xb) / 2
         wl = max(330, min(abs(xb - xa) - 20, 520))
+        if len(lab) > 44:
+            wl = 520
         mid = min(max(mid, wl / 2 + 4), W - wl / 2 - 4)
         s.label(mid, yy, '%d. %s' % (i, lab), wl, color='#6b4fa0' if ev else '#33413a', pos='above')
     y += RH_
 
-leg = (LEG_PERSON + ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun của máy chủ nghiệp vụ</span>' % BLK['gd'][1]) +
+leg = (LEG_PERSON + ('<span><i class="sw" style="background:%s;border-color:%s;border-radius:14px"></i>Nhân sự nội bộ</span>' % STAFF) +
+       ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun của máy chủ nghiệp vụ</span>' % BLK['gd'][1]) +
        ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài</span>' % EXT) +
        ('<span>%sGọi trực tiếp</span>' % icon()) + ('<span>%sGọi và nhận kết quả</span>' % icon(both=True)) +
        ('<span>%sSự kiện qua Redis, mỗi bên nhận một mũi tên</span>' % icon(dash=True, color='#6b4fa0')))
 io.open(os.path.join(OUT, 'luong-don-le.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9. Ở bước 19, mô-đun Thanh toán gọi dịch vụ hóa đơn điện tử, là hệ thống ngoài chạy bản giả lập (hình 5.5).'))
+    'Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9. Ở bước 19, mô-đun Thanh toán gọi dịch vụ hóa đơn điện tử, là hệ thống ngoài chạy bản giả lập (hình 5.5). Kết nối VNPay, GHN qua webhook chỉ thiết kế.'))
 print('ok')

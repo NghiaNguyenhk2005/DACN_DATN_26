@@ -181,7 +181,7 @@ LEGEND = (('<span><i class="sw" style="background:%s;border-color:%s;border-radi
 # ======================= 1. ĐẶT HÀNG VÀ THANH TOÁN ĐƠN LẺ =======================
 Seq([('kh', 'Khách lẻ', 'ứng dụng mua hàng', 'person'), ('rt', 'Bán lẻ', 'retail', 'mod:gd'),
      ('iv', 'Tồn kho', 'inventory', 'mod:cung'), ('pm', 'Thanh toán', 'payment', 'mod:gd'),
-     ('tt', 'Cổng thanh toán', 'VNPay', 'ext'), ('nt', 'Thông báo', 'notification', 'mod:chung')]).draw([
+     ('tt', 'Cổng thanh toán', 'bản giả lập', 'ext'), ('nt', 'Thông báo', 'notification', 'mod:chung')]).draw([
     ('call', 'kh', 'rt', 'Đặt đơn: giỏ, địa chỉ, khung giờ, cách thanh toán'),
     ('self', 'rt', 'Kiểm tra giờ chốt, khung giờ còn chỗ, điều kiện COD'),
     ('call', 'rt', 'iv', 'Giữ chỗ các dòng hàng, hạn 15 phút'),
@@ -196,7 +196,7 @@ Seq([('kh', 'Khách lẻ', 'ứng dụng mua hàng', 'person'), ('rt', 'Bán l�
             ('ret', 'tt', 'pm', 'Đường dẫn trang thanh toán'),
             ('ret', 'pm', 'kh', 'Chuyển hướng tới cổng'),
             ('call', 'kh', 'tt', 'Thanh toán trên trang của cổng'),
-            ('call', 'tt', 'pm', 'Webhook kết quả: kiểm chữ ký, gửi lặp chỉ xử lý một lần'),
+            ('call', 'tt', 'pm', 'Bản giả lập trả kết quả: kiểm chữ ký, gửi lặp chỉ xử lý một lần'),
             ('evt', 'pm', 'rt', 'PaymentSucceeded'),
             ('call', 'rt', 'iv', 'Chuyển giữ chỗ thành trừ tồn, ghi sổ xuất'),
             ('evt', 'pm', 'nt', 'PaymentSucceeded'),
@@ -213,7 +213,7 @@ Seq([('kh', 'Khách lẻ', 'ứng dụng mua hàng', 'person'), ('rt', 'Bán l�
         ]),
     ]),
 ], 'seq-dat-hang.html',
-    'Phần sau khi đơn đã thanh toán (đóng gói, chuyến trung chuyển, 3PL, hóa đơn) ở Hình luồng một đơn bán lẻ, mục 5.3.1.')
+    'Phần sau khi đơn đã thanh toán (đóng gói, chuyến trung chuyển, chặng cuối, hóa đơn) ở Hình luồng một đơn bán lẻ, mục 5.3.1. Kết nối VNPay thử nghiệm và IPN chỉ thiết kế.')
 
 # ======================= 2. RFQ, HỢP ĐỒNG, XÁC NHẬN GIAO KẾT =======================
 Seq([('ks', 'Khách sỉ', 'ứng dụng mua hàng', 'person'), ('ws', 'Bán sỉ', 'wholesale', 'mod:gd'),
@@ -228,35 +228,38 @@ Seq([('ks', 'Khách sỉ', 'ứng dụng mua hàng', 'person'), ('ws', 'Bán s�
         ]),
         ('đạt MOQ', [
             ('evt', 'ws', 'nt', 'RfqUpdated (báo nhà cung cấp)'),
-            ('frag', 'loop', [
-                ('tới khi hai bên thống nhất số lượng, đơn giá, ngày giao', [
-                    ('call', 'nc', 'ws', 'Báo giá hoặc trao đổi trong kênh của RFQ'),
-                    ('call', 'ks', 'ws', 'Phản hồi, đề xuất lại'),
-                    ('evt', 'ws', 'nt', 'RfqUpdated (báo bên còn lại)'),
+            ('call', 'nc', 'ws', 'Gửi báo giá một lượt: số lượng, đơn giá, ngày giao'),
+            ('evt', 'ws', 'nt', 'RfqUpdated (báo khách sỉ)'),
+            ('frag', 'alt', [
+                ('khách sỉ từ chối', [
+                    ('call', 'ks', 'ws', 'Từ chối báo giá'),
+                    ('self', 'ws', 'Đóng RFQ; muốn mua tiếp thì gửi RFQ mới'),
+                ]),
+                ('khách sỉ chấp nhận', [
+                    ('call', 'ks', 'ws', 'Chấp nhận báo giá'),
+                    ('self', 'ws', 'Sinh hợp đồng một lần từ mẫu chuẩn, áp giá sỉ theo bậc'),
+                    ('call', 'ws', 'md', 'Lưu tệp PDF riêng tư, nhận định danh tệp'),
+                    ('self', 'ws', 'Tính SHA-256, lưu kèm hợp đồng'),
+                    ('frag', 'loop', [
+                        ('lần lượt khách sỉ, rồi nhà cung cấp (thao tác như nhau)', [
+                            ('call', 'ks', 'ws', 'Xác nhận giao kết hợp đồng đang xem'),
+                            ('call', 'ws', 'id', 'Phát OTP, mục đích contract_confirm'),
+                            ('ret', 'id', 'ks', 'Mã OTP qua email'),
+                            ('call', 'ks', 'ws', 'Nhập OTP'),
+                            ('call', 'ws', 'id', 'Kiểm OTP'),
+                            ('ret', 'id', 'ws', 'Hợp lệ'),
+                            ('self', 'ws', 'Ghi xác nhận: tài khoản, thời điểm, mã băm'),
+                        ]),
+                    ]),
+                    ('call', 'ws', 'iv', 'Giữ chỗ phần hàng trên dòng tồn của nhà cung cấp'),
+                    ('ret', 'iv', 'ws', 'Mã giữ chỗ'),
+                    ('evt', 'ws', 'nt', 'ContractConcluded'),
                 ]),
             ]),
-            ('call', 'ks', 'ws', 'Chốt RFQ theo báo giá cuối'),
-            ('self', 'ws', 'Sinh hợp đồng từ mẫu chuẩn, áp giá sỉ theo bậc'),
-            ('call', 'ws', 'md', 'Lưu tệp PDF riêng tư, nhận định danh tệp'),
-            ('self', 'ws', 'Tính SHA-256, lưu phiên bản; mỗi lần sửa tạo phiên bản mới'),
-            ('frag', 'loop', [
-                ('lần lượt khách sỉ, rồi nhà cung cấp (thao tác như nhau)', [
-                    ('call', 'ks', 'ws', 'Xác nhận giao kết phiên bản đang xem'),
-                    ('call', 'ws', 'id', 'Phát OTP, mục đích contract_confirm'),
-                    ('ret', 'id', 'ks', 'Mã OTP qua email'),
-                    ('call', 'ks', 'ws', 'Nhập OTP'),
-                    ('call', 'ws', 'id', 'Kiểm OTP'),
-                    ('ret', 'id', 'ws', 'Hợp lệ'),
-                    ('self', 'ws', 'Ghi xác nhận: tài khoản, thời điểm, mã băm'),
-                ]),
-            ]),
-            ('call', 'ws', 'iv', 'Giữ chỗ phần hàng trên dòng tồn của nhà cung cấp'),
-            ('ret', 'iv', 'ws', 'Mã giữ chỗ'),
-            ('evt', 'ws', 'nt', 'ContractConcluded'),
         ]),
     ]),
 ], 'seq-hop-dong-si.html',
-    'ContractConcluded còn được payment nhận để lập yêu cầu thanh toán. Ký số qua tổ chức chứng thực và giao nhiều đợt chỉ thiết kế.')
+    'ContractConcluded còn được payment nhận để lập yêu cầu thanh toán. Hợp đồng sai thì hủy và tạo RFQ mới. Thương lượng nhiều vòng, sửa bản nháp nhiều phiên bản, ký số qua tổ chức chứng thực và giao nhiều đợt chỉ thiết kế.')
 
 # ======================= 3. ĐĂNG LÔ, DUYỆT LÔ, SINH QR =======================
 Seq([('nc', 'Nhà cung cấp', '', 'person'), ('md', 'Tệp', 'media', 'mod:chung'),
@@ -318,4 +321,4 @@ Seq([('kh', 'Khách lẻ', 'ứng dụng mua hàng', 'person'), ('en', 'Đánh g
         ]),
     ]),
 ], 'seq-danh-gia.html',
-    'Ẩn đánh giá thì báo lý do cho người mua. Nhà cung cấp hoặc Farmery phản hồi công khai một lần dưới mỗi đánh giá.')
+    'Ẩn đánh giá thì báo lý do cho người mua. Farmery phản hồi công khai dưới đánh giá: chỉ thiết kế.')

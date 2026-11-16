@@ -36,7 +36,7 @@ CLS = {
     'OrderItem': ('retail', (2, 3), ['quantity', 'unitPrice: Money', 'batchId', 'holdingId'], []),
     'Review': ('engagement', (3, 3), ['rating: 1..5', 'status'], ['flag()', 'publish()', 'hide()']),
     'Payment': ('payment', (0, 3), ['method', 'amount: Money', 'status'],
-                ['applyWebhook(e)', 'refund(amount)']),
+                ['applyResult(r)', 'refund(amount)']),
     'Order': ('retail', (2, 4), ['orderCode', 'status: OrderStatus', 'deliverySlot', 'total: Money'],
               ['place()', 'advance(to)', 'cancel()', 'complete()']),
     'Shipment': ('fulfillment', (3, 4), ['carrierOrderCode', 'slot', 'status'], ['applyCarrierEvent(e)']),
