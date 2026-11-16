@@ -10,7 +10,7 @@
 
 \subsection{Môi trường và công cụ phát triển}
 \label{sec:moitruong}
-Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm thử đơn vị kèm đo độ phủ, phân tích tĩnh bằng SonarQube Cloud (bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công khai không giới hạn) và cổng chất lượng; mã mới không đạt ngưỡng bị chặn trước khi hợp nhất. Kiểm thử tải bằng k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian. Nếu quy mô mã nguồn vượt giới hạn của bản miễn phí, chuyển sang SonarQube Community Build tự chạy mà không phải viết lại cấu hình phân tích.
+Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm tra kiểu, phân tích tĩnh bằng ESLint và kiểm thử kèm đo độ phủ bằng Jest; cổng độ phủ chặn mã không đạt ngưỡng tối thiểu của phần nghiệp vụ lõi trước khi hợp nhất. Kiểm thử tải bằng Grafana k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian.
 
 Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\ref{sec:giaiphapcongnghe}:
 \begin{itemize}
