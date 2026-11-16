@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Clock } from "../../core/clock";
+import { EventBus } from "../../core/events/event-bus";
 import { PaymentGateway, type ChargeResult } from "../../integrations/payment-gateway";
 import { PaymentRepository, type PaymentRecord } from "./payment.repository";
 
@@ -10,6 +11,7 @@ export class PaymentService {
     private readonly repo: PaymentRepository,
     private readonly gateway: PaymentGateway,
     private readonly clock: Clock,
+    private readonly events: EventBus,
   ) {}
 
   async charge(orderId: string, amount: number): Promise<ChargeResult> {
@@ -21,6 +23,9 @@ export class PaymentService {
       status: result.status === "succeeded" ? "succeeded" : "failed",
       reference: result.reference,
     });
+    if (result.status === "succeeded") {
+      await this.events.publish("PaymentSucceeded", { orderId, amount, reference: result.reference });
+    }
     return result;
   }
 
@@ -32,7 +37,10 @@ export class PaymentService {
   /** Hủy đơn đã thanh toán trước: đánh dấu hoàn tiền (prototype không gọi cổng). */
   async refund(orderId: string): Promise<void> {
     const record = await this.repo.findByOrderId(orderId);
-    if (record && record.status === "succeeded") await this.repo.save({ ...record, status: "refunded" });
+    if (record && record.status === "succeeded") {
+      await this.repo.save({ ...record, status: "refunded" });
+      await this.events.publish("Refunded", { orderId, amount: record.amount });
+    }
   }
 
   findByOrderId(orderId: string): Promise<PaymentRecord | null> {

@@ -20,6 +20,7 @@ import { SupplierService } from "../supplier/supplier.service";
 import { OperationsService } from "../operations/operations.service";
 import { APP_CONFIG, type AppConfig } from "../../core/app-config";
 import { InventoryService } from "../inventory/inventory.service";
+import { EventBus } from "../../core/events/event-bus";
 import type { AuthUser } from "../../core/token.service";
 import { SemanticSearch } from "./search/semantic-search";
 import { KeywordSearch } from "./search/keyword-search";
@@ -67,6 +68,7 @@ export class CatalogService {
     private readonly inventory: InventoryService,
     private readonly semantic: SemanticSearch,
     private readonly keyword: KeywordSearch,
+    private readonly events: EventBus,
   ) {}
 
   /**
@@ -344,6 +346,7 @@ export class CatalogService {
       referenceRetailPrice: input.referenceRetailPrice ?? null,
     });
     await this.operationsService.createReviewTask("product", created.id, `Sản phẩm ${created.name} — ${profile.displayName}`);
+    await this.events.publish("ProductChanged", { productId: created.id, change: "created" });
     return this.toSellerProduct(created);
   }
 
@@ -373,6 +376,7 @@ export class CatalogService {
       status: approved ? "approved" : "rejected",
       rejectReason: approved ? null : (reason ?? null),
     });
+    await this.events.publish("ProductChanged", { productId, change: approved ? "approved" : "rejected" });
   }
 
   /** Gợi ý khi gõ + hiểu câu tìm (GET /search/suggest). */
@@ -604,21 +608,18 @@ export class CatalogService {
       traceUrl,
     });
 
-    // Lô được duyệt thì có hàng để bán: mở dòng tồn của Farmery bằng số lượng khai báo.
+    // Lô được duyệt thì có hàng để bán: inventory nghe BatchApproved và mở dòng tồn của Farmery.
     const product = await this.products.findById(batch.productId);
-    if (product?.listing) {
-      await this.inventory.openFromBatch({
-        batchId: batch.id,
-        batchCode: batch.batchCode,
-        productId: product.id,
-        listingId: product.listing.id,
-        productName: batch.productName,
-        saleUnit: product.listing.saleUnit,
-        quantity: batch.declaredQuantity,
-        harvestDate: batch.harvestDate,
-        bestBefore: batch.bestBefore,
-      });
-    }
+    await this.events.publish("BatchApproved", {
+      batchId: batch.id,
+      batchCode: batch.batchCode,
+      productId: batch.productId,
+      productName: batch.productName,
+      quantity: batch.declaredQuantity,
+      harvestDate: batch.harvestDate,
+      bestBefore: batch.bestBefore,
+      listing: product?.listing ? { id: product.listing.id, saleUnit: product.listing.saleUnit } : null,
+    });
     return updated!;
   }
 
