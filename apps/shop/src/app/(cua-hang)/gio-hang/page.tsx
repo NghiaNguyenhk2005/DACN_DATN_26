@@ -85,7 +85,7 @@ export default async function CartPage({ searchParams }: PageProps<"/gio-hang">)
                       <AlertTriangle className="size-3.5 flex-none" aria-hidden />
                       {item.available > 0
                         ? `Chỉ còn ${formatQty(item.available)} ${item.saleUnit} — giảm số lượng để đặt hàng.`
-                        : "Sản phẩm đã hết hàng — xoá khỏi giỏ để đặt hàng."}
+                        : "Sản phẩm đã hết hàng — xóa khỏi giỏ để đặt hàng."}
                     </p>
                   )}
                   <div className="mt-2">

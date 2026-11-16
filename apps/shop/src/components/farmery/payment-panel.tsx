@@ -19,7 +19,7 @@ interface Props {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Trả tiền giả lập cho đơn trả trước, đếm ngược tới `reserveExpiresAt`; hết giờ thì khoá nút và báo hết hạn. */
+/** Trả tiền giả lập cho đơn trả trước, đếm ngược tới `reserveExpiresAt`; hết giờ thì khóa nút và báo hết hạn. */
 export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt, cancellable, serverNow }: Props) {
   const router = useRouter();
   const [offset] = useState(() => serverNow - Date.now());
@@ -40,7 +40,7 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
   }, [offset]);
 
   useEffect(() => {
-    // Hết giờ: tải lại một lần để lấy trạng thái đơn mới (API tự huỷ đơn quá hạn).
+    // Hết giờ: tải lại một lần để lấy trạng thái đơn mới (API tự hủy đơn quá hạn).
     if (expired && !refreshed.current) {
       refreshed.current = true;
       router.refresh();
@@ -60,7 +60,7 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
       <section role="alert" className="rounded-panel border border-danger-line bg-danger-soft p-5 text-center md:p-7">
         <TimerOff className="mx-auto mb-2 size-9 text-danger" aria-hidden />
         <h2 className="mb-1 text-h2-sm font-bold text-danger-ink">Đã hết thời gian giữ chỗ</h2>
-        <p className="text-small text-danger-ink">Đơn chưa được thanh toán kịp nên đã tự huỷ, hàng được trả lại kho. Vui lòng đặt lại.</p>
+        <p className="text-small text-danger-ink">Đơn chưa được thanh toán kịp nên đã tự hủy, hàng được trả lại kho. Vui lòng đặt lại.</p>
       </section>
     );
   }
@@ -74,7 +74,7 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
       <h2 id="pay-title" className="mb-1 text-h2-sm font-bold text-ink md:text-h2">
         Thanh toán để giữ đơn
       </h2>
-      <p className="mb-4 text-small text-muted-foreground">Hàng trong đơn đang được giữ cho bạn. Quá thời gian dưới đây chưa thanh toán thì đơn tự huỷ.</p>
+      <p className="mb-4 text-small text-muted-foreground">Hàng trong đơn đang được giữ cho bạn. Quá thời gian dưới đây chưa thanh toán thì đơn tự hủy.</p>
 
       <div className="mb-4 flex items-center gap-4 rounded-card bg-surface px-4 py-3.5">
         <Clock className={urgent ? "size-7 text-danger" : "size-7 text-primary"} aria-hidden />
@@ -117,9 +117,9 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
         <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-small">
           {confirmCancel ? (
             <>
-              <span className="text-ink-2">Huỷ đơn này?</span>
+              <span className="text-ink-2">Hủy đơn này?</span>
               <button type="button" disabled={pending} onClick={() => run(cancelOrder)} className="min-h-11 px-3 font-semibold text-danger">
-                Huỷ đơn
+                Hủy đơn
               </button>
               <button type="button" onClick={() => setConfirmCancel(false)} className="min-h-11 px-3 font-semibold text-ink-2">
                 Không
@@ -127,7 +127,7 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
             </>
           ) : (
             <button type="button" disabled={pending} onClick={() => setConfirmCancel(true)} className="min-h-11 px-3 text-muted-foreground hover:text-danger">
-              Huỷ đơn
+              Hủy đơn
             </button>
           )}
         </div>

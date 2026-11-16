@@ -1,0 +1,137 @@
+enum OwnerType {
+  supplier
+  farmery
+
+  @@map("owner_type")
+  @@schema("inventory")
+}
+
+enum LocationType {
+  supplier_site
+  farmery_warehouse
+
+  @@map("location_type")
+  @@schema("inventory")
+}
+
+enum MovementType {
+  open_from_batch
+  ownership_transfer
+  return_in
+  reserve
+  release
+  retail_out
+  wholesale_out
+  write_off
+  packing
+  refund_offset
+  recall_lock
+  stocktake_adjust
+
+  @@map("movement_type")
+  @@schema("inventory")
+}
+
+enum ReservationStatus {
+  active
+  consumed
+  released
+  expired
+
+  @@map("reservation_status")
+  @@schema("inventory")
+}
+
+/// Dòng tồn: hàng của một lô theo chủ sở hữu và nơi chứa (FR13.3)
+model StockHolding {
+  id              BigInt       @id @default(autoincrement())
+  batchId         BigInt       @map("batch_id")
+  ownerType       OwnerType    @map("owner_type")
+  ownerSupplierId BigInt?      @map("owner_supplier_id")
+  locationType    LocationType @map("location_type")
+  warehouseCode   String?      @map("warehouse_code") @db.VarChar
+  saleUnit        String       @map("sale_unit") @db.VarChar
+  qtyOnHand       Decimal      @default(0) @map("qty_on_hand") @db.Decimal(12, 2)
+  qtyReserved     Decimal      @default(0) @map("qty_reserved") @db.Decimal(12, 2)
+  isLocked        Boolean      @default(false) @map("is_locked")
+  updatedAt       DateTime     @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  stockMovements                 StockMovement[] @relation("StockMovement_holding")
+  stockMovementsByCounterHolding StockMovement[] @relation("StockMovement_counterHolding")
+  reservations                   Reservation[]   @relation("Reservation_holding")
+  packingRuns                    PackingRun[]    @relation("PackingRun_sourceHolding")
+  packingRunsByOutputHolding     PackingRun[]    @relation("PackingRun_outputHolding")
+
+  @@map("stock_holdings")
+  @@schema("inventory")
+}
+
+/// Sổ nhập xuất; chỉ thêm, không sửa; mọi thay đổi số tồn phải có một dòng ở đây (FR13.3)
+model StockMovement {
+  id               BigInt       @id @default(autoincrement())
+  holdingId        BigInt       @map("holding_id")
+  movementType     MovementType @map("movement_type")
+  quantity         Decimal      @db.Decimal(12, 2)
+  counterHoldingId BigInt?      @map("counter_holding_id")
+  sourceType       String       @map("source_type") @db.VarChar
+  sourceId         BigInt       @map("source_id")
+  performedBy      BigInt?      @map("performed_by")
+  reason           String?      @db.Text
+  createdAt        DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+
+  holding        StockHolding  @relation("StockMovement_holding", fields: [holdingId], references: [id])
+  counterHolding StockHolding? @relation("StockMovement_counterHolding", fields: [counterHoldingId], references: [id])
+
+  @@map("stock_movements")
+  @@schema("inventory")
+}
+
+/// Giữ chỗ trên dòng tồn; consumed khi trừ tồn, released khi hủy (FR4.3)
+model Reservation {
+  id         BigInt            @id @default(autoincrement())
+  holdingId  BigInt            @map("holding_id")
+  sourceType String            @map("source_type") @db.VarChar
+  sourceId   BigInt            @map("source_id")
+  quantity   Decimal           @db.Decimal(12, 2)
+  status     ReservationStatus @default(active)
+  expiresAt  DateTime?         @map("expires_at") @db.Timestamp(6)
+  createdAt  DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+
+  holding StockHolding @relation("Reservation_holding", fields: [holdingId], references: [id])
+
+  @@map("reservations")
+  @@schema("inventory")
+}
+
+/// Đóng gói một bước (FR13.4); sinh hai dòng packing trong sổ nhập xuất
+model PackingRun {
+  id              BigInt   @id @default(autoincrement())
+  sourceHoldingId BigInt   @map("source_holding_id")
+  outputHoldingId BigInt   @map("output_holding_id")
+  inputQty        Decimal  @map("input_qty") @db.Decimal(12, 2)
+  outputUnits     Int      @map("output_units")
+  shrinkageQty    Decimal  @default(0) @map("shrinkage_qty") @db.Decimal(12, 2)
+  labelData       Json     @map("label_data") @db.JsonB
+  packedBy        BigInt   @map("packed_by")
+  packedAt        DateTime @default(now()) @map("packed_at") @db.Timestamp(6)
+
+  sourceHolding StockHolding @relation("PackingRun_sourceHolding", fields: [sourceHoldingId], references: [id])
+  outputHolding StockHolding @relation("PackingRun_outputHolding", fields: [outputHoldingId], references: [id])
+
+  @@map("packing_runs")
+  @@schema("inventory")
+}
+
+/// Thu hồi lô (FR13.6); phát sự kiện BatchRecalled
+model BatchRecall {
+  id             BigInt    @id @default(autoincrement())
+  batchId        BigInt    @unique @map("batch_id")
+  reason         String    @db.Text
+  initiatedBy    BigInt    @map("initiated_by")
+  affectedOrders Json?     @map("affected_orders") @db.JsonB
+  initiatedAt    DateTime  @default(now()) @map("initiated_at") @db.Timestamp(6)
+  closedAt       DateTime? @map("closed_at") @db.Timestamp(6)
+
+  @@map("batch_recalls")
+  @@schema("inventory")
+}

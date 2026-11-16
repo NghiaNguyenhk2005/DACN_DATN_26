@@ -13,6 +13,14 @@ interface ContractOperation {
 
 export type AuthedRequest = Request & { openapi?: { schema: ContractOperation }; user?: AuthUser };
 
+const BEARER = /^Bearer +([A-Za-z0-9._~+/-]+=*)$/i;
+const MAX_TOKEN_LENGTH = 4096;
+
+function bearerToken(header: string | undefined): string | undefined {
+  if (!header || header.length > MAX_TOKEN_LENGTH + 16) return undefined;
+  return BEARER.exec(header)?.[1];
+}
+
 // Quyền lấy thẳng từ hợp đồng: security: [] là công khai; x-roles là các vai trò được gọi.
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -29,10 +37,11 @@ export class AuthGuard implements CanActivate {
     const security = operation.security ?? this.document.security ?? [];
     if (security.length === 0) return true;
 
-    const header = req.headers.authorization;
-    const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
+    const token = bearerToken(req.headers.authorization);
     const user = token ? await this.tokens.verify(token) : undefined;
-    if (!user) throw new ProblemException(401, "UNAUTHENTICATED", "Thiếu hoặc sai token");
+    if (!user) {
+      throw new ProblemException(401, "UNAUTHENTICATED", "Thiếu hoặc sai token", { "WWW-Authenticate": 'Bearer realm="farmery"' });
+    }
     req.user = user;
 
     const allowed = operation["x-roles"];

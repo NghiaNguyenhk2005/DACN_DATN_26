@@ -77,9 +77,9 @@ export function InventoryList() {
         />
         <Table.Column<StockHolding>
           dataIndex="isLocked"
-          title="Khoá"
+          title="Khóa"
           width={90}
-          render={(locked: boolean) => (locked ? <Tag color="red">Đã khoá</Tag> : <Tag>Mở</Tag>)}
+          render={(locked: boolean) => (locked ? <Tag color="red">Đã khóa</Tag> : <Tag>Mở</Tag>)}
         />
       </Table>
     </List>

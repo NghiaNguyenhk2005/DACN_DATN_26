@@ -11,9 +11,9 @@ Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, m�
 \begin{itemize}
     \item \textbf{Phát hiện bất thường bằng học máy.} Hệ thống hiện chỉ dùng luật ngưỡng do quản trị viên hệ thống cấu hình. Mô hình học máy đòi hỏi lưu lượng giao dịch thật đủ lớn để học được thế nào là bình thường, và một tập nhãn các trường hợp gian lận đã xác nhận để đo chất lượng --- cả hai đều chưa có.
     \item \textbf{Phân quyền nội bộ trong tài khoản doanh nghiệp.} Mỗi tài khoản doanh nghiệp hiện do một người đại diện sử dụng. Việc phân tách vai trò nội bộ như người đặt hàng, kế toán và người duyệt chi là nhu cầu thật của doanh nghiệp quy mô lớn, nhưng không mang đặc thù nông sản nên được để lại.
-    \item \textbf{Mua trả sau và hạn mức tín dụng cho khách sỉ.} Hệ thống hiện yêu cầu thanh toán theo từng đợt giao. Cơ chế cho nợ theo kỳ hạn kéo theo bài toán thẩm định tín dụng và thu hồi nợ, vượt khỏi phạm vi một đồ án phần mềm.
+    \item \textbf{Mua trả sau và hạn mức tín dụng cho khách sỉ.} Hệ thống hiện yêu cầu bên mua thanh toán một lần khi xác nhận nhận đơn sỉ. Cơ chế cho nợ theo kỳ hạn kéo theo bài toán thẩm định tín dụng và thu hồi nợ, vượt khỏi phạm vi một đồ án phần mềm.
     \item \textbf{Ứng dụng di động riêng và kênh hỗ trợ qua mạng xã hội} cho nhóm nhà cung cấp ít rành công nghệ.
-    \item \textbf{Luồng bán sỉ ở mức tối giản.} Đơn sỉ giao một đợt, thanh toán thường; giao nhiều đợt, ký quỹ trung gian và khấu trừ thuế thay cho nhà cung cấp mới dừng ở thiết kế, vì phần hiện thực dồn cho trục bán lẻ.
+    \item \textbf{Luồng bán sỉ ở mức tối giản.} Đơn sỉ giao một đợt, phản hồi giá một vòng, thanh toán thường; thương lượng nhiều vòng, giao nhiều đợt, ký quỹ trung gian và khấu trừ thuế thay cho nhà cung cấp mới dừng ở thiết kế, vì phần hiện thực dồn cho trục bán lẻ.
 \end{itemize}
 
 \section{Hướng phát triển}
@@ -22,6 +22,7 @@ Ngoài các giới hạn kỹ thuật đã nêu tại mục~\ref{sec:phamvi}, m�
 
 Các hạn chế nêu trên đều là hướng phát triển trực tiếp khi nền tảng đi vào vận hành thật. Thứ tự ưu tiên nên dựa vào điều kiện kích hoạt của từng hạng mục:
 \begin{itemize}
+    \item \textbf{Các phần mới dừng ở thiết kế} (Bảng~\ref{tab:chi-thiet-ke}): kết nối thật với cổng thanh toán VNPay (kèm IPN) và đơn vị vận chuyển GHN (kèm webhook) khi có tài khoản và hợp đồng với đối tác; thông báo đẩy qua Web Push, cảnh báo chứng nhận sắp hết hạn và tồn thấp, trao đổi theo đơn, báo khi có hàng hoặc vào mùa, thương lượng sỉ nhiều vòng; đưa dự báo giá lên màn hình thu mua khi MAPE đạt ngưỡng ổn định trên dữ liệu thật.
     \item Khi đã tích lũy đủ lưu lượng giao dịch và tập nhãn từ chính phán quyết của kiểm duyệt viên và nhân viên vận hành, thay lớp luật ngưỡng bằng mô hình unsupervised learning, rồi chuyển dần sang supervised learning.
     \item Khi mở rộng địa bàn ra ngoài phạm vi thí điểm, bổ sung nghiệp vụ điều phối nhiều kho sơ chế và tối ưu tuyến giao hàng.
     \item \textbf{Đội giao hàng riêng} cho chặng cuối, chỉ khi có lãi: mật độ đơn trong vùng phục vụ phải đủ để chi phí cố định (phương tiện, nhân sự, thiết bị giữ lạnh) chia trên mỗi đơn thấp hơn cước 3PL nội thành cho cùng chặng; dưới ngưỡng đó, Farmery tiếp tục thuê 3PL. Khi có đội riêng, bổ sung lại vai trò nhân viên giao hàng và thao tác ngoại tuyến cho vai trò này.

@@ -1,6 +1,6 @@
 import type { I18nProvider } from "@refinedev/core";
 
-// Chỉ dịch các khoá Refine dựng sẵn đang hiện trên màn hình; khoá lạ giữ câu mặc định.
+// Chỉ dịch các khóa Refine dựng sẵn đang hiện trên màn hình; khóa lạ giữ câu mặc định.
 const VI: Record<string, string> = {
   "actions.list": "Danh sách",
   "actions.show": "Chi tiết",
@@ -12,11 +12,11 @@ const VI: Record<string, string> = {
   "buttons.edit": "Sửa",
   "buttons.create": "Tạo mới",
   "buttons.save": "Lưu",
-  "buttons.delete": "Xoá",
-  "buttons.cancel": "Huỷ",
+  "buttons.delete": "Xóa",
+  "buttons.cancel": "Hủy",
   "buttons.confirm": "Bạn chắc chắn chứ?",
   "buttons.filter": "Lọc",
-  "buttons.clear": "Xoá lọc",
+  "buttons.clear": "Xóa lọc",
   "buttons.notAccessTooltip": "Bạn không có quyền thực hiện thao tác này",
   "notifications.success": "Thành công",
   "notifications.error": "Có lỗi",
@@ -28,7 +28,9 @@ const VI: Record<string, string> = {
 };
 
 export const i18nProvider: I18nProvider = {
-  translate: (key, _options, defaultMessage) => VI[key] ?? defaultMessage ?? key,
+  // Nút "Danh sách" của trang chi tiết dịch theo khóa "<resource>.titles.list".
+  translate: (key, _options, defaultMessage) =>
+    VI[key] ?? defaultMessage ?? (key.endsWith(".titles.list") ? "Danh sách" : key),
   changeLocale: async () => undefined,
   getLocale: () => "vi",
 };

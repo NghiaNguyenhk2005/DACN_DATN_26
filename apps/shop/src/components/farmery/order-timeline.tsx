@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const BRANCH_STATUSES: readonly Schema<"OrderStatus">[] = ["disputed", "cancelled", "returned"];
 
-/** Tám bước của đơn: bước đã qua có giờ theo `timeline`; khiếu nại, huỷ, hoàn hàng hiện thành dải cảnh báo phía trên. */
+/** Tám bước của đơn: bước đã qua có giờ theo `timeline`; khiếu nại, hủy, hoàn hàng hiện thành dải cảnh báo phía trên. */
 export function OrderTimeline({ order }: { order: Schema<"OrderDetail"> }) {
   const reachedAt = new Map(order.timeline.map((e) => [e.toStatus, e]));
   const lastReached = ORDER_STEPS.reduce((last, step, i) => (reachedAt.has(step) ? i : last), -1);

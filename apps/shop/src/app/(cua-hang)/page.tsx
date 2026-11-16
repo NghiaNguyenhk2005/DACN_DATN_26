@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { CategoryTiles } from "@/components/farmery/category-tiles";
 import { FilterChip } from "@/components/farmery/filter-chip";
 import { ProductResults } from "@/components/farmery/product-results";
 import { SafeImage } from "@/components/farmery/safe-image";
 import { TraceLookup } from "@/components/farmery/trace-lookup";
-import { searchProducts } from "@/lib/data";
+import { getCategories, searchProducts } from "@/lib/data";
 import { filtersToSearch, REGION_OPTIONS, type ProductQuery } from "@/lib/filters";
 
 const QUICK_FILTERS = [
@@ -20,7 +21,8 @@ const QUICK_FILTERS = [
  */
 export default async function HomePage() {
   const query: ProductQuery = { inSeason: true, limit: 10 };
-  const page = await searchProducts(query);
+  // Danh mục lỗi thì chỉ ẩn khối danh mục, không làm hỏng trang chủ.
+  const [page, categories] = await Promise.all([searchProducts(query), getCategories().catch(() => [])]);
   const heroImage = page.items.find((p) => p.imageUrl)?.imageUrl;
 
   return (
@@ -50,6 +52,8 @@ export default async function HomePage() {
           <TraceLookup className="h-full" />
         </div>
       </div>
+
+      <CategoryTiles categories={categories} />
 
       <div className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 py-4 md:mx-0 md:px-0 lg:flex-wrap lg:pb-0 lg:pt-5">
         {QUICK_FILTERS.map((f) => (

@@ -1,0 +1,153 @@
+enum RfqStatus {
+  open
+  negotiating
+  agreed
+  rejected
+  expired
+
+  @@map("rfq_status")
+  @@schema("wholesale")
+}
+
+enum ContractStatus {
+  draft
+  awaiting_confirmation
+  concluded
+  delivered
+  completed
+  cancelled
+
+  @@map("contract_status")
+  @@schema("wholesale")
+}
+
+enum Party {
+  buyer
+  supplier
+
+  @@map("party")
+  @@schema("wholesale")
+}
+
+/// Bảng giá sỉ theo bậc số lượng (FR4.1, FR6.4)
+model PriceTier {
+  id           BigInt    @id @default(autoincrement())
+  productId    BigInt    @map("product_id")
+  minQty       Decimal   @map("min_qty") @db.Decimal(12, 2)
+  unitPrice    Decimal   @map("unit_price") @db.Decimal(14, 2)
+  leadTimeDays Int?      @map("lead_time_days")
+  validFrom    DateTime  @map("valid_from") @db.Date
+  validTo      DateTime? @map("valid_to") @db.Date
+
+  @@map("price_tiers")
+  @@schema("wholesale")
+}
+
+/// Yêu cầu báo giá (FR6.1)
+model Rfq {
+  id              BigInt    @id @default(autoincrement())
+  businessId      BigInt    @map("business_id")
+  supplierId      BigInt    @map("supplier_id")
+  productId       BigInt    @map("product_id")
+  requestedQty    Decimal   @map("requested_qty") @db.Decimal(12, 2)
+  qualityStandard String?   @map("quality_standard") @db.VarChar
+  desiredDelivery DateTime  @map("desired_delivery") @db.Date
+  status          RfqStatus @default(open)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  rfqMessages RfqMessage[] @relation("RfqMessage_rfq")
+  contract    Contract?    @relation("Contract_rfq")
+
+  @@map("rfqs")
+  @@schema("wholesale")
+}
+
+/// Báo giá phản hồi RFQ, một vòng (FR6.2); tin trao đổi nhiều vòng chỉ thiết kế
+model RfqMessage {
+  id               BigInt    @id @default(autoincrement())
+  rfqId            BigInt    @map("rfq_id")
+  senderUserId     BigInt    @map("sender_user_id")
+  isQuote          Boolean   @default(false) @map("is_quote")
+  proposedQty      Decimal?  @map("proposed_qty") @db.Decimal(12, 2)
+  proposedPrice    Decimal?  @map("proposed_price") @db.Decimal(14, 2)
+  proposedDelivery DateTime? @map("proposed_delivery") @db.Date
+  content          String?   @db.Text
+  attachmentIds    BigInt[]  @map("attachment_ids")
+  sentAt           DateTime  @default(now()) @map("sent_at") @db.Timestamp(6)
+
+  rfq Rfq @relation("RfqMessage_rfq", fields: [rfqId], references: [id])
+
+  @@map("rfq_messages")
+  @@schema("wholesale")
+}
+
+/// Hợp đồng sinh một lần từ mẫu chuẩn khi bên mua chấp nhận báo giá (FR6.3)
+model Contract {
+  id              BigInt         @id @default(autoincrement())
+  rfqId           BigInt         @unique @map("rfq_id")
+  contractCode    String         @unique @map("contract_code") @db.VarChar
+  agreedQty       Decimal        @map("agreed_qty") @db.Decimal(12, 2)
+  agreedUnitPrice Decimal        @map("agreed_unit_price") @db.Decimal(14, 2)
+  totalAmount     Decimal        @map("total_amount") @db.Decimal(14, 2)
+  deliveryDate    DateTime       @map("delivery_date") @db.Date
+  currentVersion  Int            @default(1) @map("current_version")
+  status          ContractStatus @default(draft)
+  concludedAt     DateTime?      @map("concluded_at") @db.Timestamp(6)
+
+  rfq                   Rfq                    @relation("Contract_rfq", fields: [rfqId], references: [id])
+  contractVersions      ContractVersion[]      @relation("ContractVersion_contract")
+  contractConfirmations ContractConfirmation[] @relation("ContractConfirmation_contract")
+  wholesaleOrder        WholesaleOrder?        @relation("WholesaleOrder_contract")
+
+  @@map("contracts")
+  @@schema("wholesale")
+}
+
+/// Bản hiện thực sinh một phiên bản kèm mã băm; sửa bản nháp tạo phiên bản mới chỉ thiết kế
+model ContractVersion {
+  contractId     BigInt   @map("contract_id")
+  version        Int
+  documentFileId BigInt   @map("document_file_id")
+  documentHash   String   @map("document_hash") @db.VarChar
+  createdBy      BigInt   @map("created_by")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  contract Contract @relation("ContractVersion_contract", fields: [contractId], references: [id])
+
+  @@id([contractId, version])
+  @@map("contract_versions")
+  @@schema("wholesale")
+}
+
+/// Xác nhận giao kết bằng mã dùng một lần; ký số chỉ thiết kế
+model ContractConfirmation {
+  contractId     BigInt   @map("contract_id")
+  party          Party
+  version        Int
+  documentHash   String   @map("document_hash") @db.VarChar
+  userId         BigInt   @map("user_id")
+  otpChallengeId BigInt   @map("otp_challenge_id")
+  confirmedAt    DateTime @default(now()) @map("confirmed_at") @db.Timestamp(6)
+
+  contract Contract @relation("ContractConfirmation_contract", fields: [contractId], references: [id])
+
+  @@id([contractId, party])
+  @@map("contract_confirmations")
+  @@schema("wholesale")
+}
+
+/// Đơn sỉ giao một đợt theo hợp đồng
+model WholesaleOrder {
+  id          BigInt    @id @default(autoincrement())
+  contractId  BigInt    @unique @map("contract_id")
+  holdingId   BigInt    @map("holding_id")
+  shippedAt   DateTime? @map("shipped_at") @db.Timestamp(6)
+  receivedAt  DateTime? @map("received_at") @db.Timestamp(6)
+  rejectedQty Decimal   @default(0) @map("rejected_qty") @db.Decimal(12, 2)
+  status      String    @default("awaiting_delivery") @db.VarChar
+
+  contract Contract @relation("WholesaleOrder_contract", fields: [contractId], references: [id])
+
+  @@map("wholesale_orders")
+  @@schema("wholesale")
+}

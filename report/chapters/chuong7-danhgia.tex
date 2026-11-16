@@ -9,8 +9,8 @@ Chương này trình bày phương pháp và kết quả đánh giá hệ thốn
 Nguyên tắc chi phối toàn chương: mọi ngưỡng đối chiếu đều được xác định \emph{trước} khi hiện thực --- tại Bảng~\ref{tab:nguongNFR} cho yêu cầu phi chức năng và Bảng~\ref{tab:nguongAI} cho các mô-đun AI --- nhằm tránh việc chọn chỉ số sau khi đã biết kết quả.
 
 \begin{itemize}
-    \item \textbf{Đánh giá chất lượng mã nguồn:} phân tích tĩnh bằng SonarQube --- độ phức tạp, tỷ lệ trùng lặp, nợ kỹ thuật quy ra thời gian sửa --- và đo độ phủ kiểm thử của phần nghiệp vụ lõi. Cả hai chạy tự động mỗi lần đẩy mã lên kho GitHub qua GitHub Actions, với cổng chất lượng chặn mã mới không đạt ngưỡng (mục~\ref{sec:moitruong}).
-    \item \textbf{Đánh giá chức năng (functional testing):} kiểm thử hộp đen (black-box) cho toàn bộ 13 nhóm yêu cầu chức năng, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là kịch bản hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một lô, và luồng thu mua vào kho của nền tảng.
+    \item \textbf{Đánh giá chất lượng mã nguồn:} kiểm tra kiểu (typecheck), phân tích tĩnh bằng ESLint và đo độ phủ kiểm thử bằng Jest cho phần nghiệp vụ lõi. Cả ba chạy tự động mỗi lần đẩy mã lên kho GitHub qua GitHub Actions, với cổng độ phủ chặn mã không đạt ngưỡng tối thiểu (mục~\ref{sec:moitruong}).
+    \item \textbf{Đánh giá chức năng (functional testing):} kiểm thử hộp đen (black-box) cho các nhóm yêu cầu chức năng có phần hiện thực (FR9 chỉ ở mức thiết kế), trong mỗi nhóm chỉ kiểm phần không mang nhãn chỉ thiết kế, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là kịch bản hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một lô, và luồng thu mua vào kho của nền tảng.
     \item \textbf{Đánh giá hiệu năng và chống bán vượt (performance testing):} dùng k6 --- công cụ kiểm thử tải viết kịch bản bằng JavaScript, tốn ít tài nguyên hơn Apache JMeter và gắn được vào quy trình tích hợp liên tục --- đo thời gian phản hồi ở p95, thông lượng xử lý, và giả lập nhiều yêu cầu đồng thời tranh mua một lô có tồn kho giới hạn.
     \item \textbf{Đánh giá bảo mật và kiểm soát truy cập (security audit):} kiểm thử tự động ma trận phân quyền RBAC trên toàn bộ endpoint nghiệp vụ; rà soát an toàn dữ liệu cá nhân theo Luật Bảo vệ dữ liệu cá nhân 2025 (NFR8.2).
     \item \textbf{Đánh giá khả dụng phía giao diện:} kiểm tra giao diện đáp ứng trên ba kích thước màn hình chuẩn; đo ba chỉ số Core Web Vitals bằng Lighthouse; buổi thử tác vụ với nhóm nhà cung cấp đo bốn chỉ số hành vi --- tỷ lệ tự hoàn thành, thời gian hoàn thành, số lần nhờ giúp, số lỗi phải làm lại; kiểm tra khả năng tiếp cận tự động bằng axe-core; và kiểm tra ứng dụng web cài đặt được theo danh sách trên điện thoại thật.
@@ -22,7 +22,7 @@ Nguyên tắc chi phối toàn chương: mọi ngưỡng đối chiếu đều �
 \section{Đánh giá chức năng}
 \label{sec:danhgiachucnang}
 
-Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức năng, với ba kịch bản trọng tâm: luồng thu mua từ chào giá lô tới nhập kho và mở bán; luồng bán sỉ từ yêu cầu báo giá tới giao hàng theo đợt; và luồng bán lẻ từ đặt hàng tới đổi trả.
+Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức năng, với ba kịch bản trọng tâm: luồng thu mua từ chào giá lô tới nhập kho và mở bán; luồng bán sỉ từ yêu cầu báo giá, một vòng phản hồi giá tới giao hàng một đợt; và luồng bán lẻ từ đặt hàng tới đổi trả.
 
 % TODO: điền bảng test case và kết quả đạt/không đạt theo từng nhóm yêu cầu chức năng. Bảng chi tiết đưa xuống phụ lục, thân chương giữ phần tổng hợp.
 
@@ -72,7 +72,7 @@ Nghiệm thu ba mô-đun AI theo đúng chỉ số đã định nghĩa tại B�
 \begin{itemize}
     \item \textbf{Tìm kiếm theo ngữ nghĩa:} đo nDCG@10 và Recall@10 trên bộ truy vấn do nhóm gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở; đo thêm thời gian phản hồi ở p95.
     \item \textbf{Sản phẩm tương tự:} đo Precision@5 trên tập sản phẩm gán nhãn tay; mỗi sản phẩm trong tập có danh sách sản phẩm được người gán nhãn coi là phù hợp thay thế hoặc mua kèm. Mức tăng CTR qua thử nghiệm A/B chỉ áp dụng khi bật gợi ý cá nhân hóa, ngoài phần hiện thực.
-    \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai; mô hình chạy offline và kết quả được hiển thị làm tham khảo cho nhân viên thu mua, nên không đánh giá theo thời gian phản hồi.
+    \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai; mô hình chạy offline và chỉ được đánh giá bằng MAPE; hiển thị kết quả cho nhân viên thu mua \emph{(chỉ thiết kế)}, nên không đánh giá theo thời gian phản hồi.
 \end{itemize}
 
 Riêng phần giám sát bất thường không dùng mô hình học máy trong phạm vi đồ án (lý do tại Chương~\ref{chap:coso}), nên được nghiệm thu bằng cách kiểm tra các luật ngưỡng có kích hoạt đúng trên tập tình huống dựng sẵn, không đo bằng chỉ số mô hình.

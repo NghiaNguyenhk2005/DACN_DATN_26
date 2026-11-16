@@ -9,7 +9,7 @@ W = 1340
 INK = '#16241e'
 GREY = '#8a948f'
 LINE = '#44524b'
-D = '*'          # tiền tố đánh dấu trang chỉ thiết kế / để sau prototype
+D = '*'          # tiền tố đánh dấu trang chỉ thiết kế
 
 SHOP = [
     ('Công khai', 'không cần đăng nhập', ('#e9edeb', '#4d5c55'), [
@@ -17,7 +17,7 @@ SHOP = [
         'Trang truy xuất QR', 'Hồ sơ nguồn gốc nhà cung cấp', 'Sàn sỉ', 'Giới thiệu, chính sách, biểu phí']),
     ('Khách lẻ', 'sau đăng nhập', ('#fdf1dc', '#c98a1a'), [
         'Giỏ hàng', 'Thanh toán', 'Đơn hàng', 'Đổi trả, khiếu nại', 'Đánh giá',
-        'Báo khi có hàng, vào mùa', 'Sổ địa chỉ', D + 'Yêu thích']),
+        D + 'Báo khi có hàng, vào mùa', 'Sổ địa chỉ', D + 'Yêu thích']),
     ('Khách sỉ', 'sau đăng nhập', ('#eef4fb', '#1a5fa8'), [
         'Hồ sơ doanh nghiệp, địa chỉ nhận', 'Yêu cầu báo giá', 'Hợp đồng', 'Đơn sỉ một đợt', 'Thanh toán',
         'Khiếu nại', D + 'Ký quỹ']),
@@ -29,10 +29,10 @@ SHOP = [
 STAFF = [
     ('Hỗ trợ vùng', 'staff_support', ['Nhà cung cấp phụ trách', 'Nhập liệu thay nhà cung cấp']),
     ('Kiểm duyệt', 'staff_moderation', ['Hàng đợi duyệt', 'Đánh giá nghi vấn', 'Vi phạm nội dung']),
-    ('Thu mua', 'staff_sourcing', ['Chào giá lô', 'Đơn thu mua', 'Định giá, dự báo']),
+    ('Thu mua', 'staff_sourcing', ['Chào giá lô', 'Đơn thu mua', 'Định giá bán lẻ', D + 'Dự báo giá']),
     ('Kho', 'staff_warehouse', ['Nghiệm thu', 'Tồn kho, sổ nhập xuất', 'Đóng gói, in tem', 'Chuyến trung chuyển',
                                 D + 'Sơ chế, kiểm kê']),
-    ('Vận hành', 'staff_operations', ['Giám sát đơn, giao hàng', 'Khiếu nại, đổi trả, tranh chấp',
+    ('Vận hành', 'staff_operations', ['Giám sát đơn, chuyển bước giao hàng', 'Khiếu nại, đổi trả, tranh chấp',
                                       'Vi phạm từ đơn hàng', 'Thu hồi lô', D + 'Báo cáo thống kê']),
     ('Quản trị', 'platform_owner', ['Tài khoản, vai trò', 'Danh mục', 'Cấu hình, biểu phí', 'Chính sách, phiên bản',
                                     'Nhật ký thao tác']),
@@ -121,8 +121,8 @@ s.h = int(bottom2 + 6)
 leg = ('<span><i class="sw" style="background:#1a5fa8;border-color:#0f3d6e"></i>Ứng dụng</span>'
        '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
        '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang (cấp 3 ở Phụ lục T)</span>'
-       '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế hoặc để sau prototype</span>')
+       '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế</span>')
 io.open(os.path.join(OUT, 'sitemap-tong-quan.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Hai ứng dụng gọi chung một API. Trao đổi theo đơn nằm trong trang Đơn hàng và Đổi trả, không có trang tin nhắn chung; hỗ trợ chung qua Zalo OA.'))
+    'Hai ứng dụng gọi chung một API. Kết quả xử lý đổi trả ghi ngay trên yêu cầu và gửi email, không có trang tin nhắn chung; hỗ trợ chung qua Zalo OA.'))
 print('ok')

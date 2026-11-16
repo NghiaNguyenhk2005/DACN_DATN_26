@@ -13,14 +13,14 @@ export const TASK_STATUS: Record<Schema<"TaskStatus">, { label: string; color: s
   open: { label: "Chờ duyệt", color: "gold" },
   in_review: { label: "Đang duyệt", color: "blue" },
   approved: { label: "Đã duyệt", color: "green" },
-  rejected: { label: "Từ chối", color: "red" },
+  rejected: { label: "Bị từ chối", color: "red" },
 };
 
 export const REVIEW_STATUS: Record<Schema<"ReviewStatus">, { label: string; color: string }> = {
   draft: { label: "Nháp", color: "default" },
   pending_review: { label: "Chờ duyệt", color: "gold" },
   approved: { label: "Đã duyệt", color: "green" },
-  rejected: { label: "Từ chối", color: "red" },
+  rejected: { label: "Bị từ chối", color: "red" },
   hidden: { label: "Đã ẩn", color: "default" },
 };
 
@@ -62,7 +62,7 @@ export const ORDER_STATUS: Record<Schema<"OrderStatus">, { label: string; color:
   delivered: { label: "Đã giao", color: "cyan" },
   completed: { label: "Hoàn tất", color: "green" },
   disputed: { label: "Khiếu nại", color: "orange" },
-  cancelled: { label: "Đã huỷ", color: "red" },
+  cancelled: { label: "Đã hủy", color: "red" },
   returned: { label: "Đã hoàn hàng", color: "red" },
 };
 
@@ -88,10 +88,10 @@ export const MOVEMENT_LABELS: Record<Schema<"MovementType">, string> = {
   release: "Nhả giữ chỗ",
   retail_out: "Xuất bán lẻ",
   wholesale_out: "Xuất bán sỉ",
-  write_off: "Huỷ hàng",
+  write_off: "Hủy hàng",
   packing: "Đóng gói",
   refund_offset: "Bù hoàn tiền",
-  recall_lock: "Khoá do thu hồi",
+  recall_lock: "Khóa do thu hồi",
 };
 
 export const HOLDING_OWNER_LABELS: Record<Schema<"StockHolding">["ownerType"], string> = {

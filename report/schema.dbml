@@ -178,7 +178,7 @@ Table identity.data_requests {
 
 Enum notification.channel {
   in_app
-  push [note: 'Để sau prototype']
+  push [note: 'Chỉ thiết kế']
   email
   sms [note: 'Chỉ thiết kế']
 }
@@ -204,7 +204,7 @@ Table notification.deliveries {
   attempts int [not null, default: 0]
   sent_at timestamp
 
-  Note: 'Mỗi lần gửi qua kênh đẩy, email (FR11.1)'
+  Note: 'Mỗi lần gửi qua email (FR11.1); kênh đẩy, SMS chỉ thiết kế'
 }
 
 Table notification.preferences {
@@ -230,7 +230,7 @@ Table notification.push_subscriptions {
   created_at timestamp [not null, default: `now()`]
   revoked_at timestamp
 
-  Note: 'Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt'
+  Note: 'Đăng ký nhận thông báo đẩy (Web Push, địa chỉ nhận tin và khóa) của từng trình duyệt (FR11.1, chỉ thiết kế)'
 }
 
 
@@ -633,7 +633,7 @@ Table procurement.price_forecasts {
     (category_id, region, week_start, model_name) [unique]
   }
 
-  Note: 'Kết quả dự báo giá do dịch vụ AI trả về, hiển thị ở màn hình lập đơn thu mua (FR12.2)'
+  Note: 'Kết quả dự báo giá để hiển thị ở màn hình lập đơn thu mua; bản hiện thực chạy dự báo offline, không ghi bảng này (FR12.2, chỉ thiết kế)'
 }
 
 
@@ -653,7 +653,7 @@ Enum retail.order_status {
   paid [note: 'Đã thanh toán, hoặc COD đủ điều kiện']
   packing [note: 'Đang đóng gói']
   on_trip [note: 'Lên chuyến trung chuyển']
-  handed_to_3pl [note: '3PL đã nhận']
+  handed_to_3pl [note: 'Chặng cuối đã nhận hàng']
   delivering
   delivered
   completed
@@ -756,7 +756,7 @@ Table retail.order_status_events {
   id bigint [pk, increment]
   order_id bigint [not null, ref: > retail.orders.id]
   to_status retail.order_status [not null]
-  source varchar [not null, note: 'system, staff, payment_webhook, carrier_webhook']
+  source varchar [not null, note: 'system, staff, payment_webhook (kết quả từ bản giả lập cổng thanh toán); carrier_webhook chỉ thiết kế']
   actor_user_id bigint [note: '→ identity.users']
   note text
   occurred_at timestamp [not null, default: `now()`]
@@ -776,7 +776,7 @@ Table retail.restock_subscriptions {
     (user_id, product_id, kind) [unique]
   }
 
-  Note: 'Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7)'
+  Note: 'Đăng ký báo có hàng trở lại, báo vào mùa (FR5.7, chỉ thiết kế)'
 }
 
 
@@ -786,7 +786,7 @@ Table retail.restock_subscriptions {
 
 Enum wholesale.rfq_status {
   open
-  negotiating
+  negotiating [note: 'Đã báo giá, chờ bên mua chấp nhận hoặc từ chối (một vòng)']
   agreed
   rejected
   expired
@@ -844,7 +844,7 @@ Table wholesale.rfq_messages {
   attachment_ids bigint[] [note: '→ media.media_files']
   sent_at timestamp [not null, default: `now()`]
 
-  Note: 'Báo giá và trao đổi trong kênh gắn với RFQ (FR6.2)'
+  Note: 'Báo giá phản hồi RFQ, một vòng (FR6.2); tin trao đổi nhiều vòng chỉ thiết kế'
 }
 
 Table wholesale.contracts {
@@ -855,11 +855,11 @@ Table wholesale.contracts {
   agreed_unit_price decimal(14,2) [not null, note: 'Áp khung giá sỉ khi đạt MOQ (FR6.4)']
   total_amount decimal(14,2) [not null]
   delivery_date date [not null, note: 'Giao một đợt; giao nhiều đợt chỉ thiết kế (FR6.5)']
-  current_version int [not null, default: 1]
+  current_version int [not null, default: 1, note: 'Luôn là 1 ở bản hiện thực; nhiều phiên bản chỉ thiết kế']
   status wholesale.contract_status [not null, default: 'draft']
   concluded_at timestamp [note: 'Khi cả hai bên đã xác nhận cùng một phiên bản']
 
-  Note: 'Hợp đồng sinh từ mẫu chuẩn khi RFQ được chốt (FR6.3)'
+  Note: 'Hợp đồng sinh một lần từ mẫu chuẩn khi bên mua chấp nhận báo giá (FR6.3)'
 }
 
 Table wholesale.contract_versions {
@@ -874,7 +874,7 @@ Table wholesale.contract_versions {
     (contract_id, version) [pk]
   }
 
-  Note: 'Mỗi lần sửa bản nháp tạo một phiên bản mới'
+  Note: 'Bản hiện thực sinh một phiên bản kèm mã băm; sửa bản nháp tạo phiên bản mới chỉ thiết kế'
 }
 
 Table wholesale.contract_confirmations {
@@ -936,10 +936,10 @@ Table payment.payments {
   source_type varchar [not null, note: 'retail_order hoặc wholesale_order']
   source_id bigint [not null, note: '→ retail.orders | Hoặc wholesale.wholesale_orders, tùy source_type']
   method payment.payment_method [not null]
-  gateway varchar [note: 'vnpay, payos; trống với COD']
+  gateway varchar [note: 'mock ở bản hiện thực; vnpay, payos chỉ thiết kế; trống với COD']
   amount decimal(14,2) [not null]
   status payment.payment_status [not null, default: 'pending']
-  gateway_txn_ref varchar [unique, note: 'Mã đối soát; webhook xử lý lặp không đổi kết quả']
+  gateway_txn_ref varchar [unique, note: 'Mã đối soát; kết quả gửi lặp chỉ xử lý một lần']
   paid_at timestamp
   escrow_status varchar [note: 'Ký quỹ trung gian cho đơn sỉ lớn (FR7.3, chỉ thiết kế)']
   created_at timestamp [not null, default: `now()`]
@@ -1007,7 +1007,7 @@ Table payment.supplier_payouts {
 
 
 // ==============================================================================
-// SAU BÁN — fulfillment (FR8, FR9.1)
+// SAU BÁN — fulfillment (FR8; FR9.1 chỉ thiết kế)
 // ==============================================================================
 
 Enum fulfillment.trip_status {
@@ -1078,8 +1078,8 @@ Table fulfillment.shipments {
   id bigint [pk, increment]
   order_id bigint [not null, unique, note: '→ retail.orders']
   trip_id bigint [ref: > fulfillment.transfer_trips.id]
-  carrier varchar [not null, default: 'ghn']
-  carrier_order_code varchar [unique, note: 'Mã vận đơn của 3PL']
+  carrier varchar [not null, default: 'internal', note: 'internal: nhân viên vận hành chuyển bước chặng cuối; ghn chỉ thiết kế']
+  carrier_order_code varchar [unique, note: 'Mã vận đơn của 3PL (chỉ thiết kế)']
   carrier_fee decimal(14,2) [not null]
   middle_leg_fee decimal(14,2) [not null, note: 'Phần bù chặng giữa chia theo đơn (FR8.2)']
   slot_start timestamp [not null]
@@ -1094,12 +1094,12 @@ Table fulfillment.shipment_events {
   id bigint [pk, increment]
   shipment_id bigint [not null, ref: > fulfillment.shipments.id]
   status fulfillment.shipment_status [not null]
-  carrier_event_id varchar [unique, note: 'Chống xử lý lặp webhook']
+  carrier_event_id varchar [unique, note: 'Chống xử lý lặp webhook (chỉ thiết kế)']
   payload jsonb
   occurred_at timestamp [not null]
   received_at timestamp [not null, default: `now()`]
 
-  Note: 'Trạng thái 3PL đẩy về qua webhook'
+  Note: 'Lịch sử trạng thái chặng cuối do nhân viên vận hành chuyển bước; 3PL đẩy về qua webhook chỉ thiết kế'
 }
 
 Table fulfillment.return_requests {
@@ -1136,7 +1136,7 @@ Table fulfillment.messages {
   sent_at timestamp [not null, default: `now()`]
   read_at timestamp
 
-  Note: 'Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1)'
+  Note: 'Trao đổi bất đồng bộ gắn với đơn hoặc yêu cầu đổi trả; không có nhắn tin tự do (FR9.1, chỉ thiết kế)'
 }
 
 
@@ -1170,11 +1170,11 @@ Table engagement.reviews {
 
 Table engagement.review_replies {
   review_id bigint [pk, ref: - engagement.reviews.id]
-  responder_user_id bigint [not null, note: '→ identity.users']
+  responder_user_id bigint [not null, note: '→ identity.users | Nhân viên vận hành']
   content text [not null]
   created_at timestamp [not null, default: `now()`]
 
-  Note: 'Phản hồi công khai một lần dưới mỗi đánh giá'
+  Note: 'Farmery phản hồi công khai một lần dưới mỗi đánh giá (FR5.5, chỉ thiết kế)'
 }
 
 Table engagement.supplier_reputation {

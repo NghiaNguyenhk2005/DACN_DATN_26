@@ -1,0 +1,118 @@
+enum TaskType {
+  supplier_profile
+  certification
+  product
+  batch
+  flagged_review
+  product_report
+
+  @@map("task_type")
+  @@schema("operations")
+}
+
+enum TaskStatus {
+  open
+  in_review
+  approved
+  rejected
+
+  @@map("task_status")
+  @@schema("operations")
+}
+
+enum Sanction {
+  reminder
+  warning
+  hide_listing
+  suspend
+  ban
+
+  @@map("sanction")
+  @@schema("operations")
+}
+
+/// Cấu hình nền tảng (FR10.6); mọi lần đổi ghi vào staff_audit_logs
+model PlatformSetting {
+  key         String   @id @db.VarChar
+  value       Json     @db.JsonB
+  description String?  @db.Text
+  updatedBy   BigInt   @map("updated_by")
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@map("platform_settings")
+  @@schema("operations")
+}
+
+/// Hàng đợi duyệt chung của kiểm duyệt viên (FR10.1, FR10.2)
+model ReviewTask {
+  id             BigInt     @id @default(autoincrement())
+  taskType       TaskType   @map("task_type")
+  targetId       BigInt     @map("target_id")
+  reporterUserId BigInt?    @map("reporter_user_id")
+  status         TaskStatus @default(open)
+  assignedTo     BigInt?    @map("assigned_to")
+  dueAt          DateTime?  @map("due_at") @db.Timestamp(6)
+  decisionReason String?    @map("decision_reason") @db.Text
+  decidedAt      DateTime?  @map("decided_at") @db.Timestamp(6)
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+
+  violationRecords ViolationRecord[] @relation("ViolationRecord_reviewTask")
+
+  @@map("review_tasks")
+  @@schema("operations")
+}
+
+/// Hồ sơ vi phạm và chế tài phân cấp (FR10.2)
+model ViolationRecord {
+  id            BigInt   @id @default(autoincrement())
+  subjectType   String   @map("subject_type") @db.VarChar
+  subjectId     BigInt   @map("subject_id")
+  reviewTaskId  BigInt?  @map("review_task_id")
+  violationType String   @map("violation_type") @db.VarChar
+  sanction      Sanction
+  effectiveAt   DateTime @map("effective_at") @db.Timestamp(6)
+  reason        String   @db.Text
+  decidedBy     BigInt   @map("decided_by")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  reviewTask ReviewTask? @relation("ViolationRecord_reviewTask", fields: [reviewTaskId], references: [id])
+
+  @@map("violation_records")
+  @@schema("operations")
+}
+
+/// Cảnh báo do luật ngưỡng sinh ra; giám sát bất thường không dùng học máy
+model ThresholdAlert {
+  id             BigInt   @id @default(autoincrement())
+  ruleKey        String   @map("rule_key") @db.VarChar
+  targetType     String   @map("target_type") @db.VarChar
+  targetId       BigInt   @map("target_id")
+  observedValue  Decimal  @map("observed_value") @db.Decimal(14, 4)
+  thresholdValue Decimal  @map("threshold_value") @db.Decimal(14, 4)
+  status         String   @default("open") @db.VarChar
+  acknowledgedBy BigInt?  @map("acknowledged_by")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("threshold_alerts")
+  @@schema("operations")
+}
+
+/// Nhật ký thao tác nội bộ; chỉ thêm, không sửa (FR10.7, NFR9.1)
+model StaffAuditLog {
+  id                   BigInt   @id @default(autoincrement())
+  staffUserId          BigInt   @map("staff_user_id")
+  role                 String   @db.VarChar
+  action               String   @db.VarChar
+  targetSchema         String   @map("target_schema") @db.VarChar
+  targetTable          String   @map("target_table") @db.VarChar
+  targetId             String   @map("target_id") @db.VarChar
+  onBehalfOfSupplierId BigInt?  @map("on_behalf_of_supplier_id")
+  beforeState          Json?    @map("before_state") @db.JsonB
+  afterState           Json?    @map("after_state") @db.JsonB
+  reason               String?  @db.Text
+  ipAddress            String?  @map("ip_address") @db.VarChar
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("staff_audit_logs")
+  @@schema("operations")
+}

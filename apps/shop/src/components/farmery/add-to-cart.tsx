@@ -41,7 +41,18 @@ export function FeedbackText({ feedback, className }: { feedback: CartFeedback; 
 }
 
 /** Nút "Thêm" ở thẻ sản phẩm (mobile: "Thêm vào giỏ" rộng hết thẻ). */
-export function AddToCartButton({ listingId, disabled, className }: { listingId: string; disabled?: boolean; className?: string }) {
+export function AddToCartButton({
+  listingId,
+  quantity = 1,
+  disabled,
+  className,
+}: {
+  listingId: string;
+  /** Số lượng thêm mỗi lần bấm (1 đơn vị, hoặc phần tồn còn lại nếu ít hơn) */
+  quantity?: number;
+  disabled?: boolean;
+  className?: string;
+}) {
   const { add, pending, feedback } = useAddToCart();
   return (
     <>
@@ -50,7 +61,7 @@ export function AddToCartButton({ listingId, disabled, className }: { listingId:
         variant="outline"
         disabled={disabled || pending}
         aria-busy={pending}
-        onClick={() => add(listingId, 1)}
+        onClick={() => add(listingId, quantity)}
         className={className}
       >
         {feedback?.ok ? (

@@ -50,6 +50,11 @@ export class CatalogController {
     });
   }
 
+  @Get("search/suggest")
+  suggestSearch(@Query("q") q: string): Promise<Schema<"SearchSuggest">> {
+    return this.catalog.suggest(q);
+  }
+
   @Get("products/:productId")
   getProduct(@Param("productId") productId: string): Promise<ProductDetail> {
     return this.catalog.getProduct(productId);

@@ -1,0 +1,23 @@
+# PostgreSQL cục bộ cho STORAGE=prisma: pnpm db:up. Dữ liệu nằm ở volume farmery-pgdata (xóa: docker compose down -v).
+# pg_stat_statements nạp sẵn để Chương 7 đo truy vấn; migration tạo các extension vector, unaccent, pg_trgm.
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: farmery-db
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    environment:
+      POSTGRES_USER: farmery
+      POSTGRES_PASSWORD: farmery
+      POSTGRES_DB: farmery
+    ports:
+      - "${PG_PORT:-5433}:5432"
+    volumes:
+      - farmery-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U farmery -d farmery"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  farmery-pgdata:

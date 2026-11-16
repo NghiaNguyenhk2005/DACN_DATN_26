@@ -1,0 +1,217 @@
+enum AccountStatus {
+  pending
+  active
+  locked
+  closed
+
+  @@map("account_status")
+  @@schema("identity")
+}
+
+enum RoleCode {
+  buyer_retail
+  buyer_wholesale
+  seller
+  staff_moderation
+  staff_operations
+  staff_sourcing
+  staff_warehouse
+  staff_support
+  platform_owner
+
+  @@map("role_code")
+  @@schema("identity")
+}
+
+enum VerificationStatus {
+  pending
+  verified
+  rejected
+
+  @@map("verification_status")
+  @@schema("identity")
+}
+
+enum OtpPurpose {
+  register
+  reset_password
+  sensitive_action
+  contract_confirm
+
+  @@map("otp_purpose")
+  @@schema("identity")
+}
+
+enum DataRequestType {
+  export
+  rectify
+  erase
+
+  @@map("data_request_type")
+  @@schema("identity")
+}
+
+enum RequestStatus {
+  received
+  processing
+  completed
+  rejected
+
+  @@map("request_status")
+  @@schema("identity")
+}
+
+/// Tài khoản dùng chung cho mọi nhóm người dùng; vai trò nằm ở user_roles
+model User {
+  id              BigInt        @id @default(autoincrement())
+  fullName        String        @map("full_name") @db.VarChar
+  email           String?       @unique @db.VarChar
+  phone           String?       @unique @db.VarChar
+  emailVerifiedAt DateTime?     @map("email_verified_at") @db.Timestamp(6)
+  phoneVerifiedAt DateTime?     @map("phone_verified_at") @db.Timestamp(6)
+  passwordHash    String?       @map("password_hash") @db.VarChar
+  oauthProvider   String?       @map("oauth_provider") @db.VarChar
+  oauthSubject    String?       @map("oauth_subject") @db.VarChar
+  totpSecretEnc   String?       @map("totp_secret_enc") @db.VarChar
+  status          AccountStatus @default(pending)
+  lockedUntil     DateTime?     @map("locked_until") @db.Timestamp(6)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+
+  userRoles                    UserRole[]      @relation("UserRole_user")
+  userRolesByGrantedByRel      UserRole[]      @relation("UserRole_grantedByRel")
+  otpChallenges                OtpChallenge[]  @relation("OtpChallenge_user")
+  addresses                    Address[]       @relation("Address_user")
+  businesses                   Business[]      @relation("Business_ownerUser")
+  businessesByVerifiedByRel    Business[]      @relation("Business_verifiedByRel")
+  ekycDocuments                EkycDocument[]  @relation("EkycDocument_user")
+  ekycDocumentsByReviewedByRel EkycDocument[]  @relation("EkycDocument_reviewedByRel")
+  consentRecords               ConsentRecord[] @relation("ConsentRecord_user")
+  dataRequests                 DataRequest[]   @relation("DataRequest_user")
+  dataRequestsByHandledByRel   DataRequest[]   @relation("DataRequest_handledByRel")
+
+  @@map("users")
+  @@schema("identity")
+}
+
+/// Một tài khoản có thể giữ nhiều vai trò; mỗi vai trò là một tập quyền độc lập (NFR2.1)
+model UserRole {
+  userId    BigInt    @map("user_id")
+  role      RoleCode
+  grantedBy BigInt?   @map("granted_by")
+  grantedAt DateTime  @default(now()) @map("granted_at") @db.Timestamp(6)
+  revokedAt DateTime? @map("revoked_at") @db.Timestamp(6)
+
+  user         User  @relation("UserRole_user", fields: [userId], references: [id])
+  grantedByRel User? @relation("UserRole_grantedByRel", fields: [grantedBy], references: [id])
+
+  @@id([userId, role])
+  @@map("user_roles")
+  @@schema("identity")
+}
+
+/// Mã OTP dùng một lần (FR1.2), cả cho xác nhận giao kết hợp đồng sỉ (FR6.3)
+model OtpChallenge {
+  id         BigInt     @id @default(autoincrement())
+  userId     BigInt     @map("user_id")
+  purpose    OtpPurpose
+  channel    String     @db.VarChar
+  codeHash   String     @map("code_hash") @db.VarChar
+  attempts   Int        @default(0)
+  expiresAt  DateTime   @map("expires_at") @db.Timestamp(6)
+  consumedAt DateTime?  @map("consumed_at") @db.Timestamp(6)
+
+  user User @relation("OtpChallenge_user", fields: [userId], references: [id])
+
+  @@map("otp_challenges")
+  @@schema("identity")
+}
+
+/// Sổ địa chỉ giao nhận (FR1.5)
+model Address {
+  id            BigInt  @id @default(autoincrement())
+  userId        BigInt  @map("user_id")
+  label         String? @db.VarChar
+  recipientName String  @map("recipient_name") @db.VarChar
+  phone         String  @db.VarChar
+  addressLine   String  @map("address_line") @db.VarChar
+  ward          String  @db.VarChar
+  province      String  @db.VarChar
+  isDefault     Boolean @default(false) @map("is_default")
+
+  user User @relation("Address_user", fields: [userId], references: [id])
+
+  @@map("addresses")
+  @@schema("identity")
+}
+
+/// Hồ sơ doanh nghiệp mua sỉ — khách sỉ (FR1.3)
+model Business {
+  id                 BigInt             @id @default(autoincrement())
+  ownerUserId        BigInt             @unique @map("owner_user_id")
+  companyName        String             @map("company_name") @db.VarChar
+  taxCode            String             @unique @map("tax_code") @db.VarChar
+  licenseFileId      BigInt             @map("license_file_id")
+  verificationStatus VerificationStatus @default(pending) @map("verification_status")
+  verifiedBy         BigInt?            @map("verified_by")
+  verifiedAt         DateTime?          @map("verified_at") @db.Timestamp(6)
+
+  ownerUser     User  @relation("Business_ownerUser", fields: [ownerUserId], references: [id])
+  verifiedByRel User? @relation("Business_verifiedByRel", fields: [verifiedBy], references: [id])
+
+  @@map("businesses")
+  @@schema("identity")
+}
+
+/// Giấy tờ eKYC của nhà cung cấp (FR1.4); không lưu số giấy tờ dạng rõ
+model EkycDocument {
+  id              BigInt             @id @default(autoincrement())
+  userId          BigInt             @map("user_id")
+  documentType    String             @map("document_type") @db.VarChar
+  frontFileId     BigInt             @map("front_file_id")
+  backFileId      BigInt?            @map("back_file_id")
+  selfieFileId    BigInt             @map("selfie_file_id")
+  status          VerificationStatus @default(pending)
+  reviewedBy      BigInt?            @map("reviewed_by")
+  reviewedAt      DateTime?          @map("reviewed_at") @db.Timestamp(6)
+  rejectionReason String?            @map("rejection_reason") @db.Text
+
+  user          User  @relation("EkycDocument_user", fields: [userId], references: [id])
+  reviewedByRel User? @relation("EkycDocument_reviewedByRel", fields: [reviewedBy], references: [id])
+
+  @@map("ekyc_documents")
+  @@schema("identity")
+}
+
+/// Mỗi lần đồng ý điều khoản và chính sách bảo mật; chỉ thêm, không sửa (FR1.6, NFR8.2)
+model ConsentRecord {
+  id            BigInt   @id @default(autoincrement())
+  userId        BigInt   @map("user_id")
+  policyType    String   @map("policy_type") @db.VarChar
+  policyVersion String   @map("policy_version") @db.VarChar
+  acceptedAt    DateTime @default(now()) @map("accepted_at") @db.Timestamp(6)
+  ipAddress     String?  @map("ip_address") @db.VarChar
+
+  user User @relation("ConsentRecord_user", fields: [userId], references: [id])
+
+  @@map("consent_records")
+  @@schema("identity")
+}
+
+/// Yêu cầu xem, tải về, sửa, xóa dữ liệu cá nhân (FR1.6)
+model DataRequest {
+  id           BigInt          @id @default(autoincrement())
+  userId       BigInt          @map("user_id")
+  requestType  DataRequestType @map("request_type")
+  status       RequestStatus   @default(received)
+  requestedAt  DateTime        @default(now()) @map("requested_at") @db.Timestamp(6)
+  dueAt        DateTime        @map("due_at") @db.Timestamp(6)
+  retainedNote String?         @map("retained_note") @db.Text
+  handledBy    BigInt?         @map("handled_by")
+  completedAt  DateTime?       @map("completed_at") @db.Timestamp(6)
+
+  user         User  @relation("DataRequest_user", fields: [userId], references: [id])
+  handledByRel User? @relation("DataRequest_handledByRel", fields: [handledBy], references: [id])
+
+  @@map("data_requests")
+  @@schema("identity")
+}

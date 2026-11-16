@@ -10,7 +10,7 @@
 
 \subsection{Môi trường và công cụ phát triển}
 \label{sec:moitruong}
-Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm thử đơn vị kèm đo độ phủ, phân tích tĩnh bằng SonarQube Cloud (bản miễn phí: kho riêng tư tới 50 nghìn dòng mã, kho công khai không giới hạn) và cổng chất lượng; mã mới không đạt ngưỡng bị chặn trước khi hợp nhất. Kiểm thử tải bằng k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian. Nếu quy mô mã nguồn vượt giới hạn của bản miễn phí, chuyển sang SonarQube Community Build tự chạy mà không phải viết lại cấu hình phân tích.
+Mã nguồn được quản lý trên GitHub. Mỗi lần đẩy mã, GitHub Actions tự chạy kiểm tra kiểu, phân tích tĩnh bằng ESLint và kiểm thử kèm đo độ phủ bằng Jest; cổng độ phủ chặn mã không đạt ngưỡng tối thiểu của phần nghiệp vụ lõi trước khi hợp nhất. Kiểm thử tải bằng Grafana k6 và đo giao diện bằng Lighthouse chạy riêng theo đợt vì tốn thời gian.
 
 Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\ref{sec:giaiphapcongnghe}:
 \begin{itemize}
@@ -19,7 +19,7 @@ Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\
     \item \textbf{Máy chủ nghiệp vụ:} NestJS trên Node.js và TypeScript; truy cập dữ liệu qua Prisma, riêng khóa dòng tồn viết bằng SQL thô.
     \item \textbf{Dữ liệu:} PostgreSQL kèm các tiện ích pgvector, \texttt{unaccent}, \texttt{pg\_trgm}; Redis cho hàng đợi sự kiện và cache; MinIO cho tệp.
     \item \textbf{Dịch vụ AI:} Python với FastAPI; mô hình nhúng BGE-M3; thư viện dự báo chuỗi thời gian cho SARIMA, Prophet.
-    \item \textbf{Bên thứ ba ở môi trường thử nghiệm:} VNPay, Giao Hàng Nhanh; hóa đơn điện tử giả lập; email qua SMTP và dịch vụ đẩy của trình duyệt (Web Push, chuẩn VAPID). Hiện mới có giao diện kèm bản giả cho cổng thanh toán và kênh gửi OTP; các dịch vụ còn lại để sau prototype.
+    \item \textbf{Bên thứ ba:} cổng thanh toán và hóa đơn điện tử ở dạng bản giả lập đặt sau giao diện tích hợp; email qua SMTP. Kết nối VNPay, Giao Hàng Nhanh ở môi trường thử nghiệm và dịch vụ đẩy của trình duyệt (Web Push) \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 % TODO: ghi phiên bản cụ thể của từng thành phần khi dựng xong môi trường; ngưỡng cổng chất lượng đã đặt.
@@ -47,7 +47,7 @@ Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\
 % TODO
 
 \subsubsection*{Module quản lý tồn kho \& vận chuyển/khiếu nại}
-% TODO: hiện thực quản lý tồn kho theo lô (FEFO) và tích hợp API với đơn vị vận chuyển 3PL -- mục~\ref{subsec:khobai}.
+% TODO: hiện thực quản lý tồn kho theo lô (FEFO); chuyến trung chuyển và chuyển bước chặng cuối do nhân viên cập nhật -- mục~\ref{subsec:khobai}.
 
 \subsubsection*{Module quản trị}
 % TODO
@@ -58,7 +58,7 @@ Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\
 
 \subsection{Giải thuật và đoạn code quan trọng}
 \label{sec:giaithuat}
-% TODO: trích các đoạn code/giải thuật tiêu biểu (vd sinh mã QR, tính giá bậc theo MOQ, middleware RBAC, logic escrow) kèm giải thích ngắn gọn.
+% TODO: trích các đoạn code/giải thuật tiêu biểu (vd sinh mã QR, tính giá bậc theo MOQ, middleware RBAC) kèm giải thích ngắn gọn.
 
 
 \section{Kiểm thử}

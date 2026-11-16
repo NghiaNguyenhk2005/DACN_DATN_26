@@ -12,7 +12,7 @@ const QUERY_KEY = ["settings"];
 const vndFormatter = (v?: number | string) => (v === undefined || v === "" ? "" : Number(v).toLocaleString("vi-VN"));
 const vndParser = (v?: string) => Number((v ?? "").replace(/\D/g, ""));
 
-// PUT chỉ gửi khoá đã đổi theo hợp đồng.
+// PUT chỉ gửi khóa đã đổi theo hợp đồng.
 function changedKeys(before: PlatformSettings, after: PlatformSettings): PlatformSettings {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(after)) {

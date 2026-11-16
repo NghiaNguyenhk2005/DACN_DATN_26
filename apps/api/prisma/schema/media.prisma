@@ -1,0 +1,36 @@
+enum AccessLevel {
+  public
+  private
+
+  @@map("access_level")
+  @@schema("media")
+}
+
+enum FileStatus {
+  pending_upload
+  ready
+  rejected
+  deleted
+
+  @@map("file_status")
+  @@schema("media")
+}
+
+/// Mọi tệp trong kho tệp; bảng khác tham chiếu bằng định danh, không lưu đường dẫn
+model MediaFile {
+  id          BigInt      @id @default(autoincrement())
+  ownerUserId BigInt      @map("owner_user_id")
+  bucket      String      @db.VarChar
+  objectKey   String      @unique @map("object_key") @db.VarChar
+  mimeType    String      @map("mime_type") @db.VarChar
+  sizeBytes   BigInt      @map("size_bytes")
+  sha256      String      @db.VarChar
+  accessLevel AccessLevel @map("access_level")
+  status      FileStatus  @default(pending_upload)
+  variants    Json?       @db.JsonB
+  retainUntil DateTime?   @map("retain_until") @db.Timestamp(6)
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("media_files")
+  @@schema("media")
+}

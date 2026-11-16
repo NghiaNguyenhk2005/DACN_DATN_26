@@ -10,7 +10,7 @@ blockquote{border-left:4px solid #bbb;margin:1em 0;padding:.2em 1em;color:#444}
 Số mục kiểu "5.3.1" suy từ thứ tự mục trong LaTeX (các mục 5.3.1, 5.3.3, 5.3.4, 6.1.3, 6.2 có trong <code>DECISIONS.md</code>/<code>kehoach.tex</code>); có thể lệch 1 so với bản PDF, nên mở PDF đối chiếu trước khi trích số mục.
 Ký hiệu nguồn: <code>Ch4 §4.1.2</code> = chương 4, mục 4.1.2; <code>PL-L</code> = Phụ lục L; <code>tab:</code> / <code>fig:</code> = nhãn LaTeX.
 Ba nhãn của báo cáo (định nghĩa ở Ch4 §4.3.1, thống nhất toàn báo cáo): <strong>Đã hiện thực</strong> (mục không ghi chú) / <strong>Chỉ thiết kế</strong> (đặc tả đầy đủ nhưng cố ý không làm trong đồ án) / <strong>Để sau prototype</strong> (thuộc MVP hoặc đã cam kết, chưa làm ở prototype, sẽ làm khi có điều kiện nêu ở <code>tab:chi-thiet-ke</code>).
-Nhãn dùng trong file này (hiện trạng mã 28/10): <strong>[Hiện thực]</strong> = chạy trên API thật; <strong>[Giao diện]</strong> = nhãn riêng của file viva: giao diện dựng theo hợp đồng nhưng API còn 501; <strong>[Để sau prototype]</strong> = đúng nhãn báo cáo; <strong>[Chỉ thiết kế]</strong> = đúng nhãn báo cáo (cố ý không làm); <strong>[Chưa có mã]</strong> = nhãn riêng của file viva: thuộc bản nộp (báo cáo không gắn nhãn) nhưng chưa có mã ở prototype; <strong>[Ngoài phạm vi]</strong> = hướng phát triển (Ch8). Chỉ hai nhãn "Chỉ thiết kế" và "Để sau prototype" được phép nói với hội đồng như nhãn của báo cáo.
+Nhãn dùng trong file này (hiện trạng mã 28/10; luồng khách lẻ cập nhật 06/11 sau PR #46): <strong>[Hiện thực]</strong> = chạy trên API thật; <strong>[Giao diện]</strong> = nhãn riêng của file viva: giao diện dựng theo hợp đồng nhưng API còn 501; <strong>[Để sau prototype]</strong> = đúng nhãn báo cáo; <strong>[Chỉ thiết kế]</strong> = đúng nhãn báo cáo (cố ý không làm); <strong>[Chưa có mã]</strong> = nhãn riêng của file viva: thuộc bản nộp (báo cáo không gắn nhãn) nhưng chưa có mã ở prototype; <strong>[Ngoài phạm vi]</strong> = hướng phát triển (Ch8). Chỉ hai nhãn "Chỉ thiết kế" và "Để sau prototype" được phép nói với hội đồng như nhãn của báo cáo.
 Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này chỉ giữ câu hỏi hội đồng ngắn mỗi chương và 10 câu khó.</p>
 <h2 id="muc-luc">Mục lục</h2>
 <table>
@@ -1304,7 +1304,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </code></pre>
 <h3 id="3e-cac-buoc-chi-tiet-tung-luong-kem-trang-thai">3.E Các bước chi tiết từng luồng (kèm trạng thái)</h3>
 <p>Nhãn như ở đầu file: <strong>[Hiện thực]</strong>, <strong>[Giao diện]</strong> (có màn hình, API 501), <strong>[Để sau prototype]</strong>, <strong>[Chỉ thiết kế]</strong> (cố ý không làm), <strong>[Chưa có mã]</strong> (thuộc bản nộp, chưa có mã), <strong>[Ngoài phạm vi]</strong>.</p>
-<p><strong>E1. Đơn lẻ 1P, 19 bước (<code>fig:luong-don-le</code>) — [Giao diện], API <code>retail</code>/<code>payment</code>/<code>inventory</code> rỗng</strong></p>
+<p><strong>E1. Đơn lẻ 1P, 19 bước (<code>fig:luong-don-le</code>) — [Hiện thực] (từ PR #46, cập nhật 06/11)</strong></p>
 <table>
 <thead>
 <tr>
@@ -1446,14 +1446,14 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <li>Thanh toán qua cổng khi nhận; Farmery thu hoa hồng + hóa đơn dịch vụ.
 - Chỉ thiết kế: ký số (FR6.6 đã rút), giao nhiều đợt (FR6.5), ký quỹ (FR7.3), khấu trừ thuế.</li>
 </ol>
-<p><strong>E6. Thanh toán và hoàn tiền — [Giao diện] (cổng giả); thật là [Chỉ thiết kế]</strong></p>
+<p><strong>E6. Thanh toán và hoàn tiền — [Hiện thực] với cổng giả lập (từ PR #46); cổng thật là [Chỉ thiết kế]</strong></p>
 <ul>
 <li>Thanh toán: giữ chỗ 15 phút → cổng → webhook (chữ ký, xử lý một lần) → <code>PaymentSucceeded</code> → trừ tồn. Quá 15 phút hoặc thất bại → nhả giữ chỗ, tự hủy.</li>
 <li>COD: chỉ đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng; báo giá trả <code>codReason</code> khi không đủ điều kiện.</li>
 <li>Hoàn tiền: qua cổng, cam kết hoàn trong 7 ngày làm việc; hoàn không cần trả hàng dưới ngưỡng → bút toán hủy; sự kiện <code>Refunded</code>.</li>
 <li>Farmery không giữ tiền; không lưu dữ liệu thẻ (NFR3.4); hóa đơn điện tử thật [Chỉ thiết kế], bản giả lập cùng giao diện.</li>
 </ul>
-<p><strong>E7. Giao ba chặng — [Giao diện] chỉ phần nhân viên chuyển trạng thái</strong></p>
+<p><strong>E7. Giao ba chặng — [Hiện thực] chỉ phần nhân viên chuyển trạng thái (từ PR #46)</strong></p>
 <ol>
 <li>Chặng 1: nhà cung cấp tự đưa hàng về kho sơ chế Lâm Đồng (xe gom chặng đầu là [Chỉ thiết kế]).</li>
 <li>Chặng 2: xe lạnh Lâm Đồng–TP.HCM theo chuyến cố định; manifest lập sau giờ chốt (<code>transfer_trips</code>, <code>trip_orders</code>).</li>
@@ -1595,8 +1595,8 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 </ol>
 <p><strong>B. Phần chưa hiện thực nhưng báo cáo viết như trục chính</strong></p>
 <ol start="7">
-<li><strong>Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.</strong> <code>retail</code>, <code>payment</code>, <code>inventory</code>, <code>fulfillment</code>, <code>procurement</code>, <code>wholesale</code>, <code>engagement</code>, <code>notification</code>, <code>media</code> chỉ có file module rỗng; hợp đồng 40 thao tác, <strong>20 có handler</strong>, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng <strong>server giả ngoài repo, không commit</strong> (<code>DECISIONS.md</code> 17/10, 21/10). <code>NOTES.md</code> mục "BE2" (27/10) vẫn <code>Status: open</code>.</li>
-<li><strong>Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:</strong> <code>apps/api/README.md</code> nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun <code>inventory</code>/<code>retail</code> rỗng.</li>
+<li><strong>Giao dịch bán lẻ đầu–cuối chưa chạy trên API thật.</strong> <code>retail</code>, <code>payment</code>, <code>inventory</code>, <code>fulfillment</code>, <code>procurement</code>, <code>wholesale</code>, <code>engagement</code>, <code>notification</code>, <code>media</code> chỉ có file module rỗng; hợp đồng 40 thao tác, <strong>20 có handler</strong>, 20 trả 501. Giao diện giỏ hàng/thanh toán/đơn hàng/vận hành đơn/tồn kho/cấu hình dựng theo hợp đồng và được kiểm bằng <strong>server giả ngoài repo, không commit</strong> (<code>DECISIONS.md</code> 17/10, 21/10). <code>NOTES.md</code> mục "BE2" (27/10) vẫn <code>Status: open</code>. <strong>Cập nhật 06/11: đã chạy trên API thật từ PR #46. <code>retail</code>, <code>payment</code>, <code>inventory</code> có handler; các thao tác của luồng khách lẻ (địa chỉ, giỏ, báo giá, đặt đơn, trả tiền giả lập, hủy, vận hành chuyển bước) không còn 501; e2e <code>kich-ban/mua-hang.spec.ts</code> (PR #53) đi trọn trên API thật.</strong></li>
+<li><strong>Chống bán vượt, FEFO, giữ chỗ 15 phút, máy trạng thái đơn:</strong> <code>apps/api/README.md</code> nói các luật này "có test đi kèm", nhưng chưa có mã và test nào của chúng; mô-đun <code>inventory</code>/<code>retail</code> rỗng. <strong>Cập nhật 06/11: đã có mã và test từ PR #46 (<code>apps/api/test/retail-checkout.e2e-spec.ts</code>, <code>order-state-machine.e2e-spec.ts</code>): giữ chỗ đúng 15 phút rồi tự hủy, hai khách giành phần hàng cuối thì một người nhận 409 <code>STOCK_CONFLICT</code>, lấy lô hết hạn trước, máy trạng thái theo vai trò.</strong></li>
 <li><strong>Nhập liệu thay nhà cung cấp</strong> (thuật ngữ mới của báo cáo): service đã gán <code>onBehalf</code> cho <code>staff_*</code>, nhưng <code>x-roles</code> của <code>appendFarmingLog</code> chỉ có <code>seller</code> → nhân viên hỗ trợ vùng sẽ bị 403; chưa có test. (Tôi suy từ đọc mã, chưa chạy.)</li>
 <li><strong>AI:</strong> không có dịch vụ Python/FastAPI nào trong <code>apps/</code>; tìm kiếm là bỏ dấu + Levenshtein trong bộ nhớ, "tương tự" là cùng danh mục lấy 4 sản phẩm đầu, <strong>không có</strong> ngữ nghĩa/vector/dự báo giá/mã <code>product_embeddings</code>/<code>price_forecasts</code> thật.</li>
 <li><strong>Không có Web Push (Để sau prototype), SMTP gửi thư, SMS (chỉ thiết kế), hóa đơn giả lập, GHN, hoàn tiền</strong> nào chạy; theo dõi đơn dùng hỏi lại 5 giây. Trong 5 hệ thống ngoài thuộc phạm vi MVP, mã chỉ có 2 đứng sau interface kèm bản giả (cổng thanh toán, gửi OTP qua email).</li>
@@ -2126,7 +2126,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <td>—</td>
 <td>identity</td>
 <td>users, user_roles, otp_challenges</td>
-<td>[Hiện thực] bản tạm (đăng nhập bằng email; bằng số điện thoại và Google/Facebook [Chỉ thiết kế])</td>
+<td>[Hiện thực] (đăng nhập bằng email; bằng số điện thoại và Google/Facebook [Chỉ thiết kế])</td>
 </tr>
 <tr>
 <td>FR1.3–1.4</td>
@@ -2142,7 +2142,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <td>—</td>
 <td>identity</td>
 <td>addresses, consent_records, data_requests</td>
-<td>[Giao diện] địa chỉ (501)</td>
+<td>[Hiện thực] sổ địa chỉ; đồng ý và quyền dữ liệu [Chưa có mã]</td>
 </tr>
 <tr>
 <td>FR2.1–2.4</td>
@@ -2206,7 +2206,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <td>UC-C4</td>
 <td>retail</td>
 <td>carts, cart_items, orders, order_status_events</td>
-<td>[Giao diện]</td>
+<td>[Hiện thực]</td>
 </tr>
 <tr>
 <td>FR5.3, 5.6, 5.7</td>
@@ -2246,7 +2246,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <td>UC-C4</td>
 <td>payment</td>
 <td>payments, refunds, invoices</td>
-<td>[Giao diện] (cổng giả)</td>
+<td>[Hiện thực] thanh toán qua cổng giả lập; hóa đơn [Chưa có mã]</td>
 </tr>
 <tr>
 <td>FR7.3–7.4</td>
@@ -2262,7 +2262,7 @@ Phần hỏi đáp dài: xem <code>VIVA-HOI-DAP.md</code> (100 câu). File này 
 <td>—</td>
 <td>fulfillment</td>
 <td>transfer_trips, trip_orders, shipments, shipment_events</td>
-<td>[Giao diện] chuyển trạng thái; xe gom chặng đầu, kiểm khi xuất kho [Chỉ thiết kế]; còn lại [Chưa có mã]</td>
+<td>[Hiện thực] chuyển trạng thái, phí giao; xe gom chặng đầu, kiểm khi xuất kho [Chỉ thiết kế]; còn lại [Chưa có mã]</td>
 </tr>
 <tr>
 <td>FR8.3</td>

@@ -13,7 +13,7 @@ Các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhnghiepvu} được m�
 \begin{itemize}
     \item \textbf{Điều kiện rẽ nhánh} ghi trong ngoặc vuông trên nhánh ra của nút quyết định; nhánh ngoại lệ chính dừng ngay ở nút kết thúc, chi tiết ngoại lệ ghi dưới hình hoặc ở bảng đặc tả use case.
     \item \textbf{Thanh đậm} là rẽ song song (fork) và hợp song song (join); \textbf{hình thoi nhỏ} là điểm hợp nhánh.
-    \item \textbf{Đồng hồ cát} là sự kiện thời gian (giờ chốt đơn, hết thời hạn khiếu nại); \textbf{hình cờ lõm} là tín hiệu nhận từ hệ thống bên ngoài (webhook).
+    \item \textbf{Đồng hồ cát} là sự kiện thời gian (giờ chốt đơn, hết thời hạn khiếu nại); \textbf{hình cờ lõm} là tín hiệu nhận từ hệ thống bên ngoài (như kết quả thanh toán).
 \end{itemize}
 
 Mục này giữ hai sơ đồ mở đầu trục bán lẻ: thu mua (nguồn hàng của luồng 1P) và đặt hàng--thanh toán. Tám sơ đồ còn lại đặt tại Phụ lục~R:
@@ -87,12 +87,12 @@ Nhà cung cấp (nông dân, hợp tác xã) & \texttt{seller} & Bán sỉ cho k
 Nhân sự nội bộ \textit{(trừu tượng)} & --- & Đăng nhập hai lớp, nhận việc và thông báo; sáu vai trò dưới đây đều làm được \\
 Kiểm duyệt viên & \texttt{staff\_moderation} & Duyệt hồ sơ, sản phẩm, lô, chứng nhận, đánh giá; xử lý vi phạm nội dung \\
 Nhân viên vận hành & \texttt{staff\_operations} & Xử lý khiếu nại, đổi trả và hoàn tiền; giám sát đơn và giao hàng; thu hồi lô \\
-Nhân viên thu mua & \texttt{staff\_sourcing} & Lập đơn thu mua theo lô, định giá bán lẻ có tham khảo dự báo giá \\
-Nhân viên kho & \texttt{staff\_warehouse} & Nghiệm thu, đóng gói và in tem, quản lý dòng tồn, lập chuyến trung chuyển và vận đơn \\
+Nhân viên thu mua & \texttt{staff\_sourcing} & Lập đơn thu mua theo lô, định giá bán lẻ; xem dự báo giá \emph{(chỉ thiết kế)} \\
+Nhân viên kho & \texttt{staff\_warehouse} & Nghiệm thu, đóng gói và in tem, quản lý dòng tồn, lập và cập nhật chuyến trung chuyển; tạo vận đơn \emph{(chỉ thiết kế)} \\
 Nhân viên hỗ trợ vùng & \texttt{staff\_support} & Hướng dẫn và nhập liệu thay nhà cung cấp được phân công \\
 Quản trị viên hệ thống & \texttt{platform\_owner} & Quản lý tài khoản nội bộ, cấu hình nền tảng, xem nhật ký thao tác \\
-Cổng thanh toán \textit{(hệ thống)} & --- & Bên ngoài; thanh toán và hoàn tiền (FR7.1) \\
-Đơn vị vận chuyển \textit{(hệ thống)} & --- & Bên ngoài; vận đơn chặng cuối, trạng thái giao (FR8.1) \\
+Cổng thanh toán \textit{(hệ thống)} & --- & Bên ngoài; thanh toán và hoàn tiền (FR7.1); bản hiện thực là giả lập, kết nối VNPay \emph{(chỉ thiết kế)} \\
+Đơn vị vận chuyển \textit{(hệ thống)} & --- & Bên ngoài \emph{(chỉ thiết kế)}; vận đơn chặng cuối, trạng thái giao (FR8.1) \\
 Dịch vụ hóa đơn điện tử \textit{(hệ thống)} & --- & Bên ngoài; bản hiện thực là giả lập (FR7.2) \\
 \end{longtable}
 \endgroup
@@ -106,9 +106,9 @@ Dịch vụ hóa đơn điện tử \textit{(hệ thống)} & --- & Bên ngoài;
 Hình~\ref{fig:usecase-overview} trình bày sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối mô-đun tại Bảng~\ref{tab:module-io}. Cách đọc sơ đồ:
 \begin{itemize}
     \item \textbf{Cột trái} trong mỗi gói là use case của người dùng bên ngoài, \textbf{cột phải} là use case của nhân sự nội bộ; gói Vận hành chỉ có cột phải.
-    \item \textbf{Use case của trục bán lẻ} (tìm kiếm, đặt hàng và thanh toán, theo dõi đơn, đổi trả, đánh giá, mua lại) viền đậm; \textbf{use case chỉ thiết kế hoặc để sau prototype} vẽ xám nét đứt.
+    \item \textbf{Use case của trục bán lẻ} (tìm kiếm, đặt hàng và thanh toán, theo dõi đơn, đổi trả, đánh giá, mua lại) viền đậm; \textbf{use case chỉ thiết kế} vẽ xám nét đứt.
     \item \textbf{Mỗi đường nối là một quan hệ riêng} giữa một tác nhân và một use case; sáu vai trò nội bộ đặt trong khung ``Nhân sự nội bộ'', đường nối từ biên khung áp cho cả sáu vai trò.
-    \item \textbf{Ba tác nhân hệ thống} (cổng thanh toán, dịch vụ hóa đơn điện tử, đơn vị vận chuyển) đặt ở phía dưới bên trái; mũi tên đi từ use case tới hệ thống mà use case đó gọi (hóa đơn, thanh toán, hoàn tiền, vận đơn), nhãn ghi nội dung gọi; mã UC chỉ ghi cho các use case có bảng đặc tả.
+    \item \textbf{Ba tác nhân hệ thống} (cổng thanh toán, dịch vụ hóa đơn điện tử, đơn vị vận chuyển \emph{(chỉ thiết kế)}) đặt ở phía dưới bên trái; mũi tên đi từ use case tới hệ thống mà use case đó gọi (hóa đơn, thanh toán, hoàn tiền, vận đơn), nhãn ghi nội dung gọi; mã UC chỉ ghi cho các use case có bảng đặc tả.
 \end{itemize}
 
 \begin{figure}[p]
@@ -186,7 +186,7 @@ Bảy use case được đặc tả, chọn sao cho đủ các loại tác nhân
 1. Khách chọn địa chỉ, khung giờ giao và cách thanh toán; hệ thống hiển thị tiền hàng, thuế, cước giao trước khi xác nhận (FR5.2, FR8.2).\newline
 2. Khách xác nhận đặt hàng; hệ thống khóa dòng tồn của Farmery và giữ chỗ trong 15 phút, đơn ở trạng thái ``Đã đặt''.\newline
 3. Hệ thống tạo giao dịch và chuyển khách sang trang của cổng thanh toán.\newline
-4. Cổng thanh toán xử lý, gửi kết quả qua webhook.\newline
+4. Cổng thanh toán xử lý, gửi kết quả qua webhook. Bản hiện thực dùng bản giả lập cổng thanh toán cùng giao diện; kết nối VNPay và nhận kết quả qua IPN/webhook \emph{(chỉ thiết kế)}.\newline
 5. Hệ thống chuyển đơn sang ``Đã thanh toán'', đổi phần giữ chỗ thành trừ tồn và đưa đơn vào hàng đóng gói; khách nhận thông báo. \\
 \textbf{Luồng thay thế/ngoại lệ} &
 1a. Chọn COD: chỉ được khi đơn dưới ngưỡng và tài khoản chưa từng từ chối nhận hàng; bỏ qua bước 3--4, đơn được xác nhận ngay.\newline
@@ -215,8 +215,8 @@ Bảy use case được đặc tả, chọn sao cho đủ các loại tác nhân
 \textbf{Luồng chính} &
 1. Khách chọn đơn, chọn sản phẩm và lý do, đính kèm ảnh hoặc video minh chứng.\newline
 2. Hệ thống kiểm tra thời hạn khiếu nại, tạo yêu cầu, đưa vào hàng đợi có hạn xử lý; khách nhận xác nhận đã tiếp nhận trong 24 giờ.\newline
-3. Nhân viên vận hành xem minh chứng, trao đổi với khách ngay trên yêu cầu khi cần thêm thông tin (FR9.1).\newline
-4. Nhân viên vận hành quyết định trong 3 ngày làm việc: hoàn tiền không cần trả hàng, đổi hàng, hoặc từ chối kèm lý do.\newline
+3. Nhân viên vận hành xem minh chứng; khi cần thêm thông tin, ghi yêu cầu bổ sung ngay trên yêu cầu đổi trả, khách bổ sung trên chính yêu cầu đó.\newline
+4. Nhân viên vận hành quyết định trong 3 ngày làm việc: hoàn tiền không cần trả hàng, đổi hàng, hoặc từ chối kèm lý do; kết quả xử lý được ghi trên yêu cầu. Mỗi lần yêu cầu đổi trạng thái, hệ thống gửi email cho khách.\newline
 5. Nếu hoàn tiền: hệ thống ra lệnh hoàn qua cổng thanh toán và ghi bút toán hủy vào sổ nhập xuất; tiền về khách trong 7 ngày làm việc. \\
 \textbf{Luồng thay thế/ngoại lệ} &
 2a. Quá thời hạn của nhóm hàng, hoặc hàng tươi bị trả vì đổi ý: hệ thống không tạo yêu cầu và nêu chính sách áp dụng.\newline
@@ -246,7 +246,7 @@ Nguyên tắc xuyên suốt khi cân nhắc các phương án là \textbf{giảm
 
 Hệ thống có hai ứng dụng giao diện với yêu cầu khác nhau (mục~\ref{sec:luongvanhanh}), nên mỗi ứng dụng chọn công nghệ riêng, nhưng nằm chung một kho mã.
 
-\noindent\textbf{Ứng dụng mua hàng --- phương án chọn: Next.js (nền React).} Các ứng viên được cân nhắc gồm React kết hợp Next.js, Vue kết hợp Nuxt, và Angular. Yếu tố quyết định là trang truy xuất nguồn gốc và trang sản phẩm: đây là các trang mở công khai, không yêu cầu đăng nhập, được truy cập bằng cách quét mã QR in trên bao bì, và cần được công cụ tìm kiếm lập chỉ mục. Loại trang này đòi hỏi server-side rendering (SSR) --- điều mà Next.js hỗ trợ sẵn; ứng dụng được đóng gói thành ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3).
+\noindent\textbf{Ứng dụng mua hàng --- phương án chọn: Next.js (nền React).} Các ứng viên được cân nhắc gồm React kết hợp Next.js, Vue kết hợp Nuxt, và Angular. Yếu tố quyết định là trang truy xuất nguồn gốc và trang sản phẩm: đây là các trang mở công khai, không yêu cầu đăng nhập, được truy cập bằng cách quét mã QR in trên bao bì, và cần được công cụ tìm kiếm lập chỉ mục. Loại trang này đòi hỏi server-side rendering (SSR) --- điều mà Next.js hỗ trợ sẵn; ứng dụng được đóng gói thành ứng dụng web cài đặt được (PWA) với service worker cho hàng đợi thao tác ngoại tuyến (NFR7.3).
 
 \noindent\textbf{Ứng dụng nội bộ --- phương án chọn: React kết hợp Vite và Refine.} Các ứng viên gồm dùng chung Next.js với ứng dụng mua hàng, React-Admin, và Refine. Ứng dụng nội bộ không cần SSR hay lập chỉ mục mà gồm chủ yếu các màn hình danh sách, biểu mẫu, hàng đợi duyệt theo vai trò. Refine là khung dựng ứng dụng quản trị trên React, có sẵn khung danh sách, biểu mẫu và lớp kiểm soát truy cập theo vai trò, không ràng buộc thư viện giao diện; Vite cho thời gian khởi động và đóng gói nhanh. Tách hẳn khỏi Next.js giữ cho mã của các màn hình có quyền cao không nằm trong gói tải xuống của ứng dụng mua hàng.
 
@@ -273,10 +273,10 @@ Hệ thống có hai ứng dụng giao diện với yêu cầu khác nhau (mục
 
 \noindent\textbf{Dịch vụ bên thứ ba.} Mỗi dịch vụ được chọn theo vai trò của nó trong trục bán lẻ; so sánh chi tiết ở Phụ lục I.
 \begin{itemize}
-    \item \textbf{Cổng thanh toán --- VNPay ở môi trường thử nghiệm}, so với MoMo và PayOS (chuyển khoản qua VietQR). VNPay gom được nhiều phương thức (thẻ nội địa, mã QR, ví) sau một lần tích hợp và có môi trường thử nghiệm kèm tài liệu tiếng Việt; PayOS giữ làm phương án bổ sung cho chuyển khoản VietQR.
-    \item \textbf{Vận chuyển chặng cuối --- Giao Hàng Nhanh (GHN) ở môi trường thử nghiệm}, so với Giao Hàng Tiết Kiệm và Ahamove. Chặng cuối là giao trong nội thành TP.HCM từ điểm bàn giao của chuyến trung chuyển, nên tiêu chí chính là API tạo vận đơn, webhook trạng thái và môi trường thử nghiệm công khai để kiểm thử trọn dòng thời gian đơn hàng. Chặng giữa (xe lạnh theo chuyến) không qua API của bên thứ ba mà do nhân viên kho cập nhật.
+    \item \textbf{Cổng thanh toán --- VNPay ở môi trường thử nghiệm}, so với MoMo và PayOS (chuyển khoản qua VietQR). VNPay gom được nhiều phương thức (thẻ nội địa, mã QR, ví) sau một lần tích hợp và có môi trường thử nghiệm kèm tài liệu tiếng Việt; PayOS giữ làm phương án bổ sung cho chuyển khoản VietQR. Kết nối môi trường thử nghiệm và IPN \emph{(chỉ thiết kế)}; bản hiện thực dùng bản giả lập đặt sau cùng giao diện tích hợp.
+    \item \textbf{Vận chuyển chặng cuối --- Giao Hàng Nhanh (GHN) ở môi trường thử nghiệm}, so với Giao Hàng Tiết Kiệm và Ahamove. Chặng cuối là giao trong nội thành TP.HCM từ điểm bàn giao của chuyến trung chuyển, nên tiêu chí chính là API tạo vận đơn, webhook trạng thái và môi trường thử nghiệm công khai. Chặng giữa (xe lạnh theo chuyến) không qua API của bên thứ ba mà do nhân viên kho cập nhật. Kết nối GHN \emph{(chỉ thiết kế)}; bản hiện thực để nhân viên vận hành chuyển trạng thái chặng cuối.
     \item \textbf{Hóa đơn điện tử --- lớp tích hợp với bản giả lập}: sinh tệp PDF và mã tra cứu theo cùng giao diện mà một nhà cung cấp dịch vụ hóa đơn (VNPT, Viettel, MISA) sẽ cung cấp; kết nối thật chỉ được thiết kế, vì cần hợp đồng và chứng thư số của doanh nghiệp.
-    \item \textbf{Thông báo --- dịch vụ đẩy của trình duyệt (Web Push) và email qua SMTP}; SMS để sau vì tính phí theo tin. Web Push là chuẩn mở của W3C (Push API và Notifications API; xác thực bằng khóa VAPID theo RFC~8292, mã hóa tải tin theo RFC~8291), không phải một đối tác tích hợp: khi người dùng cho phép, trình duyệt đăng ký với dịch vụ đẩy do chính hãng trình duyệt vận hành (như Google, Mozilla, Apple), miễn phí, Farmery không ký hợp đồng hay có tài khoản riêng, và nhận về một \emph{subscription} gồm địa chỉ nhận tin và khóa; máy chủ nghiệp vụ lưu subscription này (bảng \texttt{push\_subscriptions}). Khi đơn đổi trạng thái, máy chủ gửi một yêu cầu HTTP ký VAPID tới địa chỉ đó, rồi service worker của ứng dụng mua hàng hiển thị thông báo kể cả khi người dùng đã đóng tab. Phần này \emph{(để sau prototype)}: bản prototype chưa gửi thông báo đẩy mà ứng dụng hỏi lại trạng thái đơn mỗi 5 giây.
+    \item \textbf{Thông báo --- dịch vụ đẩy của trình duyệt (Web Push) và email qua SMTP}; SMS \emph{(chỉ thiết kế)} vì tính phí theo tin. Web Push là chuẩn mở của W3C (Push API và Notifications API; xác thực bằng khóa VAPID theo RFC~8292, mã hóa tải tin theo RFC~8291), không phải một đối tác tích hợp: khi người dùng cho phép, trình duyệt đăng ký với dịch vụ đẩy do chính hãng trình duyệt vận hành (như Google, Mozilla, Apple), miễn phí, Farmery không ký hợp đồng hay có tài khoản riêng, và nhận về một \emph{subscription} gồm địa chỉ nhận tin và khóa; máy chủ nghiệp vụ lưu subscription này (bảng \texttt{push\_subscriptions}). Khi đơn đổi trạng thái, máy chủ gửi một yêu cầu HTTP ký VAPID tới địa chỉ đó, rồi service worker của ứng dụng mua hàng hiển thị thông báo kể cả khi người dùng đã đóng tab. Phần Web Push \emph{(chỉ thiết kế)}: bản hiện thực gửi thông báo trong ứng dụng (chuông thông báo) và email; trang đơn hàng tự cập nhật bằng cách hỏi lại trạng thái đơn mỗi 5 giây.
 \end{itemize}
 
 \subsection{Thuật toán, công nghệ và mô hình AI}
@@ -299,14 +299,14 @@ Ba mô-đun AI trong phạm vi đồ án được tách thành một dịch vụ
 
 Kiến trúc dưới đây là hệ quả trực tiếp của các lựa chọn công nghệ tại mục~\ref{sec:giaiphapcongnghe}, không phải một mô hình chọn sẵn từ trước. Kiến trúc được trình bày theo mô hình C4~\cite{brown_c4model}, mỗi mức phóng to một khối của mức trước:
 \begin{itemize}
-    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và mười hệ thống bên ngoài --- năm hệ thống thuộc phạm vi hiện thực của MVP (trong mã nguồn hiện nay hai hệ thống đã đứng sau một giao diện kèm bản giả: cổng thanh toán và kênh gửi OTP qua email; ba hệ thống còn lại để sau prototype), năm hệ thống chỉ được thiết kế (vẽ nét đứt màu xám).
+    \item \textbf{Mức 1 --- ngữ cảnh} (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}): hệ thống là một khối, xung quanh là người dùng và mười hệ thống bên ngoài --- ba hệ thống có trong bản hiện thực, mỗi hệ thống đứng sau một giao diện tích hợp (cổng thanh toán và dịch vụ hóa đơn điện tử ở dạng giả lập, email qua SMTP); bảy hệ thống chỉ được thiết kế (vẽ nét đứt màu xám): đơn vị vận chuyển nội thành, dịch vụ đẩy của trình duyệt, SMS, TraceViet, tổ chức chứng thực chữ ký số, Google, Facebook. Riêng cổng thanh toán, kết nối thật với môi trường thử nghiệm VNPay và IPN cũng chỉ thiết kế.
     \item \textbf{Mức 2 --- container} (Hình~\ref{fig:c4-container}): bảy thành phần chạy độc lập, công nghệ và dữ liệu vào, ra của từng thành phần.
     \item \textbf{Mức 3 --- mô-đun} (Hình~\ref{fig:c4-module}): 13 mô-đun bên trong máy chủ nghiệp vụ và quan hệ giữa chúng.
 \end{itemize}
 Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này nên được sinh tự động từ mã nguồn để không bị lệch khi mã thay đổi. Cả ba hình dùng chung một quy ước mũi tên:
 \begin{itemize}
-    \item \textbf{Mũi tên hai chiều} khi bên được gọi trả dữ liệu nghiệp vụ về (kết quả thanh toán qua webhook, mã tra cứu hóa đơn); nhãn ghi phần gửi đi trước dấu chấm phẩy, phần nhận về sau.
-    \item \textbf{Mũi tên một chiều} khi chỉ gửi đi (thư, thông báo đẩy).
+    \item \textbf{Mũi tên hai chiều} khi bên được gọi trả dữ liệu nghiệp vụ về (kết quả thanh toán, mã tra cứu hóa đơn); nhãn ghi phần gửi đi trước dấu chấm phẩy, phần nhận về sau.
+    \item \textbf{Mũi tên một chiều} khi chỉ gửi đi (thư, thông báo đẩy \emph{(chỉ thiết kế)}).
     \item \textbf{Mũi tên chạm biên một khung} áp cho mọi phần tử trong khung (mọi mô-đun đọc, ghi cơ sở dữ liệu và phát sự kiện); mũi tên chạm một phần tử là lời gọi của riêng phần tử đó.
 \end{itemize}
 
@@ -319,11 +319,11 @@ Mức 4 của C4 (mã nguồn) không vẽ tay; khi cần, sơ đồ mức này 
 \label{fig:c4-container}
 \end{figure}
 
-Bảng~\ref{tab:container-io} ghi dữ liệu vào và ra của từng container. Hai điểm đáng chú ý: tệp đi thẳng từ trình duyệt lên kho tệp qua đường dẫn ký trước, nên máy chủ nghiệp vụ không phải trung chuyển ảnh dung lượng lớn; và dịch vụ AI không đọc cơ sở dữ liệu --- nó nhận dữ liệu qua sự kiện hoặc lời gọi, trả lại vector và kết quả dự báo để mô-đun nghiệp vụ tự lưu.
+Bảng~\ref{tab:container-io} ghi dữ liệu vào và ra của từng container. Hai điểm đáng chú ý: tệp đi thẳng từ trình duyệt lên kho tệp qua đường dẫn ký trước, nên máy chủ nghiệp vụ không phải trung chuyển ảnh dung lượng lớn; và dịch vụ AI không đọc cơ sở dữ liệu --- nó nhận dữ liệu qua sự kiện hoặc lời gọi, trả lại vector để mô-đun nghiệp vụ tự lưu; kết quả dự báo giá ở bản hiện thực chỉ xuất ra tệp để đánh giá, lưu vào cơ sở dữ liệu \emph{(chỉ thiết kế)}.
 
 \noindent\textbf{Hàng đợi sự kiện và cache (Redis).} Redis là một thành phần đảm nhận hai việc. Một là hàng đợi sự kiện: khi một mô-đun hoàn thành việc của mình (ví dụ thanh toán thành công), nó phát một sự kiện vào Redis và các mô-đun quan tâm nhận sự kiện đó để làm tiếp phần việc của mình, nên mô-đun phát không phải gọi và chờ từng mô-đun nhận; hàng đợi này cũng chạy các tác vụ nền như gửi thông báo và gửi dữ liệu sang dịch vụ AI. Hai là cache: lưu tạm kết quả của những truy vấn đọc nhiều (danh mục, trang sản phẩm, trang truy xuất) để không phải đọc lại cơ sở dữ liệu mỗi lần. Giao dịch ghi dữ liệu, như khóa dòng tồn, không đi qua Redis mà chạy trực tiếp trên cơ sở dữ liệu.
 
-\noindent\textbf{Dịch vụ AI.} Dịch vụ này gom ba tính năng AI của hệ thống: tìm kiếm theo ngữ nghĩa, sản phẩm tương tự (cùng dùng vector sản phẩm do dịch vụ tính) và dự báo giá cho nhân viên thu mua. Dịch vụ không đọc cơ sở dữ liệu: khi sản phẩm được duyệt hoặc sửa mô tả, máy chủ nghiệp vụ phát sự kiện \texttt{ProductChanged}, dịch vụ tính vector rồi trả lại bằng sự kiện \texttt{ProductEmbedded} để mô-đun sản phẩm tự lưu. Nếu dịch vụ AI ngừng, tìm kiếm lùi về tìm theo từ khóa và trang chủ lùi về sản phẩm bán chạy, nên giao dịch không bị gián đoạn. Phần hiện thực của dịch vụ này được trình bày ở Chương~\ref{chap:hienthuc} và kết quả đánh giá ở Chương~\ref{chap:danhgia}; bản prototype chưa có dịch vụ AI và dùng so khớp gần đúng thay cho tìm kiếm ngữ nghĩa.
+\noindent\textbf{Dịch vụ AI.} Dịch vụ này gom ba tính năng AI của hệ thống: tìm kiếm theo ngữ nghĩa, sản phẩm tương tự (cùng dùng vector sản phẩm do dịch vụ tính) và dự báo giá (chạy offline; hiển thị cho nhân viên thu mua \emph{(chỉ thiết kế)}). Dịch vụ không đọc cơ sở dữ liệu: khi sản phẩm được duyệt hoặc sửa mô tả, máy chủ nghiệp vụ phát sự kiện \texttt{ProductChanged}, dịch vụ tính vector rồi trả lại bằng sự kiện \texttt{ProductEmbedded} để mô-đun sản phẩm tự lưu. Nếu dịch vụ AI ngừng, tìm kiếm lùi về tìm theo từ khóa và trang chủ lùi về sản phẩm bán chạy, nên giao dịch không bị gián đoạn. Phần hiện thực của dịch vụ này được trình bày ở Chương~\ref{chap:hienthuc} và kết quả đánh giá ở Chương~\ref{chap:danhgia}.
 
 \begingroup
 \tblsetup\tblzebra
@@ -344,11 +344,11 @@ Bảng~\ref{tab:container-io} ghi dữ liệu vào và ra của từng container
 \endfoot
 Ứng dụng mua hàng & Next.js, PWA & Thao tác của khách vãng lai, khách lẻ, khách sỉ, nhà cung cấp & Lời gọi tới \texttt{/api}; tệp tải thẳng lên kho tệp; trang truy xuất, trang sản phẩm dựng sẵn phía máy chủ \\
 Ứng dụng nội bộ & React, Vite, Refine & Thao tác của sáu vai trò nội bộ sau đăng nhập hai lớp & Lời gọi tới \texttt{/api/admin}; ảnh nghiệm thu, tệp nhập liệu thay nhà cung cấp tải thẳng lên kho tệp \\
-Máy chủ nghiệp vụ & NestJS, 13 mô-đun & Yêu cầu REST từ hai ứng dụng; webhook của cổng thanh toán và đơn vị vận chuyển; kết quả của dịch vụ AI & Phản hồi JSON; sự kiện nghiệp vụ vào Redis; lời gọi ra hệ thống bên ngoài; đường dẫn ký trước cho tệp \\
+Máy chủ nghiệp vụ & NestJS, 13 mô-đun & Yêu cầu REST từ hai ứng dụng; webhook của cổng thanh toán và đơn vị vận chuyển \emph{(chỉ thiết kế)}; kết quả của dịch vụ AI & Phản hồi JSON; sự kiện nghiệp vụ vào Redis; lời gọi ra hệ thống bên ngoài; đường dẫn ký trước cho tệp \\
 Cơ sở dữ liệu & PostgreSQL, pgvector & Đọc, ghi của từng mô-đun trên schema riêng; khóa dòng tồn trong một giao dịch & Dữ liệu nghiệp vụ; kết quả tìm kiếm toàn văn và theo vector \\
 Lưu trữ tệp & MinIO, chuẩn S3 & Tệp tải lên qua đường dẫn ký trước & Ảnh công khai dạng WebP nhiều cỡ; tệp riêng tư qua đường dẫn ký trước hạn ngắn \\
 Hàng đợi sự kiện và cache & Redis & Sự kiện do mô-đun phát; tác vụ nền; dữ liệu đọc nhiều & Sự kiện cho các mô-đun và dịch vụ AI đã đăng ký nhận \\
-Dịch vụ AI & Python, FastAPI & Sự kiện \texttt{ProductChanged}; câu truy vấn; chuỗi giá theo tuần & Vector sản phẩm (sự kiện \texttt{ProductEmbedded}); vector truy vấn; giá dự báo kèm khoảng tin cậy \\
+Dịch vụ AI & Python, FastAPI & Sự kiện \texttt{ProductChanged}; câu truy vấn; chuỗi giá theo tuần (chạy offline) & Vector sản phẩm (sự kiện \texttt{ProductEmbedded}); vector truy vấn; giá dự báo kèm khoảng tin cậy \\
 \end{longtable}
 \endgroup
 
@@ -403,18 +403,18 @@ Bảng~\ref{tab:module-io} ghi dữ liệu vào, ra, sự kiện phát và lời
 \bottomrule
 \endfoot
 Nền tảng chung & \texttt{identity} (FR1) & Hồ sơ đăng ký, OTP, giấy tờ eKYC, lần đồng ý dữ liệu $\rightarrow$ tài khoản, vai trò, phiên; xác thực hai lớp cho nhân sự & \texttt{UserVerified} & \texttt{notification} (gửi OTP); Google, Facebook \emph{(chỉ thiết kế)} \\
-& \texttt{notification} (FR11) & Sự kiện đã đăng ký, kênh người dùng chọn $\rightarrow$ thông báo web, thông báo đẩy, email & --- & Dịch vụ đẩy của trình duyệt (Web Push) \emph{(để sau prototype)}, email; SMS \emph{(chỉ thiết kế)} \\
+& \texttt{notification} (FR11) & Sự kiện đã đăng ký, kênh người dùng chọn $\rightarrow$ thông báo web, email; thông báo đẩy \emph{(chỉ thiết kế)} & --- & Email; dịch vụ đẩy của trình duyệt (Web Push), SMS \emph{(chỉ thiết kế)} \\
 & \texttt{media} & Yêu cầu tải tệp (loại, cỡ, mức truy cập) $\rightarrow$ đường dẫn ký trước; tệp đã kiểm tra kiểu thật, ảnh WebP nhiều cỡ & --- & Lưu trữ tệp \\
 Nguồn cung & \texttt{supplier} (FR2, FR3) & Hồ sơ, chứng nhận, loại người bán cho thuế $\rightarrow$ hồ sơ đã duyệt, hạn hiệu lực chứng nhận & \texttt{CertExpired} & --- \\
 & \texttt{catalog} (FR4, trừ FR4.3) & Sản phẩm, lô, nhật ký canh tác; câu tìm kiếm $\rightarrow$ lô đã duyệt kèm mã QR, trang truy xuất, kết quả tìm kiếm & \texttt{BatchApproved}, \texttt{ProductChanged} & Dịch vụ AI; TraceViet \emph{(chỉ thiết kế)} \\
 & \texttt{inventory} (FR4.3, FR13.2--13.6) & Lệnh giữ chỗ, trừ tồn, nhập tồn, đóng gói, thu hồi $\rightarrow$ dòng tồn, sổ nhập xuất & \texttt{StockLow}, \texttt{BatchRecalled} & --- \\
-Giao dịch & \texttt{procurement} (FR13.1--13.2) & Chào giá lô, đơn thu mua, kết quả nghiệm thu $\rightarrow$ đơn thu mua đã xác nhận, phần đạt nhập dòng tồn của Farmery & \texttt{ProcurementReceived} & \texttt{inventory}; dịch vụ AI \\
-& \texttt{retail} (FR5) & Giỏ, đơn lẻ, mua lại, đăng ký báo vào mùa $\rightarrow$ đơn kèm dòng thời gian tám trạng thái & \texttt{OrderPlaced}, \texttt{OrderCancelled} & \texttt{inventory}, \texttt{payment}, \texttt{fulfillment} \\
+Giao dịch & \texttt{procurement} (FR13.1--13.2) & Chào giá lô, đơn thu mua, kết quả nghiệm thu $\rightarrow$ đơn thu mua đã xác nhận, phần đạt nhập dòng tồn của Farmery & \texttt{ProcurementReceived} & \texttt{inventory}; dịch vụ AI \emph{(chỉ thiết kế)} \\
+& \texttt{retail} (FR5) & Giỏ, đơn lẻ, mua lại; đăng ký báo vào mùa \emph{(chỉ thiết kế)} $\rightarrow$ đơn kèm dòng thời gian tám trạng thái & \texttt{OrderPlaced}, \texttt{OrderCancelled} & \texttt{inventory}, \texttt{payment}, \texttt{fulfillment} \\
 & \texttt{wholesale} (FR6) & RFQ, báo giá, xác nhận giao kết $\rightarrow$ hợp đồng kèm mã băm, đơn sỉ giao một đợt & \texttt{RfqUpdated}, \texttt{ContractConcluded} & \texttt{identity} (OTP), \texttt{media}, \texttt{inventory}, \texttt{payment}; ký số \emph{(chỉ thiết kế)} \\
-& \texttt{payment} (FR7) & Lệnh thanh toán, hoàn tiền; webhook của cổng $\rightarrow$ trạng thái thanh toán, hóa đơn giả lập, đối soát sỉ & \texttt{PaymentSucceeded}, \texttt{Refunded} & Cổng thanh toán, dịch vụ hóa đơn điện tử \\
-Sau bán & \texttt{fulfillment} (FR8, FR9.1) & Đơn đã thanh toán, chuyến trung chuyển, webhook 3PL, yêu cầu đổi trả kèm trao đổi $\rightarrow$ vận đơn, trạng thái giao, quyết định khiếu nại & \texttt{ShipmentStatusChanged}, \texttt{CaseResolved} & Đơn vị vận chuyển \\
+& \texttt{payment} (FR7) & Lệnh thanh toán, hoàn tiền; kết quả từ cổng (qua webhook \emph{(chỉ thiết kế)}) $\rightarrow$ trạng thái thanh toán, hóa đơn giả lập, đối soát sỉ & \texttt{PaymentSucceeded}, \texttt{Refunded} & Cổng thanh toán, dịch vụ hóa đơn điện tử (đều giả lập) \\
+Sau bán & \texttt{fulfillment} (FR8, FR9.1) & Đơn đã thanh toán, chuyến trung chuyển, chuyển bước chặng cuối của nhân viên vận hành, yêu cầu đổi trả kèm minh chứng; webhook 3PL, trao đổi theo đơn \emph{(chỉ thiết kế)} $\rightarrow$ vận đơn, trạng thái giao, quyết định khiếu nại & \texttt{ShipmentStatusChanged}, \texttt{CaseResolved} & Đơn vị vận chuyển \emph{(chỉ thiết kế)} \\
 & \texttt{engagement} (FR5.5, FR9.2) & Đánh giá sau đơn hoàn tất, phản hồi $\rightarrow$ điểm đánh giá, điểm uy tín nhà cung cấp & \texttt{ReviewPosted} & \texttt{retail} (kiểm đơn đã hoàn tất) \\
-Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu hồi lô; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt, khung giờ $\rightarrow$ hàng đợi duyệt, nhật ký thao tác, báo cáo & --- & \texttt{catalog}, \texttt{supplier}, \texttt{inventory}, \texttt{engagement} \\
+Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu hồi lô; cấu hình biểu phí, ngưỡng, thời hạn đổi trả, COD, giờ chốt, khung giờ $\rightarrow$ hàng đợi duyệt, nhật ký thao tác, bảng điều khiển; báo cáo thống kê \emph{(chỉ thiết kế)} & --- & \texttt{catalog}, \texttt{supplier}, \texttt{inventory}, \texttt{engagement} \\
 \end{longtable}
 \endgroup
 
@@ -423,8 +423,8 @@ Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu h
 Hình~\ref{fig:luong-don-le} theo một đơn bán lẻ từ lúc đặt tới khi hoàn tất, qua các mô-đun và hệ thống bên ngoài, để thấy các bảng trên phối hợp với nhau thế nào. Ba điểm thiết kế hiện ra rõ ở đây:
 \begin{itemize}
     \item \textbf{Giữ chỗ trước, trừ tồn sau:} bước 2 khóa dòng tồn và giữ chỗ trong 15 phút; chỉ khi có \texttt{PaymentSucceeded} (hoặc đơn COD đủ điều kiện) mới chuyển thành trừ tồn ở bước 10.
-    \item \textbf{Kết quả từ bên ngoài đi vào qua webhook} (bước 7, 15), không hỏi lại định kỳ.
-    \item \textbf{Thông báo không nằm trên đường giao dịch:} mô-đun thông báo chỉ nhận sự kiện, nên dịch vụ đẩy hay email chậm không làm chậm việc đặt hàng.
+    \item \textbf{Kết quả thanh toán và giao hàng đi vào từ một điểm:} bản giả lập cổng trả kết quả thanh toán (bước 7), nhân viên vận hành chuyển bước chặng cuối (bước 15). Theo thiết kế, hai bước này nhận kết quả qua webhook của cổng thanh toán và đơn vị vận chuyển \emph{(chỉ thiết kế)}, không hỏi lại định kỳ.
+    \item \textbf{Thông báo không nằm trên đường giao dịch:} mô-đun thông báo chỉ nhận sự kiện, nên email chậm không làm chậm việc đặt hàng.
 \end{itemize}
 Hình không thay thế lược đồ tuần tự chi tiết (mục~\ref{subsec:tuantu}); nó dừng ở mức thành phần và sự kiện.
 
@@ -441,12 +441,12 @@ Hình không thay thế lược đồ tuần tự chi tiết (mục~\ref{subsec:
 
 Tóm tắt theo lớp, mỗi lớp ghi rõ công nghệ đã chọn:
 \begin{itemize}
-    \item \textbf{Lớp giao diện} --- hai ứng dụng: ứng dụng mua hàng dựng bằng Next.js dạng ứng dụng web cài đặt được (PWA) với service worker cho thông báo đẩy và hàng đợi thao tác ngoại tuyến (NFR7.3), phục vụ trang mua hàng và trang quản lý của nhà cung cấp; ứng dụng nội bộ dựng bằng React, Vite và Refine cho nhân sự nội bộ, đăng nhập hai lớp (NFR3.6).
+    \item \textbf{Lớp giao diện} --- hai ứng dụng: ứng dụng mua hàng dựng bằng Next.js dạng ứng dụng web cài đặt được (PWA) với service worker cho hàng đợi thao tác ngoại tuyến (NFR7.3), phục vụ trang mua hàng và trang quản lý của nhà cung cấp; ứng dụng nội bộ dựng bằng React, Vite và Refine cho nhân sự nội bộ, đăng nhập hai lớp (NFR3.6).
     \item \textbf{Lớp ứng dụng} --- NestJS, tiếp nhận yêu cầu, kiểm tra quyền truy cập theo vai trò, điều phối giữa các mô-đun nghiệp vụ.
     \item \textbf{Lớp mô-đun nghiệp vụ} --- 13 mô-đun chia theo miền (Hình~\ref{fig:c4-module}), mỗi mô-đun một schema dữ liệu riêng.
     \item \textbf{Lớp dữ liệu} --- PostgreSQL cho dữ liệu nghiệp vụ, Redis cho sự kiện, tác vụ nền và cache, MinIO cho ảnh và tệp.
     \item \textbf{Dịch vụ AI} --- tách riêng, viết bằng Python, nhận dữ liệu qua sự kiện hoặc lời gọi nội bộ, không đọc trực tiếp cơ sở dữ liệu.
-    \item \textbf{Lớp tích hợp bên ngoài} --- năm hệ thống thuộc phạm vi MVP (cổng thanh toán, đơn vị vận chuyển nội thành, dịch vụ hóa đơn điện tử ở dạng giả lập, email, dịch vụ đẩy của trình duyệt; hiện đã có giao diện kèm bản giả cho cổng thanh toán và kênh OTP qua email) và năm hệ thống chỉ thiết kế (SMS, TraceViet, tổ chức chứng thực chữ ký số, Google, Facebook); mỗi hệ thống chỉ do một mô-đun gọi tới.
+    \item \textbf{Lớp tích hợp bên ngoài} --- ba hệ thống có trong bản hiện thực (cổng thanh toán và dịch vụ hóa đơn điện tử ở dạng giả lập, email qua SMTP) và bảy hệ thống chỉ thiết kế (đơn vị vận chuyển nội thành, dịch vụ đẩy của trình duyệt, SMS, TraceViet, tổ chức chứng thực chữ ký số, Google, Facebook); kết nối thật của cổng thanh toán với VNPay \emph{(chỉ thiết kế)}; mỗi hệ thống chỉ do một mô-đun gọi tới.
 \end{itemize}
 
 \subsubsection*{Các quyết định kiến trúc đáng chú ý}
@@ -466,8 +466,8 @@ Sitemap thể hiện tổ chức các trang theo cấp bậc: mỗi nút là m�
 \begin{itemize}
     \item \textbf{Hai cây, hai ứng dụng:} ứng dụng mua hàng có bốn khu xếp theo luồng nghiệp vụ (công khai với đăng ký, đăng nhập đứng đầu, khách lẻ, khách sỉ, nhà cung cấp; trong khu nhà cung cấp, trang đi từ hồ sơ, sản phẩm và lô, chào giá lô tới đơn và đối soát); ứng dụng nội bộ có sáu mục theo vai trò, xếp từ hỗ trợ vùng (tiếp nhận nhà cung cấp), kiểm duyệt, thu mua, kho, vận hành (giao hàng, khiếu nại) tới quản trị, mỗi người chỉ thấy mục của vai trò mình và một tài khoản có thể giữ nhiều vai trò (mục~\ref{sec:doituongnguoidung}). Mỗi ứng dụng có thêm một nhánh trang dùng chung: tài khoản, quyền dữ liệu và thông báo cho mọi người dùng đã đăng nhập; đăng nhập hai lớp, hộp việc và thông báo cho mọi vai trò nội bộ.
     \item \textbf{Trục bán lẻ đi trọn trong ứng dụng mua hàng:} tìm kiếm, chi tiết sản phẩm, giỏ, thanh toán, đơn hàng (dòng thời gian, mua lại, hóa đơn), đổi trả và đánh giá.
-    \item \textbf{Không có trang tin nhắn chung:} trao đổi gắn với đơn hoặc yêu cầu đổi trả nằm ngay trong trang đó (FR9.1); hồ sơ nhà cung cấp là trang nguồn gốc, không phải gian hàng để theo dõi.
-    \item \textbf{Trang chỉ thiết kế hoặc để sau prototype} vẽ xám nét đứt, hình không phân biệt hai nhãn: yêu thích, tổng quan thống kê của nhà cung cấp, báo cáo thống kê toàn sàn (để sau prototype); ký quỹ, sơ chế nhiều bước và kiểm kê (chỉ thiết kế).
+    \item \textbf{Không có trang tin nhắn chung:} trao đổi gắn với đơn hoặc yêu cầu đổi trả nằm ngay trong trang đó (FR9.1) \emph{(chỉ thiết kế)}; hồ sơ nhà cung cấp là trang nguồn gốc, không phải gian hàng để theo dõi.
+    \item \textbf{Trang chỉ thiết kế} vẽ xám nét đứt: yêu thích, báo khi có hàng hoặc vào mùa, tổng quan thống kê của nhà cung cấp, báo cáo thống kê toàn sàn, ký quỹ, sơ chế nhiều bước và kiểm kê; phần dự báo giá trong trang thu mua.
     \item \textbf{Độc lập với framework:} sitemap mô tả tổ chức trang theo góc nhìn người dùng. Khi hiện thực, mỗi khu ứng với một nhóm route có bố cục và kiểm tra đăng nhập riêng; một số trang có thể thành thẻ hoặc hộp thoại mà không làm đổi cấu trúc cây.
 \end{itemize}
 
@@ -486,7 +486,7 @@ Sitemap thể hiện tổ chức các trang theo cấp bậc: mỗi nút là m�
 Lược đồ tuần tự đi sâu hơn hình luồng một đơn bán lẻ ở mục~\ref{sec:kientruc}: vẫn ở mức mô-đun, nhưng tách lời gọi khỏi giá trị trả về và vẽ các nhánh rẽ bằng khung \texttt{alt} (nhánh loại trừ nhau), \texttt{loop} (lặp). Mỗi đường đời là một mô-đun của Bảng~\ref{tab:module-io}, một người dùng hoặc một hệ thống bên ngoài; sự kiện qua Redis vẽ nét đứt màu tím. Bốn luồng được chọn là bốn chỗ có nhiều mô-đun phối hợp nhất:
 \begin{itemize}
     \item \textbf{Đặt hàng và thanh toán đơn lẻ} (Hình~\ref{fig:seq-dat-hang}): giữ chỗ trước, trừ tồn sau, với ba nhánh trả trước thành công, COD đủ điều kiện, và thất bại hoặc quá 15 phút.
-    \item \textbf{Yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ} (Hình~\ref{fig:seq-hop-dong-si}): vòng thương lượng trong kênh của RFQ, sinh hợp đồng có mã băm, mỗi bên xác nhận bằng OTP.
+    \item \textbf{Yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ} (Hình~\ref{fig:seq-hop-dong-si}): nhà cung cấp phản hồi một báo giá, khách sỉ chấp nhận hoặc từ chối; báo giá được chấp nhận sinh hợp đồng có mã băm, mỗi bên xác nhận bằng OTP qua email.
     \item \textbf{Đăng lô, kiểm duyệt và sinh mã QR}, \textbf{gửi và kiểm duyệt đánh giá}: hai luồng còn lại đặt tại Phụ lục~W (Hình~\ref{fig:seq-duyet-lo}, Hình~\ref{fig:seq-danh-gia}).
 \end{itemize}
 
@@ -508,7 +508,7 @@ Lược đồ tuần tự đi sâu hơn hình luồng một đơn bán lẻ ở 
 \label{fig:seq-hop-dong-si}
 \end{figure}
 
-Hai điểm thiết kế hiện rõ qua các lược đồ này. Thứ nhất, \textbf{mọi lời gọi cần kết quả ngay đều nằm trong cùng giao dịch}: giữ chỗ, trừ tồn, kiểm OTP; còn thông báo, cập nhật dòng thời gian, tính lại vector đều đi qua sự kiện, nên một mô-đun nhận chậm không làm chậm người dùng. Thứ hai, \textbf{kết quả từ bên ngoài luôn đi vào qua webhook và được xử lý một lần}: cổng thanh toán gửi lại cùng một kết quả nhiều lần thì trạng thái đơn không đổi thêm.
+Hai điểm thiết kế hiện rõ qua các lược đồ này. Thứ nhất, \textbf{mọi lời gọi cần kết quả ngay đều nằm trong cùng giao dịch}: giữ chỗ, trừ tồn, kiểm OTP; còn thông báo, cập nhật dòng thời gian, tính lại vector đều đi qua sự kiện, nên một mô-đun nhận chậm không làm chậm người dùng. Thứ hai, \textbf{kết quả từ bên ngoài được xử lý một lần} (theo thiết kế, đi vào qua webhook \emph{(chỉ thiết kế)}): cổng thanh toán gửi lại cùng một kết quả nhiều lần thì trạng thái đơn không đổi thêm.
 
 \subsection{Thiết kế lược đồ lớp}
 \label{subsec:lop}
@@ -537,10 +537,10 @@ Hình~\ref{fig:class-mien} trình bày các lớp miền của trục bán lẻ 
 
 Cơ sở dữ liệu được chia thành 13 schema, trùng tên và trùng ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}: mỗi mô-đun sở hữu đúng một schema, tham chiếu sang schema khác bằng định danh, không kết nối bảng xuyên schema (RB3). Các thực thể chính theo năm khối:
 \begin{itemize}
-    \item \textbf{Nền tảng chung} --- \texttt{identity}: tài khoản, vai trò, sổ địa chỉ, hồ sơ doanh nghiệp, giấy tờ eKYC, bản ghi đồng ý dữ liệu và yêu cầu xóa; \texttt{notification}: thông báo, kênh đăng ký, đăng ký nhận thông báo đẩy; \texttt{media}: tệp (chủ sở hữu, khóa đối tượng, kiểu, kích thước, mã băm, mức truy cập, trạng thái, hạn lưu) --- các bảng khác tham chiếu tệp qua định danh thay vì lưu đường dẫn rời.
+    \item \textbf{Nền tảng chung} --- \texttt{identity}: tài khoản, vai trò, sổ địa chỉ, hồ sơ doanh nghiệp, giấy tờ eKYC, bản ghi đồng ý dữ liệu và yêu cầu xóa; \texttt{notification}: thông báo, kênh đăng ký, đăng ký nhận thông báo đẩy \emph{(chỉ thiết kế)}; \texttt{media}: tệp (chủ sở hữu, khóa đối tượng, kiểu, kích thước, mã băm, mức truy cập, trạng thái, hạn lưu) --- các bảng khác tham chiếu tệp qua định danh thay vì lưu đường dẫn rời.
     \item \textbf{Nguồn cung} --- \texttt{supplier}: hồ sơ nhà cung cấp, chứng nhận, loại người bán cho thuế, phân công nhân viên hỗ trợ vùng; \texttt{catalog}: danh mục, sản phẩm, lô, nhật ký canh tác, mã QR, vector sản phẩm; \texttt{inventory}: dòng tồn, sổ nhập xuất, giữ chỗ, đóng gói, thu hồi lô.
-    \item \textbf{Giao dịch} --- \texttt{procurement}: chào giá lô, đơn thu mua, nghiệm thu, kết quả dự báo giá; \texttt{retail}: tin bán lẻ (giá do nhân viên thu mua đặt), mã giảm giá, giỏ, đơn lẻ, mốc trạng thái, đăng ký báo vào mùa; \texttt{wholesale}: bảng giá bậc, RFQ, báo giá và trao đổi, hợp đồng (phiên bản, mã băm), đơn sỉ; \texttt{payment}: giao dịch thanh toán, hoàn tiền, hóa đơn, chi trả thu mua cho nhà cung cấp, đối soát hoa hồng và trường khấu trừ thuế \emph{(chỉ thiết kế)}.
-    \item \textbf{Sau bán} --- \texttt{fulfillment}: chuyến trung chuyển, vận đơn, mốc giao, yêu cầu đổi trả, tin trao đổi theo đơn; \texttt{engagement}: đánh giá, phản hồi, điểm uy tín, danh sách yêu thích \emph{(chỉ thiết kế)}.
+    \item \textbf{Giao dịch} --- \texttt{procurement}: chào giá lô, đơn thu mua, nghiệm thu, kết quả dự báo giá \emph{(chỉ thiết kế)}; \texttt{retail}: tin bán lẻ (giá do nhân viên thu mua đặt), mã giảm giá \emph{(chỉ thiết kế)}, giỏ, đơn lẻ, mốc trạng thái, đăng ký báo vào mùa \emph{(chỉ thiết kế)}; \texttt{wholesale}: bảng giá bậc, RFQ, báo giá (một vòng; trao đổi nhiều vòng \emph{(chỉ thiết kế)}), hợp đồng (mã băm; nhiều phiên bản \emph{(chỉ thiết kế)}), đơn sỉ; \texttt{payment}: giao dịch thanh toán, hoàn tiền, hóa đơn, chi trả thu mua cho nhà cung cấp, đối soát hoa hồng và trường khấu trừ thuế \emph{(chỉ thiết kế)}.
+    \item \textbf{Sau bán} --- \texttt{fulfillment}: chuyến trung chuyển, vận đơn, mốc giao, yêu cầu đổi trả, tin trao đổi theo đơn \emph{(chỉ thiết kế)}; \texttt{engagement}: đánh giá, phản hồi, điểm uy tín, danh sách yêu thích \emph{(chỉ thiết kế)}.
     \item \textbf{Vận hành} --- \texttt{operations}: cấu hình nền tảng, hàng đợi duyệt, hồ sơ vi phạm, cảnh báo do luật ngưỡng, nhật ký thao tác nội bộ.
 \end{itemize}
 
@@ -551,10 +551,10 @@ Lược đồ gồm 65 bảng; hai bảng \texttt{identity.users} và \texttt{me
 
 Sơ đồ quan hệ thực thể của cơ sở dữ liệu (65 bảng, 13 schema, 565 cột, 48 khóa ngoại) được trình bày theo ba lớp từ tổng quát đến chi tiết. Hình~\ref{fig:erd-tong-quan} là ma trận phụ thuộc giữa các schema: mỗi hàng là một schema có cột tham chiếu, mỗi cột là schema được tham chiếu, số trong ô là số cột tham chiếu xuyên schema, kèm số bảng của từng schema; hai schema identity và media không đưa vào cột vì hầu hết schema đều tham chiếu tới. Các Hình~\ref{fig:erd-dinh-danh} đến~\ref{fig:erd-danh-gia-van-hanh} vẽ từng miền; mỗi bảng chỉ hiện khóa chính, khóa ngoại, tối đa một hai cột định danh (mã, trạng thái) và một dòng mô tả, các cột còn lại ghi dưới dạng ``+N cột khác''. Từ điển đầy đủ mọi cột nằm ở Phụ lục K. Hai loại đường phản ánh trực tiếp ràng buộc RB3:
 \begin{itemize}
-    \item \textbf{Nét liền} --- khóa ngoại thật giữa hai bảng trong cùng schema, ký hiệu chân chim ở phía nhiều.
+    \item \textbf{Nét liền} --- khóa ngoại thật giữa hai bảng trong cùng schema.
     \item \textbf{Nét đứt} --- tham chiếu sang schema khác bằng định danh, không có khóa ngoại vật lý; mô-đun sở hữu bảng đích bảo đảm tính nhất quán qua giao diện công khai và sự kiện. Dòng tham chiếu ghi rõ \texttt{schema.bảng} đích; đường nét đứt chỉ vẽ khi đích nằm cùng hình, và không vẽ đường tới bảng được từ bốn bảng trở lên trỏ vào (như \texttt{identity.users}) để hình đọc được.
 \end{itemize}
-Bảng chỉ thiết kế vẽ nét đứt nền xám.
+Hai đầu mỗi đường theo ký hiệu chân chim (crow's foot). Ở phía bảng cha, hai gạch nghĩa là đúng một (khóa ngoại \texttt{NOT NULL}), gạch kèm vòng tròn nghĩa là không hoặc một (khóa ngoại cho phép \texttt{NULL}). Ở phía bảng con, chân chim kèm vòng tròn nghĩa là không hoặc nhiều, vì cơ sở dữ liệu không ép mỗi bản ghi cha phải có bản ghi con. Vòng nhỏ sát mép một bảng là khóa ngoại trỏ về chính bảng đó, như quan hệ danh mục cha--con. Bảng chỉ thiết kế vẽ nét đứt nền xám.
 
 \begin{figure}[p]
 \centering
@@ -667,7 +667,7 @@ Cả ba mô-đun AI (Chương~\ref{chap:coso}) đều đi theo một luồng d�
     \item \textbf{Thu thập}: ghi nhận sự kiện từ các quy trình nghiệp vụ (lượt xem/mua sản phẩm, đơn hàng, đánh giá, hành vi hủy đơn) vào kho dữ liệu.
     \item \textbf{Tiền xử lý}: làm sạch, chuẩn hóa và trích xuất đặc trưng (feature engineering) theo từng bài toán.
     \item \textbf{Huấn luyện và suy luận}: tính lại định kỳ theo lô (batch, ví dụ mỗi tuần) cho dự báo giá; vector sản phẩm được tính khi sản phẩm được duyệt hoặc sửa mô tả; tìm kiếm và sản phẩm tương tự suy luận trực tuyến (online inference) ngay khi có truy vấn.
-    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang kết quả tìm kiếm, trang sản phẩm, màn hình thu mua).
+    \item \textbf{Phục vụ kết quả}: trả kết quả qua API nội bộ để các mô-đun nghiệp vụ khác sử dụng (trang kết quả tìm kiếm, trang sản phẩm; màn hình thu mua \emph{(chỉ thiết kế)}).
     \item \textbf{Vòng phản hồi}: ghi nhận phản ứng của người dùng với kết quả AI (truy vấn không có kết quả được nhấp, gợi ý được mở, giá thu mua thực tế so với giá dự báo) để bổ sung tập đánh giá và huấn luyện lại theo thời gian.
 \end{enumerate}
 
@@ -690,14 +690,14 @@ Bảng~\ref{tab:tinhnangAI} cụ thể hóa luồng chung này cho từng tính 
 \endhead
 \bottomrule
 \endfoot
-\textbf{Ai dùng} & Khách vãng lai, khách lẻ & Khách vãng lai, khách lẻ & Nhân viên thu mua \\
-\textbf{Màn hình} & Ô tìm kiếm và trang kết quả của ứng dụng mua hàng & Trang chi tiết sản phẩm & Màn hình lập đơn thu mua và đặt giá bán lẻ của ứng dụng nội bộ \\
+\textbf{Ai dùng} & Khách vãng lai, khách lẻ & Khách vãng lai, khách lẻ & Nhân viên thu mua \emph{(chỉ thiết kế)} \\
+\textbf{Màn hình} & Ô tìm kiếm và trang kết quả của ứng dụng mua hàng & Trang chi tiết sản phẩm & Bản hiện thực không có màn hình; màn hình lập đơn thu mua và đặt giá bán lẻ của ứng dụng nội bộ \emph{(chỉ thiết kế)} \\
 \textbf{Đầu vào} & Câu truy vấn tự nhiên hoặc từ khóa (có thể gõ không dấu, gõ sai) & Mã sản phẩm đang xem & Loại nông sản, vùng; chuỗi giá theo tuần \\
-\textbf{Đầu ra} & Danh sách sản phẩm xếp theo điểm hợp nhất & tối đa 5 sản phẩm đang bán gần nghĩa nhất theo hợp đồng API (bản prototype hiển thị 4), khác sản phẩm đang xem & Giá dự báo cho các tuần tới kèm khoảng tin cậy, hiển thị làm tham khảo \\
+\textbf{Đầu ra} & Danh sách sản phẩm xếp theo điểm hợp nhất & tối đa 5 sản phẩm đang bán gần nghĩa nhất, khác sản phẩm đang xem & Giá dự báo cho các tuần tới kèm khoảng tin cậy, xuất ra tệp để đo MAPE \\
 \textbf{Mô hình} & Tìm kiếm lai: full-text của PostgreSQL có \texttt{unaccent} (bỏ dấu) và trigram (chịu gõ sai), cộng tìm theo vector nhúng BGE-M3; hợp nhất bằng reciprocal rank fusion & Láng giềng gần nhất theo độ tương đồng cosine trên chính vector BGE-M3 của sản phẩm, lọc theo tình trạng còn hàng & Mô hình chuỗi thời gian có mùa vụ (SARIMA, Prophet), đối chứng với gradient boosting \\
 \textbf{Dữ liệu} & Tên, mô tả, danh mục, vùng trồng của sản phẩm đã duyệt; vector tính lại khi sản phẩm thay đổi & Vector sản phẩm dùng chung với tìm kiếm & Giá nông sản công khai theo tuần (Phụ lục O); chạy offline theo lô hằng tuần \\
 \textbf{Chỉ số} & nDCG@10, Recall@10 so với tìm từ khóa trên tối thiểu 50 truy vấn gán nhãn tay; p95 dưới 1 giây & Precision@5 trên tập sản phẩm gán nhãn tay & MAPE trên tập kiểm tra tách theo thời gian \\
-\textbf{Mức hiện thực} & Hiện thực cho sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế & Hiện thực; gợi ý cá nhân hóa theo hành vi để sau & Hiện thực ở chế độ offline \\
+\textbf{Mức hiện thực} & Hiện thực cho sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế & Hiện thực; gợi ý cá nhân hóa theo hành vi \emph{(chỉ thiết kế)} & Hiện thực ở chế độ offline, đo MAPE; hiển thị cho nhân viên thu mua \emph{(chỉ thiết kế)} \\
 \end{longtable}
 \endgroup
 
@@ -721,8 +721,8 @@ Vì cả ba mô-đun AI đều chưa có dữ liệu vận hành thực tế ở
 \label{subsec:chinhsachbenthuba}
 
 \begin{itemize}
-    \item \textbf{Cổng thanh toán trung gian:} mọi khoản thanh toán và hoàn tiền đi qua cổng thanh toán được cấp phép; hệ thống không lưu dữ liệu thẻ (NFR3.4), chỉ lưu mã giao dịch để đối soát. Kết quả thanh toán chỉ được ghi nhận khi webhook của cổng có chữ ký hợp lệ; cùng một webhook gửi lại nhiều lần chỉ được xử lý một lần. Ký quỹ cho đơn sỉ giá trị lớn (FR7.3) \emph{chỉ thiết kế}.
-    \item \textbf{Đơn vị vận chuyển chặng cuối (3PL):} tạo vận đơn qua REST API, mỗi lần gọi có thời gian chờ tối đa 5 giây và cơ chế thử lại khi lỗi tạm thời (NFR7.1); trạng thái giao về qua webhook, xử lý một lần như với cổng thanh toán. Đơn trễ và sự cố giao hàng hiện trên bảng điều khiển giám sát (FR10.5); lỗi của 3PL được Farmery xử lý với khách trước, đòi lại 3PL sau (Phụ lục~U).
+    \item \textbf{Cổng thanh toán trung gian:} mọi khoản thanh toán và hoàn tiền đi qua cổng thanh toán được cấp phép; hệ thống không lưu dữ liệu thẻ (NFR3.4), chỉ lưu mã giao dịch để đối soát. Kết quả thanh toán chỉ được ghi nhận khi webhook của cổng có chữ ký hợp lệ; cùng một webhook gửi lại nhiều lần chỉ được xử lý một lần. Kết nối cổng thật và nhận webhook \emph{(chỉ thiết kế)}; bản hiện thực dùng bản giả lập cổng thanh toán đặt sau cùng giao diện tích hợp. Ký quỹ cho đơn sỉ giá trị lớn (FR7.3) \emph{chỉ thiết kế}.
+    \item \textbf{Đơn vị vận chuyển chặng cuối (3PL):} kết nối \emph{(chỉ thiết kế)} gồm tạo vận đơn qua REST API và nhận trạng thái giao qua webhook, xử lý một lần như với cổng thanh toán; bản hiện thực để nhân viên vận hành chuyển trạng thái chặng cuối. Thời gian chờ tối đa 5 giây và cơ chế thử lại khi lỗi tạm thời (NFR7.1) áp cho mọi lời gọi qua lớp tích hợp, kể cả bản giả lập. Đơn trễ và sự cố giao hàng hiện trên bảng điều khiển giám sát (FR10.5); lỗi của 3PL được Farmery xử lý với khách trước, đòi lại 3PL sau (Phụ lục~U).
     \item \textbf{Dịch vụ hóa đơn điện tử:} bản hiện thực phát hành hóa đơn giả lập qua cùng giao diện mà nhà cung cấp dịch vụ thật sẽ dùng, nên khi kết nối thật chỉ đổi lớp tích hợp (FR7.2, NFR8.3).
     \item \textbf{Đăng nhập qua bên thứ ba} \emph{(chỉ thiết kế)}: OAuth 2.0 với Google, Facebook; tài khoản đăng nhập theo cách này vẫn phải xác thực OTP cho các thao tác nhạy cảm (FR1.1, FR1.2).
     \item \textbf{Xác minh chứng nhận:} trong phạm vi đồ án, việc xác minh được thực hiện thủ công; khi có kết nối với cơ quan cấp chứng nhận sẽ chuyển sang đối chiếu tự động.

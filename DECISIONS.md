@@ -685,6 +685,8 @@ SỬA 2026-10-07 (phiên siết phạm vi, mục cuối file):
 - Một ứng dụng PWA chung → hai ứng dụng (mua hàng: Next.js PWA; nội bộ: React, Vite, Refine) trên một API.
 - "MVP không ghi vào báo cáo" đảo một phần: báo cáo vẫn thiết kế hai luồng, thêm mục 1.3.4 Phạm vi hiện thực và quy ước "(chỉ thiết kế)" trong FR; bảng chi tiết vẫn ở `MVP.md`.
 - AI search (FR12.3) chỉ tìm sản phẩm; tìm nhà cung cấp cho khách sỉ chỉ thiết kế.
+SỬA 2026-11-16: bỏ SonarQube Cloud khỏi CI và khỏi trụ cột chất lượng mã nguồn (mục "Bỏ SonarQube Cloud..." 2026-11-16); việc kiểm
+giới hạn bản miễn phí SonarQube Cloud ở "Còn mở" không còn cần làm.
 
 ### Quy ước bảng thống nhất và rút thân báo cáo về 102 trang — 2026-10-01
 **Bối cảnh:** 36 bảng dùng 5 mức giãn dòng, 4 mức khoảng cách cột và tô màu xen kẽ viết tay (đã lệch ở vài bảng). Thân báo cáo 119 trang, mục tiêu lâu dài khoảng 100 trang.
@@ -955,6 +957,8 @@ chung thay bằng repository theo mô-đun; dữ liệu mẫu đổi sang Lâm �
 tắt được bằng `VALIDATE_RESPONSES=false`. Idempotency chưa chặn hai yêu cầu đồng thời cùng key (chuyển Redis ở giai
 đoạn 2). Tuần 5 trong kế hoạch dồn cả thay lớp lưu trữ lẫn mô-đun tài khoản, là tuần dễ trễ nhất. `main.pdf` chưa
 build lại sau các sửa đổi báo cáo.
+SỬA 2026-11-16: Redis không còn nằm trong bản nộp, kể cả cho Idempotency: Redis chuyển sang *(chỉ thiết kế)* (mục "Bus sự kiện trong
+tiến trình..." 2026-11-16); Idempotency-Key vẫn lưu trong bộ nhớ của tiến trình.
 
 ### Giao diện công khai `apps/shop`: token, route, dữ liệu — 2026-10-16
 **Quyết định** (user chốt theo đề xuất). Đánh dấu **[tạm — prototype]** là lối tắt chỉ dùng tới demo 21/10, phải
@@ -1147,3 +1151,239 @@ PR sửa hợp đồng vẫn phải báo cả nhóm ở kênh chung.
 NFR2.2 hai nghĩa; ERD hai hình 31 và 34 bảng chữ nhỏ khó đọc.
 **Đánh đổi:** báo cáo dài thêm khoảng 20 trang do mỗi hình ERD một trang; hình use case và sitemap dùng một chú thích chung cho cả
 hai nhãn nét đứt thay vì thêm một kiểu nét thứ ba.
+SỬA 2026-11-16: tên gọi "Hàng đợi sự kiện và cache (Redis)" chỉ còn đúng với kiến trúc thiết kế; bản nộp dùng bus trong tiến trình
+(mục "Bus sự kiện trong tiến trình..." 2026-11-16). Báo cáo (Phụ lục V, Chương 5) chưa sửa theo, làm ở tuần 9.
+
+### Bộ tài liệu thiết kế FE và 10 hạng mục UI/UX — 2026-11-05
+**Quyết định** (user chốt theo đề xuất):
+- Tài liệu thiết kế giao diện đặt ở `design/` (doc sống, commit): 7 file theo quy trình designer → FE dev (người dùng và
+  hành trình, kiến trúc thông tin, luồng tác vụ, hệ thống thiết kế, đặc tả màn hình, nội dung và thuật ngữ, quy ước FE)
+  và một file rà soát hiện trạng (`08`). Code lệch tài liệu thì sửa code hoặc sửa tài liệu kèm một dòng ở đây.
+- Tìm kiếm: tầng 1 làm ngay — `GET /search/suggest` (gợi ý sản phẩm, danh mục, vùng trồng; tách cụm lọc "hữu cơ",
+  "dưới 200k", "Đơn Dương" thành bộ lọc; gợi ý sửa từ), ô tìm kiếm thành combobox có tìm gần đây, trang tìm kiếm chuyển
+  câu có cụm lọc sang URL có bộ lọc và giữ link "tìm đúng nguyên văn". Ngữ nghĩa qua interface `SemanticSearch`, bản
+  prototype là từ điển khái niệm nông sản trong Node; vector BGE-M3 theo §5.2 báo cáo cân nhắc sau, thay bản cài đặt,
+  giữ hợp đồng.
+- Chứng nhận thuộc nhà cung cấp. Nhập ở tab "Hồ sơ & chứng nhận" bất kỳ lúc nào, và nhập tại chỗ (sheet) khi đăng sản
+  phẩm thiếu chứng nhận; bước khai lô hiện chứng nhận đi kèm (chỉ đọc), cảnh báo nếu hết hiệu lực trước hạn sử dụng.
+  Chứng nhận mới "Chờ duyệt", qua việc duyệt loại `certification`. Thêm `GET/POST /seller/certifications`;
+  `ProductInput.certifications` phải là loại nhà cung cấp đã khai.
+- Khu nhà cung cấp: tab là nơi đến (Tổng quan · Lô hàng · Sản phẩm · Hồ sơ & chứng nhận, gạch chân, badge việc cần xử
+  lý), hành động là nút ("Khai báo lô" cam, "Đăng sản phẩm" viền; mobile nút chính dính đáy). Trang đầu khu là Tổng quan
+  có "Việc cần làm".
+- Nút Duyệt/Từ chối của admin chuyển từ header sang thanh quyết định dính đáy vùng nội dung, kèm bảng đối chiếu tự tính
+  (chỉ tham khảo) và lý do từ chối mẫu.
+- Mua sỉ (3P): `ProductDetail.wholesale` (bậc giá, lượng tối thiểu, ngày chuẩn bị); khung mua có nút gạt Mua lẻ | Mua sỉ
+  khi có bảng giá sỉ; `POST /wholesale/quote-requests` (vai trò `buyer_wholesale`) gửi cho **nhà cung cấp** của sản
+  phẩm, nhà cung cấp xem ở `GET /seller/quote-requests` — theo FR6.1, khác phương án ban đầu "admin xem" vì luồng sỉ do
+  nhà cung cấp phản hồi. Phản hồi, thương lượng, hợp đồng (FR6.2–6.4) vẫn thuộc MVP. Tài khoản mẫu `khachsi@example.com`.
+- Thuật ngữ (bảng ở `design/06`): chứng nhận "Còn hiệu lực / Sắp hết hiệu lực / Hết hiệu lực"; nông sản "Hạn sử dụng";
+  trạng thái "Chờ duyệt / Đã duyệt / Bị từ chối" (nút là "Duyệt", "Từ chối"); chính tả dấu kiểu cũ "hủy, khóa" theo báo
+  cáo và locale `vi_VN` của antd.
+- Thông tin hỗ trợ quyết định: thẻ và trang sản phẩm có độ tươi theo lô bán trước (`ProductCard.saleBatch`), giá quy
+  đổi theo kg, "Chỉ còn N" khi tồn ≤ 10, hiệu lực chứng nhận đến ngày nào, ước tính giao theo giờ chốt 16:00 [tạm —
+  prototype]. Trang chủ có "Mua theo danh mục" (lưới 5 cột desktop, slider snap mobile); `Category` thêm `imageUrl`,
+  `productCount`.
+- Dữ liệu mẫu: thêm 9 sản phẩm, lô đã duyệt cho 15 sản phẩm đang "Hết hàng", một lô bị từ chối và một yêu cầu báo giá cho
+  demo; `growingRegion` theo địa giới mới; `createSeed()` dời ngày lô, nhật ký theo ngày chạy (mốc viết dữ liệu 16/10/2026)
+  để demo luôn có hàng còn hạn.
+**Bối cảnh:** rà soát (`design/08`) thấy thuật ngữ lệch giữa shop và admin, khu nhà cung cấp trộn tab với hành động và
+dùng màu ngoài token, nhà cung cấp không có chỗ nhập chứng nhận, `POST /seller/products` trả 501, 14/30 sản phẩm mẫu
+"Hết hàng".
+**Đánh đổi:** sửa hợp đồng ở 6 chỗ trong một PR — phải báo cả nhóm. Dời ngày dữ liệu mẫu làm ngày hiển thị khác nhau
+giữa các ngày chạy (test không phụ thuộc ngày mẫu). Hiểu câu tìm bằng luật (regex) chỉ bắt được mẫu câu đã liệt kê.
+
+### Ô số lượng gõ tự do theo đơn vị bán — 2026-11-05
+**Quyết định:** khung mua và giỏ hàng dùng chung `QuantityInput`: gõ tự do + nút −/+. Đơn vị bán "kg" nhập lẻ tới
+0,1 kg (100 g), nút bước 0,5 kg; đơn vị đóng gói (hộp, túi, gói, bó, khay) chỉ số nguyên. "1,5" và "1.5" đều hiểu là
+1,5. Số sai quy tắc hoặc vượt tồn được làm tròn, kẹp lại và báo câu giải thích, không chặn im lặng.
+**Bối cảnh:** khung mua chỉ có nút −/+ bước 1, không gõ được, nên không mua được 1,5 kg dù hợp đồng và API đã nhận số
+lượng tới 3 chữ số thập phân.
+**Đánh đổi:** quy tắc nhận diện cân theo chuỗi `saleUnit === "kg"`; MVP nên có trường "bán theo cân" và bước số lượng
+trong tin bán thay vì đoán từ chữ.
+
+### Tìm kiếm sản phẩm: hai bộ tìm gộp bằng RRF, khớp theo từ, bộ đánh giá — 2026-11-06
+**Quyết định:**
+- `GET /products?q=` chạy hai bộ tìm song song rồi hợp nhất bằng RRF có trọng số (`Σ w / (60 + hạng)`), giống kiến
+  trúc Ch.5 §5.2 nhưng chạy trong bộ nhớ: `KeywordSearch` (bản sau: `unaccent` + trigram) và `SemanticSearch` (bản sau:
+  BGE-M3 + pgvector). Interface mới trả `{productId, score}[]` — đổi từ `expand(q): string[]` vì bản vector trả sản
+  phẩm, không trả từ. Repository không tự chấm điểm nữa, nhận `rankedIds` rồi lọc cứng + phân trang giữ thứ tự.
+- Từ khóa: khớp theo từ, không theo chuỗi con. Bậc: cụm trong tên 100, gõ liền ("dautay") 90, cụm trong danh mục lá 80,
+  đủ từ ở tên/danh mục 70, cụm ở mô tả 40. Chỉ trả tầng tốt nhất có kết quả (tên → danh mục → mô tả). Tiền tố chỉ với
+  từ ≥ 3 ký tự. Gõ có dấu thì so có dấu ("đồ" ≠ "đỏ"), gõ không dấu thì so bỏ dấu.
+- Khớp gần đúng chỉ là đường lùi khi cả hai bộ tìm rỗng: từ ≥ 3 ký tự sai 1, ≥ 7 ký tự sai 2, đảo hai ký tự kề tính
+  là 1 lỗi; chỉ giữ kết quả ít lỗi nhất. Khớp từ khóa chỉ ở mô tả có trọng số 0,5 khi gộp.
+- Khái niệm ngữ nghĩa trỏ vào **danh mục** (gồm cả sản phẩm đăng sau), tên sản phẩm chỉ dùng cho trường hợp đặc thù,
+  thêm chứng nhận (quà biếu → OCOP). "Rau sạch" trỏ về danh mục rau, không trỏ về chứng nhận.
+- Bộ đánh giá `apps/api/test/search-eval/` chạy trong e2e, khóa ngưỡng chặn hồi quy: bộ chính 36 câu và bộ kiểm tra độc
+  lập 18 câu (viết sau bản cài đặt đầu, không dùng để chỉnh).
+
+| Đo trên 39 sản phẩm mẫu | P@5 | R@10 | MRR | Độ sạch | Câu ngoài danh mục trả rỗng |
+|---|---|---|---|---|---|
+| Trước (bộ chính) | 0,60 | 0,76 | 0,70 | 0,27 | 0/3 |
+| Sau (bộ chính — từ điển viết khi đã biết nhãn, số lạc quan) | 1,00 | 1,00 | 1,00 | 0,99 | 3/3 |
+| Sau (bộ kiểm tra độc lập) | 0,87 | 0,92 | 0,89 | 0,85 | 1/3 |
+
+**Bối cảnh:** khớp chuỗi con hai chiều trên cả mô tả làm "nướng" ra 36/39 sản phẩm, "củ" ra dâu tây 100 điểm; lớp ngữ
+nghĩa chỉ chạy khi từ khóa không khớp nên gần như không bao giờ chạy (NOTES 2026-10-16, design/08 X8).
+**Đánh đổi:** từ điển khái niệm viết tay — câu ngoài từ điển ("quà tết") không được mở rộng, đây là phần bản vector
+phải giải. Đường lùi gần đúng còn nhiễu với âm tiết ngắn ("gạo" ra "gà", "cá hồi" ra "hộp"). Bậc và trọng số chọn theo
+bộ đánh giá nhỏ, cần đo lại khi có dữ liệu thật.
+SỬA 2026-11-06: bổ sung số "trước" của bộ kiểm tra độc lập (đo trên code cũ, cùng 18 câu): P@5 0,47 · R@10 0,67 ·
+MRR 0,60 · độ sạch 0,18 · câu ngoài danh mục trả rỗng 0/3. So sánh công bằng là 0,47 → 0,87 (P@5), 0,18 → 0,85 (độ
+sạch); dòng "Trước (bộ chính)" ở bảng trên đo trên bộ câu khác.
+
+### Chốt 5 yêu cầu phụ thành chỉ thiết kế, FR11.2 làm nếu kịp — 2026-11-06
+**Quyết định:**
+- FR2.2 thống kê cho nhà cung cấp, FR4.7 báo cáo sai danh mục, FR5.3 mã giảm giá, FR9.2 yêu thích, FR10.4 báo cáo tổng
+  quan đổi nhãn từ *(để sau prototype)* sang *(chỉ thiết kế)*: Chương 4 (từng FR, `tab:chi-thiet-ke`, bảng các khâu
+  kiểm duyệt theo giai đoạn), Phụ lục sitemap và ma trận FR, `MVP.md`.
+- FR11.2 (cảnh báo chứng nhận hết hạn, tồn thấp, kèm phần nhắc gia hạn của FR3.3) giữ *(để sau prototype)*; là việc phụ
+  tuần 10 của Nghĩa, không kịp thì đổi sang *(chỉ thiết kế)* trước khi nộp.
+- MT7 (Chương 1) đổi thành "kiểm duyệt và giám sát vi phạm; thiết kế phần báo cáo thống kê".
+- §1.3.4 Phạm vi hiện thực không đổi: không mục nào trong số trên nằm trong ba mức ở đó.
+**Bối cảnh:** báo cáo gắn *(để sau prototype)* (tức cam kết làm) cho các mục này trong khi `MVP.md` xếp chúng vào "để sau
+MVP"; phân công tuần 8–10 trên sheet nhóm không có chỗ cho chúng. Bản nộp cuối kỳ không bắt buộc là MVP đầy đủ.
+**Đánh đổi:** bỏ phần "báo cáo thống kê" của MT7 khỏi phần hiện thực. Đổi lại giữ thời gian tuần 12–13 cho bộ test case,
+kiểm thử tải, chống bán vượt và thử khả dụng; các mục này không có chỉ số đánh giá ở Chương 7, đúng nguyên tắc chọn
+phạm vi ở §1.2 (không đo được bằng số thì không đưa vào). Đặc tả, lược đồ CSDL và sitemap của các mục vẫn giữ.
+
+### Hai nhãn trạng thái; cắt phần kết nối bên ngoài để trả nợ Prisma — 2026-11-06
+**Quyết định:**
+- Báo cáo bỏ nhãn *(để sau prototype)*, chỉ còn hai trạng thái: hiện thực (mặc định, không ghi chú) và
+  *(chỉ thiết kế)*. Giai đoạn prototype đã qua; báo cáo nộp ngày 31/12 mô tả trạng thái của bản nộp. Mục nào trễ thì
+  đổi sang *(chỉ thiết kế)* trước khi nộp, không giữ nhãn trung gian.
+- Chuyển sang *(chỉ thiết kế)*: kết nối cổng VNPay thử nghiệm (FR7.1 dùng `DemoPaymentGateway` sau interface, vẫn đủ
+  COD có điều kiện, hoàn tiền, hóa đơn giả lập, hoa hồng); kết nối GHN thử nghiệm và webhook (ba chặng vẫn đủ trạng
+  thái, chặng cuối do nhân viên cập nhật); thông báo đẩy Web Push (FR11.1 còn thông báo trong web và email); FR11.2
+  cùng phần nhắc gia hạn của FR3.3; FR9.1 trao đổi theo đơn; FR5.7 đăng ký báo khi có hàng hoặc vào mùa (khối "Sắp vào
+  mùa" chỉ hiển thị).
+- Dự báo giá FR12.2 chỉ chạy offline và đo MAPE, không làm endpoint, không làm trang admin.
+- Bán sỉ một vòng phản hồi giá (chấp nhận hoặc từ chối), không thương lượng nhiều vòng; giao một đợt như cũ.
+- Giữ hiện thực: Prisma + PostgreSQL (pgvector), chống bán vượt, thu mua và nhập kho, `POST /media`, đổi trả và hoàn
+  tiền, đánh giá, mua lại, tìm kiếm ngữ nghĩa, sản phẩm tương tự, SonarQube, PWA và ghi nhật ký khi mất sóng, TOTP.
+  Nếu tuần 10 vẫn căng thì ghi nhật ký khi mất sóng (NFR7.3) là mục cắt tiếp theo.
+**Bối cảnh:** lớp lưu trữ Prisma (tuần 5 trong `kehoach.tex`) chưa bắt đầu, sheet nhóm dời sang tuần 8–10. Chương 7
+cần PostgreSQL cho `pg_stat_statements`, kiểm thử chống bán vượt có khóa dòng và pgvector, nên Prisma không cắt được;
+phải gỡ việc ở chỗ khác. Các mục cắt đều phụ thuộc dịch vụ bên ngoài hoặc không có chỉ số ở Chương 7.
+**Đánh đổi:** demo không có thanh toán và vận đơn thật, theo dõi đơn không có thông báo đẩy; FR9 không còn mục nào
+hiện thực. Đổi lại Khải bỏ được việc đăng ký và chờ duyệt VNPay, GHN; tuần 8–10 có chỗ cho Prisma và bộ test case.
+Các phần cắt đều đã có interface hoặc bảng dữ liệu, chỉ cần thay phần kết nối khi làm tiếp.
+Bổ sung cùng ngày, sau khi rà toàn báo cáo:
+- Đổi trả không có FR9.1: khách ghi lý do và ảnh trên yêu cầu, nhân viên vận hành ghi kết quả hoặc yêu cầu bổ sung trên
+  chính yêu cầu, mỗi lần đổi trạng thái gửi email. FR9 giữ mức Should, hiện chỉ ở mức thiết kế.
+- Hợp đồng sỉ sinh một lần từ báo giá đã chấp nhận, kèm mã băm, xác nhận bằng OTP qua email; sai thì hủy và tạo yêu cầu
+  mới. Sửa bản nháp nhiều phiên bản là chỉ thiết kế.
+- Sản phẩm tương tự hiển thị 5 (khớp hợp đồng API và Precision@5). Kết quả dự báo giá không ghi vào
+  `procurement.price_forecasts`; bảng này chỉ thiết kế.
+- Phụ lục D (Điều khoản dịch vụ) mô tả nền tảng đầy đủ, không cắt theo bản nộp; riêng mã xác nhận giao kết gửi qua email.
+- `tab:kiemduyet-giaidoan` giữ cột trạng thái với hai giá trị. NFR7.1 giữ, đo trên lớp tích hợp với bản giả lập.
+  NFR7.3 bỏ phần "nhận thông báo đẩy". Theo dõi đơn ở bản nộp: hỏi lại định kỳ, chuông thông báo trong web, email.
+- Phản hồi công khai dưới đánh giá do Farmery thực hiện (bán lẻ 1P), không phải nhà cung cấp; sửa các chỗ lệch.
+SỬA 2026-11-16: SonarQube bị bỏ khỏi danh sách "giữ hiện thực" (mục "Bỏ SonarQube Cloud..." 2026-11-16); email của FR11.1 chuyển
+từ "giữ hiện thực" sang "làm nếu còn thời gian, không kịp thì chỉ thiết kế" (mục "Ghi bổ sung các quyết định ngày 16/11" cuối file).
+
+### Phản hồi công khai dưới đánh giá chỉ thiết kế; NFR7.1 đo trên bản giả lập — 2026-11-16
+**Quyết định:**
+- Phần phản hồi công khai của Farmery dưới đánh giá (FR5.5) chuyển sang *(chỉ thiết kế)*. Viết đánh giá, điểm uy tín và
+  gắn cờ đánh giá nghi vấn vẫn hiện thực.
+- NFR7.1 giữ: lời gọi qua interface `PaymentGateway` có thời gian chờ 5 giây, thử lại 2 lần có giãn cách; bản giả lập
+  có tham số độ trễ để kiểm ca vượt ngưỡng. Giao Khải ở tuần 8 trên sheet nhóm.
+- `kehoach.tex` dòng tuần 5 ghi rõ các việc đã dời (TOTP, SonarQube, chứng nhận và tệp, nhật ký khi mất sóng), không
+  để bảng khẳng định việc chưa làm.
+**Bối cảnh:** sau khi rà báo cáo, phần phản hồi đánh giá được ghi là hiện thực nhưng chưa có trong mã nguồn và chưa giao
+cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi kết nối VNPay chuyển chỉ thiết kế.
+**Đánh đổi:** FR5.5 thiếu một phần tương tác của bên bán; đổi lại không phải sửa hợp đồng và thêm màn hình admin. NFR7.1
+đo trên bản giả lập chỉ chứng minh cơ chế chờ và thử lại, không đo độ trễ của cổng thật.
+
+### Bỏ SonarQube Cloud; chất lượng mã đo bằng Jest và ESLint, hiệu năng đo bằng k6 — 2026-11-16
+**Quyết định:**
+- Không nối SonarQube Cloud vào CI. Trụ cột chất lượng mã nguồn ở Ch.7 đo bằng typecheck, ESLint và độ phủ Jest của phần
+  nghiệp vụ lõi; ngưỡng độ phủ tối thiểu là cổng chặn trong CI.
+- Đo hiệu năng và chống bán vượt bằng Grafana k6 (NFR1.1, NFR1.2, NFR4.1), chạy trên PostgreSQL thật sau khi retail và
+  inventory chuyển sang Prisma; số đo trên bản lưu trong bộ nhớ không dùng làm bằng chứng.
+- SỬA 2026-11-16 (mục 2026-11-06 "Hai nhãn trạng thái"): SonarQube bị bỏ khỏi danh sách giữ hiện thực.
+**Bối cảnh:** SonarQube cần tạo tổ chức, dự án và secret `SONAR_TOKEN` (NOTES 2026-10-13, chưa ai làm) trong khi tuần 8–10
+trên sheet đã kín; ba công cụ thay thế đều đã chạy trong CI. Mốc đóng băng nội dung 15/12, báo cáo nộp 31/12.
+**Đánh đổi:** mất các chỉ số độ phức tạp, tỷ lệ trùng lặp và nợ kỹ thuật; đổi lại không phụ thuộc dịch vụ ngoài và bớt một
+việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện tại, việc khoảng nửa ngày ở tuần 8.
+Bổ sung 2026-11-16 (sau khi đo): ngưỡng đặt ở statements 88 / branches 70 / functions 90 / lines 89 cho toàn `apps/api/src` (`pnpm test`
+chạy `jest --coverage`), thấp hơn số đo cùng ngày 91,46 / 73,21 / 93,79 / 92,81 để chặn tụt chứ không phải mục tiêu; branches là điểm yếu.
+Ngưỡng áp cho mọi file `src/**/*.ts` (không chỉ "phần nghiệp vụ lõi" như viết ở trên), trừ client Prisma sinh ra và các file chỉ
+chạy được khi có PostgreSQL. Chỉ `apps/api` có Jest nên các gói khác chưa có ngưỡng; CI GitHub đã chạy cổng này và qua.
+
+### Nền Prisma + PostgreSQL: Prisma 7.10.1, schema trong apps/api, seed hẹp — 2026-11-16
+**Quyết định:**
+- Prisma ghim 7.10.1 (bản ổn định; tag `latest` trên npm lúc đó là 8.0.0-rc.33, bản RC). Dùng driver adapter `@prisma/adapter-pg`.
+- Schema đặt ở `apps/api/prisma/schema/`: `base.prisma` (generator, datasource, danh sách 13 schema) và mỗi mô-đun một file
+  `<mô-đun>.prisma`; không tạo package riêng vì chỉ `apps/api` dùng cơ sở dữ liệu. Bản nháp sinh một lần từ
+  `report/schema.dbml` (65 bảng, 41 enum, 565 cột, đối chiếu khớp); từ nay `.prisma` là nguồn chính, dbml còn dùng cho báo cáo.
+- PostgreSQL 17 kèm pgvector (`pgvector/pgvector:pg17`) chạy bằng `docker-compose.yml` ở cổng 5433 (đổi bằng `PG_PORT`; máy dev có PostgreSQL cài sẵn chiếm 5432); migration tạo extension `vector`,
+  `unaccent`, `pg_trgm`, hàm bọc `f_unaccent`, chỉ mục HNSW cho vector, trigram và tsvector cho tìm từ khóa, và CHECK
+  `stock_holdings` (tồn và giữ chỗ không âm, giữ chỗ không vượt tồn).
+- `STORAGE=memory|prisma` (mặc định `memory`); `storageProvider(Token, InMemoryX, PrismaX)` chọn lớp lưu trữ lúc khởi động.
+  `STORAGE=prisma` thiếu `DATABASE_URL` thì từ chối khởi động. Mới có `CategoryRepository` bản Prisma làm thí điểm.
+- Seed (`pnpm db:seed`, chạy lại được) chỉ nạp danh mục và tài khoản kèm vai trò. Nhà cung cấp, sản phẩm, lô, nhật ký canh tác,
+  tồn kho để cùng repository của chúng ở tuần 9.
+- CI thêm job `ci-pg` (PostgreSQL thật: migrate, seed hai lần, test `STORAGE=prisma`); job `ci` giữ chạy bản bộ nhớ.
+  Client Prisma sinh bằng `pnpm generate` (không commit) và bị loại khỏi cổng độ phủ Jest cùng các file `prisma-*.ts`
+  (chỉ chạy được khi có PostgreSQL).
+**Bối cảnh:** lớp lưu trữ Prisma là việc chặn cả nhóm ở tuần 8 (W8-5) và là điều kiện để k6 đo trên PostgreSQL (NFR1.1, NFR1.2, NFR4.1).
+**Đánh đổi:** hai mô hình dữ liệu song song (bộ nhớ và PostgreSQL) cho tới khi chuyển hết repository; seed hẹp nên
+`STORAGE=prisma` chưa chạy được toàn bộ API, chỉ danh mục. Đổi lại nền dựng xong sớm, nhóm viết repository từng mô-đun độc lập.
+Bổ sung 2026-11-16 (sau khi chạy thật trên PostgreSQL 17 và job `ci-pg` qua):
+- Prisma 7.10.1 không khai báo được chỉ mục HNSW nên `migrate dev` luôn đề xuất xóa chỉ mục vector; phải xóa tay dòng DROP INDEX đó khỏi
+  migration mới, và không đưa `migrate diff --exit-code` vào CI vì sẽ đỏ vì lý do này. Chỉ mục GIN của tsvector đã khai nên khớp.
+- Hiện có hai nguồn mô tả cấu trúc bảng: `schema.prisma` (chạy thật) và `schema.dbml` (sinh Phụ lục K và ERD, mục 2026-10-13). Chưa có kiểm tự
+  động lệch; sửa cấu trúc bảng phải sửa cả hai.
+
+### Bus sự kiện trong tiến trình, 17 sự kiện khai kiểu theo Phụ lục V — 2026-11-16
+**Quyết định:**
+- Bản nộp dùng bus trong tiến trình (`@nestjs/event-emitter` 3.1.0), không dùng Redis. Phụ lục V và mục "Hàng đợi sự kiện và cache (Redis)"
+  mô tả Redis nên Redis là phần *(chỉ thiết kế)*; cổng `EventBus` (`core/events/event-bus.ts`) cho phép thay bản Redis mà không sửa nơi gọi.
+  Việc sửa Phụ lục V và Ch.5 làm ở tuần 9.
+- Thư viện ghim 3.1.0, không phải 12.0.3: dòng 12.x chỉ phát hành ESM (`"type": "module"`), `apps/api` biên dịch CommonJS và Jest không nạp được.
+- Phong bì `{ id, name, occurredAt, payload }`; `EventPayloads` khai kiểu đủ 17 sự kiện, `EVENT_NAMES` đối chiếu với Phụ lục V bằng test để mã và báo cáo không lệch.
+- `publish` chờ mọi bên nhận xử lý xong rồi mới trả (xử lý tuần tự trong cùng tiến trình, kết quả xác định, test không phải đợi); lỗi ở bên nhận được
+  ghi log và không ném về bên phát. Không thử lại. `@OnDomainEvent` bỏ qua bản gửi lại theo (id sự kiện, bên nhận); lỗi thì lần gửi lại chạy lại.
+  Bộ nhớ chống lặp mất khi khởi động lại (giữ tối đa 10.000 mục).
+- Chuyển một lời gọi trực tiếp sang sự kiện làm mẫu: `approveBatch` phát `BatchApproved`, `InventoryEvents` nhận và mở dòng tồn. Các lời gọi
+  trực tiếp còn lại (giữ chỗ, trừ tồn, tạo giao dịch thanh toán) giữ nguyên theo Phụ lục V.
+- Đã phát tại điểm có mã: `BatchApproved`, `ProductChanged` (tạo, duyệt, từ chối), `OrderPlaced`, `OrderCancelled` (khách hủy và quá hạn giữ chỗ),
+  `PaymentSucceeded`, `Refunded`. 11 sự kiện còn lại mới khai kiểu, chờ mô-đun phát được hiện thực.
+**Bối cảnh:** W8-6 chặn cả nhóm: notification, AI và payment cần điểm cắm trước khi viết bên nhận. Bốn mô-đun còn rỗng (engagement,
+fulfillment, notification, procurement) nên phần lớn bên nhận chưa tồn tại.
+**Đánh đổi:** không bền qua khởi động lại và không có thử lại, chưa chứng minh được giao nhận qua tiến trình khác; đổi lại không thêm
+hạ tầng. Bên nhận chạy đồng bộ nên bên nhận chậm làm chậm yêu cầu của bên phát (chấp nhận được ở quy mô đồ án).
+SỬA 2026-11-16 (rà soát): các bên nhận của cùng một sự kiện chạy ĐỒNG THỜI, không tuần tự như ghi ở trên: `emitAsync` của eventemitter2
+gọi mọi bên nhận rồi chờ `Promise.all`. `publish` vẫn chỉ trả khi tất cả xong; bên nhận không được giả định thứ tự giữa các bên nhận.
+
+### Hình ERD theo miền: định tuyến trực giao, trục dọc theo bảng cha, ký hiệu chân chim đủ tùy chọn — 2026-11-16
+**Quyết định:**
+- `report/tools/diagrams/gen_erd.py` định tuyến lại các hình ERD theo miền: đoạn thẳng ≥ 50px ra khỏi mép bảng trước khi rẽ,
+  mỗi bảng cha một trục dọc trong rãnh giữa hai cột (rãnh tự giãn theo số trục, bảng giữ nguyên 410px), đầu nối phía cha
+  tách nhau ≥ 20px và ưu tiên dòng `id`, điểm neo phụ đặt ở vùng tiêu đề bảng; chỗ cắt nhau vẽ dấu bắc cầu.
+- Ký hiệu: phía cha `||` (khóa ngoại NOT NULL) hoặc `o|` (cho phép NULL); phía con `o<` (không hoặc nhiều), `o|` khi quan hệ 1-1;
+  khóa ngoại tự tham chiếu vẽ vòng nhỏ sát mép bảng; tham chiếu định danh (RB3) giữ nét đứt, đậm hơn bản cũ.
+- Bộ kiểm tra V1-V5 chạy trong generator mỗi lần sinh hình; có vi phạm V1/V2/V3/V5 thì thoát mã 1.
+- Giữ ngưỡng lược đường tới bảng có từ 4 bảng con trỏ vào.
+**Bối cảnh:** hình cũ rẽ cách mép 12px trong khi chân chim dài 19px, các đường vào cùng bảng cha lệch nhau 7px nên ký hiệu chồng
+nhau; đo trên 10 hình: V1 (rẽ sát mép) 27, V2 (đoạn chồng/sát) 13, V3 (ký hiệu chạm đường khác) 31, V4 (điểm cắt) 36. Sau khi sửa:
+V1 = V2 = V3 = V5 = 0, V4 = 24, trong đó 3 điểm do vòng tự tham chiếu mà bản cũ không vẽ.
+**Đánh đổi:** chiều rộng hình tăng từ 960 lên 1002px nên chữ co khoảng 4% khi ép về 16 cm; phía con đổi từ một-hoặc-nhiều sang
+không-hoặc-nhiều vì cơ sở dữ liệu không ép mỗi bản ghi cha có bản ghi con. Điểm neo phụ ở vùng tiêu đề thay vì dòng cột,
+tránh đọc nhầm là quan hệ của cột đó; đổi lại điểm neo không còn cùng hàng với `id`.
+
+### Ghi bổ sung các quyết định ngày 16/11: ToS có ghi nhận đồng ý, email FR11.1 làm nếu kịp, máy demo — 2026-11-16
+**Quyết định:**
+- Trang công khai `/dieu-khoan` (nguồn Phụ lục D) làm kèm ghi nhận đồng ý khi đăng ký nhà cung cấp và khách sỉ: hộp chọn, lưu phiên bản
+  và thời điểm đồng ý trên tài khoản, cần sửa hợp đồng API. Ước lượng 3 ngày công thay vì 2 nếu chỉ hiển thị trang.
+- SỬA mục 2026-11-06 (FR11.1 "còn thông báo trong web và email"): email của FR11.1 hạ từ "giữ hiện thực" xuống "làm nếu còn thời gian, không
+  kịp thì đổi sang *(chỉ thiết kế)*"; thông báo trong web giữ nguyên.
+- Máy demo là máy của Nghĩa. Đo mô hình BGE-M3 trên máy này (CPU, bản đầy đủ): nạp 51 giây, đỉnh working set 2,2 GB, đỉnh cam kết bộ nhớ
+  4,9 GB; chạy được khi đóng bớt ứng dụng (cần khoảng 3 GB trống). Khi demo làm nóng mô hình trước và giữ đường lùi từ điển khái niệm.
+**Bối cảnh:** tuần 8–10 của Nghĩa trên sheet nhóm đã kín (nền Prisma, bus sự kiện, dịch vụ AI, tìm kiếm vector, PWA, test case), cộng thêm
+việc báo cáo thì quá tải nên phải hạ mức việc nào không có chỉ số ở Chương 7. Máy demo chưa từng được xác định nên chưa có số bộ nhớ thật.
+**Đánh đổi:** ToS thêm một ngày và một thay đổi hợp đồng API; email FR11.1 có thể rơi xuống chỉ thiết kế thì báo cáo phải đổi nhãn trước 15/12.
+Số đo độ trễ BGE-M3 chưa dùng được (lúc đo RAM trống chỉ khoảng 2,5 GB nên bị đẩy sang swap); chỉ số bộ nhớ ở trên đáng tin, độ trễ phải đo lại khi máy rảnh.
+

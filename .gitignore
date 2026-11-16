@@ -50,3 +50,9 @@ packages/contract/src/generated/
 
 # Log của scripts/demo
 scripts/.demo-dev.log
+
+# Jest coverage
+coverage/
+
+# Client Prisma sinh bằng prisma generate
+apps/api/src/generated/

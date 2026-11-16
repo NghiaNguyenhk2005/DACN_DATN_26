@@ -1,0 +1,15 @@
+// Một cơ sở dữ liệu PostgreSQL, 13 schema trùng tên 13 mô-đun; mỗi mô-đun một file <mô-đun>.prisma cùng thư mục.
+// Tiện ích pgvector, unaccent, pg_trgm tạo trong migration (Prisma không khai báo extension ở schema).
+// Tham chiếu xuyên schema chỉ lưu định danh, không có khóa ngoại vật lý (ràng buộc RB3).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../../src/generated/prisma"
+  moduleFormat = "cjs"
+  importFileExtension = ""
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["catalog", "engagement", "fulfillment", "identity", "inventory", "media", "notification", "operations", "payment", "procurement", "retail", "supplier", "wholesale"]
+}

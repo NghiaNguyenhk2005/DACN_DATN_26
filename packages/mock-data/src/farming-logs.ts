@@ -1,4 +1,5 @@
 import type { Schema } from "@farmery/contract";
+import { extraLogs } from "./extra";
 
 export const farmingLogs: Schema<"FarmingLog">[] = [
   // Nhật ký lô Dâu tây Hana Đà Lạt (batchId: 1001) - Kịch bản trọng tâm demo
@@ -179,3 +180,5 @@ export const farmingLogs: Schema<"FarmingLog">[] = [
     createdAt: "2026-09-01T08:00:00Z",
   },
 ];
+
+farmingLogs.push(...extraLogs);

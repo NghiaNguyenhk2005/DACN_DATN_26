@@ -14,7 +14,7 @@ Farmery hoạt động trong lĩnh vực phân phối nông sản tươi --- lo�
 Farmery vận hành đồng thời hai luồng thương mại trên cùng một tập nguồn cung là nông dân và hợp tác xã đã được xác thực. Hai luồng khác nhau ở một điểm căn bản: \textbf{ai sở hữu hàng hóa trong lúc giao dịch diễn ra}. Chính điểm này kéo theo toàn bộ khác biệt về cách định giá, nguồn doanh thu và bên chịu rủi ro.
 
 \begin{itemize}
-    \item \textbf{Luồng bán sỉ --- sàn nhiều người bán (3P):} nhà cung cấp tự đăng sản phẩm, tự công bố bảng giá sỉ theo bậc số lượng và tự thương lượng với doanh nghiệp mua sỉ. Hàng hóa thuộc sở hữu nhà cung cấp cho tới khi bàn giao cho bên mua; Farmery đóng vai trò trung gian kết nối, bảo đảm minh bạch và thu phí hoa hồng trên mỗi giao dịch thành công.
+    \item \textbf{Luồng bán sỉ --- sàn nhiều người bán (3P):} nhà cung cấp tự đăng sản phẩm, tự công bố bảng giá sỉ theo bậc số lượng và tự báo giá cho doanh nghiệp mua sỉ. Hàng hóa thuộc sở hữu nhà cung cấp cho tới khi bàn giao cho bên mua; Farmery đóng vai trò trung gian kết nối, bảo đảm minh bạch và thu phí hoa hồng trên mỗi giao dịch thành công.
     \item \textbf{Luồng bán lẻ --- Farmery thu mua và bán lại (1P):} Farmery chủ động đặt mua theo lô từ nhà cung cấp, tiếp nhận quyền sở hữu hàng hóa, tự phân loại, đóng gói, định giá và bán lại cho người tiêu dùng cá nhân dưới gian hàng của chính nền tảng. Doanh thu đến từ chênh lệch giữa giá thu mua và giá bán lẻ.
 \end{itemize}
 
@@ -48,7 +48,7 @@ Bên mua & Doanh nghiệp mua sỉ & Người tiêu dùng cá nhân \\
 
 Hai luồng hỗ trợ nhau theo một chiều: khi một lô đăng bán sỉ sắp hết thời hạn bảo quản mà chưa có người mua, nhân viên thu mua có thể lập đơn thu mua lô đó với giá chiết khấu, vừa giảm thiệt hại cho nhà cung cấp vừa bổ sung hàng cho gian hàng bán lẻ. Chiều ngược lại không mở: Farmery không bán sỉ, kể cả phần hàng bán lẻ tồn dư --- nền tảng không dùng vị thế vận hành sàn để cạnh tranh với chính nhà cung cấp của mình. Hàng tồn dư được xả bằng giảm giá ở kênh bán lẻ; việc chào phần tồn dư cho khách sỉ được để ở hướng phát triển (Chương~\ref{chap:ketluan}).
 
-\noindent\textbf{Trục hiện thực.} Báo cáo thiết kế đủ hai luồng, nhưng phần hiện thực tập trung vào trục bán lẻ đầu--cuối: tìm kiếm $\rightarrow$ giỏ hàng $\rightarrow$ thanh toán $\rightarrow$ theo dõi đơn $\rightarrow$ đổi trả $\rightarrow$ đánh giá. Ba mức hiện thực được nêu tại mục~\ref{sec:phamvi}; các yêu cầu chỉ dừng ở mức thiết kế được ghi chú ngay tại mục~\ref{sec:yeucauchucnang}.
+\noindent\textbf{Trục hiện thực.} Báo cáo thiết kế đủ hai luồng, nhưng phần hiện thực tập trung vào trục bán lẻ đầu--cuối: tìm kiếm $\rightarrow$ giỏ hàng $\rightarrow$ thanh toán $\rightarrow$ theo dõi đơn $\rightarrow$ đổi trả $\rightarrow$ đánh giá. Ba mức độ làm sâu được nêu tại mục~\ref{sec:phamvi}; các yêu cầu chỉ dừng ở mức thiết kế được ghi chú ngay tại mục~\ref{sec:yeucauchucnang}.
 
 \subsubsection*{Mô hình kinh doanh theo khung Business Model Canvas}
 
@@ -116,7 +116,7 @@ Mỗi quy trình dưới đây được trình bày theo các bước tuần t�
 
 \noindent\textbf{Ngoại lệ:}
 \begin{itemize}
-    \item Chứng nhận còn hiệu lực dưới 30 ngày: hệ thống tự động nhắc nhà cung cấp gia hạn; nếu hết hạn mà chưa gia hạn, nhãn chứng nhận trên sản phẩm liên quan tự động bị ẩn cho đến khi cập nhật (sản phẩm không bị gỡ bỏ).
+    \item Chứng nhận còn hiệu lực dưới 30 ngày: hệ thống tự động nhắc nhà cung cấp gia hạn \emph{(chỉ thiết kế)}; nếu hết hạn mà chưa gia hạn, nhãn chứng nhận trên sản phẩm liên quan tự động bị ẩn cho đến khi cập nhật (sản phẩm không bị gỡ bỏ).
     \item Phát hiện chứng nhận giả mạo qua xác minh hoặc khiếu nại: tài khoản bị khóa vĩnh viễn, ghi vào danh sách vi phạm, không được phép đăng ký lại bằng cùng thông tin định danh.
 \end{itemize}
 
@@ -154,7 +154,7 @@ Quy trình này đứng trước quy trình bán lẻ và là điểm khác bi�
 
 \begin{enumerate}
     \item Nhà cung cấp công bố lô hàng sắp thu hoạch kèm sản lượng dự kiến, ngày thu hoạch và giá chào.
-    \item Nhân viên thu mua đối chiếu các chào giá lô cùng loại trong kỳ, tham khảo dự báo giá hiển thị ngay tại màn hình lập đơn (FR12.2, mục~\ref{sec:thietkeAI}) và tồn kho hiện có để quyết định mua lô nào, số lượng bao nhiêu.
+    \item Nhân viên thu mua đối chiếu các chào giá lô cùng loại trong kỳ và tồn kho hiện có để quyết định mua lô nào, số lượng bao nhiêu; hiển thị dự báo giá ngay tại màn hình lập đơn (FR12.2, mục~\ref{sec:thietkeAI}) \emph{(chỉ thiết kế)}.
     \item Nhân viên thu mua lập đơn thu mua ghi rõ số lượng, đơn giá và thời điểm giao; \textbf{nhà cung cấp xác nhận đơn trên hệ thống}. Đơn chỉ có hiệu lực sau bước xác nhận này, và từ lúc đó phần sản lượng trong đơn được giữ chỗ, không còn chào bán sỉ được nữa.
     \item Nhà cung cấp tự đưa hàng về kho sơ chế tại vùng trồng (chặng đầu). Farmery thuê xe đi gom tại nông hộ chỉ được thiết kế.
     \item Nhân viên kho nghiệm thu chất lượng thực tế và nhập kho phần đạt yêu cầu. Phần nhập kho trở thành một \emph{dòng tồn} thuộc sở hữu của Farmery, tách khỏi phần nhà cung cấp còn giữ, nhưng vẫn mang nguyên mã lô, nhật ký canh tác và mã QR truy xuất của lô gốc.
@@ -177,12 +177,12 @@ Quy trình này đứng trước quy trình bán lẻ và là điểm khác bi�
 
 \begin{enumerate}
     \item Khách lẻ tìm sản phẩm bằng câu tự nhiên hoặc từ khóa (gõ không dấu, gõ sai vẫn tìm được), lọc theo danh mục, vùng trồng, chứng nhận hoặc mức giá (FR4.5, FR12.3).
-    \item Khách lẻ xem chi tiết sản phẩm kèm tóm tắt truy xuất và các sản phẩm tương tự; có thể mở trang truy xuất nguồn gốc --- vẫn dẫn tới nhật ký canh tác của nhà cung cấp gốc --- trước khi quyết định mua. Sản phẩm đang hết hàng hoặc chưa vào mùa cho phép đăng ký nhận thông báo khi có hàng.
+    \item Khách lẻ xem chi tiết sản phẩm kèm tóm tắt truy xuất và các sản phẩm tương tự; có thể mở trang truy xuất nguồn gốc --- vẫn dẫn tới nhật ký canh tác của nhà cung cấp gốc --- trước khi quyết định mua. Sản phẩm đang hết hàng hoặc chưa vào mùa cho phép đăng ký nhận thông báo khi có hàng \emph{(chỉ thiết kế)}.
     \item Khách lẻ thêm sản phẩm vào giỏ hàng, số lượng giới hạn theo lượng còn lại trên dòng tồn của Farmery.
     \item Ở bước thanh toán, khách chọn địa chỉ, khung giờ giao và phương thức thanh toán; hệ thống hiển thị đủ tiền hàng, thuế, cước giao trước khi khách xác nhận đặt hàng. Thanh toán khi nhận hàng (COD) chỉ mở cho đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng; ngoài hai điều kiện đó, đơn phải trả trước qua cổng thanh toán.
     \item Hệ thống giữ chỗ trên dòng tồn của Farmery thuộc lô tương ứng; thao tác giữ chỗ và trừ tồn thực hiện trong một giao dịch có khóa để tránh bán vượt khi nhiều khách cùng đặt trên một dòng tồn.
     \item Đơn đặt trước \emph{giờ chốt đơn} hằng ngày được nhân viên kho đóng gói, dán tem QR và xếp lên \emph{chuyến trung chuyển} về TP.HCM trong ngày; đơn sau giờ chốt vào chuyến kế tiếp. Đơn vị vận chuyển nội thành (3PL) nhận hàng ở đầu TP.HCM và giao theo khung giờ khách đã chọn.
-    \item Khách theo dõi đơn trên một dòng thời gian tám trạng thái: Đã đặt $\rightarrow$ Đã thanh toán $\rightarrow$ Đang đóng gói $\rightarrow$ Lên chuyến trung chuyển $\rightarrow$ 3PL đã nhận $\rightarrow$ Đang giao $\rightarrow$ Đã giao $\rightarrow$ Hoàn tất (hoặc Khiếu nại); mỗi lần chuyển trạng thái có thông báo đẩy hoặc email.
+    \item Khách theo dõi đơn trên một dòng thời gian tám trạng thái: Đã đặt $\rightarrow$ Đã thanh toán $\rightarrow$ Đang đóng gói $\rightarrow$ Lên chuyến trung chuyển $\rightarrow$ 3PL đã nhận $\rightarrow$ Đang giao $\rightarrow$ Đã giao $\rightarrow$ Hoàn tất (hoặc Khiếu nại); mỗi lần chuyển trạng thái có thông báo trong ứng dụng và email.
     \item Khách kiểm hàng khi nhận. Khi hết thời hạn khiếu nại của nhóm hàng mà không có khiếu nại, đơn chuyển Hoàn tất; hệ thống phát hành hóa đơn điện tử cho đơn (bản hiện thực phát hành bản giả lập kèm mã tra cứu) và mở quyền đánh giá. Từ trang đơn hàng, khách có thể mua lại đúng các sản phẩm của đơn cũ.
 \end{enumerate}
 
@@ -203,7 +203,7 @@ Quy trình này đứng trước quy trình bán lẻ và là điểm khác bi�
     \item Hệ thống kiểm duyệt tự động sơ bộ (từ khóa cấm, liên kết đáng ngờ) kết hợp các luật ngưỡng giám sát bất thường (Chương~\ref{chap:coso}) để phát hiện đánh giá giả hoặc thao túng uy tín.
     \item Đánh giá không bị nghi ngờ được công khai ngay; đánh giá bị nghi ngờ chuyển cho kiểm duyệt viên xem xét thủ công trước khi công khai hoặc ẩn.
     \item Hệ thống cập nhật điểm uy tín tổng hợp của nhà cung cấp --- trung bình có trọng số theo thời gian và số lượng đơn, không tính các đánh giá bị ẩn.
-    \item Nhà cung cấp có thể phản hồi công khai một lần dưới mỗi đánh giá.
+    \item Farmery, là bên bán ở luồng bán lẻ, có thể phản hồi công khai một lần dưới mỗi đánh giá qua nhân viên vận hành \emph{(chỉ thiết kế)}.
 \end{enumerate}
 
 \noindent\textbf{Thang đo điểm uy tín (đo lường):} điểm uy tín tổng hợp được chuẩn hóa về thang 0--100 (không dùng trực tiếp thang 1--5 sao của từng đánh giá đơn lẻ), tính bằng trung bình có trọng số của điểm sao các đánh giá hợp lệ trong 6 tháng gần nhất, trong đó đánh giá gần đây và đánh giá gắn với đơn hàng giá trị lớn hơn được gán trọng số cao hơn đánh giá cũ/đơn giá trị nhỏ. Ngưỡng áp dụng cơ chế hậu kiểm nhanh và ưu tiên hiển thị được đặt ở mức từ 80/100 trở lên.
@@ -223,16 +223,16 @@ Quy trình này đứng trước quy trình bán lẻ và là điểm khác bi�
     \item Nhà cung cấp công bố bảng giá bán sỉ theo bậc số lượng, số lượng tối thiểu (MOQ) và lịch giao dự kiến cho từng sản phẩm/lô hàng.
     \item Doanh nghiệp mua sỉ xem bảng giá công khai, gửi yêu cầu báo giá (RFQ) tham chiếu bảng giá hoặc yêu cầu tùy chỉnh nếu nhu cầu khác chuẩn (sản phẩm, số lượng, tiêu chuẩn chất lượng, lịch giao).
     \item Hệ thống kiểm tra số lượng yêu cầu có đạt MOQ của nhà cung cấp hay không; nếu chưa đạt, hệ thống gợi ý gộp đơn với doanh nghiệp khác cùng khu vực hoặc chuyển hướng sang kênh bán lẻ.
-    \item Nhà cung cấp xác nhận hoặc điều chỉnh báo giá theo bậc, thời gian có thể đáp ứng và điều kiện thanh toán.
-    \item Hai bên thương lượng trong kênh trao đổi gắn với chính yêu cầu báo giá đó (FR6.2) cho đến khi thống nhất số lượng, đơn giá và ngày giao.
-    \item Hệ thống sinh hợp đồng điện tử từ mẫu chuẩn, điền đầy đủ các điều khoản đã thống nhất, bao gồm điều khoản phạt vi phạm và điều khoản thanh toán; hai bên xem bản nháp và có thể yêu cầu sửa, mỗi lần sửa tạo một phiên bản mới.
-    \item Hai bên \emph{xác nhận giao kết} hợp đồng trong hệ thống bằng mã xác nhận dùng một lần; hệ thống lưu tài khoản, thời điểm và mã băm của đúng phiên bản đã xác nhận.
+    \item Nhà cung cấp phản hồi bằng một báo giá theo bậc, số lượng và ngày giao có thể đáp ứng, kèm điều kiện thanh toán (FR6.2).
+    \item Doanh nghiệp mua sỉ chấp nhận hoặc từ chối báo giá; từ chối thì yêu cầu báo giá đóng lại và bên mua có thể gửi yêu cầu mới.
+    \item Khi báo giá được chấp nhận, hệ thống sinh hợp đồng điện tử một lần từ mẫu chuẩn, điền đầy đủ các điều khoản của báo giá, bao gồm điều khoản phạt vi phạm và điều khoản thanh toán, kèm mã băm của văn bản. Nếu nội dung sai, hợp đồng bị hủy và bên mua tạo yêu cầu báo giá mới.
+    \item Hai bên \emph{xác nhận giao kết} hợp đồng trong hệ thống bằng mã xác nhận dùng một lần gửi qua email; hệ thống lưu tài khoản, thời điểm và mã băm của đúng văn bản đã xác nhận.
     \item Nhà cung cấp tự giao hoặc thuê 3PL giao hàng \textbf{trong một đợt} theo ngày đã ký, và xuất hóa đơn bán hàng cho doanh nghiệp mua sỉ.
     \item Doanh nghiệp mua sỉ xác nhận nhận hàng và chất lượng, sau đó thanh toán qua cổng thanh toán. Farmery ghi nhận hoa hồng của đơn và xuất hóa đơn dịch vụ cho nhà cung cấp.
     \item Nhà cung cấp theo dõi doanh thu, hoa hồng đã trừ và lịch sử bán sỉ trên trang đối soát của mình.
 \end{enumerate}
 
-\noindent\textbf{Phần chỉ thiết kế:} giao nhiều đợt trên một hợp đồng (FR6.5); ký quỹ trung gian cho hợp đồng giá trị lớn (FR7.3) --- tiền bên mua được giữ tại cổng thanh toán và chỉ giải ngân khi xác nhận nhận hàng, nền tảng không trực tiếp giữ tiền; và khấu trừ, nộp thuế thay cho nhà cung cấp là hộ hoặc cá nhân kinh doanh (FR7.4) theo pháp luật thuế về thương mại điện tử (mục~\ref{sec:boicanhchinhsach}). Ở bản hiện thực, niềm tin giữa hai bên dựa vào mã băm của hợp đồng đã xác nhận và mã QR truy xuất của lô.
+\noindent\textbf{Phần chỉ thiết kế:} thương lượng nhiều vòng trong kênh trao đổi gắn với yêu cầu báo giá (FR6.2); sửa bản nháp hợp đồng thành nhiều phiên bản (FR6.3); giao nhiều đợt trên một hợp đồng (FR6.5); ký quỹ trung gian cho hợp đồng giá trị lớn (FR7.3) --- tiền bên mua được giữ tại cổng thanh toán và chỉ giải ngân khi xác nhận nhận hàng, nền tảng không trực tiếp giữ tiền; và khấu trừ, nộp thuế thay cho nhà cung cấp là hộ hoặc cá nhân kinh doanh (FR7.4) theo pháp luật thuế về thương mại điện tử (mục~\ref{sec:boicanhchinhsach}). Ở bản hiện thực, niềm tin giữa hai bên dựa vào mã băm của hợp đồng đã xác nhận và mã QR truy xuất của lô.
 
 \noindent\textbf{Ngoại lệ:}
 \begin{itemize}
@@ -249,7 +249,7 @@ Mọi thay đổi số lượng trên một dòng tồn đều phải đi qua m�
 
 \noindent\textbf{Thu hồi lô} là lý do trực tiếp để gắn tồn kho với truy xuất nguồn gốc. Khi phát hiện chứng nhận giả hoặc vấn đề an toàn thực phẩm ở một lô, nhân viên vận hành thực hiện thu hồi: hệ thống khóa toàn bộ dòng tồn của lô dù chúng thuộc chủ nào và nằm ở đâu, truy ngược sổ nhập xuất để lập danh sách các đơn đã bán từ lô, thông báo cho người mua, và trang truy xuất của lô hiện cảnh báo thu hồi.
 
-\noindent\textbf{Nguyên tắc quản lý.} Mọi dòng tồn được quản lý theo nguyên tắc FEFO (mục~\ref{subsec:khobai}): hệ thống ưu tiên gợi ý bán và xuất trước các lô sắp hết hạn, cảnh báo chủ dòng tồn khi số lượng xuống dưới ngưỡng hoặc sắp hết hạn mà chưa bán hết. Farmery không vận hành kho trung chuyển quy mô lớn mà chỉ duy trì kho sơ chế nhỏ tại vùng trồng, chứa hàng đã thu mua cho luồng bán lẻ; hàng bán sỉ do nhà cung cấp tự bảo quản tại chỗ.
+\noindent\textbf{Nguyên tắc quản lý.} Mọi dòng tồn được quản lý theo nguyên tắc FEFO (mục~\ref{subsec:khobai}): hệ thống ưu tiên gợi ý bán và xuất trước các lô sắp hết hạn; lô cận hạn mà chưa bán hết hiện trên bảng điều khiển giám sát (FR10.5), còn cảnh báo chủ dòng tồn khi số lượng xuống dưới ngưỡng (FR11.2) \emph{(chỉ thiết kế)}. Farmery không vận hành kho trung chuyển quy mô lớn mà chỉ duy trì kho sơ chế nhỏ tại vùng trồng, chứa hàng đã thu mua cho luồng bán lẻ; hàng bán sỉ do nhà cung cấp tự bảo quản tại chỗ.
 
 Hai tình huống sau được xử lý bằng quy tắc nghiệp vụ, chưa thiết kế chi tiết:
 \begin{itemize}
@@ -262,7 +262,7 @@ Kho sơ chế ở Lâm Đồng cách khách lẻ ở TP.HCM khoảng ba trăm ki
 \begin{enumerate}
     \item \textbf{Chặng đầu --- nông hộ về kho sơ chế:} thuộc quy trình thu mua; nhà cung cấp tự đưa hàng tới kho.
     \item \textbf{Chặng giữa --- Lâm Đồng về TP.HCM:} xe lạnh chạy tuyến cố định theo chuyến, do Farmery thuê và điều phối. Mỗi \emph{chuyến trung chuyển} có danh sách đơn (manifest) được lập sau giờ chốt đơn hằng ngày; nhân viên kho cập nhật lúc xe rời kho và lúc bàn giao tại đầu TP.HCM.
-    \item \textbf{Chặng cuối --- giao tới khách:} đơn vị vận chuyển nội thành (3PL) nhận hàng tại điểm bàn giao, giao theo khung giờ khách đã chọn và đẩy trạng thái về hệ thống qua webhook.
+    \item \textbf{Chặng cuối --- giao tới khách:} đơn vị vận chuyển nội thành (3PL) nhận hàng tại điểm bàn giao, giao theo khung giờ khách đã chọn. Trong bản hiện thực, nhân viên vận hành chuyển trạng thái chặng cuối trên hệ thống; tạo vận đơn với đơn vị vận chuyển và nhận trạng thái qua webhook \emph{(chỉ thiết kế)}.
 \end{enumerate}
 Phí giao đơn lẻ gồm cước 3PL nội thành và phần bù chặng giữa chia theo đơn, miễn khi đơn vượt ngưỡng cấu hình. Đơn sỉ không đi qua ba chặng này: nhà cung cấp tự giao hoặc thuê 3PL theo hợp đồng, trong một đợt. Đội giao hàng riêng của Farmery chỉ có ở hướng phát triển (Chương~\ref{chap:ketluan}).
 
@@ -279,8 +279,8 @@ Toàn văn chính sách kiểm hàng và chính sách đổi trả--hoàn tiền
 
 Quy trình xử lý một yêu cầu đổi trả hoặc khiếu nại:
 \begin{enumerate}
-    \item Khách gửi yêu cầu từ trang đơn hàng trong thời hạn của nhóm hàng, kèm ảnh hoặc video minh chứng.
-    \item Hệ thống ghi nhận và gửi xác nhận tiếp nhận; mọi trao đổi giữa khách và nhân viên vận hành diễn ra trong luồng trao đổi gắn với chính yêu cầu đó (FR9.1), có đính kèm ảnh.
+    \item Khách gửi yêu cầu từ trang đơn hàng trong thời hạn của nhóm hàng, ghi lý do và kèm ảnh hoặc video minh chứng.
+    \item Hệ thống ghi nhận và gửi xác nhận tiếp nhận. Nhân viên vận hành ghi kết quả xử lý, và yêu cầu khách bổ sung minh chứng khi cần, ngay trên yêu cầu đó; mỗi lần yêu cầu đổi trạng thái, hệ thống gửi email cho khách. Luồng trao đổi gắn với yêu cầu (FR9.1) \emph{(chỉ thiết kế)}.
     \item Hệ thống gợi ý phân loại nguyên nhân: chất lượng từ khâu cung ứng, đóng gói, vận chuyển, hoặc bảo quản sai từ phía người nhận.
     \item Nhân viên vận hành ra quyết định: hoàn tiền toàn phần, hoàn một phần, giao bù, hoặc từ chối khi bằng chứng không đủ, kèm lý do.
     \item Hệ thống thực hiện hoàn tiền qua cổng thanh toán và ghi nhận nguyên nhân vào lịch sử của nhà cung cấp hoặc của 3PL để đối chiếu về sau.
@@ -299,10 +299,10 @@ Quy trình xử lý một yêu cầu đổi trả hoặc khiếu nại:
     \item Kiểm duyệt viên thực hiện kiểm duyệt định kỳ hồ sơ nhà cung cấp mới, sản phẩm mới hoặc có thay đổi trọng yếu, và các chứng nhận sắp hết hạn; việc kiểm duyệt trải suốt ba giai đoạn trước, trong và sau giao hàng (Bảng~\ref{tab:kiemduyet-giaidoan}).
     \item Nhân viên vận hành giám sát các cảnh báo tự động từ hệ thống, bao gồm tỷ lệ khiếu nại bất thường và các dấu hiệu giao dịch đáng ngờ do luật ngưỡng kích hoạt (Chương~\ref{chap:coso}); ngưỡng của các luật này do quản trị viên hệ thống cấu hình.
     \item Vi phạm được xử lý theo quy trình phân cấp từ nhắc nhở, cảnh cáo công khai, tạm khóa cho đến khóa vĩnh viễn tài khoản, tùy theo mức độ và số lần vi phạm, có lưu vết đầy đủ lý do và quyết định --- vi phạm về nội dung đăng bán do kiểm duyệt viên xử lý, vi phạm phát sinh từ đơn hàng do nhân viên vận hành xử lý.
-    \item Nhân viên vận hành truy xuất báo cáo thống kê định kỳ để hỗ trợ ra quyết định vận hành và báo cáo cho các bên liên quan.
+    \item Nhân viên vận hành truy xuất báo cáo thống kê định kỳ để hỗ trợ ra quyết định vận hành và báo cáo cho các bên liên quan (FR10.4) \emph{(chỉ thiết kế)}.
 \end{enumerate}
 
-Bảng~\ref{tab:kiemduyet-giaidoan} gom việc kiểm duyệt theo ba giai đoạn của một lô hàng: trước giao hàng, trong giao hàng và sau giao hàng, kèm người duyệt, hạn xử lý và trạng thái của từng khâu theo ba nhãn ở đầu mục~\ref{sec:yeucauchucnang}.
+Bảng~\ref{tab:kiemduyet-giaidoan} gom việc kiểm duyệt theo ba giai đoạn của một lô hàng: trước giao hàng, trong giao hàng và sau giao hàng, kèm người duyệt, hạn xử lý và trạng thái của từng khâu theo hai nhãn ở đầu mục~\ref{sec:yeucauchucnang}.
 
 \begingroup
 \tblsetup\tblzebra
@@ -321,15 +321,16 @@ Bảng~\ref{tab:kiemduyet-giaidoan} gom việc kiểm duyệt theo ba giai đo�
 \endhead
 \bottomrule
 \endfoot
-Trước giao hàng & Hồ sơ nhà cung cấp, eKYC, chứng nhận & Kiểm duyệt viên; 5 ngày làm việc & \emph{Để sau prototype}, làm khi mô-đun nhà cung cấp nối vào API; eKYC ở đây là duyệt thủ công ảnh giấy tờ, đối chiếu khuôn mặt tự động \emph{chỉ thiết kế} \\
- & Sản phẩm (bốn lớp L1--L4) & Hệ thống kiểm sơ bộ, kiểm duyệt viên duyệt thủ công; L4 là hậu kiểm từ báo cáo của người mua & Quy tắc L1--L3 trong thiết kế; báo cáo sai danh mục (L4) \emph{để sau prototype} \\
- & Lô hàng & Kiểm duyệt viên; mặc định 48 giờ, cấu hình được & Đã hiện thực: tạo việc duyệt, duyệt thì sinh mã truy xuất, từ chối kèm lý do \\
- & Nghiệm thu nhập kho & Nhân viên thu mua, nhân viên kho & \emph{Để sau prototype}, làm cùng mô-đun tồn kho ở bản MVP \\
-Trong giao hàng & Trạng thái chuyến và vận đơn, xử lý ngoại lệ giao hàng & Nhân viên vận hành & Đã hiện thực: nhân viên chuyển trạng thái đơn \\
+Trước giao hàng & Hồ sơ nhà cung cấp, eKYC, chứng nhận & Kiểm duyệt viên; 5 ngày làm việc & Hiện thực; eKYC là duyệt thủ công ảnh giấy tờ, đối chiếu khuôn mặt tự động \emph{chỉ thiết kế} \\
+ & Sản phẩm (bốn lớp L1--L4) & Hệ thống kiểm sơ bộ, kiểm duyệt viên duyệt thủ công; L4 là hậu kiểm từ báo cáo của người mua & Hiện thực L1--L3; báo cáo sai danh mục (L4) \emph{chỉ thiết kế} \\
+ & Lô hàng & Kiểm duyệt viên; mặc định 48 giờ, cấu hình được & Hiện thực: tạo việc duyệt, duyệt thì sinh mã truy xuất, từ chối kèm lý do \\
+ & Nghiệm thu nhập kho & Nhân viên thu mua, nhân viên kho & Hiện thực \\
+Trong giao hàng & Trạng thái chuyến và vận đơn, xử lý ngoại lệ giao hàng & Nhân viên kho (chuyến trung chuyển), nhân viên vận hành (chặng cuối) & Hiện thực: nhân viên chuyển trạng thái chuyến và đơn; nhận trạng thái từ 3PL qua webhook \emph{chỉ thiết kế} \\
  & Kiểm khi xuất kho, bàn giao cho đơn vị vận chuyển (3PL) & Nhân viên kho & \emph{Chỉ thiết kế} \\
-Sau giao hàng & Khiếu nại, đổi trả & Nhân viên vận hành; hạn khiếu nại rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày; quyết định trong 3 ngày làm việc & \emph{Để sau prototype}, làm khi mô-đun bán lẻ và thanh toán nối vào API \\
- & Đánh giá nghi vấn, báo cáo sai danh mục & Kiểm duyệt viên & \emph{Để sau prototype}, làm cùng đánh giá của người mua \\
- & Vi phạm và thu hồi lô & Kiểm duyệt viên (vi phạm nội dung), nhân viên vận hành (vi phạm từ đơn hàng, thu hồi lô) & \emph{Để sau prototype}, làm cùng mô-đun tồn kho \\
+Sau giao hàng & Khiếu nại, đổi trả & Nhân viên vận hành; hạn khiếu nại rau lá 24 giờ, củ quả 48 giờ, hàng khô 7 ngày; quyết định trong 3 ngày làm việc & Hiện thực \\
+ & Đánh giá nghi vấn & Kiểm duyệt viên & Hiện thực: luật ngưỡng gắn cờ, sinh việc duyệt \\
+ & Báo cáo sai danh mục từ người mua & Kiểm duyệt viên & \emph{Chỉ thiết kế} \\
+ & Vi phạm và thu hồi lô & Kiểm duyệt viên (vi phạm nội dung), nhân viên vận hành (vi phạm từ đơn hàng, thu hồi lô) & Hiện thực \\
 \end{longtable}
 \endgroup
 
@@ -371,7 +372,7 @@ Nền tảng được tổ chức thành năm khối chức năng, mỗi khối 
     \item \textbf{Nền tảng chung} --- tài khoản và phân quyền, đồng ý dữ liệu, thông báo, quản lý tệp (FR1, FR11).
     \item \textbf{Nguồn cung} --- hồ sơ nhà cung cấp, quản lý chứng nhận, sản phẩm và truy xuất nguồn gốc theo lô, tồn kho (FR2--FR4).
     \item \textbf{Giao dịch} --- bán sỉ qua báo giá và hợp đồng, bán lẻ từ gian hàng của nền tảng, thu mua và quản lý kho, thanh toán và hóa đơn (FR5--FR7, FR13).
-    \item \textbf{Sau bán} --- giao hàng ba chặng, đổi trả và khiếu nại kèm trao đổi theo đơn, đánh giá và điểm uy tín (FR5.5, FR8, FR9).
+    \item \textbf{Sau bán} --- giao hàng ba chặng, đổi trả và khiếu nại, trao đổi theo đơn \emph{(chỉ thiết kế)}, đánh giá và điểm uy tín (FR5.5, FR8, FR9).
     \item \textbf{Vận hành và hỗ trợ ra quyết định} --- công cụ quản trị và cấu hình, các mô-đun AI (FR10, FR12).
 \end{itemize}
 
@@ -379,7 +380,7 @@ Nền tảng được tổ chức thành năm khối chức năng, mỗi khối 
 
 Người dùng bên ngoài và nhân sự nội bộ dùng hai ứng dụng web riêng, cùng gọi một giao diện lập trình (API) của hệ thống:
 \begin{itemize}
-    \item \textbf{Ứng dụng mua hàng} --- cho khách vãng lai, khách lẻ, khách sỉ và nhà cung cấp. Ứng dụng được dựng theo dạng \emph{ứng dụng web cài đặt được} (Progressive Web App, PWA): không bắt buộc cài, chỉ cần mở đường dẫn là dùng được, nhưng cài được lên màn hình chính để nhận thông báo đẩy; nhà cung cấp ghi nhật ký tại ruộng vẫn thao tác được khi sóng yếu, dữ liệu được gửi khi có kết nối (NFR7.3). Trang truy xuất nguồn gốc và trang sản phẩm được dựng sẵn phía máy chủ để mở nhanh khi quét mã QR và để máy tìm kiếm lập chỉ mục được.
+    \item \textbf{Ứng dụng mua hàng} --- cho khách vãng lai, khách lẻ, khách sỉ và nhà cung cấp. Ứng dụng được dựng theo dạng \emph{ứng dụng web cài đặt được} (Progressive Web App, PWA): không bắt buộc cài, chỉ cần mở đường dẫn là dùng được, nhưng cài được lên màn hình chính như một ứng dụng (nhận thông báo đẩy \emph{(chỉ thiết kế)}); nhà cung cấp ghi nhật ký tại ruộng vẫn thao tác được khi sóng yếu, dữ liệu được gửi khi có kết nối (NFR7.3). Trang truy xuất nguồn gốc và trang sản phẩm được dựng sẵn phía máy chủ để mở nhanh khi quét mã QR và để máy tìm kiếm lập chỉ mục được.
     \item \textbf{Ứng dụng nội bộ} --- cho sáu vai trò nhân sự nội bộ (Bảng~\ref{tab:vaitro-noibo}). Đăng nhập bắt buộc xác thực hai lớp, phiên làm việc ngắn, có thể giới hạn theo địa chỉ mạng (NFR3.6); giao diện đáp ứng để nhân viên kho và nhân viên hỗ trợ vùng dùng được trên điện thoại.
 \end{itemize}
 Tách hai ứng dụng giữ cho ứng dụng mua hàng nhẹ và bảo đảm các màn hình có quyền cao không bao giờ được tải xuống máy của người dùng bên ngoài. Ứng dụng di động gốc nằm ngoài phạm vi đồ án (Chương~\ref{chap:ketluan}). Hỗ trợ chung cho người dùng đi qua Zalo OA và liên lạc của nhân viên hỗ trợ vùng với nhà cung cấp, không phải một kênh truy cập hệ thống.
@@ -401,10 +402,10 @@ Tổng hợp từ các quy trình nghiệp vụ tại mục~\ref{sec:quytrinhngh
 
 \begin{itemize}
     \item \textbf{Nhà cung cấp} --- nông dân, hợp tác xã: đăng ký và xác thực, đăng sản phẩm, ghi nhật ký canh tác, phản hồi yêu cầu báo giá từ khách sỉ, hoặc bán cả lô cho Farmery qua nhân viên thu mua; giao hàng và nhận thanh toán.
-    \item \textbf{Khách sỉ} --- doanh nghiệp mua sỉ: gửi yêu cầu báo giá, thương lượng và giao kết hợp đồng với nhà cung cấp qua kênh do hệ thống trung gian hóa, theo dõi đơn sỉ giao một đợt.
+    \item \textbf{Khách sỉ} --- doanh nghiệp mua sỉ: gửi yêu cầu báo giá, chấp nhận hoặc từ chối báo giá của nhà cung cấp và giao kết hợp đồng qua kênh do hệ thống trung gian hóa, theo dõi đơn sỉ giao một đợt.
     \item \textbf{Khách lẻ} --- người tiêu dùng cá nhân: tìm kiếm, tra cứu truy xuất, đặt hàng từ gian hàng của nền tảng, theo dõi đơn, yêu cầu đổi trả và đánh giá. Khách lẻ giao dịch với Farmery chứ không với nhà cung cấp.
     \item \textbf{Nhân sự nội bộ Farmery} --- sáu vai trò tại Bảng~\ref{tab:vaitro-noibo}: khảo giá và tạo đơn thu mua theo lô, nghiệm thu, đóng gói và điều phối chuyến trung chuyển, kiểm duyệt nhà cung cấp và sản phẩm, xử lý khiếu nại và đổi trả, hỗ trợ nhà cung cấp tại vùng trồng, và cấu hình hệ thống.
-    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân. Mười hệ thống bên ngoài được chia làm hai nhóm. Năm hệ thống thuộc phạm vi hiện thực của MVP: cổng thanh toán, đơn vị vận chuyển nội thành, dịch vụ hóa đơn điện tử (giả lập), dịch vụ email và dịch vụ đẩy của trình duyệt (Web Push, mục~\ref{sec:giaiphapcongnghe}); trong mã nguồn hiện nay mới có hai hệ thống đã đứng sau một giao diện kèm bản giả (cổng thanh toán và kênh gửi mã OTP qua email), ba hệ thống còn lại để sau prototype. Năm hệ thống chỉ được thiết kế: dịch vụ SMS, TraceViet, tổ chức chứng thực chữ ký số, và đăng nhập qua Google hoặc Facebook.
+    \item \textbf{Hệ thống nền tảng:} xác thực OTP, kiểm duyệt tự động sơ bộ, sinh mã QR, phục vụ kết quả từ các mô-đun AI, xử lý thanh toán và điều phối dữ liệu giữa các tác nhân. Mười hệ thống bên ngoài được chia làm hai nhóm. Ba hệ thống có trong bản hiện thực, mỗi hệ thống đứng sau một giao diện tích hợp: cổng thanh toán và dịch vụ hóa đơn điện tử (đều ở dạng giả lập), và dịch vụ email. Bảy hệ thống chỉ được thiết kế: đơn vị vận chuyển nội thành (GHN), dịch vụ đẩy của trình duyệt (Web Push, mục~\ref{sec:giaiphapcongnghe}), dịch vụ SMS, TraceViet, tổ chức chứng thực chữ ký số, đăng nhập qua Google và đăng nhập qua Facebook. Riêng cổng thanh toán, kết nối thật với môi trường thử nghiệm VNPay và nhận kết quả qua IPN cũng chỉ được thiết kế.
 \end{itemize}
 
 Một nguyên tắc chi phối toàn hệ thống: nền tảng không cho phép bên bán và bên mua giao dịch ngoài tầm kiểm soát của mình. Mọi luồng tiền, dữ liệu chứng nhận và đánh giá đều đi qua hệ thống, vừa để đảm bảo tính minh bạch (liên hệ mục~\ref{subsec:reputation}), vừa để nhân sự nội bộ có đủ dữ liệu giám sát và xử lý vi phạm. Ở luồng bán lẻ, nguyên tắc này thể hiện theo cách mạnh hơn: Farmery không đứng giữa mà là một bên trong giao dịch, trực tiếp chịu trách nhiệm chất lượng hàng bán ra trước người tiêu dùng.
@@ -455,8 +456,8 @@ Nhân sự nội bộ Farmery & Sáu vai trò (Bảng~\ref{tab:vaitro-noibo}) & 
 \bottomrule
 \endfoot
 Kiểm duyệt viên & \texttt{staff\_moderation} & Duyệt hồ sơ nhà cung cấp, hồ sơ doanh nghiệp mua sỉ (mã số thuế, giấy phép kinh doanh), sản phẩm và chứng nhận; duyệt đánh giá bị hệ thống gắn cờ; xử lý vi phạm về nội dung đăng bán (FR10.1, FR10.2) \\
-Nhân viên vận hành & \texttt{staff\_operations} & Xử lý khiếu nại, đổi trả và tranh chấp đơn hàng; giám sát đơn và giao hàng; thực hiện thu hồi lô; báo cáo thống kê (FR10.3--FR10.5, FR13.6) \\
-Nhân viên thu mua & \texttt{staff\_sourcing} & Xem chào giá lô, lập đơn thu mua theo lô, định giá bán lẻ có tham khảo dự báo giá, chủ động xả hàng tồn cận hạn (FR13.1, FR12.2) \\
+Nhân viên vận hành & \texttt{staff\_operations} & Xử lý khiếu nại, đổi trả và tranh chấp đơn hàng; giám sát đơn và giao hàng; phản hồi công khai đánh giá thay Farmery (FR5.5) \emph{(chỉ thiết kế)}; thực hiện thu hồi lô; báo cáo thống kê (FR10.3--FR10.5, FR13.6) \\
+Nhân viên thu mua & \texttt{staff\_sourcing} & Xem chào giá lô, lập đơn thu mua theo lô, định giá bán lẻ, chủ động xả hàng tồn cận hạn (FR13.1); xem dự báo giá (FR12.2) \emph{chỉ thiết kế} \\
 Nhân viên kho & \texttt{staff\_warehouse} & Nghiệm thu hàng nhập, đóng gói và in tem QR, nhãn; quản lý dòng tồn và sổ nhập xuất; lập và cập nhật chuyến trung chuyển (FR13.2--FR13.4, FR8.1) \\
 Nhân viên hỗ trợ vùng & \texttt{staff\_support} & Hướng dẫn và nhập liệu thay nhà cung cấp được phân công; chỉ truy cập dữ liệu của những nhà cung cấp đó, không có quyền duyệt \\
 Quản trị viên hệ thống & \texttt{platform\_owner} & Quản lý tài khoản nội bộ và vai trò; cấu hình cây danh mục, ngưỡng của luật giám sát, biểu phí, thời hạn đổi trả, điều kiện COD, giờ chốt đơn, khung giờ giao; xem nhật ký thao tác (FR10.6, FR10.7) \\
@@ -481,7 +482,7 @@ Mục này làm rõ cách mỗi nhóm người dùng ở mục~\ref{sec:doituong
 \paragraph*{Người mua lẻ (người tiêu dùng cá nhân)}
 \begin{itemize}
     \item \textbf{Kênh tiếp cận:} tự đăng ký trên nền tảng web qua kênh quảng bá số (mạng xã hội, SEO) hoặc giới thiệu từ cộng đồng quan tâm nông sản sạch.
-    \item \textbf{Liên hệ hỗ trợ:} thắc mắc về một đơn cụ thể được trao đổi ngay trong trang đơn hoặc trang khiếu nại của đơn đó; hỏi đáp chung qua Zalo OA và hotline.
+    \item \textbf{Liên hệ hỗ trợ:} sự cố với một đơn cụ thể được gửi bằng yêu cầu đổi trả, khiếu nại ngay trên trang đơn đó; hỏi đáp chung qua Zalo OA và hotline.
     \item \textbf{Thủ tục:} đăng ký bằng email, xác thực OTP qua email; số điện thoại khai để giao hàng, chưa xác minh qua SMS --- không yêu cầu xác minh giấy tờ, có thể mua ngay sau khi xác thực.
     \item \textbf{Kết quả:} tài khoản được gán vai trò \texttt{buyer\_retail}, truy cập ngay quy trình bán lẻ (mục~\ref{sec:quytrinhnghiepvu}).
 \end{itemize}
@@ -489,7 +490,7 @@ Mục này làm rõ cách mỗi nhóm người dùng ở mục~\ref{sec:doituong
 \paragraph*{Người mua sỉ (doanh nghiệp mua sỉ)}
 \begin{itemize}
     \item \textbf{Kênh tiếp cận:} đăng ký tài khoản doanh nghiệp qua form riêng trên nền tảng, hoặc liên hệ trực tiếp đội ngũ Farmery để được tư vấn.
-    \item \textbf{Liên hệ hỗ trợ:} qua hotline hoặc Zalo, ngoài hệ thống; điều kiện giao nhận và thanh toán được thỏa thuận ngay trong kênh trao đổi của từng RFQ.
+    \item \textbf{Liên hệ hỗ trợ:} qua hotline hoặc Zalo, ngoài hệ thống; điều kiện giao nhận và thanh toán nêu trong RFQ và trong báo giá phản hồi.
     \item \textbf{Thủ tục:} khai báo mã số thuế/giấy phép kinh doanh, kiểm duyệt viên (\texttt{staff\_moderation}) xác minh hồ sơ trước khi cấp quyền xem bảng giá sỉ và gửi RFQ (FR1.3) --- thời gian xử lý dài hơn nhóm mua lẻ do cần thẩm định.
     \item \textbf{Kết quả:} tài khoản được gán vai trò \texttt{buyer\_wholesale}, truy cập quy trình bán sỉ (mục~\ref{sec:quytrinhnghiepvu}).
 \end{itemize}
@@ -603,20 +604,19 @@ quy trình nghiệp vụ (mục~\ref{sec:quytrinhnghiepvu}), hệ thống cần 
 nhóm yêu cầu chức năng sau. Các mã FRx.x dùng để đối chiếu 1--1 với use case
 tại mục~\ref{sec:sddchitiet} và phần hiện thực ở Chương~\ref{chap:hienthuc}.
 
-\noindent\textbf{Mức độ ưu tiên, tính khả thi và cách kiểm thử.} Toàn bộ 13 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính: mức độ ưu tiên theo MoSCoW, tính khả thi kỹ thuật, và phương pháp kiểm thử tương ứng. Phân bố cho thấy \textbf{11 nhóm ở mức Must} --- tài khoản và phân quyền, hồ sơ nhà cung cấp, chứng nhận, sản phẩm và truy xuất nguồn gốc, hai luồng giao dịch, thanh toán, giao hàng và đổi trả, vận hành nền tảng, thông báo, thu mua cùng quản lý kho --- vì thiếu bất kỳ nhóm nào thì trục bán lẻ đầu--cuối không chạy trọn được. Hai nhóm ở mức Should: tương tác người dùng (chỉ phần trao đổi theo đơn được hiện thực) và hỗ trợ AI, vì khi dịch vụ AI tạm ngưng hệ thống vẫn bán được hàng nhờ tìm kiếm từ khóa. Không nhóm nào ở mức Could; phần chưa làm được ghi nhãn \emph{(chỉ thiết kế)} hoặc \emph{(để sau prototype)} ngay trong từng yêu cầu. Về tính khả thi, dự báo giá là hạng mục duy nhất ở mức Challenging (sản phẩm tương tự và tìm kiếm theo ngữ nghĩa ở mức Medium vì dùng mô hình nhúng có sẵn), phản ánh đúng rủi ro đã nêu tại mục~\ref{subsec:vandenghiencuu} về việc thiếu dữ liệu ở giai đoạn đầu. Ma trận đầy đủ kèm phương pháp kiểm thử cho từng nhóm được trình bày tại Phụ lục M.
+\noindent\textbf{Mức độ ưu tiên, tính khả thi và cách kiểm thử.} Toàn bộ 13 nhóm yêu cầu chức năng được đánh giá theo ba thuộc tính: mức độ ưu tiên theo MoSCoW, tính khả thi kỹ thuật, và phương pháp kiểm thử tương ứng. Phân bố cho thấy \textbf{11 nhóm ở mức Must} --- tài khoản và phân quyền, hồ sơ nhà cung cấp, chứng nhận, sản phẩm và truy xuất nguồn gốc, hai luồng giao dịch, thanh toán, giao hàng và đổi trả, vận hành nền tảng, thông báo, thu mua cùng quản lý kho --- vì thiếu bất kỳ nhóm nào thì trục bán lẻ đầu--cuối không chạy trọn được. Hai nhóm ở mức Should: tương tác người dùng (hiện chỉ có ở mức thiết kế) và hỗ trợ AI, vì khi dịch vụ AI tạm ngưng hệ thống vẫn bán được hàng nhờ tìm kiếm từ khóa. Không nhóm nào ở mức Could; phần chưa làm được ghi nhãn \emph{(chỉ thiết kế)} ngay trong từng yêu cầu. Về tính khả thi, dự báo giá là hạng mục duy nhất ở mức Challenging (sản phẩm tương tự và tìm kiếm theo ngữ nghĩa ở mức Medium vì dùng mô hình nhúng có sẵn), phản ánh đúng rủi ro đã nêu tại mục~\ref{subsec:vandenghiencuu} về việc thiếu dữ liệu ở giai đoạn đầu. Ma trận đầy đủ kèm phương pháp kiểm thử cho từng nhóm được trình bày tại Phụ lục M.
 
-\noindent\textbf{Quy ước ghi chú.} Báo cáo dùng ba nhãn trạng thái, thống nhất ở mọi chương, phụ lục và hình vẽ:
+\noindent\textbf{Quy ước ghi chú.} Báo cáo dùng hai nhãn trạng thái, thống nhất ở mọi chương, phụ lục và hình vẽ:
 \begin{itemize}
     \item \textbf{Đã hiện thực:} mục không có ghi chú, có trong bản nộp.
     \item \textbf{Chỉ thiết kế} (ghi \emph{(chỉ thiết kế)}): được đặc tả và thiết kế đầy đủ nhưng cố ý không làm trong đồ án.
-    \item \textbf{Để sau prototype} (ghi \emph{(để sau prototype)}): thuộc phạm vi sản phẩm khả dụng tối thiểu (MVP) hoặc đã cam kết, nhưng chưa làm ở bản prototype và sẽ làm khi có điều kiện nêu ở Bảng~\ref{tab:chi-thiet-ke}.
 \end{itemize}
-Năm mã của phiên bản trước --- FR4.8 đồng bộ TraceViet, FR6.6 ký số, FR11.3 cảnh báo khan hiếm, FR13.5 thuê kho, FR13.7 chào sỉ tồn dư --- đã được rút khỏi bộ yêu cầu và chuyển sang hướng phát triển (Chương~\ref{chap:ketluan}); các mã còn lại giữ nguyên số để không lệch truy vết. Bảng~\ref{tab:chi-thiet-ke} liệt kê các phần mang một trong hai nhãn sau, chia thành hai nhóm, kèm lý do chưa làm và điều kiện để làm; các mục khác trong báo cáo chỉ đánh dấu và dẫn về bảng này. Riêng các khâu kiểm duyệt, nghiệm thu, đổi trả chưa nối vào API ở prototype được ghi trạng thái từng khâu ở Bảng~\ref{tab:kiemduyet-giaidoan}.
+Năm mã của phiên bản trước --- FR4.8 đồng bộ TraceViet, FR6.6 ký số, FR11.3 cảnh báo khan hiếm, FR13.5 thuê kho, FR13.7 chào sỉ tồn dư --- đã được rút khỏi bộ yêu cầu và chuyển sang hướng phát triển (Chương~\ref{chap:ketluan}); các mã còn lại giữ nguyên số để không lệch truy vết. Bảng~\ref{tab:chi-thiet-ke} liệt kê các phần chỉ thiết kế, kèm lý do chưa làm và điều kiện để làm; các mục khác trong báo cáo chỉ đánh dấu và dẫn về bảng này. Trạng thái từng khâu kiểm duyệt, nghiệm thu, đổi trả được ghi ở Bảng~\ref{tab:kiemduyet-giaidoan}.
 
 \begingroup
 \tblsetup\tblzebra
 \begin{longtable}{L{3.30cm} L{4.30cm} L{3.80cm} L{3.60cm}}
-\caption{Các phần chỉ thiết kế và để sau prototype: lý do và điều kiện để làm}
+\caption{Các phần chỉ thiết kế: lý do và điều kiện để làm}
 \label{tab:chi-thiet-ke} \\
 \toprule
 \rowcolor{tblheadbg}
@@ -634,19 +634,22 @@ Năm mã của phiên bản trước --- FR4.8 đồng bộ TraceViet, FR6.6 ký
 Đăng nhập Google, Facebook & Phụ thuộc dịch vụ bên ngoài, không nằm trên trục bán lẻ & Đăng ký ứng dụng OAuth với từng nhà cung cấp & Hai khối hệ thống ngoài ở sơ đồ kiến trúc \\
 OTP và thông báo qua SMS & Nhà cung cấp tính phí theo tin nhắn & Ngân sách và hợp đồng với nhà cung cấp SMS & Kênh SMS trong mô-đun thông báo; hiện dùng OTP qua email \\
 Hóa đơn điện tử thật & Cần hợp đồng với nhà cung cấp dịch vụ hóa đơn và chứng thư số của doanh nghiệp & Doanh nghiệp vận hành có chứng thư số và hợp đồng & Lớp tích hợp và bản giả lập cùng giao diện \\
-Ký số hợp đồng sỉ & Cần tổ chức chứng thực chữ ký số và hiệu lực pháp lý của chữ ký & Hợp đồng với tổ chức chứng thực & Bản ghi các phiên bản và xác nhận giao kết bằng OTP \\
-Ký quỹ, giao nhiều đợt, khấu trừ thuế (bán sỉ) & Bán sỉ giữ tối giản, chỉ giao một đợt để tập trung vào trục chính & Có khách sỉ thật và quy định thuế rõ ràng & Bảng hợp đồng và thanh toán đã có cột phục vụ đối soát \\
+Ký số hợp đồng sỉ & Cần tổ chức chứng thực chữ ký số và hiệu lực pháp lý của chữ ký & Hợp đồng với tổ chức chứng thực & Mã băm hợp đồng và xác nhận giao kết bằng OTP qua email \\
+Thương lượng nhiều vòng, sửa hợp đồng thành nhiều phiên bản, ký quỹ, giao nhiều đợt, khấu trừ thuế (bán sỉ; FR6.2, FR6.3, FR6.5, FR7.3, FR7.4) & Bán sỉ giữ tối giản để tập trung vào trục chính: một vòng phản hồi giá, hợp đồng sinh một lần, giao một đợt & Có khách sỉ thật và quy định thuế rõ ràng & Bảng trao đổi theo RFQ, bảng phiên bản hợp đồng; bảng hợp đồng và thanh toán đã có cột phục vụ đối soát \\
+Kết nối cổng thanh toán VNPay (môi trường thử nghiệm) và nhận kết quả qua IPN/webhook (FR7.1) & Phụ thuộc dịch vụ bên ngoài, không có chỉ số ở Chương~\ref{chap:danhgia}; bản giả lập đặt sau giao diện tích hợp đủ cho trục bán lẻ, kể cả COD và hoàn tiền & Tài khoản môi trường thử nghiệm của cổng; máy chủ có địa chỉ công khai nhận IPN & Giao diện tích hợp cổng thanh toán và bản giả lập cùng giao diện \\
+Kết nối đơn vị vận chuyển nội thành GHN (môi trường thử nghiệm) và nhận trạng thái qua webhook (chặng cuối của FR8.1) & Phụ thuộc dịch vụ bên ngoài, không có chỉ số ở Chương~\ref{chap:danhgia}; chặng cuối vẫn đủ trạng thái do nhân viên vận hành chuyển bước & Tài khoản môi trường thử nghiệm của đơn vị vận chuyển; địa chỉ công khai nhận webhook & Bảng vận đơn và lịch sử trạng thái vận đơn \\
+Thông báo đẩy của trình duyệt (Web Push, FR11.1) & Không có chỉ số ở Chương~\ref{chap:danhgia}; thông báo trong web, email và trang đơn tự hỏi lại trạng thái mỗi 5 giây đủ cho việc theo dõi đơn & Khóa VAPID và service worker nhận đẩy & Bảng \texttt{push\_subscriptions} lưu đăng ký của từng trình duyệt \\
+Cảnh báo chứng nhận sắp hết hạn, tồn thấp, nhắc gia hạn (FR11.2, phần nhắc của FR3.3) & Không nằm trên trục bán lẻ đầu--cuối, không có chỉ số ở Chương~\ref{chap:danhgia} & Nối hai sự kiện vào kênh thông báo sẵn có, thêm lịch quét định kỳ & Sự kiện \texttt{CertExpired}, \texttt{StockLow} đã có sẵn \\
+Trao đổi theo đơn (FR9.1) & Không có chỉ số ở Chương~\ref{chap:danhgia}; đổi trả ghi lý do, minh chứng và kết quả xử lý trên chính yêu cầu, kèm email mỗi lần đổi trạng thái & Trục bán lẻ đã chạy trọn và đo xong & Bảng tin nhắn gắn với đơn và yêu cầu đổi trả \\
+Đăng ký báo khi có hàng hoặc vào mùa (FR5.7) & Không nằm trên trục bán lẻ đầu--cuối, không có chỉ số ở Chương~\ref{chap:danhgia}; khối ``Sắp vào mùa'' vẫn hiển thị & Trục bán lẻ đã chạy trọn và đo xong & Bảng đăng ký báo khi có hàng \\
+Phản hồi công khai của Farmery dưới đánh giá (FR5.5) & Không có chỉ số ở Chương~\ref{chap:danhgia}; viết đánh giá, điểm uy tín và gắn cờ đánh giá nghi vấn vẫn hiện thực & Trục bán lẻ đã chạy trọn và đo xong & Bảng \texttt{review\_replies} \\
+Hiển thị dự báo giá cho nhân viên thu mua (FR12.2) & Mô hình chỉ chạy offline và đo MAPE trên dữ liệu giá công khai; chưa có dữ liệu giá nội bộ để dùng khi ra quyết định & Sai số đạt ngưỡng trên dữ liệu giá nội bộ; bổ sung API và trang nội bộ & Mô hình và tệp kết quả dự báo; bảng lưu kết quả dự báo trong lược đồ thu mua \\
 Xe gom chặng đầu & Ở bản hiện thực nhà cung cấp tự đưa hàng tới điểm nhận & Có đội xe hoặc đối tác vận chuyển chặng đầu & Chặng đầu trong mô hình ba chặng giao hàng \\
 Sơ chế nhiều bước, kiểm kê định kỳ & Kho được rút gọn về nhập, đóng gói một bước và xuất & Kho vận hành thật với nhiều công đoạn & Các bảng tồn kho, sổ kho và đóng gói \\
 Gợi ý cá nhân hóa, tìm nhà cung cấp theo ngữ nghĩa & Cần dữ liệu tương tác mà nền tảng mới chưa có & Đủ dữ liệu lượt xem, mua, đánh giá & Hàng đợi sự kiện thu thập hành vi, vector sản phẩm dùng chung \\
 Đồng bộ TraceViet & Phụ thuộc quyền kết nối vào hệ thống của Bộ Nông nghiệp và Môi trường & Được cấp quyền và chuẩn kết nối & Mã truy xuất theo lô và khối hệ thống ngoài ở sơ đồ \\
-\multicolumn{4}{l}{\cellcolor{tblaltbg}\textbf{Để sau prototype} (thuộc MVP hoặc đã cam kết, sẽ làm sau)} \\
-Thông báo đẩy của trình duyệt (Web Push, FR11.1) & Prototype chưa gửi thông báo đẩy mà hỏi lại trạng thái đơn mỗi 5 giây; cần khóa VAPID và service worker & Làm cùng FR11.1 ở bản MVP; dịch vụ đẩy do hãng trình duyệt vận hành, miễn phí, không cần hợp đồng & Bảng \texttt{push\_subscriptions} lưu đăng ký của từng trình duyệt \\
-Đánh giá của người mua, đăng ký báo khi có hàng hoặc vào mùa (FR5.5, FR5.7) & Trục bán lẻ ưu tiên xem, chọn và thêm vào giỏ; chưa có màn hình và API & Bổ sung màn hình và API; đánh giá cần dữ liệu đơn đã giao & Yêu cầu FR5.5, FR5.7 và bảng đăng ký báo vào mùa \\
-Mã giảm giá, danh sách yêu thích, báo cáo sai danh mục (FR5.3, FR9.2, FR4.7) & Không nằm trên trục bán lẻ đầu--cuối & Làm sau khi trục bán lẻ chạy trọn & Yêu cầu và hàng đợi xử lý của kiểm duyệt viên \\
-Báo cáo tổng quan và thống kê cho nhà cung cấp (FR10.4, FR2.2) & Không nằm trên trục bán lẻ đầu--cuối & Có đủ dữ liệu giao dịch để thống kê & Dữ liệu đơn, thanh toán và sổ nhập xuất \\
-Cảnh báo chứng nhận sắp hết hạn, tồn thấp, nhắc gia hạn (FR11.2, phần nhắc của FR3.3) & Đi theo kênh thông báo; chưa có bộ gửi cảnh báo & Làm cùng FR11.1 & Sự kiện \texttt{CertExpired}, \texttt{StockLow} đã có sẵn \\
-Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ sơ nhà cung cấp, eKYC thủ công, chứng nhận, nghiệm thu nhập kho, khiếu nại, thu hồi lô) & Prototype tập trung trục bán lẻ và duyệt lô; chi tiết từng khâu ở Bảng~\ref{tab:kiemduyet-giaidoan} & Hoàn thiện mô-đun tương ứng ở bản MVP & Hợp đồng API và lược đồ cơ sở dữ liệu của các mô-đun này \\
+Mã giảm giá, danh sách yêu thích, báo cáo sai danh mục (FR5.3, FR9.2, FR4.7) & Không nằm trên trục bán lẻ đầu--cuối và không có chỉ số đánh giá ở Chương~\ref{chap:danhgia}; thời gian dành cho kiểm thử trục chính & Trục bán lẻ đã chạy trọn và đo xong & Yêu cầu, bảng mã giảm giá và yêu thích, hàng đợi xử lý của kiểm duyệt viên \\
+Báo cáo tổng quan và thống kê cho nhà cung cấp (FR10.4, FR2.2) & Không nằm trên trục bán lẻ đầu--cuối; dữ liệu mô phỏng chưa đủ để số thống kê có ý nghĩa & Có dữ liệu giao dịch thật & Dữ liệu đơn, thanh toán và sổ nhập xuất \\
 \end{longtable}
 \endgroup
 
@@ -682,7 +685,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     không phải gian hàng riêng của nhà cung cấp.
     \item \textbf{FR2.2:} Báo cáo thống kê cơ bản cho nhà cung cấp: doanh
     thu, số đơn hàng, sản phẩm bán chạy theo mốc thời gian
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR2.3:} Nhà cung cấp theo dõi tồn kho của mình theo lô
     hàng (chi tiết tại FR13).
     \item \textbf{FR2.4:} Khai báo loại người bán cho nghĩa vụ thuế (tự sản
@@ -700,7 +703,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     chứng nhận trước khi hiển thị công khai.
     \item \textbf{FR3.3:} Theo dõi hạn hiệu lực chứng nhận, tự động đánh dấu
     hết hạn và nhắc người bán gia hạn (liên hệ FR11.2); phần nhắc gia hạn
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR4: Quản lý sản phẩm \& truy xuất nguồn gốc}
@@ -728,7 +731,7 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     nhóm hàng bị loại trừ (mục~\ref{sec:quytrinhnghiepvu}).
     \item \textbf{FR4.7:} Tiếp nhận báo cáo từ người mua về sản phẩm sai
     danh mục hoặc không thuộc nhóm nông sản, đưa vào hàng đợi xử lý của
-    kiểm duyệt viên (liên hệ FR10.2) \emph{(để sau prototype)}.
+    kiểm duyệt viên (liên hệ FR10.2) \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR5: Giao dịch bán lẻ (B2C)}
@@ -740,18 +743,19 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     giữ chỗ tồn cho đơn chờ thanh toán và tự nhả khi đơn quá hạn hoặc bị hủy;
     đơn sau giờ chốt đơn chuyển sang chuyến trung chuyển kế tiếp.
     \item \textbf{FR5.3:} Áp dụng mã giảm giá của gian hàng bán lẻ
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR5.4:} Theo dõi đơn trên dòng thời gian tám trạng thái
     (Đã đặt, Đã thanh toán, Đang đóng gói, Lên chuyến trung chuyển, 3PL đã
     nhận, Đang giao, Đã giao, Hoàn tất hoặc Khiếu nại); hủy đơn trước khi đóng
     gói. Farmery chịu trách nhiệm trực tiếp với khách lẻ.
     \item \textbf{FR5.5:} Đánh giá sản phẩm (điểm số, nhận xét, hình ảnh)
     sau khi đơn hoàn tất; điểm đánh giá được tổng hợp vào uy tín của nhà cung
-    cấp gốc; Farmery có thể phản hồi công khai \emph{(để sau prototype)}.
+    cấp gốc; Farmery, qua nhân viên vận hành, có thể phản hồi công khai một
+    lần dưới mỗi đánh giá \emph{(chỉ thiết kế)}.
     \item \textbf{FR5.6:} Mua lại: tạo giỏ hàng mới từ các sản phẩm của một
     đơn cũ, chỉ lấy những sản phẩm còn bán.
     \item \textbf{FR5.7:} Đăng ký nhận thông báo khi sản phẩm có hàng trở lại
-    hoặc vào mùa; thông báo gửi qua FR11.1 \emph{(để sau prototype)}.
+    hoặc vào mùa; thông báo gửi qua FR11.1 \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR6: Giao dịch bán sỉ (B2B)}
@@ -759,12 +763,15 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     \item \textbf{FR6.1:} Doanh nghiệp mua sỉ gửi yêu cầu báo giá (RFQ) cho
     một hoặc nhiều nông dân/HTX, nêu rõ số lượng, thời gian giao, tiêu chuẩn
     chất lượng mong muốn.
-    \item \textbf{FR6.2:} Nông dân/HTX phản hồi RFQ (báo giá, số lượng có
-    thể cung ứng); hai bên trao đổi, đàm phán trong kênh gắn với chính RFQ đó
-    trước khi chốt.
-    \item \textbf{FR6.3:} Khi hai bên chốt RFQ, hệ thống sinh hợp đồng từ
-    mẫu chuẩn và lưu lịch sử phiên bản. Mỗi bên \emph{xác nhận giao kết} trong
-    hệ thống bằng mã xác nhận dùng một lần; hệ thống lưu tài khoản, thời điểm
+    \item \textbf{FR6.2:} Nông dân/HTX phản hồi RFQ bằng một báo giá (đơn
+    giá theo bậc, số lượng có thể cung ứng, ngày giao); doanh nghiệp mua sỉ
+    chấp nhận hoặc từ chối. Trao đổi, đàm phán nhiều vòng trong kênh gắn với
+    RFQ \emph{(chỉ thiết kế)}.
+    \item \textbf{FR6.3:} Khi bên mua chấp nhận báo giá, hệ thống sinh hợp
+    đồng một lần từ mẫu chuẩn; nội dung sai thì hợp đồng bị hủy và bên mua tạo
+    yêu cầu mới. Sửa bản nháp thành nhiều phiên bản \emph{(chỉ thiết kế)}. Mỗi
+    bên \emph{xác nhận giao kết} trong hệ thống bằng mã xác nhận dùng một lần
+    gửi qua email; hệ thống lưu tài khoản, thời điểm
     và mã băm của đúng văn bản đã xác nhận để về sau chứng minh được nội dung
     hai bên đã đồng ý. Đơn sỉ được giao trong một đợt và thanh toán qua cổng
     thanh toán khi bên mua xác nhận nhận hàng.
@@ -780,7 +787,10 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     \item \textbf{FR7.1:} Hỗ trợ chuyển khoản ngân hàng/VietQR, ví điện tử
     qua cổng thanh toán trung gian đã được cấp phép, và COD có điều kiện: chỉ
     cho đơn dưới ngưỡng cấu hình và tài khoản chưa từng từ chối nhận hàng.
-    Hoàn tiền đi qua cổng thanh toán theo quyết định xử lý khiếu nại.
+    Hoàn tiền đi qua cổng thanh toán theo quyết định xử lý khiếu nại. Bản
+    hiện thực dùng bản giả lập cổng thanh toán đặt sau giao diện tích hợp;
+    kết nối môi trường thử nghiệm VNPay và nhận kết quả qua IPN/webhook
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR7.2:} Phát hành hóa đơn điện tử cho đơn lẻ khi đơn hoàn
     tất, kèm mã tra cứu. Bản hiện thực phát hành hóa đơn giả lập (tệp PDF và mã
     tra cứu) qua một lớp tích hợp; kết nối nhà cung cấp dịch vụ hóa đơn điện
@@ -803,9 +813,10 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     \item \textbf{FR8.1:} Giao đơn lẻ qua ba chặng: nhà cung cấp tự đưa
     hàng về kho (chặng đầu; Farmery thuê xe gom \emph{(chỉ thiết kế)}); nhân
     viên kho lập \emph{chuyến trung chuyển} xe lạnh Lâm Đồng--TP.HCM từ danh
-    sách đơn sau giờ chốt và cập nhật trạng thái chuyến (chặng giữa); tạo vận
-    đơn với đơn vị vận chuyển nội thành theo khung giờ khách chọn, nhận trạng
-    thái qua webhook (chặng cuối).
+    sách đơn sau giờ chốt và cập nhật trạng thái chuyến (chặng giữa); chặng
+    cuối giao theo khung giờ khách chọn, nhân viên vận hành chuyển trạng thái
+    giao trên hệ thống. Tạo vận đơn với đơn vị vận chuyển nội thành và nhận
+    trạng thái qua webhook \emph{(chỉ thiết kế)}.
     \item \textbf{FR8.2:} Tính phí giao đơn lẻ gồm cước 3PL nội thành và phần
     bù chặng giữa; miễn phí khi đơn vượt ngưỡng cấu hình; hiển thị trước khi
     xác nhận đơn.
@@ -819,10 +830,9 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
 \subsubsection*{FR9: Tương tác người dùng}
 \begin{itemize}
     \item \textbf{FR9.1:} Trao đổi bất đồng bộ gắn với một đơn hàng hoặc một
-    yêu cầu khiếu nại, giữa khách và nhân viên vận hành, có đính kèm ảnh.
-    Không có kênh nhắn tin tự do giữa người dùng; đàm phán sỉ dùng kênh của
-    FR6.2.
-    \item \textbf{FR9.2:} Danh sách sản phẩm yêu thích \emph{(để sau prototype)}.
+    yêu cầu khiếu nại, giữa khách và nhân viên vận hành, có đính kèm ảnh
+    \emph{(chỉ thiết kế)}. Không có kênh nhắn tin tự do giữa người dùng.
+    \item \textbf{FR9.2:} Danh sách sản phẩm yêu thích \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR10: Vận hành và quản trị nền tảng}
@@ -837,10 +847,10 @@ Các khâu kiểm duyệt, nghiệm thu và đổi trả chưa nối API (hồ s
     trung gian phân xử khi có tranh chấp giữa các bên.
     \item \textbf{FR10.4:} Báo cáo thống kê tổng quan hệ thống: tổng giá trị
     giao dịch, số lượng người dùng hoạt động, tỷ lệ hoàn tất đơn hàng
-    \emph{(để sau prototype)}.
+    \emph{(chỉ thiết kế)}.
     \item \textbf{FR10.5:} Bảng điều khiển giám sát tồn kho và giao hàng:
     lô sắp hết hạn hoặc tồn thấp (liên hệ FR2.3, FR11.2), chuyến trung chuyển
-    trong ngày, đơn trễ và sự cố với đơn vị vận chuyển (FR8.1).
+    trong ngày, đơn trễ và sự cố giao hàng do nhân viên ghi nhận (FR8.1).
     \item \textbf{FR10.6:} Cấu hình nền tảng: cây danh mục nông sản, ngưỡng
     của các luật giám sát, biểu phí công bố, thời hạn khiếu nại theo nhóm
     hàng, ngưỡng hoàn tiền không cần trả hàng, điều kiện COD, giờ chốt đơn,
@@ -860,12 +870,13 @@ mọi vai trò nội bộ (Bảng~\ref{tab:vaitro-noibo}).
 
 \subsubsection*{FR11: Thông báo}
 \begin{itemize}
-    \item \textbf{FR11.1:} Thông báo đa kênh (trên giao diện web, thông báo
-    đẩy của ứng dụng web cài đặt được \emph{(để sau prototype)}, email; SMS \emph{(chỉ thiết kế)}) ở mỗi lần đơn chuyển trạng
-    thái, khi khiếu nại có phản hồi, khi sản phẩm đã đăng ký có hàng, và về
-    tiến độ RFQ, hợp đồng.
+    \item \textbf{FR11.1:} Thông báo trên giao diện web và email ở mỗi lần
+    đơn chuyển trạng thái, mỗi lần yêu cầu đổi trả, khiếu nại đổi trạng thái,
+    và về tiến độ RFQ, hợp đồng. Thông báo đẩy của ứng dụng web cài đặt được,
+    thông báo khi sản phẩm đã đăng ký có hàng (FR5.7) và SMS \emph{(chỉ thiết
+    kế)}.
     \item \textbf{FR11.2:} Cảnh báo chứng nhận sắp hết hạn (liên hệ FR3.3)
-    và tồn kho chạm ngưỡng tối thiểu (liên hệ FR2.3) \emph{(để sau prototype)}.
+    và tồn kho chạm ngưỡng tối thiểu (liên hệ FR2.3) \emph{(chỉ thiết kế)}.
 \end{itemize}
 
 \subsubsection*{FR12: Hỗ trợ AI}
@@ -875,9 +886,10 @@ Chi tiết thiết kế tại mục~\ref{sec:thietkeAI}.
     \item \textbf{FR12.1:} Gợi ý sản phẩm tương tự ở trang chi tiết sản phẩm,
     dựa trên độ gần của vector mô tả sản phẩm. Gợi ý cá nhân hóa theo lịch sử
     tìm kiếm, mua hàng là bước sau khi có đủ dữ liệu tương tác.
-    \item \textbf{FR12.2:} Dự báo xu hướng giá theo mùa vụ, hiển thị cho nhân
-    viên thu mua ngay tại màn hình lập đơn thu mua và đặt giá bán lẻ, làm căn
-    cứ tham khảo.
+    \item \textbf{FR12.2:} Dự báo xu hướng giá theo mùa vụ: mô hình chạy
+    offline trên dữ liệu giá công khai và được đo sai số MAPE. Hiển thị kết
+    quả cho nhân viên thu mua tại màn hình lập đơn thu mua và đặt giá bán lẻ,
+    làm căn cứ tham khảo \emph{(chỉ thiết kế)}.
     \item \textbf{FR12.3:} Tìm kiếm theo ngữ nghĩa: hiểu câu tìm kiếm tự
     nhiên (ví dụ ``rau ăn lẩu'', ``trái cây ít ngọt'') để trả về sản phẩm phù
     hợp dù mô tả không chứa đúng từ khóa. Tìm nhà cung cấp theo ngữ nghĩa cho
@@ -988,12 +1000,15 @@ Các yêu cầu phi chức năng dưới đây cũng tuân theo nguyên tắc đ
 \subsubsection*{NFR7: Khả năng tích hợp \& tương thích}
 \begin{itemize}
     \item \textbf{NFR7.1:} Tích hợp qua API chuẩn (RESTful) với đơn vị vận
-    chuyển và cổng thanh toán trung gian.
+    chuyển và cổng thanh toán trung gian, qua lớp tích hợp có thời gian chờ
+    và thử lại. Bản hiện thực kiểm lớp tích hợp cổng thanh toán với bản giả
+    lập (giả độ trễ); kết nối thật với cổng thanh toán và đơn vị vận chuyển
+    \emph{(chỉ thiết kế)}.
     \item \textbf{NFR7.2:} Giao diện web đáp ứng (responsive), hoạt động
     tốt trên các trình duyệt phổ biến.
     \item \textbf{NFR7.3:} Ứng dụng mua hàng là ứng dụng web cài đặt được
-    (PWA): cài được lên màn hình chính của điện thoại, nhận được thông báo
-    đẩy, và thao tác ghi nhật ký canh tác của nhà cung cấp tại ruộng vẫn thực
+    (PWA): cài được lên màn hình chính của điện thoại, và thao tác ghi nhật
+    ký canh tác của nhà cung cấp tại ruộng vẫn thực
     hiện được khi mất kết nối, được đồng bộ khi có mạng trở lại. Ứng dụng nội
     bộ có giao diện đáp ứng, dùng được trên điện thoại cho nhân viên kho và
     nhân viên hỗ trợ vùng.
@@ -1059,9 +1074,9 @@ Hệ thống sàn thương mại điện tử nông nghiệp Farmery vận hành
     \item \textbf{Dữ liệu danh mục và sản phẩm:} cây danh mục nông sản đa cấp đóng, đơn vị tính hợp lệ theo danh mục, giá bán lẻ, bảng giá sỉ theo bậc sản lượng, thông tin vùng trồng và mùa vụ.
     \item \textbf{Dữ liệu truy xuất nguồn gốc và chứng nhận:} định danh lô sản xuất, nhật ký canh tác theo mốc thời gian (gieo giống, xử lý phân bón và thuốc bảo vệ thực vật, thu hoạch), hồ sơ chứng nhận chất lượng kèm cơ quan cấp và thời hạn hiệu lực, mã QR định danh theo nguyên lý GS1.
     \item \textbf{Dữ liệu thu mua (luồng 1P):} chào giá lô của nhà cung cấp, đơn thu mua theo lô, kết quả nghiệm thu chất lượng khi nhập kho, giá vốn và tỷ lệ hao hụt thực tế theo từng lô.
-    \item \textbf{Dữ liệu giao dịch thương mại:} giỏ hàng phiên và đơn bán lẻ; yêu cầu báo giá (RFQ), lịch sử đàm phán, hợp đồng điện tử kèm mã băm và biên bản giao nhận ở luồng bán sỉ; giao dịch thanh toán, hoàn tiền, hóa đơn và dữ liệu đối soát hoa hồng.
-    \item \textbf{Dữ liệu vận chuyển và tồn kho:} sổ địa chỉ giao nhận, chuyến trung chuyển kèm danh sách đơn, vận đơn tích hợp đơn vị vận chuyển nội thành, lịch sử trạng thái hành trình, tồn kho theo lô kèm hạn sử dụng theo nguyên tắc FEFO và phiếu khiếu nại chất lượng.
-    \item \textbf{Dữ liệu uy tín và tương tác:} điểm đánh giá, nội dung nhận xét, hình ảnh thực tế khi nhận hàng, điểm uy tín tổng hợp của nhà cung cấp tính theo trọng số thời gian, luồng trao đổi gắn với đơn hàng và khiếu nại.
+    \item \textbf{Dữ liệu giao dịch thương mại:} giỏ hàng phiên và đơn bán lẻ; yêu cầu báo giá (RFQ), báo giá phản hồi, hợp đồng điện tử kèm mã băm và biên bản giao nhận ở luồng bán sỉ; giao dịch thanh toán, hoàn tiền, hóa đơn và dữ liệu đối soát hoa hồng.
+    \item \textbf{Dữ liệu vận chuyển và tồn kho:} sổ địa chỉ giao nhận, chuyến trung chuyển kèm danh sách đơn, vận đơn tích hợp đơn vị vận chuyển nội thành \emph{(chỉ thiết kế)}, lịch sử trạng thái hành trình, tồn kho theo lô kèm hạn sử dụng theo nguyên tắc FEFO và phiếu khiếu nại chất lượng.
+    \item \textbf{Dữ liệu uy tín và tương tác:} điểm đánh giá, nội dung nhận xét, hình ảnh thực tế khi nhận hàng, điểm uy tín tổng hợp của nhà cung cấp tính theo trọng số thời gian, luồng trao đổi gắn với đơn hàng và khiếu nại \emph{(chỉ thiết kế)}.
     \item \textbf{Dữ liệu tệp:} ảnh sản phẩm, ảnh nhật ký canh tác, minh chứng chứng nhận và khiếu nại, ảnh giấy tờ eKYC, hợp đồng và hóa đơn; mỗi tệp được phân loại công khai hoặc riêng tư, kèm mã băm và thời hạn lưu.
     \item \textbf{Dữ liệu tuân thủ:} lần đồng ý với điều khoản và chính sách bảo mật (phiên bản, thời điểm), yêu cầu của chủ thể dữ liệu, loại người bán và nhóm thuế của sản phẩm.
     \item \textbf{Dữ liệu phân tích và học máy:} nhật ký sự kiện hành vi (clickstream, từ khóa tìm kiếm, lượt thêm giỏ); chuỗi time series lịch sử giá và sản lượng theo vùng; cảnh báo do luật ngưỡng sinh ra kèm phán quyết của kiểm duyệt viên hoặc nhân viên vận hành, tích lũy làm nhãn cho giai đoạn sau.

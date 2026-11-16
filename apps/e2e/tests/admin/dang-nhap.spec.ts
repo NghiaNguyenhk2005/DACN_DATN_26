@@ -30,7 +30,7 @@ test.describe("Admin — đăng nhập OTP", () => {
   });
 
   test("menu theo vai trò: chủ nền tảng thấy Cấu hình, không thấy Tồn kho", async ({ page }) => {
-    const code = await requestOtp(page, "staff@example.com");
+    const code = await requestOtp(page, "chu@farmery.vn");
     await submitOtp(page, code);
 
     await expect(page.getByRole("menuitem", { name: /Cấu hình/ })).toBeVisible();
@@ -46,6 +46,20 @@ test.describe("Admin — đăng nhập OTP", () => {
 
     await expect(page.getByText("Tài khoản này không có quyền vào ứng dụng nội bộ.")).toBeVisible();
     await expect(page).toHaveURL(/\/login/);
+  });
+
+  test("sai mã thì báo 'Mã OTP không đúng.', gửi lại mã mới thì đăng nhập được", async ({ page }) => {
+    const firstCode = await requestOtp(page, "staff@example.com");
+    await submitOtp(page, firstCode === "000000" ? "111111" : "000000");
+    await expect(page.getByText("Mã OTP không đúng.").first()).toBeVisible();
+    await expect(page).toHaveURL(/\/login/);
+
+    // Bản demo luôn trả cùng một mã nên chờ phản hồi gửi lại thay vì so mã.
+    const resent = page.waitForResponse((r) => r.url().endsWith("/api/auth/otp") && r.request().method() === "POST" && r.ok());
+    await page.getByRole("button", { name: "Gửi lại mã" }).click();
+    await resent;
+    await submitOtp(page, firstCode);
+    await expect(page).toHaveURL("/");
   });
 
   test("chưa đăng nhập thì bị đưa về /login", async ({ page }) => {

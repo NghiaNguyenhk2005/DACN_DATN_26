@@ -262,7 +262,8 @@ Status: open
 Chương 7 đo chất lượng mã bằng SonarQube; CI hiện chưa có bước này. Cần user tạo tổ chức, dự án trên SonarQube Cloud
 và thêm secret `SONAR_TOKEN` vào repo GitHub; sau đó thêm job phân tích vào `.github/workflows/ci.yml`. Kế hoạch xếp
 ở tuần 5.
-Status: open
+Status: resolved
+SỬA 2026-11-16: không làm nữa; bỏ SonarQube Cloud, thay bằng độ phủ Jest + ESLint + typecheck trong CI (xem DECISIONS 2026-11-16).
 
 ### Rà phạm vi MVP theo tốc độ thật ở mốc 21/10 — Claude — 2026-10-13
 Sau prototype còn khoảng 10 tuần cho 13 mô-đun, 3 tính năng AI, bán sỉ, PWA ngoại tuyến với 3 người. Ở mốc 21/10:
@@ -297,7 +298,11 @@ Status: open
 (`qToken.includes(tToken)`) nên mọi từ ngắn trong mô tả cũng khớp. Phần lớn âm tiết tiếng Việt chỉ 2–4 ký tự: "dau"
 khớp "rau", "sau", "dat"; "tay" khớp "day", "tai". Đề xuất: không so gần đúng với từ dưới 4 ký tự, bỏ chiều
 `qToken.includes(tToken)`; có kết quả điểm ≥ 80 thì không trả kết quả điểm 70.
-Status: open
+**Cập nhật 2026-11-05:** chưa sửa. Lớp ngữ nghĩa mới (`SemanticSearch`) chỉ chạy khi từ khóa không khớp, nên độ rộng
+này còn làm gợi ý sửa từ (`correction`) hiếm khi xuất hiện — xem `design/08-ra-soat-hien-trang.md` X8.
+**Cập nhật 2026-11-06:** đã sửa — khớp theo từ, gần đúng chỉ là đường lùi, ngữ nghĩa chạy song song gộp RRF; xem
+DECISIONS "Tìm kiếm sản phẩm: hai bộ tìm gộp bằng RRF…". `q=dau tay` còn 4 sản phẩm, đều là dâu tây.
+Status: resolved
 
 ### BE1: địa chỉ vùng trồng theo địa giới mới — Claude — 2026-10-17
 Từ 1/7/2025 không còn cấp huyện (Nghị quyết 1671/NQ-UBTVQH15 sắp xếp cấp xã tỉnh Lâm Đồng), nhưng `growingRegion`
@@ -311,7 +316,9 @@ trong `mock-data` còn ghi "Huyện …", "TP. Đà Lạt". User chốt đổi s
 Bộ lọc vùng của shop đã đổi theo: Đà Lạt, Lang Biang, Đơn Dương, Hiệp Thạnh (khớp chứa chuỗi, bỏ dấu). Trước khi BE1
 sửa xong, "Lang Biang" và "Hiệp Thạnh" trả rỗng. Về lâu dài: so chuỗi trên địa chỉ đầy đủ dễ vỡ khi địa giới đổi tiếp
 — đề xuất hợp đồng có trường vùng trồng có cấu trúc (mã đơn vị hành chính hoặc danh mục vùng), sửa qua PR riêng.
-Status: open
+**Cập nhật 2026-11-05:** đã đổi `growingRegion` của 5 nhà cung cấp trong `mock-data/suppliers.ts` đúng danh sách trên;
+chip Lang Biang, Hiệp Thạnh có kết quả. Trường vùng trồng có cấu trúc vẫn là việc riêng.
+Status: resolved
 
 ### BE1: `traceUrl` gõ cứng localhost — Claude — 2026-10-16
 `batches.ts` ghi `traceUrl: "http://localhost:3000/truy-xuat/..."`, trong khi hợp đồng mô tả đây là đường dẫn in vào
@@ -346,6 +353,10 @@ Cập nhật 2026-10-27 (kiểm trên `develop` sau PR #38): mô-đun `identity`
 và `GET /me`, cả ba chạy (kèm sửa trả 200 đúng hợp đồng); `retail`, `payment` vẫn chỉ có file module. Các thao tác còn
 lại (`/me/addresses`, `/cart*`, `/checkout/quote`, `/orders*`) chưa có handler nên vẫn là 501; đã gọi thử `GET
 /me/addresses` và `GET /cart` đều 501.
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46, gộp BE2). Cả 13 thao tác có handler trong `identity`, `retail`,
+`payment`, không mô-đun nào còn trả 501. e2e `kich-ban/mua-hang.spec.ts` (PR #53) đi qua giỏ, báo giá, đặt đơn, trả tiền
+giả lập, xoá dòng giỏ trên API thật.
+Status: resolved
 
 ### BE2: tài khoản khách lẻ mẫu để đăng nhập — Claude — 2026-10-17
 `mock-data` chưa có người dùng nào, trong khi hợp đồng cho `POST /auth/otp` trả 404 với email lạ, nên chưa ai đăng
@@ -355,6 +366,10 @@ dùng thông tin người thật.
 **Cập nhật 2026-10-21:** đăng nhập được với mọi email nhờ bản tạm của `identity`, nhưng chưa có tài khoản riêng cho
 khách lẻ — xem mục "identity bản tạm" bên dưới.
 Status: open
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46). `khachle@example.com` là tài khoản `buyer_retail` riêng trong
+`apps/api/src/modules/identity/seed-accounts.ts`, có sẵn một địa chỉ mặc định (`in-memory-address.repository.ts`).
+Tài khoản giả nằm ở `apps/api` chứ không ở `mock-data` như đề xuất.
+Status: resolved
 
 ### Hợp đồng: thao tác cần đăng nhập không khai phản hồi 401/403 — Claude — 2026-10-17
 Chỉ `/auth/login` và `/me` khai 401. Khi chạy server giả có bộ kiểm phản hồi theo `openapi.yaml`, `GET /cart`
@@ -364,11 +379,17 @@ không có token trả 401 thì bộ kiểm báo "no schema defined for status c
 xuất thêm `401`/`403` (`Unauthorized`, `Forbidden`) cho mọi thao tác có `security`, qua PR sửa hợp đồng riêng.
 Shop hiện coi 500 là lỗi máy chủ nên vẫn báo được, nhưng không chuyển được sang trang đăng nhập khi token hết hạn.
 Status: open
+Cập nhật 2026-11-06 (kiểm trên `develop` sau PR #46): phần chạy đã ổn, `GET /cart` không token trả đúng 401
+`UNAUTHENTICATED`, không thành 500. Phần hợp đồng thì chưa làm: trong 35 thao tác có `security`, chỉ 1 khai `401`
+và 4 khai `403`. Vẫn cần PR sửa hợp đồng thêm `Unauthorized`/`Forbidden` cho cả 35, để client sinh kiểu biết hai mã này.
 
 ### Hợp đồng: OTP sai chưa có mã lỗi riêng — Claude — 2026-10-17
 `POST /auth/login` chỉ khai 401 chung. Đề xuất thêm `OTP_INVALID`, `OTP_EXPIRED` vào danh sách `Problem.code` (PR
 sửa hợp đồng riêng) để báo "mã sai" khác "mã hết hạn". Hiện shop báo chung "Mã OTP không đúng hoặc đã hết hạn".
 Status: open
+Cập nhật 2026-11-06: hợp đồng có `OTP_INVALID`, `OTP_EXPIRED` từ `1f7e16b` (PR #46). Sai quá 5 lần cũng trả
+`OTP_EXPIRED`. Shop và admin báo hai câu riêng ở PR #52, kèm e2e.
+Status: resolved
 
 ### BE2: hành vi API mà shop đang dựa vào — Claude — 2026-10-17
 - `PUT /cart/items/{id}` đặt số lượng tuyệt đối (shop tự cộng dồn khi bấm Thêm); vượt lượng còn bán trả 422
@@ -395,6 +416,10 @@ PR #30 (BE1) thêm `POST /auth/otp`, `/auth/login`, `GET /me` ở `identity.serv
 (gồm `khachle@example.com`), email lạ 404, `GET /me` đọc theo token; báo BE1 vì `/seller/*` cần `supplierId` qua
 `IdentityService`.
 Status: open
+Cập nhật 2026-11-06: đã sửa ở `1f7e16b` (PR #46). `seed-accounts.ts` có 10 tài khoản theo vai trò (có
+`staff_operations` `vanhanh@farmery.vn`, `staff_warehouse` `kho@farmery.vn`). Ở DEMO_MODE email lạ trả 404, `GET /me`
+đọc theo token. Phần `/seller/*` lấy `supplierId` qua `IdentityService` theo dõi ở mục BE1 bên dưới.
+Status: resolved
 
 ### BE1: `/seller/*` chưa theo nhà cung cấp đang đăng nhập — Claude — 2026-10-21
 `catalog.service.ts`: `listSellerProducts` gõ cứng nhà cung cấp `"101"`, `categoryId: "1"`, `unit: "kg"`;
@@ -402,6 +427,9 @@ Status: open
 nhật ký dựng `http://localhost:4000/api/media/...` gõ cứng; id lô, nhật ký, `challengeId` dùng `Date.now()` nên có
 thể trùng khi gọi liền nhau. Đề xuất: lấy `supplierId` qua `IdentityService`, lô của nhà cung cấp khác trả 404,
 `SellerProduct` lấy danh mục, đơn vị thật; id sinh bằng bộ đếm hoặc `randomUUID`.
+**Cập nhật 2026-11-05:** `GET /seller/products`, `/seller/batches` đã lọc theo nhà cung cấp đang đăng nhập (qua
+`IdentityService.supplierIdOf`), `SellerProduct` có danh mục, đơn vị, trạng thái thật; thêm `POST /seller/products`.
+Còn mở: `getSellerBatch`, `createBatch`, nhật ký chưa kiểm lô thuộc nhà cung cấp; id `Date.now()`.
 Status: open
 
 ### Khu nhà cung cấp trong shop lệch quyết định của shop — Claude — 2026-10-21
@@ -434,4 +462,56 @@ Status: open
 bật tự xoá nhánh sau gộp (còn các nhánh `origin/docs/…`, `origin/feat/…` cũ). `ci.yml` chưa chạy e2e Playwright (cần API
 cổng 4000). Đề xuất: bật protection cho `develop`/`main` (CI xanh, ≥1 review, cấm force-push), bật tự xoá nhánh, đặt
 `git config pull.rebase true`, thêm job e2e riêng không chặn gộp ở bước đầu. Việc trên GitHub do chủ repo bấm.
+Status: open
+
+### BE1: giới hạn còn lại của tìm kiếm sau bản RRF — Claude — 2026-11-06
+Đo bằng bộ kiểm tra độc lập (`apps/api/test/search-eval/queries.ts`, `HELDOUT_QUERIES`):
+- Khái niệm ngắn bắt cả trong cụm dài: "rau thơm" khớp cả khóa "rau" nên kéo theo 9 sản phẩm rau lá. Đề xuất: khóa
+  dài nhất thắng (khóa nằm gọn trong một khóa dài hơn đã khớp thì bỏ).
+- Đường lùi gần đúng nhiễu với âm tiết 3 ký tự: "gạo" ra "Bảo Lộc", "gà", "cao nguyên"; "cá hồi" ra "(Hộp 500g)",
+  "ôn đới". Đề xuất: bỏ phần quy cách trong ngoặc khỏi tên khi khớp gần đúng; cân nhắc chỉ cho sai với từ ≥ 4 ký tự
+  (đổi lại "khoai tya", "bong cia" sẽ không ra).
+- Từ điển không phủ: "quà tết" rỗng; "làm sinh tố" thiếu bơ. Đây là phần bản BGE-M3 phải giải.
+- Gõ liền kèm sai ("bongcaii") trả rỗng và không có gợi ý sửa.
+- Khi lên vector: thay `ConceptSemanticSearch` bằng lớp gọi dịch vụ nhúng, giữ `SemanticSearch.rank`; chạy lại
+  `search-eval.e2e-spec.ts` để so — bộ kiểm tra độc lập là số đối chiếu chính, bộ chính đã lạc quan vì từ điển viết khi
+  đã biết nhãn.
+Status: open
+
+### BE2: test blackbox "Hành trình mua bán" lệch dữ liệu mẫu — Claude — 2026-11-06
+`npm run test:blackbox` hỏng 6/79 ở `journey.bb-spec.ts`: test giả định sản phẩm 3 chưa có lô đã duyệt (`available`
+= 0), nhưng dữ liệu mẫu `packages/mock-data/src/extra.ts` đã có lô `DTBT-2610-41` cho sản phẩm 3. Không liên quan
+tìm kiếm. Đề xuất: đổi test sang một sản phẩm chưa có lô, hoặc tạo sản phẩm mới trong test.
+Status: open
+
+### Nền Prisma: các lệch giữa lược đồ và mã khi chuyển repository — Claude — 2026-11-16
+Phát hiện lúc chuyển `schema.dbml` sang Prisma; cần chốt trước khi viết repository Prisma tương ứng (tuần 9):
+- `catalog.categories` không có cột ảnh nên `Category.imageUrl` của hợp đồng không có chỗ lưu (bản Prisma đang bỏ imageUrl và
+  productCount). Đề xuất: lấy ảnh qua `media`, hoặc thêm cột `image_file_id`.
+- `identity.users.email` chỉ một giá trị, trong khi tài khoản mẫu có nhiều email bí danh (`admin@example.com`, `staff@example.com`...)
+  mà test e2e và Playwright đang dùng để đăng nhập. Seed chỉ nạp email đầu. Đề xuất: bảng bí danh hoặc đổi dữ liệu mẫu và test.
+- Số lượng tồn `decimal(12,2)` trong khi mã làm tròn 3 chữ số (`round3`). Chốt 2 hay 3 chữ số trước khi viết `inventory`.
+- Khóa chính là `bigint` còn hợp đồng dùng id chuỗi; đơn hàng có thêm `order_code` (FM-yymmdd-NNNN). Cần chốt hợp đồng trả `id`
+  hay `order_code` và cách ánh xạ.
+- Chống bán vượt hiện dựa `KeyedMutex` trong tiến trình; trên PostgreSQL phải đổi sang khóa dòng (`SELECT ... FOR UPDATE`) hoặc
+  cập nhật có điều kiện, CHECK `stock_holdings_qty_check` là lớp chặn cuối.
+- Chưa có chỉ mục cho cột khóa ngoại (Prisma không tự tạo); chiến lược index đưa vào mục ánh xạ ERD (A3) sau khi k6 đo.
+- Chưa kiểm `prisma migrate diff` giữa migration và schema (chỉ mục biểu thức, trigger viết tay có thể bị coi là lệch khi `migrate dev`);
+  kiểm khi có Docker, nếu lệch thì dùng `migrate dev --create-only` rồi sửa tay.
+Cập nhật 2026-11-16 (đã kiểm trên PostgreSQL thật): chỉ mục GIN của `search_tsv` đã khai trong `catalog.prisma` nên khớp; chỉ mục
+trigram biểu thức, trigger và CHECK Prisma không báo lệch. Còn lệch một chỗ: Prisma 7.10.1 không có kiểu index HNSW nên
+`product_embeddings_embedding_hnsw_idx` luôn bị đề xuất DROP; mỗi lần `migrate dev` sinh migration mới phải xóa dòng DROP INDEX đó
+trước khi áp. Không đưa `migrate diff --exit-code` vào CI vì sẽ đỏ vì lý do này.
+Status: open
+
+### Bus sự kiện: việc phải làm khi lên PostgreSQL và khi thêm bên nhận — Claude — 2026-11-16
+- Phát sự kiện phải xảy ra SAU khi giao dịch PostgreSQL commit (hoặc dùng outbox); hiện phát ngay sau khi ghi bộ nhớ nên chưa có vấn đề.
+  Cần chốt trước khi chuyển retail/payment sang Prisma (tuần 9).
+- Phụ lục V và Ch.5 vẫn ghi "phát vào Redis" và "gửi lại nhiều lần chỉ có tác dụng một lần"; cần sửa thành bus trong tiến trình, chống lặp
+  trong bộ nhớ, Redis chỉ thiết kế. Chưa sửa (tuần 9).
+- Payload của 11 sự kiện chưa có bên phát là dự kiến (`core/events/events.ts`); bên phát đầu tiên được chỉnh và cập nhật Phụ lục V cho khớp.
+- `RfqUpdated`, `UserVerified`, `BatchRecalled`, `CertExpired`, `StockLow` chưa phát vì mã chưa có bước tương ứng (wholesale mới có tạo yêu cầu báo giá,
+  chưa có báo giá, chấp nhận, từ chối).
+- Bên nhận chạy trong yêu cầu của bên phát: không đặt việc nặng (gọi dịch vụ ngoài) trong bên nhận; AI W8-8 nghe `ProductChanged` phải đẩy việc
+  nhúng ra nền, không chờ.
 Status: open

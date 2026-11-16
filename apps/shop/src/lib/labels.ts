@@ -20,7 +20,7 @@ export const REVIEW_STATUS_LABELS: Record<Schema<"ReviewStatus">, string> = {
   draft: "Nháp",
   pending_review: "Chờ duyệt",
   approved: "Đã duyệt",
-  rejected: "Từ chối",
+  rejected: "Bị từ chối",
   hidden: "Đã ẩn",
 };
 
@@ -46,6 +46,15 @@ export const ORDER_STATUS_LABELS: Record<Schema<"OrderStatus">, string> = {
   delivered: "Đã giao",
   completed: "Hoàn tất",
   disputed: "Đang khiếu nại",
-  cancelled: "Đã huỷ",
+  cancelled: "Đã hủy",
   returned: "Đã hoàn hàng",
+};
+
+/** Trạng thái hiệu lực của chứng nhận: "sắp hết" khi còn ≤30 ngày (FR3.3, nhắc gia hạn). */
+export type CertValidity = "valid" | "expiring" | "expired";
+
+export const CERT_VALIDITY_LABELS: Record<CertValidity, string> = {
+  valid: "Còn hiệu lực",
+  expiring: "Sắp hết hiệu lực",
+  expired: "Hết hiệu lực",
 };

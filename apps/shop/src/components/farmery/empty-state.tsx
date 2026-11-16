@@ -11,7 +11,7 @@ interface Props {
 /** Khối "không có kết quả" cho danh sách sản phẩm, giỏ hàng trống. */
 export function EmptyState({
   title = "Chưa có sản phẩm phù hợp",
-  description = "Thử bỏ bớt bộ lọc hoặc tìm bằng từ khoá khác.",
+  description = "Thử bỏ bớt bộ lọc hoặc tìm bằng từ khóa khác.",
   action,
   icon: Icon = SearchX,
 }: Props) {

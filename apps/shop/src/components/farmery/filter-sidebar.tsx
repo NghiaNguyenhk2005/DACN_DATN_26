@@ -169,7 +169,7 @@ function SheetFilters({ value, onApply }: { value: Filters; onApply: (next: Filt
             onClick={() => setDraft({ inStock: draft.inStock, inSeason: draft.inSeason })}
             className="-mr-2 min-h-11 px-2 text-small text-muted-foreground"
           >
-            Xoá lọc
+            Xóa lọc
           </button>
         </SheetHeader>
         <Group title="Chứng nhận">
@@ -252,7 +252,7 @@ export function ProductFilters({ basePath, q, filters, children }: Props) {
               onClick={() => apply({})}
               className="min-h-10 flex-none px-1 text-caption text-muted-foreground"
             >
-              Xoá lọc
+              Xóa lọc
             </button>
           </div>
         )}

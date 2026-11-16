@@ -1,4 +1,4 @@
-import { Controller, Get, Post, type INestApplication } from "@nestjs/common";
+import { Controller, Post, type INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import type { Schema } from "@farmery/contract";
@@ -6,7 +6,7 @@ import { AppModule } from "../src/app.module";
 import { configureApp } from "../src/app.setup";
 import { TokenService } from "../src/core/token.service";
 
-// Endpoint giả chỉ có trong test, để kiểm guard theo x-roles và Idempotency-Key trên thao tác thật của hợp đồng.
+// Endpoint giả chỉ có trong test, để kiểm Idempotency-Key trên một thao tác ghi của hợp đồng chưa có endpoint thật.
 @Controller()
 class ProbeController {
   private created = 0;
@@ -15,11 +15,6 @@ class ProbeController {
   create(): Schema<"SellerProduct"> {
     this.created += 1;
     return { id: String(this.created), name: "Dâu tây", categoryId: "11", unit: "kg", status: "pending_review" };
-  }
-
-  @Get("admin/orders")
-  listOrders(): { items: Schema<"OrderSummary">[]; nextCursor: string | null } {
-    return { items: [], nextCursor: null };
   }
 }
 
@@ -65,7 +60,13 @@ describe("API khung", () => {
 
   it("đường dẫn ngoài hợp đồng trả 404, thao tác chưa làm trả 501", async () => {
     expect((await request(app.getHttpServer()).get("/api/khong-co").expect(404)).body.code).toBe("NOT_IN_CONTRACT");
-    expect((await request(app.getHttpServer()).get("/api/cart").expect(501)).body.code).toBe("NOT_IMPLEMENTED");
+    // POST /media (tải tệp) là thao tác trong hợp đồng chưa có endpoint.
+    const media = await request(app.getHttpServer())
+      .post("/api/media")
+      .auth(sellerToken, { type: "bearer" })
+      .attach("file", Buffer.from("x"), "a.bin")
+      .expect(501);
+    expect(media.body.code).toBe("NOT_IMPLEMENTED");
   });
 
   it("thiếu token trả 401, sai vai trò trả 403", async () => {
@@ -95,11 +96,13 @@ describe("API khung", () => {
 describe("khi tắt DEMO_MODE", () => {
   it("POST /api/dev/reset trả 404", async () => {
     process.env.DEMO_MODE = "false";
+    process.env.SMTP_URL = "smtp://localhost:1"; // ngoài DEMO_MODE bắt buộc có SMTP; test này không gửi thư
     const app = await createApp();
     try {
       expect((await request(app.getHttpServer()).post("/api/dev/reset").expect(404)).body.code).toBe("DEMO_MODE_OFF");
     } finally {
       delete process.env.DEMO_MODE;
+      delete process.env.SMTP_URL;
       await app.close();
     }
   });

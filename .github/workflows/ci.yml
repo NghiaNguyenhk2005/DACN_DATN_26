@@ -29,3 +29,75 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+
+  # Kho PostgreSQL thật: migrate, seed hai lần (kiểm idempotent), rồi chạy test STORAGE=prisma.
+  ci-pg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: farmery
+          POSTGRES_PASSWORD: farmery
+          POSTGRES_DB: farmery
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U farmery -d farmery"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      STORAGE: prisma
+      DATABASE_URL: postgresql://farmery:farmery@localhost:5432/farmery
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm generate
+      - name: Build các package dùng chung
+        run: pnpm turbo run build --filter="./packages/*"
+      - name: Kiểm schema Prisma
+        run: pnpm --filter @farmery/api exec prisma validate
+      - name: Áp migration
+        run: pnpm db:migrate
+      - name: Seed lần 1
+        run: pnpm db:seed
+      - name: Seed lần 2 (phải chạy lại được)
+        run: pnpm db:seed
+      - name: Test trên PostgreSQL
+        run: pnpm --filter @farmery/api exec jest test/storage.e2e-spec.ts --coverage=false
+
+  # Chưa chặn gộp: job đỏ vẫn để PR gộp được; xem báo cáo Playwright ở artifact.
+  e2e:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm generate
+      - name: Build các package dùng chung
+        run: pnpm turbo run build --filter="./packages/*"
+      - name: Cài Chromium cho Playwright
+        run: pnpm --filter @farmery/e2e exec playwright install --with-deps chromium
+      - name: Chạy e2e (Playwright tự bật api, shop, admin)
+        run: pnpm --filter @farmery/e2e e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            apps/e2e/playwright-report
+            apps/e2e/test-results
+          retention-days: 7
