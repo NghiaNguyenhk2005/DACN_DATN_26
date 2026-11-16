@@ -1288,6 +1288,17 @@ cho ai; tuần 10 của Khải đã kín. NFR7.1 mất đối tượng đo khi k
 **Đánh đổi:** FR5.5 thiếu một phần tương tác của bên bán; đổi lại không phải sửa hợp đồng và thêm màn hình admin. NFR7.1
 đo trên bản giả lập chỉ chứng minh cơ chế chờ và thử lại, không đo độ trễ của cổng thật.
 
+### Bỏ SonarQube Cloud; chất lượng mã đo bằng Jest và ESLint, hiệu năng đo bằng k6 — 2026-11-16
+**Quyết định:**
+- Không nối SonarQube Cloud vào CI. Trụ cột chất lượng mã nguồn ở Ch.7 đo bằng typecheck, ESLint và độ phủ Jest của phần
+  nghiệp vụ lõi; ngưỡng độ phủ tối thiểu là cổng chặn trong CI.
+- Đo hiệu năng và chống bán vượt bằng Grafana k6 (NFR1.1, NFR1.2, NFR4.1), chạy trên PostgreSQL thật sau khi retail và
+  inventory chuyển sang Prisma; số đo trên bản lưu trong bộ nhớ không dùng làm bằng chứng.
+- SỬA 2026-11-16 (mục 2026-11-06 "Hai nhãn trạng thái"): SonarQube bị bỏ khỏi danh sách giữ hiện thực.
+**Bối cảnh:** SonarQube cần tạo tổ chức, dự án và secret `SONAR_TOKEN` (NOTES 2026-10-13, chưa ai làm) trong khi tuần 8–10
+trên sheet đã kín; ba công cụ thay thế đều đã chạy trong CI. Mốc đóng băng nội dung 15/12, báo cáo nộp 31/12.
+**Đánh đổi:** mất các chỉ số độ phức tạp, tỷ lệ trùng lặp và nợ kỹ thuật; đổi lại không phụ thuộc dịch vụ ngoài và bớt một
+việc cấu hình. Ngưỡng độ phủ đặt sau khi đo độ phủ hiện tại, việc khoảng nửa ngày ở tuần 8.
 ### Hình ERD theo miền: định tuyến trực giao, trục dọc theo bảng cha, ký hiệu chân chim đủ tùy chọn — 2026-11-16
 **Quyết định:**
 - `report/tools/diagrams/gen_erd.py` định tuyến lại các hình ERD theo miền: đoạn thẳng ≥ 50px ra khỏi mép bảng trước khi rẽ,

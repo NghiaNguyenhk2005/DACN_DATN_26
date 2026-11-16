@@ -262,7 +262,8 @@ Status: open
 Chương 7 đo chất lượng mã bằng SonarQube; CI hiện chưa có bước này. Cần user tạo tổ chức, dự án trên SonarQube Cloud
 và thêm secret `SONAR_TOKEN` vào repo GitHub; sau đó thêm job phân tích vào `.github/workflows/ci.yml`. Kế hoạch xếp
 ở tuần 5.
-Status: open
+Status: resolved
+SỬA 2026-11-16: không làm nữa; bỏ SonarQube Cloud, thay bằng độ phủ Jest + ESLint + typecheck trong CI (xem DECISIONS 2026-11-16).
 
 ### Rà phạm vi MVP theo tốc độ thật ở mốc 21/10 — Claude — 2026-10-13
 Sau prototype còn khoảng 10 tuần cho 13 mô-đun, 3 tính năng AI, bán sỉ, PWA ngoại tuyến với 3 người. Ở mốc 21/10:
