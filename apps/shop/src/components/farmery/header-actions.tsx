@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Factory, LogOut, ReceiptText, Search, ShoppingBag, User } from "lucide-react";
+import { Building2, ChevronDown, Factory, LogOut, ReceiptText, Search, ShoppingBag, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +37,17 @@ function LoginLink({ compact }: { compact: boolean }) {
   );
 }
 
-function AccountMenu({ displayName, compact, isSeller }: { displayName: string; compact: boolean; isSeller: boolean }) {
+function AccountMenu({
+  displayName,
+  compact,
+  isSeller,
+  isWholesale,
+}: {
+  displayName: string;
+  compact: boolean;
+  isSeller: boolean;
+  isWholesale?: boolean;
+}) {
   const [pending, startTransition] = useTransition();
   return (
     <DropdownMenu>
@@ -68,6 +78,14 @@ function AccountMenu({ displayName, compact, isSeller }: { displayName: string; 
         >
           <ReceiptText className="size-[18px]" aria-hidden /> Đơn hàng
         </DropdownMenuItem>
+        {isWholesale && (
+          <DropdownMenuItem
+            render={<Link href="/khach-si" />}
+            className="min-h-11 gap-2.5 px-2.5 text-title text-ink-2"
+          >
+            <Building2 className="size-[18px]" aria-hidden /> Khu khách sỉ
+          </DropdownMenuItem>
+        )}
         {isSeller && (
           <DropdownMenuItem
             render={<Link href="/nha-cung-cap" />}
@@ -92,19 +110,30 @@ export function HeaderActions({
   displayName,
   cartCount = 0,
   isSeller = false,
+  isWholesale = false,
 }: {
   displayName?: string | null;
   cartCount?: number;
   isSeller?: boolean;
+  isWholesale?: boolean;
 }) {
   const compact = useCompactHeader();
   return (
     <div className="flex items-center gap-1 md:ml-auto md:gap-5">
+      {isWholesale && (
+        <Link
+          href="/khach-si"
+          className="hidden items-center gap-1.5 rounded-btn bg-amber-500/10 px-3 py-1.5 text-title font-medium text-amber-700 transition-colors hover:bg-amber-500/20 lg:inline-flex"
+        >
+          <Building2 className="size-4" aria-hidden />
+          <span>Khu khách sỉ</span>
+        </Link>
+      )}
       {isSeller && (
         <Link
           href="/nha-cung-cap"
           className="hidden items-center gap-1.5 rounded-btn bg-leaf-soft/60 px-3 py-1.5 text-title font-medium text-primary transition-colors hover:bg-leaf-soft lg:inline-flex"
-      >
+        >
           <Factory className="size-4" aria-hidden />
           <span>Khu nhà cung cấp</span>
         </Link>
@@ -114,7 +143,11 @@ export function HeaderActions({
           <Search className="size-[22px]" aria-hidden />
         </Link>
       )}
-      {displayName ? <AccountMenu displayName={displayName} compact={compact} isSeller={isSeller} /> : <LoginLink compact={compact} />}
+      {displayName ? (
+        <AccountMenu displayName={displayName} compact={compact} isSeller={isSeller} isWholesale={isWholesale} />
+      ) : (
+        <LoginLink compact={compact} />
+      )}
       <Link
         href="/gio-hang"
         className="relative flex min-h-11 min-w-11 items-center justify-center md:min-w-0"
