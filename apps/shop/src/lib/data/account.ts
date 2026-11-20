@@ -113,12 +113,17 @@ export async function addToCartWith(
 }
 
 /** Tên và số món trong giỏ cho đầu trang; lỗi API không làm hỏng đầu trang (coi như chưa đăng nhập). */
-export async function getHeaderAccount(): Promise<{ displayName: string; cartCount: number; isSeller: boolean } | null> {
+export async function getHeaderAccount(): Promise<{ displayName: string; cartCount: number; isSeller: boolean; isWholesale: boolean } | null> {
   try {
     const viewer = await getViewer();
     if (!viewer) return null;
     const cart = viewer.roles.includes("buyer_retail") ? await getCart().catch(() => null) : null;
-    return { displayName: viewer.displayName, cartCount: cart?.items.length ?? 0, isSeller: isSeller(viewer) };
+    return {
+      displayName: viewer.displayName,
+      cartCount: cart?.items.length ?? 0,
+      isSeller: isSeller(viewer),
+      isWholesale: viewer.roles.includes("buyer_wholesale"),
+    };
   } catch {
     return null;
   }

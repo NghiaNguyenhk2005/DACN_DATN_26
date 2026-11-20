@@ -145,5 +145,109 @@ describe("Tìm kiếm có gợi ý, chứng nhận và sản phẩm của nhà c
       await post("/api/wholesale/quote-requests", wholesale, { productId: "1", quantity: 50, neededBy: "2026-10-01" }).expect(422);
       await post("/api/wholesale/quote-requests", retail, { productId: "1", quantity: 50, neededBy: "2026-11-30" }).expect(403);
     });
+
+    describe("Quy trình bán sỉ: phản hồi 1 lượt, ký hợp đồng OTP, thanh toán và giao 1 đợt", () => {
+      it("gửi RFQ → NCC báo giá 1 lượt → khách sỉ chấp nhận → ký OTP → thanh toán PaymentService → giao 1 đợt", async () => {
+        // 1. Khách sỉ gửi RFQ
+        const rfq = (
+          await post("/api/wholesale/quote-requests", wholesale, {
+            productId: "1",
+            quantity: 100,
+            neededBy: "2026-12-15",
+            note: "Giao kho Thủ Đức xe lạnh",
+          }).expect(201)
+        ).body;
+        expect(rfq.status).toBe("sent");
+
+        // 2. Khách sỉ xem danh sách yêu cầu của mình
+        const myRfqs = (await get("/api/wholesale/quote-requests", wholesale).expect(200)).body;
+        expect(myRfqs.some((r: { id: string }) => r.id === rfq.id)).toBe(true);
+
+        // 3. Nhà cung cấp phản hồi báo giá 1 lượt
+        const quoted = (
+          await post(`/api/seller/quote-requests/${rfq.id}/quote`, seller, {
+            proposedPrice: 190000,
+            proposedQty: 100,
+            proposedDelivery: "2026-12-14",
+            note: "HTX đáp ứng đủ 100kg dâu tây đạt chuẩn.",
+          }).expect(200)
+        ).body;
+        expect(quoted.status).toBe("quoted");
+        expect(quoted.quoteResponse).toMatchObject({
+          proposedPrice: 190000,
+          proposedQty: 100,
+          proposedDelivery: "2026-12-14",
+        });
+
+        // 4. Khách sỉ chấp nhận báo giá -> Sinh hợp đồng mẫu
+        const accepted = (
+          await post(`/api/wholesale/quote-requests/${rfq.id}/respond`, wholesale, {
+            action: "accept",
+          }).expect(200)
+        ).body;
+        expect(accepted.status).toBe("accepted");
+        expect(accepted.contract).toMatchObject({
+          contractCode: `HD-2026-${rfq.id}`,
+          agreedQty: 100,
+          agreedUnitPrice: 190000,
+          totalAmount: 19000000,
+          status: "draft",
+        });
+        expect(accepted.contract.documentHash).toBeDefined();
+
+        // 5. Yêu cầu gửi OTP ký hợp đồng
+        const otpReq = (await post(`/api/wholesale/quote-requests/${rfq.id}/request-otp`, wholesale, {}).expect(200)).body;
+        expect(otpReq.sent).toBe(true);
+        expect(otpReq.devCode).toBe("123456");
+
+        // 6. Nhập sai OTP -> 400
+        await post(`/api/wholesale/quote-requests/${rfq.id}/confirm-otp`, wholesale, { code: "999999" }).expect(400);
+
+        // 7. Nhập đúng OTP -> Giao kết hợp đồng
+        const confirmed = (
+          await post(`/api/wholesale/quote-requests/${rfq.id}/confirm-otp`, wholesale, { code: "123456" }).expect(200)
+        ).body;
+        expect(confirmed.status).toBe("confirmed");
+        expect(confirmed.contract.status).toBe("concluded");
+        expect(confirmed.contract.concludedAt).toBeDefined();
+
+        // 8. Thanh toán qua PaymentService (DemoPaymentGateway)
+        const paid = (await post(`/api/wholesale/quote-requests/${rfq.id}/pay`, wholesale, {}).expect(200)).body;
+        expect(paid.status).toBe("paid");
+        expect(paid.payment).toMatchObject({
+          amount: 19000000,
+          status: "succeeded",
+        });
+        expect(paid.delivery).toMatchObject({
+          deliveryType: "single_batch",
+          status: "awaiting_delivery",
+        });
+      });
+
+      it("khách sỉ từ chối báo giá thì đóng RFQ", async () => {
+        const rfq = (
+          await post("/api/wholesale/quote-requests", wholesale, {
+            productId: "1",
+            quantity: 80,
+            neededBy: "2026-12-15",
+          }).expect(201)
+        ).body;
+
+        await post(`/api/seller/quote-requests/${rfq.id}/quote`, seller, {
+          proposedPrice: 200000,
+          proposedQty: 80,
+          proposedDelivery: "2026-12-16",
+        }).expect(200);
+
+        const rejected = (
+          await post(`/api/wholesale/quote-requests/${rfq.id}/respond`, wholesale, {
+            action: "reject",
+            rejectReason: "Giá quá cao",
+          }).expect(200)
+        ).body;
+        expect(rejected.status).toBe("rejected");
+        expect(rejected.rejectReason).toBe("Giá quá cao");
+      });
+    });
   });
 });
