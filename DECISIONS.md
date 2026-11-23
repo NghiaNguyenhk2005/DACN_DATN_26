@@ -1496,3 +1496,7 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 `report/schema.dbml`; kèm 10 ERD theo miền, Phụ lục D còn 20 trang, tổng PDF 160 trang. Đã xóa ảnh và HTML của các hình không còn dùng
 (8 sơ đồ hoạt động, 5 use case chi tiết, 3 cụm BMC, luồng đơn lẻ, OCOP, 2 tuần tự phụ).
 **SỬA 2026-11-24:** Phụ lục V (danh mục sự kiện) được giữ lại thành **Phụ lục G**: `apps/api/test/events.e2e-spec.ts` đọc `report/backmatter/phuluc-sukien.tex` để kiểm 17 tên sự kiện trong mã khớp báo cáo, nên xóa file làm CI đỏ. Phụ lục nay là A–G; nội dung đã sửa từ "phát vào Redis" thành bus sự kiện trong tiến trình.
+
+
+SỬA 24/11 (mục "Dự báo giá theo tháng..."): "8 trên 30 sản phẩm" sai vì mới đếm 30 sản phẩm đầu của dữ liệu mẫu; thực tế dữ liệu mẫu có 39 sản phẩm
+và 10 sản phẩm khớp bốn mặt hàng FAOSTAT (khoai tây 1, nấm 4, chè 2, cà phê 3), 29 sản phẩm không có mặt hàng tương ứng.
