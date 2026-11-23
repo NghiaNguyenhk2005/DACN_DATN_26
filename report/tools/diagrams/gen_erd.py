@@ -239,7 +239,7 @@ def draw_cell(s, c, x, y, bw):
                    '#44524b' if strong else '#6b7872', 'end')
     if c['more']:
         yy += 26
-        s.text(x + 12, yy - 8, '… +%d cột khác (xem Phụ lục D)' % c['more'], FS_DESC - 1, 400, '#7a8782', 'start',
+        s.text(x + 12, yy - 8, '… +%d cột khác (xem schema.dbml)' % c['more'], FS_DESC - 1, 400, '#7a8782', 'start',
                italic=True)
 
 
@@ -764,20 +764,19 @@ def appendix():
     L.append('\\addcontentsline{toc}{section}{Phụ lục D. Từ điển dữ liệu và sơ đồ ERD}')
     L.append('')
     L.append('Cơ sở dữ liệu gồm %d bảng, %d cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại '
-             'Bảng~\\ref{tab:module-io}; sơ đồ quan hệ từ Hình~\\ref{fig:erd-tong-quan} đến Hình~\\ref{fig:erd-danh-gia-van-hanh}. Mỗi bảng dưới '
-             'đây có một dòng tiêu đề kèm mục đích, sau đó là từng cột. Quy ước ở cột thứ hai:' % (n_tab, n_col))
+             'Bảng~\\ref{tab:module-io}; sơ đồ quan hệ ở Hình~\\ref{fig:erd-tong-quan} và các hình ERD theo miền cuối phụ lục này. '
+             'Mỗi bảng dưới đây ghi mục đích, số cột và các cột khóa. Danh sách đầy đủ từng cột (kiểu, ràng buộc, giá trị hợp lệ) '
+             'nằm trong tệp lược đồ \\texttt{report/schema.dbml} của dự án, nguồn sinh duy nhất của bảng này và các hình ERD nên luôn khớp nhau. '
+             'Quy ước cột cuối:' % (n_tab, n_col))
     L.append('\\begin{itemize}')
     L.append('    \\item \\textbf{PK} --- khóa chính; \\textbf{FK $\\to$ bảng} --- khóa ngoại tới bảng trong cùng schema '
              '(%d khóa ngoại);' % n_fk)
     L.append('    \\item \\textbf{$\\to$ schema.bảng} --- tham chiếu sang schema khác bằng định danh, không tạo khóa '
              'ngoại vật lý, theo ràng buộc RB3 tại mục~\\ref{sec:kientruc}; tính nhất quán do mô-đun sở hữu bảng đích '
-             'bảo đảm qua giao diện công khai và sự kiện;')
-    L.append('    \\item \\textbf{bắt buộc} --- \\texttt{NOT NULL}; \\textbf{duy nhất} --- \\texttt{UNIQUE}. Cột kiểu '
-             '\\texttt{bigint[]} lưu danh sách định danh tệp của schema \\texttt{media}.')
+             'bảo đảm qua giao diện công khai và sự kiện.')
     L.append('\\end{itemize}')
-    L.append('Bảng, cột ghi \\emph{chỉ thiết kế} có trong lược đồ để không phải đổi cấu trúc khi mở rộng, nhưng bản '
-             'hiện thực không ghi dữ liệu vào. Từ điển này sinh tự động từ tệp lược đồ \\texttt{schema.dbml} của '
-             'dự án, nên luôn khớp với lược đồ.')
+    L.append('Bảng ghi \\emph{chỉ thiết kế} có trong lược đồ để không phải đổi cấu trúc khi mở rộng, nhưng bản '
+             'hiện thực không ghi dữ liệu vào.')
     L.append('')
     for bname, schemas in BLOCKS:
         L.append('\\paragraph*{Khối %s}' % bname)
@@ -786,19 +785,24 @@ def appendix():
             ts = [t for t in ORDER if t.startswith(sc + '.')]
             L.append('\\begingroup')
             L.append('\\tblsetup\\footnotesize\\renewcommand{\\arraystretch}{1.1}')
-            L.append('\\begin{longtable}{L{3.60cm} L{4.40cm} L{6.90cm}}')
-            L.append('\\caption{Từ điển dữ liệu schema \\texttt{%s} (%d bảng)}' % (sc, len(ts)))
+            L.append('\\begin{longtable}{L{3.20cm} L{5.60cm} L{1.10cm} L{5.00cm}}')
+            L.append('\\caption{Các bảng của schema \\texttt{%s} (%d bảng)}' % (sc, len(ts)))
             L.append('\\label{tab:db-%s} \\\\' % sc)
             hdr = ['\\toprule', '\\rowcolor{tblheadbg}',
-                   '\\textbf{Cột} & \\textbf{Kiểu; ràng buộc} & \\textbf{Mô tả, giá trị} \\\\', '\\midrule']
+                   '\\textbf{Bảng} & \\textbf{Mục đích} & \\textbf{Số cột} & \\textbf{Khóa, tham chiếu} \\\\', '\\midrule']
             L += hdr + ['\\endfirsthead'] + hdr + ['\\endhead', '\\bottomrule', '\\endfoot']
-            for k, t in enumerate(ts):
+            for t in ts:
                 T = TABLES[t]
-                if k:
-                    L.append('\\midrule')
-                L.append('\\multicolumn{3}{@{}L{15.30cm}}{\\cellcolor{tblaltbg}\\textbf{%s} --- %s} \\\\'
-                         % (tt(t.split('.', 1)[1]), tex(T['note'])))
-                L += col_rows(T)
+                keys = []
+                for c in T['cols']:
+                    if c['pk']:
+                        keys.append('PK %s' % tt(c['name']))
+                    elif c['ref']:
+                        keys.append('%s FK $\\to$ %s' % (tt(c['name']), tt(c['ref'][1].split('.', 1)[1])))
+                    elif xref(c):
+                        keys.append('%s $\\to$ %s' % (tt(c['name']), tt(xref(c))))
+                L.append('%s & %s & %d & %s \\\\' % (tt(t.split('.', 1)[1]), tex(T['note']), len(T['cols']),
+                                                  '; '.join(keys)))
             L.append('\\end{longtable}')
             L.append('\\endgroup')
             L.append('')
