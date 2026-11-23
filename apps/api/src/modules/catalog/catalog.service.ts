@@ -23,6 +23,7 @@ import { InventoryService } from "../inventory/inventory.service";
 import { EventBus } from "../../core/events/event-bus";
 import type { AuthUser } from "../../core/token.service";
 import { SemanticSearch } from "./search/semantic-search";
+import { ProductEmbeddingIndex } from "./search/product-embedding-index";
 import { KeywordSearch } from "./search/keyword-search";
 import { fuseRrf } from "./search/fusion";
 import { containsAllTokens, fold, tokenize } from "./search/text-match";
@@ -54,6 +55,9 @@ function withStock<T extends WithListing>(item: T, availability: Map<string, num
   return { ...item, listing: { ...item.listing, available: availability.get(item.listing.id) ?? 0 } };
 }
 
+/** Số sản phẩm tương tự tối đa (hợp đồng cho tối đa 5; trang chi tiết xếp một hàng 5 thẻ). */
+const SIMILAR_LIMIT = 5;
+
 @Injectable()
 export class CatalogService {
   constructor(
@@ -69,6 +73,7 @@ export class CatalogService {
     private readonly semantic: SemanticSearch,
     private readonly keyword: KeywordSearch,
     private readonly events: EventBus,
+    private readonly vectorIndex: ProductEmbeddingIndex,
   ) {}
 
   /**
@@ -175,6 +180,39 @@ export class CatalogService {
     };
   }
 
+  /**
+   * Sản phẩm tương tự (FR12.1): láng giềng gần nhất theo vector còn hàng, thiếu thì bù cùng danh mục.
+   * Chưa có vector (chưa cấu hình dịch vụ AI hoặc chưa dựng xong chỉ mục) thì chỉ lấy cùng danh mục.
+   */
+  private async similarTo(productId: string, categoryId: string, availability: Map<string, number>): Promise<ProductCard[]> {
+    const inStock = (c: ProductCard) => !c.listing || (availability.get(c.listing.id) ?? 0) > 0;
+    const picked: ProductCard[] = [];
+    const ids = new Set<string>([productId]);
+    if (this.vectorIndex.ready) {
+      const ranked = this.vectorIndex.neighbors(productId, SIMILAR_LIMIT * 3, this.vectorIndex.minSimSimilar).map((h) => h.productId);
+      if (ranked.length) {
+        const { items } = await this.products.search({ rankedIds: ranked, limit: ranked.length });
+        for (const card of items) {
+          if (picked.length >= SIMILAR_LIMIT) break;
+          if (inStock(card)) {
+            picked.push(card);
+            ids.add(card.id);
+          }
+        }
+      }
+    }
+    if (picked.length < SIMILAR_LIMIT) {
+      for (const card of await this.products.findSimilar(categoryId, productId, 50)) {
+        if (picked.length >= SIMILAR_LIMIT) break;
+        if (!ids.has(card.id) && inStock(card)) {
+          picked.push(card);
+          ids.add(card.id);
+        }
+      }
+    }
+    return picked;
+  }
+
   async getProduct(productId: string): Promise<ProductDetail> {
     const product = await this.products.findById(productId);
     if (!product) {
@@ -187,9 +225,8 @@ export class CatalogService {
 
     const batchesOnSale = await this.batches.findApprovedByProductId(productId);
     const categoryId = (product as { categoryId?: string }).categoryId ?? "";
-    const similar = await this.products.findSimilar(categoryId, productId, 4);
-
     const [availability, freshness] = await Promise.all([this.inventory.availabilityByListing(), this.freshnessByProduct()]);
+    const similar = await this.similarTo(productId, categoryId, availability);
     return withStock(
       {
         ...product,

@@ -17,6 +17,9 @@ import { InventoryModule } from "../inventory/inventory.module";
 import { ConceptSemanticSearch, SemanticSearch } from "./search/semantic-search";
 import { InMemoryKeywordSearch, KeywordSearch } from "./search/keyword-search";
 import { SearchCorpus } from "./search/search-corpus";
+import { ProductEmbeddingIndex } from "./search/product-embedding-index";
+import { VectorSemanticSearch } from "./search/vector-semantic-search";
+import { EmbeddingProvider } from "../../integrations/embedding-provider";
 
 // Mô-đun catalog: danh mục, sản phẩm, lô hàng và truy xuất công khai
 @Module({
@@ -34,7 +37,15 @@ import { SearchCorpus } from "./search/search-corpus";
     { provide: BatchRepository, useClass: InMemoryBatchRepository },
     SearchCorpus,
     { provide: KeywordSearch, useClass: InMemoryKeywordSearch },
-    { provide: SemanticSearch, useClass: ConceptSemanticSearch },
+    ProductEmbeddingIndex,
+    ConceptSemanticSearch,
+    // Có EmbeddingProvider (AI_SERVICE_URL, hoặc bản băm ở test) thì tìm theo vector, không thì từ điển khái niệm.
+    {
+      provide: SemanticSearch,
+      inject: [{ token: EmbeddingProvider, optional: true }, ProductEmbeddingIndex, ConceptSemanticSearch],
+      useFactory: (embedder: EmbeddingProvider | null, index: ProductEmbeddingIndex, concept: ConceptSemanticSearch) =>
+        embedder ? new VectorSemanticSearch(index, embedder, concept) : concept,
+    },
   ],
   exports: [CatalogService, ProductRepository, BatchRepository],
 })

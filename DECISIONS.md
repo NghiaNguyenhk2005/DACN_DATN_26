@@ -1419,6 +1419,34 @@ merge vào `main` xung đột 81 điểm trong ít nhất 40 file (báo cáo, e2
 **Đánh đổi:** `turbo dev` chưa khởi động được dịch vụ AI (chạy tay bằng `uvicorn`); CI không kiểm mô hình thật, chỉ bộ nhúng
 băm, nên chất lượng nhúng thật chỉ kiểm bằng lần chạy tay với BGE-M3 (đã làm ngày 23/11, xem `apps/ai/README.md`).
 
+### Tìm theo vector BGE-M3 trộn từ điển khái niệm; sản phẩm tương tự theo láng giềng vector — 2026-11-23
+**Quyết định:**
+- `VectorSemanticSearch` (chỉ mục vector trong bộ nhớ, nhúng khi khởi động ở nền, nhúng lại khi nghe `ProductChanged`) chạy khi có
+  `EmbeddingProvider`; chưa dựng xong chỉ mục hoặc dịch vụ AI lỗi thì lùi về từ điển khái niệm, không trả 5xx.
+- Tham số chốt (`search/vector-config.ts`): `MIN_SIM = 0,45`; từ điển khái niệm trộn vào nhánh vector với trọng số 0,5 (KHÔNG bỏ
+  từ điển); `MIN_SIM_SIMILAR = 0,5`; tối đa 50 kết quả vector; sản phẩm tương tự hiển thị 5 (trước là 4).
+- Văn bản nhúng mỗi sản phẩm: tên, đường dẫn danh mục (cha > lá), vùng trồng, chứng nhận, mô tả. Thử bỏ mô tả, bỏ vùng và chứng
+  nhận, chỉ tên và danh mục: không biến thể nào hơn rõ rệt (Precision@5 sản phẩm tương tự 0,51–0,63 so với 0,65 của bản đầy đủ có đường dẫn cha).
+**Số đo (BGE-M3 thật, dữ liệu mẫu 39 sản phẩm; nDCG@10 / Recall@10 / P@5 / câu ngoài danh mục trả rỗng):**
+- Bộ chính (33 câu trong danh mục + 3 ngoài): chỉ từ khóa 0,59/0,56/0,58/1,00; từ khóa + từ điển 1,00/1,00/1,00/1,00; từ khóa + vector
+  0,69/0,67/0,65/1,00; bản chốt (vector + từ điển 0,5) 0,95/0,97/0,90/1,00.
+- Bộ độc lập (15 + 3): 0,62/0,61/0,61/0,33; 0,89/0,92/0,87/0,33; 0,64/0,68/0,61/0,33; bản chốt 0,88/0,92/0,85/0,33.
+- Bộ mở rộng (10 + 2, câu từ điển không có khóa, gán nhãn trước khi chạy): 0,02/0,02/0,02/0,50; 0,52/0,52/0,50/0,50; 0,53/0,63/0,47/0,50;
+  bản chốt 0,67/0,74/0,55/0,50.
+- Độ trễ `/products?q=` với 66 câu chưa có trong bộ nhớ đệm: p50 129 ms, p95 173 ms, max 251 ms (một máy, tuần tự, dịch vụ AI cục bộ);
+  p95 dưới 1 giây.
+- Sản phẩm tương tự (39 sản phẩm gán nhãn tay): Precision@5 cùng danh mục 0,52 (chỉ 33% sản phẩm đủ 5 gợi ý) lên vector 0,65 (100% đủ 5).
+  Kết quả không đổi khi ngưỡng giữa 0,3 và 0,6.
+**Bối cảnh:** kế hoạch giả định một ngưỡng cosine đủ để câu ngoài danh mục trả rỗng. Đo thực tế: cosine cao nhất của câu ngoài danh mục
+là 0,38–0,46, trong khi sản phẩm liên quan của câu trừu tượng ("nướng", "trẻ em", "làm sinh tố") chỉ 0,30–0,45; chỉ 23 trên 48 câu có
+cosine liên quan thấp nhất vẫn cao hơn cosine nhiễu cao nhất. Ngưỡng 0,5 trả rỗng cả ba câu ngoài danh mục nhưng bỏ phần lớn câu trừu tượng;
+0,4 giữ câu trừu tượng nhưng để lọt câu ngoài danh mục (bộ chính còn 0,33). 0,45 là mức lớn nhất không làm tệ hơn bản không vector ở việc
+chặn câu ngoài danh mục.
+**Đánh đổi:** bản chốt thấp hơn bản từ khóa + từ điển một chút trên bộ chính (0,95 so với 1,00) và bộ độc lập (0,88 so với 0,89), vì từ điển
+được viết khi đã biết nhãn của hai bộ đó; đổi lại hơn rõ trên bộ mở rộng (0,67 so với 0,52) và không còn phụ thuộc hoàn toàn vào việc người viết từ
+điển đoán đủ khái niệm. Hơn bản chỉ từ khóa +61% (chính), +42% (độc lập) về nDCG@10, Recall@10 không thấp hơn; đạt mốc Phụ lục L. Giới hạn: 39 sản
+phẩm là quá ít để có ý nghĩa thống kê; nhãn gán tay một người; bộ mở rộng chỉ 10 câu; sản phẩm tương tự 0,65 chỉ vừa qua mốc 0,6.
+
 ### Dự báo giá theo tháng trên giá FAOSTAT của bốn mặt hàng; dữ liệu mô phỏng chỉ để thử pipeline — 2026-11-23
 **Quyết định:**
 - FR12.2 đổi từ chuỗi tuần sang chuỗi THÁNG. Nguồn huấn luyện: FAOSTAT Producer Prices, giá nhà sản xuất của Việt Nam
