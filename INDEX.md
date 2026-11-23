@@ -1,6 +1,6 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-11-23 (tinh giản báo cáo: thân Ch.1–8 từ 149 xuống khoảng 78 trang, tổng 290 xuống 181 trang,
+Cập nhật lần cuối: 2026-11-23 (tinh giản báo cáo: thân Ch.1–8 từ 149 xuống khoảng 78 trang, tổng 290 xuống 160 trang,
 phụ lục từ A–W xuống A–F). Trước đó: 2026-11-05 (thư mục `design/`; khu nhà cung cấp chia tab Tổng quan · Lô hàng · Sản phẩm · Hồ sơ;
 tìm kiếm có gợi ý, mua sỉ, chứng nhận của nhà cung cấp; mô-đun `wholesale` của API).
 Trước đó: 2026-10-21 (khu nhà cung cấp trong shop; endpoint `/seller/*`, `identity`, `operations` của API).
@@ -58,7 +58,7 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
 | `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục D (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 181 trang (thân Ch.1–8 khoảng 78 trang) |
+| `main.pdf` | Bản build gần nhất, 160 trang (thân Ch.1–8 khoảng 78 trang) |
 | `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
 | `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10) |
 | `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10); `chapters/_incoming/` cũng vậy |
@@ -92,7 +92,7 @@ phụ lục dùng `\section*` nên trong thân phải viết thẳng "Phụ lụ
 | `phuluc-khaosat.tex` | **Phụ lục A** — bộ công cụ đánh giá khả dụng (A.1–A.6) |
 | `phuluc-tos.tex`, `phuluc-chinhsach.tex` | **Phụ lục B** — B.1 Điều khoản dịch vụ (17 điều, viết để đọc độc lập) · B.2 bộ chính sách (`tab:bochinhsach`) |
 | `phuluc-yeucau.tex` | **Phụ lục C** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
-| `phuluc-csdl.tex`, `phuluc-erd.tex` | **Phụ lục D** — từ điển dữ liệu 13 schema `tab:db-<schema>` (**sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay) và 10 ERD theo miền (viết tay, `fig:erd-*`) |
+| `phuluc-csdl.tex`, `phuluc-erd.tex` | **Phụ lục D** — bảng mô tả 65 bảng theo 13 schema `tab:db-<schema>` (mục đích, số cột, khóa; **sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay; đủ từng cột nằm trong `schema.dbml`) và 10 ERD theo miền (viết tay, `fig:erd-*`) |
 | `phuluc-nguong.tex`, `phuluc-matran.tex` | **Phụ lục E** — E.1 ngưỡng NFR và AI kèm căn cứ (`tab:nguongNFR`, `tab:nguongAI`) · E.2 ma trận Priority/Feasibility/Testability |
 | `phuluc-congnghe.tex` | **Phụ lục F** — đối sánh các hướng tiếp cận cho 5 nhóm AI (`tab:sosanh-ai`); bảng công nghệ nền đã gộp vào `tab:congnghe` ở Ch.5 |
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ; tuần 4 (16–22/10) là prototype, tuần 5 thay lớp lưu trữ bằng Prisma |
@@ -151,8 +151,8 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 `fig:class-mien`, `fig:erd-tong-quan` (Ch.5). **Hình ở Phụ lục D:** 10 hình ERD theo miền `fig:erd-dinh-danh`,
 `fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`,
 `fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh`.
-Các hình đã loại khỏi bản build cùng phụ lục cũ (ảnh vẫn nằm ở `image/comparison/`): `bmc-cum1`–`3`, `act-*` (8 sơ đồ còn lại),
-`usecase-*` chi tiết, `luong-don-le`, `ocop-2024-2025`.
+Ảnh và HTML của các hình đã loại cùng phụ lục cũ (`bmc-cum1`–`3`, 8 sơ đồ `act-*`, 5 `usecase-*` chi tiết, `luong-don-le`, `ocop-2024-2025`,
+`seq-duyet-lo`, `seq-danh-gia`) đã xóa ngày 2026-11-23; `gen_activity.py`, `gen_usecase.py`, `gen_sequence.py` vẫn sinh lại HTML của chúng nếu chạy.
 
 **Bảng ở thân báo cáo:** `tab:phaply` (Ch.2); `tab:sosanhtrongnuoc`, `tab:researchgap` (Ch.3); `tab:hailuong`, `tab:bmc`,
 `tab:chi-thiet-ke`, `tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:personas`, `tab:fr`, `tab:nfr` (Ch.4; hai nhãn trạng thái
