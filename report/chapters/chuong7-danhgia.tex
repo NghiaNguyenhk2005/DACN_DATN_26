@@ -50,6 +50,87 @@ Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu, với ba
 \section{Đánh giá mô-đun AI}
 \label{sec:danhgiaAI}
 
-Nghiệm thu theo chỉ số ở Bảng~\ref{tab:nguongAI}: \emph{tìm kiếm ngữ nghĩa} đo nDCG@10, Recall@10 trên bộ truy vấn gán nhãn tay so với tìm từ khóa làm đường cơ sở, kèm p95; \emph{sản phẩm tương tự} đo Precision@5 trên tập sản phẩm gán nhãn tay (CTR qua A/B chỉ áp dụng khi bật cá nhân hóa, ngoài phần hiện thực); \emph{dự báo giá} đo MAPE trên tập kiểm tra tách theo thời gian, dùng chuỗi giá theo tháng của FAOSTAT (đến 01/2025, đã nối tại điểm gãy mức giá 01/2022) cho bốn mặt hàng khớp sản phẩm của nền tảng là khoai tây, nấm, chè, cà phê --- dâu tây, cà chua và các mặt hàng đặc trưng Đà Lạt không có chuỗi đủ dài nên không đo được; mô hình chạy offline và chỉ đánh giá bằng MAPE. Giám sát bất thường dùng luật ngưỡng (Chương~\ref{chap:coso}) nên được nghiệm thu bằng việc kiểm tra luật kích hoạt đúng trên tập tình huống dựng sẵn.
+Nghiệm thu theo chỉ số ở Bảng~\ref{tab:nguongAI}: \emph{tìm kiếm ngữ nghĩa} đo nDCG@10, Recall@10 trên bộ truy vấn gán nhãn tay so với tìm từ khóa làm đường cơ sở, kèm p95; \emph{sản phẩm tương tự} đo Precision@5 trên tập sản phẩm gán nhãn tay (CTR qua A/B chỉ áp dụng khi bật cá nhân hóa, ngoài phần hiện thực); \emph{dự báo giá} đo MAPE trên tập kiểm tra tách theo thời gian, dùng chuỗi giá theo tháng của FAOSTAT (đến 01/2025, đã nối tại điểm gãy mức giá 01/2022) cho bốn mặt hàng khớp sản phẩm của nền tảng là khoai tây, nấm, chè, cà phê --- dâu tây, cà chua và các mặt hàng đặc trưng Đà Lạt không có chuỗi đủ dài nên không đo được; mô hình chạy offline, MAPE là chỉ số nghiệm thu còn MASE và độ phủ khoảng 80\% là chỉ số phụ. Giám sát bất thường dùng luật ngưỡng (Chương~\ref{chap:coso}) nên được nghiệm thu bằng việc kiểm tra luật kích hoạt đúng trên tập tình huống dựng sẵn.
 
-% TODO: điền kết quả thực nghiệm, kết luận đạt hoặc không đạt, kích thước và nguồn từng tập dữ liệu. Cuối chương tổng hợp ưu điểm và hạn chế, nêu cả chỉ số chưa đạt ngưỡng kèm nguyên nhân (hội đồng quan tâm phần này hơn danh sách chỉ số đã đạt) và phản ánh lại vào mục Hạn chế ở Chương~\ref{chap:ketluan}.
+\noindent\textbf{Tìm kiếm theo ngữ nghĩa: dữ liệu và cách đo.} Đo trên dịch vụ nhúng thật (BGE-M3, chạy CPU, máy phát triển) với 39 sản phẩm công khai của dữ liệu mẫu. Ba bộ truy vấn gán nhãn tay, mỗi câu kèm danh sách sản phẩm liên quan:
+\begin{itemize}
+    \item \textbf{Bộ chính:} 36 câu (33 trong danh mục, 3 ngoài danh mục), chia theo nhóm tên chính xác, không dấu, viết liền, gõ sai, danh mục, ý định, tiếng Anh.
+    \item \textbf{Bộ độc lập:} 18 câu (15 và 3), viết sau khi xong bản cài đặt đầu và không dùng để chỉnh tham số.
+    \item \textbf{Bộ mở rộng:} 12 câu (10 và 2) mà từ điển khái niệm không có khóa tương ứng (ví dụ \lq\lq quả mọng\rq\rq, \lq\lq đồ uống có caffeine\rq\rq), gán nhãn trước khi chạy bản vector.
+\end{itemize}
+Bộ chính và bộ độc lập cộng lại 54 câu, vượt mốc 50 của Bảng~\ref{tab:nguongAI}. Đường cơ sở là tìm từ khóa; \lq\lq bản chốt\rq\rq{} là nhánh vector (ngưỡng cosine 0,45) trộn từ điển khái niệm với trọng số 0,5 rồi hợp nhất với từ khóa bằng RRF. Bảng~\ref{tab:ketquaTimKiem} nêu kết quả.
+
+\begin{table}[t]
+\centering
+\caption{nDCG@10 và Recall@10 của các cấu hình tìm kiếm trên ba bộ truy vấn}
+\label{tab:ketquaTimKiem}
+\tblsetup\tblzebra
+\begin{tabular}{L{4.60cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm}}
+\toprule
+\rowcolor{tblheadbg}
+& \multicolumn{2}{l}{\textbf{Bộ chính}} & \multicolumn{2}{l}{\textbf{Bộ độc lập}} & \multicolumn{2}{l}{\textbf{Bộ mở rộng}} \\
+\rowcolor{tblheadbg}
+\textbf{Cấu hình} & nDCG & R@10 & nDCG & R@10 & nDCG & R@10 \\
+\midrule
+Chỉ từ khóa (đường cơ sở) & 0,59 & 0,56 & 0,62 & 0,61 & 0,02 & 0,02 \\
+Từ khóa và từ điển khái niệm & 1,00 & 1,00 & 0,89 & 0,92 & 0,52 & 0,52 \\
+Từ khóa và vector & 0,69 & 0,67 & 0,64 & 0,68 & 0,53 & 0,63 \\
+\textbf{Bản chốt} (vector và từ điển, cùng từ khóa) & \textbf{0,95} & \textbf{0,97} & \textbf{0,88} & \textbf{0,92} & \textbf{0,67} & \textbf{0,74} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Đối chiếu ngưỡng ở Bảng~\ref{tab:nguongAI}:
+\begin{itemize}
+    \item \textbf{nDCG@10 hơn từ khóa tối thiểu 15\%: đạt.} Bản chốt hơn 61\% ở bộ chính (0,95 so với 0,59) và 42\% ở bộ độc lập (0,88 so với 0,62); Recall@10 không thấp hơn (0,97 so với 0,56; 0,92 so với 0,61).
+    \item \textbf{p95 dưới 1 giây: đạt.} 66 câu chưa có trong bộ nhớ đệm vector cho p50 129 ms, p95 173 ms, lớn nhất 251 ms. Đo tuần tự trên một máy, dịch vụ AI chạy cùng máy; chưa đo khi nhiều người tìm đồng thời.
+    \item \textbf{Câu ngoài danh mục chưa chặn được trọn vẹn.} Cosine cao nhất của câu ngoài danh mục là 0,38--0,46, trong khi sản phẩm liên quan của câu trừu tượng (\lq\lq nướng\rq\rq, \lq\lq trẻ em\rq\rq, \lq\lq làm sinh tố\rq\rq) chỉ 0,30--0,45, nên một ngưỡng không vừa chặn vừa giữ được. Ngưỡng 0,45 là mức không tệ hơn bản không vector: trả rỗng đúng 3 trên 3 câu ngoài danh mục ở bộ chính, 1 trên 3 ở bộ độc lập và 1 trên 2 ở bộ mở rộng (các câu còn lại trả kết quả gần đúng từ đường lùi khớp gần đúng).
+\end{itemize}
+
+\noindent\textbf{Giới hạn của kết quả tìm kiếm.} Từ điển khái niệm được viết khi đã biết nhãn của bộ chính và bộ độc lập nên số của dòng \lq\lq từ khóa và từ điển\rq\rq{} (1,00 và 0,89) lạc quan; bản chốt thấp hơn một chút ở hai bộ này nhưng hơn rõ ở bộ mở rộng (0,67 so với 0,52). Chỉ có 39 sản phẩm, nhãn do một người gán và bộ mở rộng chỉ 10 câu trong danh mục, nên các số đo cho thấy xu hướng chứ chưa đủ làm bằng chứng thống kê. Chỉ mục vector hiện nằm trong bộ nhớ của API; chưa đo bản lưu trên \texttt{pgvector}.
+
+\noindent\textbf{Sản phẩm tương tự.} Với mỗi sản phẩm trong 39 sản phẩm mẫu, người gán nhãn ghi danh sách sản phẩm \lq\lq tương tự hợp lệ\rq\rq{} (cho phép khác danh mục: trái cây, rau lá, củ, đồ uống). Precision@5 trung bình đạt 0,65 với láng giềng vector (mọi sản phẩm nhận đủ 5 gợi ý, 100\% còn hàng), so với 0,52 của bản đầu chỉ lấy cùng danh mục (chỉ 33\% sản phẩm nhận đủ 5 gợi ý). Ngưỡng 0,6 ở Bảng~\ref{tab:nguongAI} \textbf{đạt nhưng sát}. Kết quả không đổi khi ngưỡng cosine nằm giữa 0,3 và 0,6; thử bốn cách ghép văn bản nhúng khác (bỏ mô tả, bỏ vùng và chứng nhận, chỉ tên và danh mục) cho Precision@5 từ 0,51 đến 0,63, không cách nào hơn. Giới hạn: 39 sản phẩm thấp hơn mốc 50 của Bảng~\ref{tab:nguongAI} (đã là toàn bộ dữ liệu mẫu) và nhãn do một người gán.
+
+\noindent\textbf{Dự báo giá: dữ liệu và cách đo.} Chuỗi giá nhà sản xuất theo tháng của Việt Nam từ FAOSTAT \parencite{faostat_producerprices}, bốn mặt hàng khớp sản phẩm của nền tảng (khoai tây, chè, cà phê, nấm), chuỗi tháng liên tục từ 12/2011 (nấm từ 01/2013) đến 01/2025. Kiểm tra ngược kiểu rolling-origin: 16 lần dự báo, mỗi lần huấn luyện lại bốn mô hình trên phần đầu chuỗi rồi dự báo 3 tháng kế tiếp, lùi từ cuối chuỗi, tức 48 điểm kiểm tra mỗi mặt hàng (từ 02/2021 đến 01/2025). Bậc của SARIMA và tham số của LightGBM đặt cố định trước, không chỉnh theo tập kiểm tra. Ba chuỗi (chè, cà phê, nấm) gãy mức giá chưa rõ nguyên nhân giữa 12/2021 và 01/2022 dù mọi dòng mang cờ chính thức (cà phê từ 36,1 triệu xuống 13,7 triệu đồng/tấn), nên chuỗi được nối tại điểm gãy trước khi mô hình hóa; kết quả trên chuỗi thô được nêu kèm. Bảng~\ref{tab:ketquaDuBao} và Hình~\ref{fig:dubaigia-mape} nêu MAPE, Hình~\ref{fig:dubaigia-kiemtra} minh họa dự báo so với giá thực.
+
+\begin{table}[t]
+\centering
+\caption{MAPE (\%) theo mô hình trên chuỗi đã nối điểm gãy, và chỉ số của mô hình được chọn}
+\label{tab:ketquaDuBao}
+\tblsetup\tblzebra
+\begin{tabular}{L{1.90cm} L{1.90cm} L{1.85cm} L{1.80cm} L{2.20cm} L{1.95cm} L{1.30cm} L{1.60cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mặt hàng} & \textbf{Seasonal naive} & \textbf{SARIMA} & \textbf{Prophet} & \textbf{LightGBM} & \textbf{Mô hình chọn} & \textbf{MASE} & \textbf{Độ phủ 80\%} \\
+\midrule
+Chè & 4,8 & 1,8 & 2,7 & 2,3 & SARIMA & 0,34 & 94\% \\
+Cà phê & 10,2 & 2,7 & 5,7 & 3,1 & SARIMA & 0,32 & 85\% \\
+Khoai tây & 8,4 & 3,6 & 8,6 & 4,1 & SARIMA & 0,44 & 94\% \\
+Nấm & 14,0 & 2,3 & 9,9 & 1,8 & LightGBM & 0,22 & 48\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/du-bao-gia-mape-mo-hinh.png}
+\caption{MAPE theo mô hình và mặt hàng, chuỗi đã nối điểm gãy (trái) và chuỗi thô (phải)}
+\label{fig:dubaigia-mape}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/du-bao-gia-kiem-tra-nguoc.png}
+\caption{Giá thực tế và dự báo 3 tháng của mô hình được chọn qua 16 lần kiểm tra ngược; vùng tô là khoảng 80\% cho ba tháng sau 01/2025}
+\label{fig:dubaigia-kiemtra}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{MAPE dưới 20\%: đạt.} Mô hình tốt nhất mỗi mặt hàng có MAPE 1,8--3,6\% trên chuỗi đã nối và 3,6--9,7\% trên chuỗi thô. Ở chuỗi thô, MAPE theo từng tầm cho thấy lỗi dồn vào tầm 3 tháng của chè (22,6\%) vì tháng gãy giá rơi đúng vào tầm đó.
+    \item \textbf{Hơn mốc seasonal naive.} SARIMA hoặc LightGBM thắng mốc ở cả bốn mặt hàng, MASE 0,22--0,44 (dưới 1 là sai số nhỏ hơn mốc). Prophet ít khi hơn mốc: kém nhẹ ở khoai tây (8,6 so với 8,4), hơn ở nấm, chè và cà phê. Trên chuỗi thô MASE của SARIMA ở nấm là 1,28, tức chưa hơn mốc.
+    \item \textbf{Khoảng tin cậy chưa đáng tin ở mọi mô hình.} Độ phủ khoảng 80\% của SARIMA 85--96\% (khoảng quá rộng), của LightGBM 42--69\% và Prophet 35--60\% (quá hẹp); mô hình được chọn cho nấm là LightGBM chỉ phủ 48\%, nên khoảng này chưa dùng được làm biên độ giá tham khảo.
+\end{itemize}
+
+\noindent\textbf{Giới hạn của kết quả dự báo giá.} Chỉ mười trong 39 sản phẩm mẫu (khoai tây, nấm, chè, cà phê) có mặt hàng tương ứng; dâu tây, cà chua, xà lách, ớt chuông, bơ không có trong FAOSTAT nên không đo được. Dữ liệu là giá nhà sản xuất cấp quốc gia, dừng ở 01/2025, không phải giá Đà Lạt hay giá giao dịch của nền tảng. Nối chuỗi tại điểm gãy làm MAPE thấp hơn thực tế của chuỗi thô, và nguyên nhân gãy chưa tra được. Mô hình được chọn bằng chính tập kiểm tra nên số đo hơi lạc quan. Bản tin giá tuần của Trung tâm Khuyến nông Lâm Đồng \parencite{khuyennong_lamdong_gia} chỉ có sáu kỳ liên tục nên không đủ để đo.
+
+% TODO: cuối chương tổng hợp ưu điểm và hạn chế, nêu cả chỉ số chưa đạt ngưỡng kèm nguyên nhân (hội đồng quan tâm phần này hơn danh sách chỉ số đã đạt) và phản ánh lại vào mục Hạn chế ở Chương~\ref{chap:ketluan}.
