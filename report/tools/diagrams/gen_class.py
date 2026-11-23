@@ -162,6 +162,6 @@ leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s"></i>%s<
        'stroke-dasharray="8 5"/></svg>Tham chiếu bằng định danh sang mô-đun khác</span>' % GREY)
 io.open(os.path.join(OUT, 'class-mien.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Thuộc tính rút gọn; đủ cột ở Phụ lục D. Money, Decimal, Date là kiểu giá trị. Mỗi lớp thuộc đúng một mô-đun, '
+    'Thuộc tính rút gọn; đủ cột ở schema.dbml. Money, Decimal, Date là kiểu giá trị. Mỗi lớp thuộc đúng một mô-đun, '
     'đổi trạng thái chỉ qua phương thức của chính lớp đó.'))
 print('ok class-mien.html', H)
