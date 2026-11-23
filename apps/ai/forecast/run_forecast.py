@@ -82,6 +82,7 @@ def fc_prophet(y: pd.Series, h: int):
     m = Prophet(yearly_seasonality=True, weekly_seasonality=False, daily_seasonality=False, interval_width=0.8)
     m.fit(df)
     fut = pd.DataFrame({"ds": [(y.index[-1] + k).to_timestamp() for k in range(1, h + 1)]})
+    np.random.seed(0)  # khoảng tin cậy của Prophet lấy mẫu ngẫu nhiên; cố định để kết quả tái lập
     p = m.predict(fut)
     return np.exp(p["yhat"].to_numpy()), np.exp(p["yhat_lower"].to_numpy()), np.exp(p["yhat_upper"].to_numpy())
 
@@ -165,11 +166,16 @@ def main() -> None:
     outdir.mkdir(parents=True, exist_ok=True)
 
     series = load_series(Path(args.input), args.splice_threshold)
-    rows, results = [], []
+    rows, results, backtest_rows = [], [], []
     for name, s in series.items():
         y = s["y"]
         recs = backtest(y, args.origins)
         stats = {m: summarize(recs[m]) for m in MODELS}
+        for m in MODELS:
+            for r in recs[m]:
+                origin = pd.Period(r["origin"], freq="M")
+                for h in range(H):
+                    backtest_rows.append((name, m, r["origin"], h + 1, str(origin + h + 1), float(r["actual"][h]), float(r["mean"][h])))
         for m in MODELS:
             rows.append({"commodity": name, "model": m, **stats[m]})
         best = min(MODELS, key=lambda m: stats[m]["mape"])
@@ -190,6 +196,10 @@ def main() -> None:
 
     with (outdir / "forecasts.json").open("w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
+    with (outdir / "backtest.csv").open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["commodity", "model", "origin", "horizon", "month", "actual", "forecast"])
+        w.writerows(backtest_rows)
     cols = ["commodity", "model", "mape", "mase", "coverage80", "mape_h1", "mape_h2", "mape_h3", "n_forecasts", "n_origins"]
     with (outdir / "metrics.csv").open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
