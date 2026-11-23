@@ -1,5 +1,5 @@
 import type { INestApplication, Provider } from "@nestjs/common";
-import { Test } from "@nestjs/testing";
+import { Test, type TestingModuleBuilder } from "@nestjs/testing";
 import { randomUUID } from "node:crypto";
 import request from "supertest";
 import { AppModule } from "../src/app.module";
@@ -26,12 +26,13 @@ export interface TestApp {
   http: () => ReturnType<INestApplication["getHttpServer"]>;
 }
 
-export async function createTestApp(extraProviders: Provider[] = []): Promise<TestApp> {
+export async function createTestApp(
+  extraProviders: Provider[] = [],
+  customize: (builder: TestingModuleBuilder) => TestingModuleBuilder = (b) => b,
+): Promise<TestApp> {
   const clock = new TestClock();
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule], providers: extraProviders })
-    .overrideProvider(Clock)
-    .useValue(clock)
-    .compile();
+  const builder = Test.createTestingModule({ imports: [AppModule], providers: extraProviders }).overrideProvider(Clock).useValue(clock);
+  const moduleRef = await customize(builder).compile();
   const app = moduleRef.createNestApplication({ bodyParser: false, logger: false });
   configureApp(app);
   await app.listen(0); // lắng nghe sẵn để các yêu cầu song song dùng chung một cổng

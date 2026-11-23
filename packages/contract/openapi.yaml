@@ -1412,7 +1412,7 @@ components:
             similar:
               type: array
               maxItems: 5
-              description: Prototype lấy cùng danh mục; giai đoạn 2 dùng vector (FR12.1)
+              description: Láng giềng gần nhất theo vector BGE-M3 còn hàng (FR12.1); thiếu thì bù sản phẩm cùng danh mục, và chưa có vector thì chỉ lấy cùng danh mục
               items: { $ref: '#/components/schemas/ProductCard' }
 
     # ------------------------------------------------------------ nhà cung cấp, chứng nhận

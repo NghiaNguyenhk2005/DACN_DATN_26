@@ -87,3 +87,22 @@ export const HELDOUT_QUERIES: EvalQuery[] = [
   { group: "Độc lập", q: "cá hồi", relevant: [] },
   { group: "Độc lập", q: "bánh mì", relevant: [] },
 ];
+
+/**
+ * Bộ mở rộng: câu mà từ điển khái niệm không có khóa tương ứng, gán nhãn trước khi chạy bản vector. Đo phần vector làm
+ * được mà từ điển không làm được; hai câu cuối ngoài danh mục.
+ */
+export const EXTENSION_QUERIES: EvalQuery[] = [
+  { group: "Mở rộng", q: "quả mọng", relevant: [...DAU_TAY, "31"] },
+  { group: "Mở rộng", q: "rau lá xanh", relevant: ["9", "10", "11", "12", "13", "14", "34"] },
+  { group: "Mở rộng", q: "thức uống nóng buổi sáng", relevant: [...TRA, ...CA_PHE] },
+  { group: "Mở rộng", q: "hạt cà phê rang xay", relevant: CA_PHE },
+  { group: "Mở rộng", q: "củ nấu canh hầm", relevant: ["17", "18", "19", "35"] },
+  { group: "Mở rộng", q: "đồ uống có caffeine", relevant: [...TRA, ...CA_PHE] },
+  { group: "Mở rộng", q: "cây thuốc tốt cho gan", relevant: ["23"] },
+  { group: "Mở rộng", q: "nguyên liệu pha trà chiều", relevant: TRA },
+  { group: "Mở rộng", q: "trái cây giàu chất chống oxy hóa", relevant: [...DAU_TAY, "22", "31"] },
+  { group: "Mở rộng", q: "hương liệu nấu bít tết", relevant: ["37"] },
+  { group: "Mở rộng", q: "máy giặt", relevant: [] },
+  { group: "Mở rộng", q: "laptop gaming", relevant: [] },
+];
