@@ -515,3 +515,13 @@ Status: open
 - Bên nhận chạy trong yêu cầu của bên phát: không đặt việc nặng (gọi dịch vụ ngoài) trong bên nhận; AI W8-8 nghe `ProductChanged` phải đẩy việc
   nhúng ra nền, không chờ.
 Status: open
+
+### Bán sỉ: mã còn gán kho trung chuyển Farmery cho đơn sỉ, trái thiết kế — Claude — 2026-11-23
+- `apps/api/src/modules/wholesale/wholesale.service.ts` (khoảng dòng 225–230) và dữ liệu mẫu ở `quote-request.repository.ts` đặt
+  `warehouseHub: "Kho trung chuyển Farmery Đức Trọng, Lâm Đồng"` khi hợp đồng sỉ được giao kết.
+- Thiết kế (Ch.4 quy trình 6, ToS Phụ lục B) là nhà cung cấp tự giao hoặc thuê 3PL giao thẳng cho khách sỉ, Farmery không giữ hàng sỉ.
+  Cần bỏ hoặc đổi trường `warehouseHub` (và các màn hình đang hiển thị nó) cho khớp; nếu nhóm muốn giữ kho trung chuyển thì phải đổi thiết kế
+  và nguyên tắc "Farmery không bán sỉ" ở Ch.1, Ch.4, Ch.8.
+- Ch.6 đã viết theo thiết kế (giao thẳng), có ghi chú rằng mã còn lệch.
+Status: open
+**Cập nhật 2026-11-23:** đã sửa chỗ nhắc Redis ở Ch.5, Ch.6, Ch.8, Phụ lục E, ảnh C4 (container, mô-đun) và tuần tự: nay ghi bus sự kiện trong tiến trình, Redis và MinIO là chỉ thiết kế. Phụ lục V đã bỏ khỏi báo cáo. Ý "chống lặp trong bộ nhớ" vẫn ở mức một câu ngắn ở Ch.5; còn lại khi lên PostgreSQL (phát sau commit hoặc outbox).

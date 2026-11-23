@@ -1403,3 +1403,52 @@ merge vào `main` xung đột 81 điểm trong ít nhất 40 file (báo cáo, e2
 **Đánh đổi:** hai lần squash cũ vẫn nằm trong lịch sử `main` (không sửa vì không force-push). Repo vẫn cho phép squash và rebase, `main` và
 `develop` không có branch protection nên GitHub không chặn nếu bấm nhầm; có thể dùng ruleset giới hạn kiểu gộp cho `main` (chưa làm).
 
+### Dự báo giá theo tháng trên giá FAOSTAT của bốn mặt hàng; dữ liệu mô phỏng chỉ để thử pipeline — 2026-11-23
+**Quyết định:**
+- FR12.2 đổi từ chuỗi tuần sang chuỗi THÁNG. Nguồn huấn luyện: FAOSTAT Producer Prices, giá nhà sản xuất của Việt Nam
+  (đồng trên tấn), 33 mặt hàng đủ 161 tháng từ 03/2011 đến 01/2025.
+- Phạm vi đo MAPE: bốn mặt hàng khớp sản phẩm Farmery là khoai tây, nấm, chè, cà phê (8 trên 30 sản phẩm trong
+  `mock-data`). Dâu tây, cà chua, xà lách, ớt chuông, bơ và các mặt hàng đặc trưng Đà Lạt không có trong FAOSTAT nên không
+  đo được; báo cáo ghi rõ điều này ở Chương 7 và Phụ lục O.
+- Bản tin giá tuần của Trung tâm Khuyến nông Lâm Đồng (đọc được 6 kỳ liên tục 18/11 → 30/12/2025, chưa thấy kỳ 2026)
+  chỉ làm bằng chứng giá trong nước; được thu thập ít, mỗi dòng kèm URL bài và ghi nguồn.
+- `apps/ai/forecast/data/nong_san_prices.csv` (1350 dòng, sinh bằng `random.seed(42)`) là dữ liệu MÔ PHỎNG: giữ để thử
+  pipeline, đổi cột nguồn thành `simulated`, không dùng đo MAPE và không trích làm số liệu báo cáo.
+- Ngưỡng MAPE dưới 20% ở Phụ lục L giữ nguyên, đo trên chuỗi tháng.
+**Bối cảnh:** hạn chốt nguồn 18/11 đã qua. Kiểm 23/11: không nguồn mở nào có chuỗi tuần đủ dài (SARIMA, Prophet cần khoảng
+104 tuần để học mùa vụ năm); app "Giá nông sản Lâm Đồng" và VNSAT tải dữ liệu bằng JavaScript, chưa xác nhận được lịch sử
+hay khả năng tải. Tệp mô phỏng ghi cột nguồn là tên cơ quan thật (Sở Công Thương, Cục Thống kê, Bộ NN&PTNT) cho số tự sinh.
+**Đánh đổi:** dự báo phủ ít sản phẩm hơn kế hoạch ban đầu và là giá cấp quốc gia, không phải giá Đà Lạt; đổi lại có chuỗi
+161 điểm để đo mùa vụ có ý nghĩa thống kê và nguồn dữ liệu mở kiểm chứng được. FAOSTAT dừng ở 01/2025, nên mô hình không
+phản ánh giá 2025–2026. Nếu Dũng mở được endpoint lịch sử của app Lâm Đồng thì cân nhắc bổ sung chuỗi tuần (ghi SỬA mục này).
+
+### Tinh giản báo cáo: thân Ch.1–8 còn khoảng 78 trang, phụ lục còn A–F — 2026-11-23
+**Quyết định:**
+- Mục tiêu độ dài chỉ tính thân Ch.1–8 (khoảng 75 trang); kết quả 78 trang (Ch.1 5, Ch.2 8, Ch.3 5, Ch.4 24, Ch.5 23,
+  Ch.6 7, Ch.7 3, Ch.8 3). Tổng PDF từ 290 xuống 181 trang.
+- Bỏ "Kết chương" ở Ch.2, 4, 5, 7; Ch.3 đổi thành "3.4 Khoảng trống nghiên cứu". Mục lục chỉ in tới cấp section.
+- Phụ lục từ 21 mục (A–W) xuống 6 mục: A khảo sát khả dụng · B điều khoản và chính sách (gộp D, U) · C truy vết yêu cầu ·
+  D từ điển dữ liệu và ERD theo miền (gộp K, kèm 10 ERD chuyển từ Ch.5) · E ngưỡng và ma trận (gộp L, M) · F đối sánh AI.
+  Đã bỏ khỏi bản build: BMC đầy đủ (E), F–H, N–P, Q–T, V, W; hai phụ lục A, C cũ chỉ là TODO. BMC giờ là một bảng ở 4.1.1.
+- Ch.4: FR/NFR đổi từ đoạn văn sang bảng `tab:fr`, `tab:nfr` (giữ nguyên mã), persona thành bảng; Ch.5: 8 sơ đồ hoạt động,
+  5 use case chi tiết, sitemap cấp 3, 2 lược đồ tuần tự phụ không còn trong báo cáo; các mục 5.3.7–5.3.9 (API, UI/UX,
+  test case, mới chỉ có TODO) chuyển sang mục 6.2.
+**Bối cảnh:** báo cáo 290 trang, phụ lục chiếm 40%; nhiều phụ lục lặp nội dung đã có ở thân. Mức cắt do người dùng chọn
+(mục tiêu 75 trang cho thân).
+**Đánh đổi:** mất chi tiết minh họa (sơ đồ hoạt động, use case, sitemap cấp 3) — ảnh và file sinh vẫn còn trong
+`report/image/comparison/` và `report/tools/`. Khi Ch.6 và Ch.7 điền nốt số liệu, thân sẽ vượt 75 trang vài trang.
+**SỬA 2026-11-23:** các mục DECISIONS trước ngày này nhắc "Phụ lục K", "L", "O", "D", "U" theo chữ cái cũ; chữ cái mới là
+D (từ điển dữ liệu), E (ngưỡng), B (điều khoản, chính sách); Phụ lục O (nguồn dữ liệu) đã bỏ, nội dung nằm ở mục 2.4.
+
+SỬA 23/11 (mục "Dự báo giá theo tháng..."): (1) "33 mặt hàng đủ 161 tháng" sai: 161 là số quan sát, trong đó 4 điểm đầu
+là theo quý (2011); chuỗi tháng liên tục là 158 tháng từ 12/2011 (khoai tây, chè, cà phê) và 145 tháng từ 01/2013 (nấm).
+(2) Cả ba chuỗi chè, cà phê, nấm gãy mức giá chưa rõ nguyên nhân giữa 12/2021 và 01/2022 dù mọi dòng mang cờ chính thức A
+(cà phê 36,1 triệu xuống 13,7 triệu đồng/tấn; chè 24,4 triệu xuống 9,3 triệu; nấm 30,2 triệu lên 113,9 triệu); chè còn
+một bước nhảy ở 01/2021; khoai tây không bị. `run_forecast.py` nối chuỗi tại điểm gãy (ngưỡng |ln tỷ lệ| > 0,5) và ghi vào
+`forecasts.json`; kết quả chuỗi thô lưu ở `results/raw/`. Số đo MAPE trên chuỗi đã nối tốt hơn chuỗi thô, báo cáo phải nêu
+cả hai và nói rõ chưa tra được nguyên nhân gãy. Kết quả lần chạy đầu (bốn mô hình, 16 lần dự báo 3 tháng): SARIMA hoặc
+LightGBM thắng seasonal naive ở cả bốn mặt hàng.
+**SỬA 2026-11-23 (lượt 2):** Phụ lục D rút từ điển từng cột (khoảng 31 trang) còn bảng mô tả 65 bảng (mục đích, số cột, khóa), đủ cột ở
+`report/schema.dbml`; kèm 10 ERD theo miền, Phụ lục D còn 20 trang, tổng PDF 160 trang. Đã xóa ảnh và HTML của các hình không còn dùng
+(8 sơ đồ hoạt động, 5 use case chi tiết, 3 cụm BMC, luồng đơn lẻ, OCOP, 2 tuần tự phụ).
+**SỬA 2026-11-24:** Phụ lục V (danh mục sự kiện) được giữ lại thành **Phụ lục G**: `apps/api/test/events.e2e-spec.ts` đọc `report/backmatter/phuluc-sukien.tex` để kiểm 17 tên sự kiện trong mã khớp báo cáo, nên xóa file làm CI đỏ. Phụ lục nay là A–G; nội dung đã sửa từ "phát vào Redis" thành bus sự kiện trong tiến trình.
