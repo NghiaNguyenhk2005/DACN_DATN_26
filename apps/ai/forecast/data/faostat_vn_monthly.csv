@@ -1,0 +1,629 @@
+month,commodity,price,unit,source
+2011-03,Chè,5198000,VND/tấn,FAOSTAT Producer Prices
+2011-06,Chè,5817000,VND/tấn,FAOSTAT Producer Prices
+2011-09,Chè,5699000,VND/tấn,FAOSTAT Producer Prices
+2011-12,Chè,5920000,VND/tấn,FAOSTAT Producer Prices
+2012-01,Chè,6215000,VND/tấn,FAOSTAT Producer Prices
+2012-02,Chè,6394000,VND/tấn,FAOSTAT Producer Prices
+2012-03,Chè,6385000,VND/tấn,FAOSTAT Producer Prices
+2012-04,Chè,6483000,VND/tấn,FAOSTAT Producer Prices
+2012-05,Chè,6417000,VND/tấn,FAOSTAT Producer Prices
+2012-06,Chè,6567000,VND/tấn,FAOSTAT Producer Prices
+2012-07,Chè,6534000,VND/tấn,FAOSTAT Producer Prices
+2012-08,Chè,6557000,VND/tấn,FAOSTAT Producer Prices
+2012-09,Chè,6554000,VND/tấn,FAOSTAT Producer Prices
+2012-10,Chè,6512000,VND/tấn,FAOSTAT Producer Prices
+2012-11,Chè,6493000,VND/tấn,FAOSTAT Producer Prices
+2012-12,Chè,6554000,VND/tấn,FAOSTAT Producer Prices
+2013-01,Chè,6686000,VND/tấn,FAOSTAT Producer Prices
+2013-02,Chè,6762000,VND/tấn,FAOSTAT Producer Prices
+2013-03,Chè,6724000,VND/tấn,FAOSTAT Producer Prices
+2013-04,Chè,6724000,VND/tấn,FAOSTAT Producer Prices
+2013-05,Chè,6736000,VND/tấn,FAOSTAT Producer Prices
+2013-06,Chè,6650000,VND/tấn,FAOSTAT Producer Prices
+2013-07,Chè,6578000,VND/tấn,FAOSTAT Producer Prices
+2013-08,Chè,6826000,VND/tấn,FAOSTAT Producer Prices
+2013-09,Chè,6378000,VND/tấn,FAOSTAT Producer Prices
+2013-10,Chè,6357000,VND/tấn,FAOSTAT Producer Prices
+2013-11,Chè,6706000,VND/tấn,FAOSTAT Producer Prices
+2013-12,Chè,6835000,VND/tấn,FAOSTAT Producer Prices
+2014-01,Chè,6897000,VND/tấn,FAOSTAT Producer Prices
+2014-02,Chè,6920000,VND/tấn,FAOSTAT Producer Prices
+2014-03,Chè,7059000,VND/tấn,FAOSTAT Producer Prices
+2014-04,Chè,7048000,VND/tấn,FAOSTAT Producer Prices
+2014-05,Chè,7199000,VND/tấn,FAOSTAT Producer Prices
+2014-06,Chè,7185000,VND/tấn,FAOSTAT Producer Prices
+2014-07,Chè,7166000,VND/tấn,FAOSTAT Producer Prices
+2014-08,Chè,7203000,VND/tấn,FAOSTAT Producer Prices
+2014-09,Chè,7109000,VND/tấn,FAOSTAT Producer Prices
+2014-10,Chè,7000000,VND/tấn,FAOSTAT Producer Prices
+2014-11,Chè,6956000,VND/tấn,FAOSTAT Producer Prices
+2014-12,Chè,7210000,VND/tấn,FAOSTAT Producer Prices
+2015-01,Chè,7238000,VND/tấn,FAOSTAT Producer Prices
+2015-02,Chè,7480000,VND/tấn,FAOSTAT Producer Prices
+2015-03,Chè,7523000,VND/tấn,FAOSTAT Producer Prices
+2015-04,Chè,7544000,VND/tấn,FAOSTAT Producer Prices
+2015-05,Chè,7565000,VND/tấn,FAOSTAT Producer Prices
+2015-06,Chè,7456000,VND/tấn,FAOSTAT Producer Prices
+2015-07,Chè,7420000,VND/tấn,FAOSTAT Producer Prices
+2015-08,Chè,7417000,VND/tấn,FAOSTAT Producer Prices
+2015-09,Chè,7288000,VND/tấn,FAOSTAT Producer Prices
+2015-10,Chè,7302000,VND/tấn,FAOSTAT Producer Prices
+2015-11,Chè,7581000,VND/tấn,FAOSTAT Producer Prices
+2015-12,Chè,7617000,VND/tấn,FAOSTAT Producer Prices
+2016-01,Chè,7666000,VND/tấn,FAOSTAT Producer Prices
+2016-02,Chè,7869000,VND/tấn,FAOSTAT Producer Prices
+2016-03,Chè,7797000,VND/tấn,FAOSTAT Producer Prices
+2016-04,Chè,8161000,VND/tấn,FAOSTAT Producer Prices
+2016-05,Chè,7934000,VND/tấn,FAOSTAT Producer Prices
+2016-06,Chè,8627830,VND/tấn,FAOSTAT Producer Prices
+2016-07,Chè,8655040,VND/tấn,FAOSTAT Producer Prices
+2016-08,Chè,8607020,VND/tấn,FAOSTAT Producer Prices
+2016-09,Chè,8672610,VND/tấn,FAOSTAT Producer Prices
+2016-10,Chè,8613950,VND/tấn,FAOSTAT Producer Prices
+2016-11,Chè,8618730,VND/tấn,FAOSTAT Producer Prices
+2016-12,Chè,8717930,VND/tấn,FAOSTAT Producer Prices
+2017-01,Chè,7870000,VND/tấn,FAOSTAT Producer Prices
+2017-02,Chè,8080000,VND/tấn,FAOSTAT Producer Prices
+2017-03,Chè,8120000,VND/tấn,FAOSTAT Producer Prices
+2017-04,Chè,8063000,VND/tấn,FAOSTAT Producer Prices
+2017-05,Chè,8107000,VND/tấn,FAOSTAT Producer Prices
+2017-06,Chè,8172000,VND/tấn,FAOSTAT Producer Prices
+2017-07,Chè,8193000,VND/tấn,FAOSTAT Producer Prices
+2017-08,Chè,8227000,VND/tấn,FAOSTAT Producer Prices
+2017-09,Chè,8290000,VND/tấn,FAOSTAT Producer Prices
+2017-10,Chè,8262000,VND/tấn,FAOSTAT Producer Prices
+2017-11,Chè,8296000,VND/tấn,FAOSTAT Producer Prices
+2017-12,Chè,8328000,VND/tấn,FAOSTAT Producer Prices
+2018-01,Chè,9081000,VND/tấn,FAOSTAT Producer Prices
+2018-02,Chè,8374730,VND/tấn,FAOSTAT Producer Prices
+2018-03,Chè,8410100,VND/tấn,FAOSTAT Producer Prices
+2018-04,Chè,8431410,VND/tấn,FAOSTAT Producer Prices
+2018-05,Chè,8460050,VND/tấn,FAOSTAT Producer Prices
+2018-06,Chè,8538620,VND/tấn,FAOSTAT Producer Prices
+2018-07,Chè,8556250,VND/tấn,FAOSTAT Producer Prices
+2018-08,Chè,8539140,VND/tấn,FAOSTAT Producer Prices
+2018-09,Chè,8561000,VND/tấn,FAOSTAT Producer Prices
+2018-10,Chè,8637750,VND/tấn,FAOSTAT Producer Prices
+2018-11,Chè,8681230,VND/tấn,FAOSTAT Producer Prices
+2018-12,Chè,8778990,VND/tấn,FAOSTAT Producer Prices
+2019-01,Chè,9276220,VND/tấn,FAOSTAT Producer Prices
+2019-02,Chè,9507630,VND/tấn,FAOSTAT Producer Prices
+2019-03,Chè,9541240,VND/tấn,FAOSTAT Producer Prices
+2019-04,Chè,9576020,VND/tấn,FAOSTAT Producer Prices
+2019-05,Chè,9617430,VND/tấn,FAOSTAT Producer Prices
+2019-06,Chè,9498140,VND/tấn,FAOSTAT Producer Prices
+2019-07,Chè,9691940,VND/tấn,FAOSTAT Producer Prices
+2019-08,Chè,9653370,VND/tấn,FAOSTAT Producer Prices
+2019-09,Chè,9681590,VND/tấn,FAOSTAT Producer Prices
+2019-10,Chè,9813600,VND/tấn,FAOSTAT Producer Prices
+2019-11,Chè,9677530,VND/tấn,FAOSTAT Producer Prices
+2019-12,Chè,9770500,VND/tấn,FAOSTAT Producer Prices
+2020-01,Chè,11064990,VND/tấn,FAOSTAT Producer Prices
+2020-02,Chè,11191330,VND/tấn,FAOSTAT Producer Prices
+2020-03,Chè,11411100,VND/tấn,FAOSTAT Producer Prices
+2020-04,Chè,11263970,VND/tấn,FAOSTAT Producer Prices
+2020-05,Chè,11336580,VND/tấn,FAOSTAT Producer Prices
+2020-06,Chè,11075750,VND/tấn,FAOSTAT Producer Prices
+2020-07,Chè,11043790,VND/tấn,FAOSTAT Producer Prices
+2020-08,Chè,11124950,VND/tấn,FAOSTAT Producer Prices
+2020-09,Chè,11133850,VND/tấn,FAOSTAT Producer Prices
+2020-10,Chè,11141700,VND/tấn,FAOSTAT Producer Prices
+2020-11,Chè,11249310,VND/tấn,FAOSTAT Producer Prices
+2020-12,Chè,11193470,VND/tấn,FAOSTAT Producer Prices
+2021-01,Chè,22445310,VND/tấn,FAOSTAT Producer Prices
+2021-02,Chè,22083170,VND/tấn,FAOSTAT Producer Prices
+2021-03,Chè,21785010,VND/tấn,FAOSTAT Producer Prices
+2021-04,Chè,25080392,VND/tấn,FAOSTAT Producer Prices
+2021-05,Chè,21668972,VND/tấn,FAOSTAT Producer Prices
+2021-06,Chè,24727464,VND/tấn,FAOSTAT Producer Prices
+2021-07,Chè,24600449,VND/tấn,FAOSTAT Producer Prices
+2021-08,Chè,25080392,VND/tấn,FAOSTAT Producer Prices
+2021-09,Chè,23968772,VND/tấn,FAOSTAT Producer Prices
+2021-10,Chè,23762451,VND/tấn,FAOSTAT Producer Prices
+2021-11,Chè,23999598,VND/tấn,FAOSTAT Producer Prices
+2021-12,Chè,24395720,VND/tấn,FAOSTAT Producer Prices
+2022-01,Chè,9328874,VND/tấn,FAOSTAT Producer Prices
+2022-02,Chè,9359609,VND/tấn,FAOSTAT Producer Prices
+2022-03,Chè,9398970,VND/tấn,FAOSTAT Producer Prices
+2022-04,Chè,9432913,VND/tấn,FAOSTAT Producer Prices
+2022-05,Chè,9493967,VND/tấn,FAOSTAT Producer Prices
+2022-06,Chè,9505992,VND/tấn,FAOSTAT Producer Prices
+2022-07,Chè,9535457,VND/tấn,FAOSTAT Producer Prices
+2022-08,Chè,9609312,VND/tấn,FAOSTAT Producer Prices
+2022-09,Chè,9526147,VND/tấn,FAOSTAT Producer Prices
+2022-10,Chè,9486044,VND/tấn,FAOSTAT Producer Prices
+2022-11,Chè,9517487,VND/tấn,FAOSTAT Producer Prices
+2022-12,Chè,9495397,VND/tấn,FAOSTAT Producer Prices
+2023-01,Chè,9606500,VND/tấn,FAOSTAT Producer Prices
+2023-02,Chè,9652865,VND/tấn,FAOSTAT Producer Prices
+2023-03,Chè,9722100,VND/tấn,FAOSTAT Producer Prices
+2023-04,Chè,9593499,VND/tấn,FAOSTAT Producer Prices
+2023-05,Chè,9666931,VND/tấn,FAOSTAT Producer Prices
+2023-06,Chè,9645562,VND/tấn,FAOSTAT Producer Prices
+2023-07,Chè,9602581,VND/tấn,FAOSTAT Producer Prices
+2023-08,Chè,9632231,VND/tấn,FAOSTAT Producer Prices
+2023-09,Chè,9692230,VND/tấn,FAOSTAT Producer Prices
+2023-10,Chè,9685904,VND/tấn,FAOSTAT Producer Prices
+2023-11,Chè,9637173,VND/tấn,FAOSTAT Producer Prices
+2023-12,Chè,9707382,VND/tấn,FAOSTAT Producer Prices
+2024-01,Chè,9726676,VND/tấn,FAOSTAT Producer Prices
+2024-02,Chè,9937241,VND/tấn,FAOSTAT Producer Prices
+2024-03,Chè,10007616,VND/tấn,FAOSTAT Producer Prices
+2024-04,Chè,10030260,VND/tấn,FAOSTAT Producer Prices
+2024-05,Chè,10226610,VND/tấn,FAOSTAT Producer Prices
+2024-06,Chè,10294369,VND/tấn,FAOSTAT Producer Prices
+2024-07,Chè,10221295,VND/tấn,FAOSTAT Producer Prices
+2024-08,Chè,10182271,VND/tấn,FAOSTAT Producer Prices
+2024-09,Chè,10233675,VND/tấn,FAOSTAT Producer Prices
+2024-10,Chè,10431088,VND/tấn,FAOSTAT Producer Prices
+2024-11,Chè,10337153,VND/tấn,FAOSTAT Producer Prices
+2024-12,Chè,10415870,VND/tấn,FAOSTAT Producer Prices
+2025-01,Chè,10437781,VND/tấn,FAOSTAT Producer Prices
+2011-03,Cà phê,28763000,VND/tấn,FAOSTAT Producer Prices
+2011-06,Cà phê,37383000,VND/tấn,FAOSTAT Producer Prices
+2011-09,Cà phê,37503000,VND/tấn,FAOSTAT Producer Prices
+2011-12,Cà phê,35407000,VND/tấn,FAOSTAT Producer Prices
+2012-01,Cà phê,34388000,VND/tấn,FAOSTAT Producer Prices
+2012-02,Cà phê,33774000,VND/tấn,FAOSTAT Producer Prices
+2012-03,Cà phê,34179000,VND/tấn,FAOSTAT Producer Prices
+2012-04,Cà phê,34364000,VND/tấn,FAOSTAT Producer Prices
+2012-05,Cà phê,35073000,VND/tấn,FAOSTAT Producer Prices
+2012-06,Cà phê,35448000,VND/tấn,FAOSTAT Producer Prices
+2012-07,Cà phê,35111000,VND/tấn,FAOSTAT Producer Prices
+2012-08,Cà phê,35059000,VND/tấn,FAOSTAT Producer Prices
+2012-09,Cà phê,35669000,VND/tấn,FAOSTAT Producer Prices
+2012-10,Cà phê,35593000,VND/tấn,FAOSTAT Producer Prices
+2012-11,Cà phê,33855000,VND/tấn,FAOSTAT Producer Prices
+2012-12,Cà phê,34059000,VND/tấn,FAOSTAT Producer Prices
+2013-01,Cà phê,35788000,VND/tấn,FAOSTAT Producer Prices
+2013-02,Cà phê,36362000,VND/tấn,FAOSTAT Producer Prices
+2013-03,Cà phê,35093000,VND/tấn,FAOSTAT Producer Prices
+2013-04,Cà phê,35093000,VND/tấn,FAOSTAT Producer Prices
+2013-05,Cà phê,34571000,VND/tấn,FAOSTAT Producer Prices
+2013-06,Cà phê,33380000,VND/tấn,FAOSTAT Producer Prices
+2013-07,Cà phê,34212000,VND/tấn,FAOSTAT Producer Prices
+2013-08,Cà phê,32626000,VND/tấn,FAOSTAT Producer Prices
+2013-09,Cà phê,32134000,VND/tấn,FAOSTAT Producer Prices
+2013-10,Cà phê,29137000,VND/tấn,FAOSTAT Producer Prices
+2013-11,Cà phê,30649000,VND/tấn,FAOSTAT Producer Prices
+2013-12,Cà phê,31785000,VND/tấn,FAOSTAT Producer Prices
+2014-01,Cà phê,31646000,VND/tấn,FAOSTAT Producer Prices
+2014-02,Cà phê,32092000,VND/tấn,FAOSTAT Producer Prices
+2014-03,Cà phê,32441000,VND/tấn,FAOSTAT Producer Prices
+2014-04,Cà phê,32955000,VND/tấn,FAOSTAT Producer Prices
+2014-05,Cà phê,33314000,VND/tấn,FAOSTAT Producer Prices
+2014-06,Cà phê,33413000,VND/tấn,FAOSTAT Producer Prices
+2014-07,Cà phê,33607000,VND/tấn,FAOSTAT Producer Prices
+2014-08,Cà phê,33578000,VND/tấn,FAOSTAT Producer Prices
+2014-09,Cà phê,33849000,VND/tấn,FAOSTAT Producer Prices
+2014-10,Cà phê,34374000,VND/tấn,FAOSTAT Producer Prices
+2014-11,Cà phê,34284000,VND/tấn,FAOSTAT Producer Prices
+2014-12,Cà phê,34110000,VND/tấn,FAOSTAT Producer Prices
+2015-01,Cà phê,34095000,VND/tấn,FAOSTAT Producer Prices
+2015-02,Cà phê,33726000,VND/tấn,FAOSTAT Producer Prices
+2015-03,Cà phê,33287000,VND/tấn,FAOSTAT Producer Prices
+2015-04,Cà phê,32820000,VND/tấn,FAOSTAT Producer Prices
+2015-05,Cà phê,33390000,VND/tấn,FAOSTAT Producer Prices
+2015-06,Cà phê,32833000,VND/tấn,FAOSTAT Producer Prices
+2015-07,Cà phê,31920000,VND/tấn,FAOSTAT Producer Prices
+2015-08,Cà phê,31928000,VND/tấn,FAOSTAT Producer Prices
+2015-09,Cà phê,32177000,VND/tấn,FAOSTAT Producer Prices
+2015-10,Cà phê,31559000,VND/tấn,FAOSTAT Producer Prices
+2015-11,Cà phê,31722000,VND/tấn,FAOSTAT Producer Prices
+2015-12,Cà phê,30877000,VND/tấn,FAOSTAT Producer Prices
+2016-01,Cà phê,29659000,VND/tấn,FAOSTAT Producer Prices
+2016-02,Cà phê,29411000,VND/tấn,FAOSTAT Producer Prices
+2016-03,Cà phê,28885000,VND/tấn,FAOSTAT Producer Prices
+2016-04,Cà phê,29224000,VND/tấn,FAOSTAT Producer Prices
+2016-05,Cà phê,30555000,VND/tấn,FAOSTAT Producer Prices
+2016-06,Cà phê,37410970,VND/tấn,FAOSTAT Producer Prices
+2016-07,Cà phê,37756370,VND/tấn,FAOSTAT Producer Prices
+2016-08,Cà phê,38249270,VND/tấn,FAOSTAT Producer Prices
+2016-09,Cà phê,38287060,VND/tấn,FAOSTAT Producer Prices
+2016-10,Cà phê,36951430,VND/tấn,FAOSTAT Producer Prices
+2016-11,Cà phê,39712370,VND/tấn,FAOSTAT Producer Prices
+2016-12,Cà phê,40153440,VND/tấn,FAOSTAT Producer Prices
+2017-01,Cà phê,41855000,VND/tấn,FAOSTAT Producer Prices
+2017-02,Cà phê,41278000,VND/tấn,FAOSTAT Producer Prices
+2017-03,Cà phê,42998000,VND/tấn,FAOSTAT Producer Prices
+2017-04,Cà phê,44171000,VND/tấn,FAOSTAT Producer Prices
+2017-05,Cà phê,43932000,VND/tấn,FAOSTAT Producer Prices
+2017-06,Cà phê,43225000,VND/tấn,FAOSTAT Producer Prices
+2017-07,Cà phê,43983000,VND/tấn,FAOSTAT Producer Prices
+2017-08,Cà phê,44826000,VND/tấn,FAOSTAT Producer Prices
+2017-09,Cà phê,43933000,VND/tấn,FAOSTAT Producer Prices
+2017-10,Cà phê,43705000,VND/tấn,FAOSTAT Producer Prices
+2017-11,Cà phê,42898000,VND/tấn,FAOSTAT Producer Prices
+2017-12,Cà phê,42650000,VND/tấn,FAOSTAT Producer Prices
+2018-01,Cà phê,41828000,VND/tấn,FAOSTAT Producer Prices
+2018-02,Cà phê,41587740,VND/tấn,FAOSTAT Producer Prices
+2018-03,Cà phê,41088250,VND/tấn,FAOSTAT Producer Prices
+2018-04,Cà phê,40468660,VND/tấn,FAOSTAT Producer Prices
+2018-05,Cà phê,40422230,VND/tấn,FAOSTAT Producer Prices
+2018-06,Cà phê,40399270,VND/tấn,FAOSTAT Producer Prices
+2018-07,Cà phê,40110910,VND/tấn,FAOSTAT Producer Prices
+2018-08,Cà phê,39989430,VND/tấn,FAOSTAT Producer Prices
+2018-09,Cà phê,38966030,VND/tấn,FAOSTAT Producer Prices
+2018-10,Cà phê,39425390,VND/tấn,FAOSTAT Producer Prices
+2018-11,Cà phê,39026420,VND/tấn,FAOSTAT Producer Prices
+2018-12,Cà phê,37970480,VND/tấn,FAOSTAT Producer Prices
+2019-01,Cà phê,36981430,VND/tấn,FAOSTAT Producer Prices
+2019-02,Cà phê,36538960,VND/tấn,FAOSTAT Producer Prices
+2019-03,Cà phê,36283300,VND/tấn,FAOSTAT Producer Prices
+2019-04,Cà phê,35987920,VND/tấn,FAOSTAT Producer Prices
+2019-05,Cà phê,35215960,VND/tấn,FAOSTAT Producer Prices
+2019-06,Cà phê,35152120,VND/tấn,FAOSTAT Producer Prices
+2019-07,Cà phê,35258060,VND/tấn,FAOSTAT Producer Prices
+2019-08,Cà phê,34339140,VND/tấn,FAOSTAT Producer Prices
+2019-09,Cà phê,34342870,VND/tấn,FAOSTAT Producer Prices
+2019-10,Cà phê,34353480,VND/tấn,FAOSTAT Producer Prices
+2019-11,Cà phê,33303350,VND/tấn,FAOSTAT Producer Prices
+2019-12,Cà phê,33504420,VND/tấn,FAOSTAT Producer Prices
+2020-01,Cà phê,32303880,VND/tấn,FAOSTAT Producer Prices
+2020-02,Cà phê,31913420,VND/tấn,FAOSTAT Producer Prices
+2020-03,Cà phê,31473220,VND/tấn,FAOSTAT Producer Prices
+2020-04,Cà phê,31009010,VND/tấn,FAOSTAT Producer Prices
+2020-05,Cà phê,31066560,VND/tấn,FAOSTAT Producer Prices
+2020-06,Cà phê,31435600,VND/tấn,FAOSTAT Producer Prices
+2020-07,Cà phê,31446320,VND/tấn,FAOSTAT Producer Prices
+2020-08,Cà phê,31692590,VND/tấn,FAOSTAT Producer Prices
+2020-09,Cà phê,32317940,VND/tấn,FAOSTAT Producer Prices
+2020-10,Cà phê,31831860,VND/tấn,FAOSTAT Producer Prices
+2020-11,Cà phê,31993640,VND/tấn,FAOSTAT Producer Prices
+2020-12,Cà phê,32004460,VND/tấn,FAOSTAT Producer Prices
+2021-01,Cà phê,31704674,VND/tấn,FAOSTAT Producer Prices
+2021-02,Cà phê,31704674,VND/tấn,FAOSTAT Producer Prices
+2021-03,Cà phê,31704674,VND/tấn,FAOSTAT Producer Prices
+2021-04,Cà phê,31736408,VND/tấn,FAOSTAT Producer Prices
+2021-05,Cà phê,31752316,VND/tấn,FAOSTAT Producer Prices
+2021-06,Cà phê,31800034,VND/tấn,FAOSTAT Producer Prices
+2021-07,Cà phê,31638608,VND/tấn,FAOSTAT Producer Prices
+2021-08,Cà phê,31736408,VND/tấn,FAOSTAT Producer Prices
+2021-09,Cà phê,30874670,VND/tấn,FAOSTAT Producer Prices
+2021-10,Cà phê,31346725,VND/tấn,FAOSTAT Producer Prices
+2021-11,Cà phê,33267597,VND/tấn,FAOSTAT Producer Prices
+2021-12,Cà phê,36144068,VND/tấn,FAOSTAT Producer Prices
+2022-01,Cà phê,13655432,VND/tấn,FAOSTAT Producer Prices
+2022-02,Cà phê,13550220,VND/tấn,FAOSTAT Producer Prices
+2022-03,Cà phê,13763790,VND/tấn,FAOSTAT Producer Prices
+2022-04,Cà phê,13793088,VND/tấn,FAOSTAT Producer Prices
+2022-05,Cà phê,13824204,VND/tấn,FAOSTAT Producer Prices
+2022-06,Cà phê,13999968,VND/tấn,FAOSTAT Producer Prices
+2022-07,Cà phê,14057758,VND/tấn,FAOSTAT Producer Prices
+2022-08,Cà phê,14193744,VND/tấn,FAOSTAT Producer Prices
+2022-09,Cà phê,14203008,VND/tấn,FAOSTAT Producer Prices
+2022-10,Cà phê,14567346,VND/tấn,FAOSTAT Producer Prices
+2022-11,Cà phê,14516786,VND/tấn,FAOSTAT Producer Prices
+2022-12,Cà phê,14753265,VND/tấn,FAOSTAT Producer Prices
+2023-01,Cà phê,14875155,VND/tấn,FAOSTAT Producer Prices
+2023-02,Cà phê,14885950,VND/tấn,FAOSTAT Producer Prices
+2023-03,Cà phê,14931401,VND/tấn,FAOSTAT Producer Prices
+2023-04,Cà phê,14906224,VND/tấn,FAOSTAT Producer Prices
+2023-05,Cà phê,14977339,VND/tấn,FAOSTAT Producer Prices
+2023-06,Cà phê,15228260,VND/tấn,FAOSTAT Producer Prices
+2023-07,Cà phê,15209263,VND/tấn,FAOSTAT Producer Prices
+2023-08,Cà phê,15084201,VND/tấn,FAOSTAT Producer Prices
+2023-09,Cà phê,15088122,VND/tấn,FAOSTAT Producer Prices
+2023-10,Cà phê,14735841,VND/tấn,FAOSTAT Producer Prices
+2023-11,Cà phê,15125740,VND/tấn,FAOSTAT Producer Prices
+2023-12,Cà phê,15361811,VND/tấn,FAOSTAT Producer Prices
+2024-01,Cà phê,16020523,VND/tấn,FAOSTAT Producer Prices
+2024-02,Cà phê,16197312,VND/tấn,FAOSTAT Producer Prices
+2024-03,Cà phê,16560603,VND/tấn,FAOSTAT Producer Prices
+2024-04,Cà phê,16918820,VND/tấn,FAOSTAT Producer Prices
+2024-05,Cà phê,17309182,VND/tấn,FAOSTAT Producer Prices
+2024-06,Cà phê,17535319,VND/tấn,FAOSTAT Producer Prices
+2024-07,Cà phê,17646605,VND/tấn,FAOSTAT Producer Prices
+2024-08,Cà phê,17727698,VND/tấn,FAOSTAT Producer Prices
+2024-09,Cà phê,17853639,VND/tấn,FAOSTAT Producer Prices
+2024-10,Cà phê,19878889,VND/tấn,FAOSTAT Producer Prices
+2024-11,Cà phê,19311277,VND/tấn,FAOSTAT Producer Prices
+2024-12,Cà phê,20723782,VND/tấn,FAOSTAT Producer Prices
+2025-01,Cà phê,26064710,VND/tấn,FAOSTAT Producer Prices
+2011-03,Khoai tây,7483000,VND/tấn,FAOSTAT Producer Prices
+2011-06,Khoai tây,8893000,VND/tấn,FAOSTAT Producer Prices
+2011-09,Khoai tây,9950000,VND/tấn,FAOSTAT Producer Prices
+2011-12,Khoai tây,10434000,VND/tấn,FAOSTAT Producer Prices
+2012-01,Khoai tây,10526000,VND/tấn,FAOSTAT Producer Prices
+2012-02,Khoai tây,9946000,VND/tấn,FAOSTAT Producer Prices
+2012-03,Khoai tây,8965000,VND/tấn,FAOSTAT Producer Prices
+2012-04,Khoai tây,9215000,VND/tấn,FAOSTAT Producer Prices
+2012-05,Khoai tây,9754000,VND/tấn,FAOSTAT Producer Prices
+2012-06,Khoai tây,9699000,VND/tấn,FAOSTAT Producer Prices
+2012-07,Khoai tây,10073000,VND/tấn,FAOSTAT Producer Prices
+2012-08,Khoai tây,10514000,VND/tấn,FAOSTAT Producer Prices
+2012-09,Khoai tây,10634000,VND/tấn,FAOSTAT Producer Prices
+2012-10,Khoai tây,10842000,VND/tấn,FAOSTAT Producer Prices
+2012-11,Khoai tây,10643000,VND/tấn,FAOSTAT Producer Prices
+2012-12,Khoai tây,10738000,VND/tấn,FAOSTAT Producer Prices
+2013-01,Khoai tây,10856000,VND/tấn,FAOSTAT Producer Prices
+2013-02,Khoai tây,10633000,VND/tấn,FAOSTAT Producer Prices
+2013-03,Khoai tây,10902000,VND/tấn,FAOSTAT Producer Prices
+2013-04,Khoai tây,10902000,VND/tấn,FAOSTAT Producer Prices
+2013-05,Khoai tây,10315000,VND/tấn,FAOSTAT Producer Prices
+2013-06,Khoai tây,11036000,VND/tấn,FAOSTAT Producer Prices
+2013-07,Khoai tây,10676000,VND/tấn,FAOSTAT Producer Prices
+2013-08,Khoai tây,10888000,VND/tấn,FAOSTAT Producer Prices
+2013-09,Khoai tây,9553000,VND/tấn,FAOSTAT Producer Prices
+2013-10,Khoai tây,9434000,VND/tấn,FAOSTAT Producer Prices
+2013-11,Khoai tây,12722000,VND/tấn,FAOSTAT Producer Prices
+2013-12,Khoai tây,12583000,VND/tấn,FAOSTAT Producer Prices
+2014-01,Khoai tây,12378000,VND/tấn,FAOSTAT Producer Prices
+2014-02,Khoai tây,12498000,VND/tấn,FAOSTAT Producer Prices
+2014-03,Khoai tây,11594000,VND/tấn,FAOSTAT Producer Prices
+2014-04,Khoai tây,11601000,VND/tấn,FAOSTAT Producer Prices
+2014-05,Khoai tây,11590000,VND/tấn,FAOSTAT Producer Prices
+2014-06,Khoai tây,12243000,VND/tấn,FAOSTAT Producer Prices
+2014-07,Khoai tây,12097000,VND/tấn,FAOSTAT Producer Prices
+2014-08,Khoai tây,12143000,VND/tấn,FAOSTAT Producer Prices
+2014-09,Khoai tây,11579000,VND/tấn,FAOSTAT Producer Prices
+2014-10,Khoai tây,12104000,VND/tấn,FAOSTAT Producer Prices
+2014-11,Khoai tây,12418000,VND/tấn,FAOSTAT Producer Prices
+2014-12,Khoai tây,12382000,VND/tấn,FAOSTAT Producer Prices
+2015-01,Khoai tây,11242000,VND/tấn,FAOSTAT Producer Prices
+2015-02,Khoai tây,10251000,VND/tấn,FAOSTAT Producer Prices
+2015-03,Khoai tây,9902000,VND/tấn,FAOSTAT Producer Prices
+2015-04,Khoai tây,10134000,VND/tấn,FAOSTAT Producer Prices
+2015-05,Khoai tây,10255000,VND/tấn,FAOSTAT Producer Prices
+2015-06,Khoai tây,10452000,VND/tấn,FAOSTAT Producer Prices
+2015-07,Khoai tây,10667000,VND/tấn,FAOSTAT Producer Prices
+2015-08,Khoai tây,10847000,VND/tấn,FAOSTAT Producer Prices
+2015-09,Khoai tây,10866000,VND/tấn,FAOSTAT Producer Prices
+2015-10,Khoai tây,11901000,VND/tấn,FAOSTAT Producer Prices
+2015-11,Khoai tây,11843000,VND/tấn,FAOSTAT Producer Prices
+2015-12,Khoai tây,11559000,VND/tấn,FAOSTAT Producer Prices
+2016-01,Khoai tây,11022000,VND/tấn,FAOSTAT Producer Prices
+2016-02,Khoai tây,11369000,VND/tấn,FAOSTAT Producer Prices
+2016-03,Khoai tây,11324000,VND/tấn,FAOSTAT Producer Prices
+2016-04,Khoai tây,11509000,VND/tấn,FAOSTAT Producer Prices
+2016-05,Khoai tây,11771000,VND/tấn,FAOSTAT Producer Prices
+2016-06,Khoai tây,12019980,VND/tấn,FAOSTAT Producer Prices
+2016-07,Khoai tây,11879880,VND/tấn,FAOSTAT Producer Prices
+2016-08,Khoai tây,12352220,VND/tấn,FAOSTAT Producer Prices
+2016-09,Khoai tây,12486940,VND/tấn,FAOSTAT Producer Prices
+2016-10,Khoai tây,12614100,VND/tấn,FAOSTAT Producer Prices
+2016-11,Khoai tây,13195270,VND/tấn,FAOSTAT Producer Prices
+2016-12,Khoai tây,12592890,VND/tấn,FAOSTAT Producer Prices
+2017-01,Khoai tây,12210000,VND/tấn,FAOSTAT Producer Prices
+2017-02,Khoai tây,12135000,VND/tấn,FAOSTAT Producer Prices
+2017-03,Khoai tây,11104000,VND/tấn,FAOSTAT Producer Prices
+2017-04,Khoai tây,10846000,VND/tấn,FAOSTAT Producer Prices
+2017-05,Khoai tây,11484000,VND/tấn,FAOSTAT Producer Prices
+2017-06,Khoai tây,10974000,VND/tấn,FAOSTAT Producer Prices
+2017-07,Khoai tây,11194000,VND/tấn,FAOSTAT Producer Prices
+2017-08,Khoai tây,11388000,VND/tấn,FAOSTAT Producer Prices
+2017-09,Khoai tây,11674000,VND/tấn,FAOSTAT Producer Prices
+2017-10,Khoai tây,11892000,VND/tấn,FAOSTAT Producer Prices
+2017-11,Khoai tây,12440000,VND/tấn,FAOSTAT Producer Prices
+2017-12,Khoai tây,12495000,VND/tấn,FAOSTAT Producer Prices
+2018-01,Khoai tây,12462000,VND/tấn,FAOSTAT Producer Prices
+2018-02,Khoai tây,12524230,VND/tấn,FAOSTAT Producer Prices
+2018-03,Khoai tây,11324340,VND/tấn,FAOSTAT Producer Prices
+2018-04,Khoai tây,10156340,VND/tấn,FAOSTAT Producer Prices
+2018-05,Khoai tây,10352140,VND/tấn,FAOSTAT Producer Prices
+2018-06,Khoai tây,10012110,VND/tấn,FAOSTAT Producer Prices
+2018-07,Khoai tây,10200790,VND/tấn,FAOSTAT Producer Prices
+2018-08,Khoai tây,10556990,VND/tấn,FAOSTAT Producer Prices
+2018-09,Khoai tây,11575500,VND/tấn,FAOSTAT Producer Prices
+2018-10,Khoai tây,11768290,VND/tấn,FAOSTAT Producer Prices
+2018-11,Khoai tây,11814060,VND/tấn,FAOSTAT Producer Prices
+2018-12,Khoai tây,11441340,VND/tấn,FAOSTAT Producer Prices
+2019-01,Khoai tây,11137810,VND/tấn,FAOSTAT Producer Prices
+2019-02,Khoai tây,11444480,VND/tấn,FAOSTAT Producer Prices
+2019-03,Khoai tây,10864880,VND/tấn,FAOSTAT Producer Prices
+2019-04,Khoai tây,11351590,VND/tấn,FAOSTAT Producer Prices
+2019-05,Khoai tây,11528610,VND/tấn,FAOSTAT Producer Prices
+2019-06,Khoai tây,11803320,VND/tấn,FAOSTAT Producer Prices
+2019-07,Khoai tây,11986970,VND/tấn,FAOSTAT Producer Prices
+2019-08,Khoai tây,11976690,VND/tấn,FAOSTAT Producer Prices
+2019-09,Khoai tây,11862290,VND/tấn,FAOSTAT Producer Prices
+2019-10,Khoai tây,12263190,VND/tấn,FAOSTAT Producer Prices
+2019-11,Khoai tây,12172210,VND/tấn,FAOSTAT Producer Prices
+2019-12,Khoai tây,12584390,VND/tấn,FAOSTAT Producer Prices
+2020-01,Khoai tây,11313690,VND/tấn,FAOSTAT Producer Prices
+2020-02,Khoai tây,11966700,VND/tấn,FAOSTAT Producer Prices
+2020-03,Khoai tây,12896500,VND/tấn,FAOSTAT Producer Prices
+2020-04,Khoai tây,13866840,VND/tấn,FAOSTAT Producer Prices
+2020-05,Khoai tây,13958500,VND/tấn,FAOSTAT Producer Prices
+2020-06,Khoai tây,13514140,VND/tấn,FAOSTAT Producer Prices
+2020-07,Khoai tây,13027610,VND/tấn,FAOSTAT Producer Prices
+2020-08,Khoai tây,13492810,VND/tấn,FAOSTAT Producer Prices
+2020-09,Khoai tây,13123060,VND/tấn,FAOSTAT Producer Prices
+2020-10,Khoai tây,13022080,VND/tấn,FAOSTAT Producer Prices
+2020-11,Khoai tây,13741160,VND/tấn,FAOSTAT Producer Prices
+2020-12,Khoai tây,13648790,VND/tấn,FAOSTAT Producer Prices
+2021-01,Khoai tây,12715858,VND/tấn,FAOSTAT Producer Prices
+2021-02,Khoai tây,12600771,VND/tấn,FAOSTAT Producer Prices
+2021-03,Khoai tây,12805622,VND/tấn,FAOSTAT Producer Prices
+2021-04,Khoai tây,11475079,VND/tấn,FAOSTAT Producer Prices
+2021-05,Khoai tây,12434675,VND/tấn,FAOSTAT Producer Prices
+2021-06,Khoai tây,12439789,VND/tấn,FAOSTAT Producer Prices
+2021-07,Khoai tây,12371921,VND/tấn,FAOSTAT Producer Prices
+2021-08,Khoai tây,11475079,VND/tấn,FAOSTAT Producer Prices
+2021-09,Khoai tây,11699934,VND/tấn,FAOSTAT Producer Prices
+2021-10,Khoai tây,11696985,VND/tấn,FAOSTAT Producer Prices
+2021-11,Khoai tây,11960421,VND/tấn,FAOSTAT Producer Prices
+2021-12,Khoai tây,12482704,VND/tấn,FAOSTAT Producer Prices
+2022-01,Khoai tây,15300884,VND/tấn,FAOSTAT Producer Prices
+2022-02,Khoai tây,14925515,VND/tấn,FAOSTAT Producer Prices
+2022-03,Khoai tây,14482532,VND/tấn,FAOSTAT Producer Prices
+2022-04,Khoai tây,14532092,VND/tấn,FAOSTAT Producer Prices
+2022-05,Khoai tây,14822611,VND/tấn,FAOSTAT Producer Prices
+2022-06,Khoai tây,15114860,VND/tấn,FAOSTAT Producer Prices
+2022-07,Khoai tây,15264708,VND/tấn,FAOSTAT Producer Prices
+2022-08,Khoai tây,15607095,VND/tấn,FAOSTAT Producer Prices
+2022-09,Khoai tây,15482009,VND/tấn,FAOSTAT Producer Prices
+2022-10,Khoai tây,15522898,VND/tấn,FAOSTAT Producer Prices
+2022-11,Khoai tây,15485308,VND/tấn,FAOSTAT Producer Prices
+2022-12,Khoai tây,16226606,VND/tấn,FAOSTAT Producer Prices
+2023-01,Khoai tây,15876085,VND/tấn,FAOSTAT Producer Prices
+2023-02,Khoai tây,15559730,VND/tấn,FAOSTAT Producer Prices
+2023-03,Khoai tây,15216730,VND/tấn,FAOSTAT Producer Prices
+2023-04,Khoai tây,15164845,VND/tấn,FAOSTAT Producer Prices
+2023-05,Khoai tây,14974955,VND/tấn,FAOSTAT Producer Prices
+2023-06,Khoai tây,15070149,VND/tấn,FAOSTAT Producer Prices
+2023-07,Khoai tây,15526276,VND/tấn,FAOSTAT Producer Prices
+2023-08,Khoai tây,15595579,VND/tấn,FAOSTAT Producer Prices
+2023-09,Khoai tây,15759175,VND/tấn,FAOSTAT Producer Prices
+2023-10,Khoai tây,16025572,VND/tấn,FAOSTAT Producer Prices
+2023-11,Khoai tây,16022869,VND/tấn,FAOSTAT Producer Prices
+2023-12,Khoai tây,15788379,VND/tấn,FAOSTAT Producer Prices
+2024-01,Khoai tây,15499076,VND/tấn,FAOSTAT Producer Prices
+2024-02,Khoai tây,15919864,VND/tấn,FAOSTAT Producer Prices
+2024-03,Khoai tây,15173705,VND/tấn,FAOSTAT Producer Prices
+2024-04,Khoai tây,15272522,VND/tấn,FAOSTAT Producer Prices
+2024-05,Khoai tây,15303683,VND/tấn,FAOSTAT Producer Prices
+2024-06,Khoai tây,15146442,VND/tấn,FAOSTAT Producer Prices
+2024-07,Khoai tây,15338526,VND/tấn,FAOSTAT Producer Prices
+2024-08,Khoai tây,15591508,VND/tấn,FAOSTAT Producer Prices
+2024-09,Khoai tây,15856539,VND/tấn,FAOSTAT Producer Prices
+2024-10,Khoai tây,16045455,VND/tấn,FAOSTAT Producer Prices
+2024-11,Khoai tây,16091616,VND/tấn,FAOSTAT Producer Prices
+2024-12,Khoai tây,15992835,VND/tấn,FAOSTAT Producer Prices
+2025-01,Khoai tây,15873498,VND/tấn,FAOSTAT Producer Prices
+2013-01,Nấm,34720000,VND/tấn,FAOSTAT Producer Prices
+2013-02,Nấm,35791000,VND/tấn,FAOSTAT Producer Prices
+2013-03,Nấm,35064000,VND/tấn,FAOSTAT Producer Prices
+2013-04,Nấm,35064000,VND/tấn,FAOSTAT Producer Prices
+2013-05,Nấm,35475000,VND/tấn,FAOSTAT Producer Prices
+2013-06,Nấm,35861000,VND/tấn,FAOSTAT Producer Prices
+2013-07,Nấm,35299000,VND/tấn,FAOSTAT Producer Prices
+2013-08,Nấm,35360000,VND/tấn,FAOSTAT Producer Prices
+2013-09,Nấm,36189000,VND/tấn,FAOSTAT Producer Prices
+2013-10,Nấm,37342000,VND/tấn,FAOSTAT Producer Prices
+2013-11,Nấm,36455000,VND/tấn,FAOSTAT Producer Prices
+2013-12,Nấm,36937000,VND/tấn,FAOSTAT Producer Prices
+2014-01,Nấm,37548000,VND/tấn,FAOSTAT Producer Prices
+2014-02,Nấm,37756000,VND/tấn,FAOSTAT Producer Prices
+2014-03,Nấm,37357000,VND/tấn,FAOSTAT Producer Prices
+2014-04,Nấm,37582000,VND/tấn,FAOSTAT Producer Prices
+2014-05,Nấm,37760000,VND/tấn,FAOSTAT Producer Prices
+2014-06,Nấm,37322000,VND/tấn,FAOSTAT Producer Prices
+2014-07,Nấm,37815000,VND/tấn,FAOSTAT Producer Prices
+2014-08,Nấm,38196000,VND/tấn,FAOSTAT Producer Prices
+2014-09,Nấm,37598000,VND/tấn,FAOSTAT Producer Prices
+2014-10,Nấm,38015000,VND/tấn,FAOSTAT Producer Prices
+2014-11,Nấm,37964000,VND/tấn,FAOSTAT Producer Prices
+2014-12,Nấm,38551000,VND/tấn,FAOSTAT Producer Prices
+2015-01,Nấm,39127000,VND/tấn,FAOSTAT Producer Prices
+2015-02,Nấm,39349000,VND/tấn,FAOSTAT Producer Prices
+2015-03,Nấm,38630000,VND/tấn,FAOSTAT Producer Prices
+2015-04,Nấm,38252000,VND/tấn,FAOSTAT Producer Prices
+2015-05,Nấm,35661000,VND/tấn,FAOSTAT Producer Prices
+2015-06,Nấm,36054000,VND/tấn,FAOSTAT Producer Prices
+2015-07,Nấm,35942000,VND/tấn,FAOSTAT Producer Prices
+2015-08,Nấm,36454000,VND/tấn,FAOSTAT Producer Prices
+2015-09,Nấm,36429000,VND/tấn,FAOSTAT Producer Prices
+2015-10,Nấm,36610000,VND/tấn,FAOSTAT Producer Prices
+2015-11,Nấm,36979000,VND/tấn,FAOSTAT Producer Prices
+2015-12,Nấm,37913000,VND/tấn,FAOSTAT Producer Prices
+2016-01,Nấm,38396000,VND/tấn,FAOSTAT Producer Prices
+2016-02,Nấm,39525000,VND/tấn,FAOSTAT Producer Prices
+2016-03,Nấm,38587000,VND/tấn,FAOSTAT Producer Prices
+2016-04,Nấm,38330000,VND/tấn,FAOSTAT Producer Prices
+2016-05,Nấm,39586000,VND/tấn,FAOSTAT Producer Prices
+2016-06,Nấm,40632470,VND/tấn,FAOSTAT Producer Prices
+2016-07,Nấm,40512960,VND/tấn,FAOSTAT Producer Prices
+2016-08,Nấm,40588900,VND/tấn,FAOSTAT Producer Prices
+2016-09,Nấm,40282610,VND/tấn,FAOSTAT Producer Prices
+2016-10,Nấm,39858840,VND/tấn,FAOSTAT Producer Prices
+2016-11,Nấm,40827320,VND/tấn,FAOSTAT Producer Prices
+2016-12,Nấm,41000360,VND/tấn,FAOSTAT Producer Prices
+2017-01,Nấm,40247000,VND/tấn,FAOSTAT Producer Prices
+2017-02,Nấm,41518000,VND/tấn,FAOSTAT Producer Prices
+2017-03,Nấm,41176000,VND/tấn,FAOSTAT Producer Prices
+2017-04,Nấm,40620000,VND/tấn,FAOSTAT Producer Prices
+2017-05,Nấm,40607000,VND/tấn,FAOSTAT Producer Prices
+2017-06,Nấm,40772000,VND/tấn,FAOSTAT Producer Prices
+2017-07,Nấm,40083000,VND/tấn,FAOSTAT Producer Prices
+2017-08,Nấm,40034000,VND/tấn,FAOSTAT Producer Prices
+2017-09,Nấm,41075000,VND/tấn,FAOSTAT Producer Prices
+2017-10,Nấm,40833000,VND/tấn,FAOSTAT Producer Prices
+2017-11,Nấm,41361000,VND/tấn,FAOSTAT Producer Prices
+2017-12,Nấm,41775000,VND/tấn,FAOSTAT Producer Prices
+2018-01,Nấm,41408000,VND/tấn,FAOSTAT Producer Prices
+2018-02,Nấm,42438270,VND/tấn,FAOSTAT Producer Prices
+2018-03,Nấm,41791140,VND/tấn,FAOSTAT Producer Prices
+2018-04,Nấm,41021290,VND/tấn,FAOSTAT Producer Prices
+2018-05,Nấm,40710500,VND/tấn,FAOSTAT Producer Prices
+2018-06,Nấm,40592600,VND/tấn,FAOSTAT Producer Prices
+2018-07,Nấm,40592130,VND/tấn,FAOSTAT Producer Prices
+2018-08,Nấm,40971410,VND/tấn,FAOSTAT Producer Prices
+2018-09,Nấm,41287720,VND/tấn,FAOSTAT Producer Prices
+2018-10,Nấm,41382350,VND/tấn,FAOSTAT Producer Prices
+2018-11,Nấm,41559100,VND/tấn,FAOSTAT Producer Prices
+2018-12,Nấm,41325150,VND/tấn,FAOSTAT Producer Prices
+2019-01,Nấm,42030590,VND/tấn,FAOSTAT Producer Prices
+2019-02,Nấm,42690330,VND/tấn,FAOSTAT Producer Prices
+2019-03,Nấm,43105750,VND/tấn,FAOSTAT Producer Prices
+2019-04,Nấm,42598990,VND/tấn,FAOSTAT Producer Prices
+2019-05,Nấm,42795800,VND/tấn,FAOSTAT Producer Prices
+2019-06,Nấm,43109260,VND/tấn,FAOSTAT Producer Prices
+2019-07,Nấm,42713980,VND/tấn,FAOSTAT Producer Prices
+2019-08,Nấm,42810560,VND/tấn,FAOSTAT Producer Prices
+2019-09,Nấm,42616740,VND/tấn,FAOSTAT Producer Prices
+2019-10,Nấm,43372210,VND/tấn,FAOSTAT Producer Prices
+2019-11,Nấm,42854400,VND/tấn,FAOSTAT Producer Prices
+2019-12,Nấm,43023330,VND/tấn,FAOSTAT Producer Prices
+2020-01,Nấm,43614940,VND/tấn,FAOSTAT Producer Prices
+2020-02,Nấm,44488590,VND/tấn,FAOSTAT Producer Prices
+2020-03,Nấm,44140040,VND/tấn,FAOSTAT Producer Prices
+2020-04,Nấm,44222480,VND/tấn,FAOSTAT Producer Prices
+2020-05,Nấm,44227410,VND/tấn,FAOSTAT Producer Prices
+2020-06,Nấm,43757320,VND/tấn,FAOSTAT Producer Prices
+2020-07,Nấm,44171720,VND/tấn,FAOSTAT Producer Prices
+2020-08,Nấm,43820140,VND/tấn,FAOSTAT Producer Prices
+2020-09,Nấm,43926130,VND/tấn,FAOSTAT Producer Prices
+2020-10,Nấm,45092230,VND/tấn,FAOSTAT Producer Prices
+2020-11,Nấm,46181070,VND/tấn,FAOSTAT Producer Prices
+2020-12,Nấm,45655820,VND/tấn,FAOSTAT Producer Prices
+2021-01,Nấm,30392093,VND/tấn,FAOSTAT Producer Prices
+2021-02,Nấm,30073127,VND/tấn,FAOSTAT Producer Prices
+2021-03,Nấm,30204110,VND/tấn,FAOSTAT Producer Prices
+2021-04,Nấm,29285922,VND/tấn,FAOSTAT Producer Prices
+2021-05,Nấm,30254768,VND/tấn,FAOSTAT Producer Prices
+2021-06,Nấm,29607313,VND/tấn,FAOSTAT Producer Prices
+2021-07,Nấm,30473192,VND/tấn,FAOSTAT Producer Prices
+2021-08,Nấm,29285922,VND/tấn,FAOSTAT Producer Prices
+2021-09,Nấm,29585544,VND/tấn,FAOSTAT Producer Prices
+2021-10,Nấm,29585544,VND/tấn,FAOSTAT Producer Prices
+2021-11,Nấm,29739319,VND/tấn,FAOSTAT Producer Prices
+2021-12,Nấm,30220582,VND/tấn,FAOSTAT Producer Prices
+2022-01,Nấm,113946837,VND/tấn,FAOSTAT Producer Prices
+2022-02,Nấm,113282044,VND/tấn,FAOSTAT Producer Prices
+2022-03,Nấm,115872354,VND/tấn,FAOSTAT Producer Prices
+2022-04,Nấm,114776234,VND/tấn,FAOSTAT Producer Prices
+2022-05,Nấm,114287257,VND/tấn,FAOSTAT Producer Prices
+2022-06,Nấm,115744823,VND/tấn,FAOSTAT Producer Prices
+2022-07,Nấm,117061825,VND/tấn,FAOSTAT Producer Prices
+2022-08,Nấm,115540409,VND/tấn,FAOSTAT Producer Prices
+2022-09,Nấm,116189241,VND/tấn,FAOSTAT Producer Prices
+2022-10,Nấm,114669054,VND/tấn,FAOSTAT Producer Prices
+2022-11,Nấm,114756651,VND/tấn,FAOSTAT Producer Prices
+2022-12,Nấm,115889638,VND/tấn,FAOSTAT Producer Prices
+2023-01,Nấm,116911766,VND/tấn,FAOSTAT Producer Prices
+2023-02,Nấm,115726296,VND/tấn,FAOSTAT Producer Prices
+2023-03,Nấm,114665397,VND/tấn,FAOSTAT Producer Prices
+2023-04,Nấm,114524783,VND/tấn,FAOSTAT Producer Prices
+2023-05,Nấm,116460830,VND/tấn,FAOSTAT Producer Prices
+2023-06,Nấm,115452428,VND/tấn,FAOSTAT Producer Prices
+2023-07,Nấm,116043058,VND/tấn,FAOSTAT Producer Prices
+2023-08,Nấm,116752940,VND/tấn,FAOSTAT Producer Prices
+2023-09,Nấm,116893086,VND/tấn,FAOSTAT Producer Prices
+2023-10,Nấm,118581185,VND/tấn,FAOSTAT Producer Prices
+2023-11,Nấm,118482721,VND/tấn,FAOSTAT Producer Prices
+2023-12,Nấm,120151017,VND/tấn,FAOSTAT Producer Prices
+2024-01,Nấm,120545314,VND/tấn,FAOSTAT Producer Prices
+2024-02,Nấm,125362264,VND/tấn,FAOSTAT Producer Prices
+2024-03,Nấm,123418435,VND/tấn,FAOSTAT Producer Prices
+2024-04,Nấm,123141248,VND/tấn,FAOSTAT Producer Prices
+2024-05,Nấm,122781241,VND/tấn,FAOSTAT Producer Prices
+2024-06,Nấm,123177233,VND/tấn,FAOSTAT Producer Prices
+2024-07,Nấm,123538521,VND/tấn,FAOSTAT Producer Prices
+2024-08,Nấm,125614761,VND/tấn,FAOSTAT Producer Prices
+2024-09,Nấm,126364168,VND/tấn,FAOSTAT Producer Prices
+2024-10,Nấm,128186040,VND/tấn,FAOSTAT Producer Prices
+2024-11,Nấm,127748225,VND/tấn,FAOSTAT Producer Prices
+2024-12,Nấm,127516957,VND/tấn,FAOSTAT Producer Prices
+2025-01,Nấm,131089134,VND/tấn,FAOSTAT Producer Prices
