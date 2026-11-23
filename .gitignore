@@ -56,3 +56,6 @@ coverage/
 
 # Client Prisma sinh bằng prisma generate
 apps/api/src/generated/
+
+# Dự báo giá: gói FAOSTAT tải về
+apps/ai/forecast/data/.cache/

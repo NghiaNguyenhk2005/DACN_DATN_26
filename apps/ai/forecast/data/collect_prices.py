@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script thu thập và tổng hợp dữ liệu chuỗi thời gian giá nông sản theo tuần.
+Script SINH dữ liệu MÔ PHỎNG chuỗi giá nông sản theo tuần (không thu thập từ nguồn nào), chỉ để thử pipeline.
+Không dùng đo MAPE và không trích làm số liệu báo cáo; dữ liệu thật dùng collect_faostat.py.
 Phục vụ mô hình dự báo giá (SARIMA, Prophet) cho khâu thu mua của Farmery (FR12.2).
 
 Định dạng xuất CSV:
@@ -20,7 +21,7 @@ COMMODITIES = [
         "region": "Đà Lạt",
         "unit": "kg",
         "base_price": 240000,
-        "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         # Đỉnh vụ đông xuân (T11-T2) giá cao, mùa hè ít hàng giá giảm nhẹ hoặc do mưa
         "season_peak_week": 4,  # Dịp Tết Nguyên Đán
         "season_amplitude": 0.25,
@@ -31,7 +32,7 @@ COMMODITIES = [
         "region": "Đơn Dương",
         "unit": "kg",
         "base_price": 45000,
-        "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 38, # Mùa mưa giá cao do khó trồng
         "season_amplitude": 0.20,
         "noise_pct": 0.06,
@@ -41,7 +42,7 @@ COMMODITIES = [
         "region": "Đơn Dương",
         "unit": "kg",
         "base_price": 32000,
-        "source": "Chợ đầu mối nông sản Thủ Đức",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 40,
         "season_amplitude": 0.18,
         "noise_pct": 0.05,
@@ -51,7 +52,7 @@ COMMODITIES = [
         "region": "Đà Lạt",
         "unit": "kg",
         "base_price": 38000,
-        "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 35, # Mưa bão miền Trung/Tây Nguyên giá rau tăng
         "season_amplitude": 0.22,
         "noise_pct": 0.07,
@@ -61,7 +62,7 @@ COMMODITIES = [
         "region": "Lạc Dương",
         "unit": "kg",
         "base_price": 50000,
-        "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 36,
         "season_amplitude": 0.15,
         "noise_pct": 0.05,
@@ -71,7 +72,7 @@ COMMODITIES = [
         "region": "Đức Trọng",
         "unit": "kg",
         "base_price": 48000,
-        "source": "Cổng thông tin giá cả nông sản (Bộ NN&PTNT)",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 50,
         "season_amplitude": 0.18,
         "noise_pct": 0.06,
@@ -81,7 +82,7 @@ COMMODITIES = [
         "region": "Đà Lạt",
         "unit": "kg",
         "base_price": 65000,
-        "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 2,
         "season_amplitude": 0.12,
         "noise_pct": 0.04,
@@ -91,7 +92,7 @@ COMMODITIES = [
         "region": "Bảo Lộc",
         "unit": "kg",
         "base_price": 55000,
-        "source": "Cục Thống kê tỉnh Lâm Đồng",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 22, # Chính vụ tháng 5-8 giá mềm hơn, nghịch vụ giá cao
         "season_amplitude": -0.30, # Nghịch mùa giá cao
         "noise_pct": 0.08,
@@ -101,7 +102,7 @@ COMMODITIES = [
         "region": "Đà Lạt",
         "unit": "kg",
         "base_price": 35000,
-        "source": "Chợ đầu mối nông sản Thủ Đức",
+        "source": "mô phỏng (simulated)",
         "season_peak_week": 48,
         "season_amplitude": 0.15,
         "noise_pct": 0.05,

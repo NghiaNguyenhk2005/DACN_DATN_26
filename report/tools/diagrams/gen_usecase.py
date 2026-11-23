@@ -100,14 +100,14 @@ def overview():
          [('A1', 'Đăng ký tài khoản mua hàng', 'n')],
          [('A2', 'Đăng nhập hai lớp, nhận việc và thông báo', 'n')]),
         ('B', 'B. Nguồn cung (FR2–FR4)',
-         [('B1', 'Tìm kiếm, quét QR xem truy xuất', 'b'), ('B2', 'UC-B2 Đăng sản phẩm, lô, nhật ký', 'n'),
+         [('B1', 'Tìm kiếm, quét QR xem truy xuất', 'b'), ('B2', 'Đăng sản phẩm, lô, nhật ký', 'n'),
           ('B3', 'Đăng ký, xác minh, khai báo chứng nhận', 'n')],
          [('B5', 'Hỗ trợ, nhập liệu thay nhà cung cấp', 'n')]),
         ('C', 'C. Giao dịch (FR5–FR7, FR12.2, FR13)',
-         [('C5', 'Gửi chào giá lô, xác nhận đơn thu mua', 'n'), ('C3', 'UC-D4 Gửi RFQ, giao kết hợp đồng sỉ', 'n'),
+         [('C5', 'Gửi chào giá lô, xác nhận đơn thu mua', 'n'), ('C3', 'Gửi RFQ, giao kết hợp đồng sỉ', 'n'),
           ('C8', 'Nộp ký quỹ đơn sỉ', 'd'), ('C1', 'UC-C4 Đặt hàng, thanh toán đơn lẻ', 'b'),
           ('C2', 'Mua lại đơn cũ', 'b')],
-         [('C9', 'Định giá bán lẻ', 'n'), ('C6', 'UC-B5 Lập đơn thu mua, nghiệm thu', 'n'),
+         [('C9', 'Định giá bán lẻ', 'n'), ('C6', 'Lập đơn thu mua, nghiệm thu', 'n'),
           ('C7', 'Đóng gói, in tem, quản lý dòng tồn', 'n')]),
         ('D', 'D. Sau bán (FR8, FR9)',
          [('D2', 'UC-C6 Yêu cầu đổi trả, hoàn tiền', 'b'), ('D1', 'Theo dõi đơn, nhận hóa đơn', 'b'),
@@ -116,7 +116,7 @@ def overview():
         ('E', 'E. Vận hành (FR10)',
          [],
          [('E1', 'Thu hồi lô', 'n'), ('B4', 'UC-B4 Duyệt hồ sơ, sản phẩm và lô', 'n'),
-          ('D6', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('E2', 'Xử lý vi phạm nội dung', 'n'),
+          ('D6', 'Kiểm duyệt đánh giá nghi vấn', 'n'), ('E2', 'Xử lý vi phạm nội dung', 'n'),
           ('E3', 'Cấu hình nền tảng, tài khoản nội bộ', 'n')]),
     ]
     s = Svg(W, 1800)
@@ -239,9 +239,9 @@ def supplier():
     mains = [('m0', 'Đăng ký, xác minh danh tính (eKYC)', 'n'), ('m1', 'Tải, theo dõi chứng nhận', 'n'),
              ('m2', 'Theo dõi tồn kho của mình', 'n'), ('m3', 'Gửi chào giá lô cho Farmery', 'n'),
              ('m4', 'Xác nhận đơn thu mua', 'n'), ('m5', 'Gửi báo giá cho RFQ', 'n'),
-             ('m6', 'UC-D4 Xác nhận giao kết hợp đồng sỉ', 'n'), ('m7', 'Xem doanh thu, đối soát', 'n'),
+             ('m6', 'Xác nhận giao kết hợp đồng sỉ', 'n'), ('m7', 'Xem doanh thu, đối soát', 'n'),
              ('m8', 'Xem báo cáo thống kê', 'd'), ('m9', 'Đăng sản phẩm, khai báo lô', 'n'),
-             ('m10', 'UC-B2 Ghi nhật ký canh tác theo lô', 'n')]
+             ('m10', 'Ghi nhật ký canh tác theo lô', 'n')]
     sides = {'s0': (0, 'Khai báo loại người bán cho thuế', 'n'), 's2': (2, 'UC-B4 Duyệt sản phẩm và lô', 'n'),
              's9': (9, 'Kiểm tra tính hợp lệ sản phẩm', 'n'), 's10': (10, 'Đính chính bản ghi', 'n')}
     deps = [('m0', 's0', 'include'), ('m9', 's9', 'include'), ('s10', 'm10', 'extend')]
@@ -277,7 +277,7 @@ def retail():
 
 def wholesale():
     mains = [('m0', 'Xem giá sỉ theo MOQ', 'n'), ('m1', 'Gửi yêu cầu báo giá (RFQ)', 'n'),
-             ('m2', 'Nhận báo giá của nhà cung cấp', 'n'), ('m3', 'UC-D4 Chốt báo giá, giao kết hợp đồng', 'n'),
+             ('m2', 'Nhận báo giá của nhà cung cấp', 'n'), ('m3', 'Chốt báo giá, giao kết hợp đồng', 'n'),
              ('m4', 'Theo dõi, nhận đơn sỉ một đợt', 'n'), ('m5', 'Thanh toán đơn sỉ', 'n'),
              ('m6', 'Nộp ký quỹ', 'd'), ('m7', 'Khiếu nại đơn sỉ', 'n'), ('m8', 'Giao nhận nhiều đợt', 'd'),
              ('m9', 'Nộp hồ sơ doanh nghiệp (MST, GPKD)', 'n')]
@@ -294,7 +294,7 @@ def wholesale():
 
 def internal_supply():
     mains = [('m0', 'Xem chào giá lô của nhà cung cấp', 'n'), ('m1', 'Định giá bán lẻ', 'n'),
-             ('m2', 'UC-B5 Lập đơn thu mua và nghiệm thu', 'n'), ('m3', 'Đóng gói, in tem QR và nhãn', 'n'),
+             ('m2', 'Lập đơn thu mua và nghiệm thu', 'n'), ('m3', 'Đóng gói, in tem QR và nhãn', 'n'),
              ('m4', 'Quản lý dòng tồn, sổ nhập xuất', 'n'), ('m5', 'Lập chuyến trung chuyển', 'n'),
              ('m6', 'Tạo vận đơn chặng cuối qua 3PL', 'd'), ('m7', 'Sơ chế, phân loại nhiều bước', 'd'),
              ('m8', 'Kiểm kê định kỳ', 'd'), ('m9', 'Nhập liệu thay nhà cung cấp', 'n')]
@@ -311,7 +311,7 @@ def internal_supply():
 
 def internal_ops():
     mains = [('m0', 'Duyệt hồ sơ nhà cung cấp, khách sỉ, chứng nhận', 'n'), ('m1', 'UC-B4 Duyệt sản phẩm và lô', 'n'),
-             ('m2', 'UC-C7 Kiểm duyệt đánh giá nghi vấn', 'n'), ('m3', 'Xử lý vi phạm nội dung', 'n'),
+             ('m2', 'Kiểm duyệt đánh giá nghi vấn', 'n'), ('m3', 'Xử lý vi phạm nội dung', 'n'),
              ('m4', 'Xử lý khiếu nại, đổi trả', 'n'), ('m5', 'Ra lệnh hoàn tiền', 'n'),
              ('m6', 'Giám sát đơn, chuyển bước chặng cuối', 'n'), ('m7', 'Thu hồi lô', 'n'), ('m8', 'Xem báo cáo thống kê', 'd'),
              ('m9', 'Quản lý tài khoản nội bộ, vai trò', 'n'), ('m10', 'Cấu hình biểu phí, ngưỡng, thời hạn', 'n'),

@@ -9,18 +9,8 @@ const outDir = path.join(__dirname, '..', 'image', 'comparison');
 
 const pages = [
   'thuc-trang-chuoi-cung-ung.html',
-  'ocop-2024-2025.html',
-  // 3 cụm BMC dùng trong thân báo cáo (thay cho ảnh ngang khó đọc)
-  'bmc-cum1.html',
-  'bmc-cum2.html',
-  'bmc-cum3.html',
-  // Sơ đồ Use Case (tổng quan + chi tiết theo từng actor) — chương Phân tích & thiết kế
+  // Sơ đồ Use Case tổng quan — chương Phân tích & thiết kế
   'usecase-overview.html',
-  'usecase-nha-ban.html',
-  'usecase-nguoi-mua-le.html',
-  'usecase-nguoi-mua-si.html',
-  'usecase-noibo-nguonhang.html',
-  'usecase-noibo-vanhanh.html',
   // Sơ đồ C4 (ngữ cảnh, container, mô-đun) và sitemap; HTML sinh từ tools/diagrams/*.py
   'c4-ngu-canh.html',
   'c4-container.html',
@@ -37,19 +27,11 @@ const pages = [
   'erd-ban-si.html',
   'erd-giao-hang-doi-tra.html',
   'erd-danh-gia-van-hanh.html',
-  'luong-don-le.html',
   'sitemap-tong-quan.html',
+  'ai-luong-du-lieu.html',
   // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
   'act-thu-mua.html',
   'act-dat-hang.html',
-  'act-giao-hang.html',
-  'act-doi-tra.html',
-  'act-dang-ky-ncc.html',
-  'act-dang-san-pham.html',
-  'act-ban-si.html',
-  'act-danh-gia.html',
-  'act-thu-hoi.html',
-  'act-vi-pham.html',
 ];
 
 (async () => {
