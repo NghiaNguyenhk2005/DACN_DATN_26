@@ -39,7 +39,7 @@ Kiểm thử với tối thiểu 50 yêu cầu đặt hàng đồng thời trên
 Khi bổ sung một vai trò/mô-đun mới, toàn bộ test case hồi quy (regression) của các module hiện có phải PASS -- 0 test case bị phá vỡ. &
 Xuất phát từ nhu cầu vận hành: nền tảng sẽ phải thêm vai trò và phân hệ mới khi mở rộng địa bàn hoặc thêm loại hàng, mà mỗi lần thêm lại làm hỏng chức năng cũ thì người dùng đang quen việc sẽ mất niềm tin. Đồ án không đo trực tiếp được ``chi phí thay đổi kiến trúc'' bằng một con số, nên dùng số test case hồi quy bị phá vỡ làm chỉ số gián tiếp nhưng kiểm chứng được. \\
 \textbf{NFR2.2} &
-Chỉ thiết kế, không đo trong đồ án: rà soát thiết kế xác nhận máy chủ nghiệp vụ không giữ trạng thái phiên trong bộ nhớ, trạng thái dùng chung nằm ở cơ sở dữ liệu và Redis, nên có thể chạy nhiều bản sao. &
+Chỉ thiết kế, không đo trong đồ án: rà soát thiết kế xác nhận máy chủ nghiệp vụ không giữ trạng thái phiên trong bộ nhớ, trạng thái dùng chung nằm ở cơ sở dữ liệu (và Redis khi bật, chỉ thiết kế), nên có thể chạy nhiều bản sao. &
 Quy mô đánh giá ở địa bàn thí điểm không cần mở rộng ngang; yêu cầu được giữ ở mức thiết kế để không phải viết lại khi lưu lượng tăng. \\
 \textbf{NFR3.6} &
 100\% tài khoản nhân sự nội bộ phải qua bước xác thực hai lớp (TOTP); đăng nhập chỉ bằng mật khẩu vào đường dẫn \texttt{/api/admin} phải bị từ chối; phiên làm việc hết hạn theo thời gian cấu hình. &

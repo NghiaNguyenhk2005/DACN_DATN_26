@@ -4,7 +4,7 @@
 \label{apdx:tudien}
 \addcontentsline{toc}{section}{Phụ lục D. Từ điển dữ liệu và sơ đồ ERD}
 
-Cơ sở dữ liệu gồm 65 bảng, 565 cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}; sơ đồ quan hệ ở Hình~\ref{fig:erd-tong-quan} và các hình ERD theo miền cuối phụ lục này. Mỗi bảng dưới đây ghi mục đích, số cột và các cột khóa. Danh sách đầy đủ từng cột (kiểu, ràng buộc, giá trị hợp lệ) nằm trong tệp lược đồ \texttt{report/schema.dbml} của dự án, nguồn sinh duy nhất của bảng này và các hình ERD nên luôn khớp nhau. Quy ước cột cuối:
+Cơ sở dữ liệu gồm 65 bảng, 565 cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại Bảng~\ref{tab:module-io}; sơ đồ quan hệ ở Hình~\ref{fig:erd-tong-quan} và các hình ERD theo miền cuối phụ lục này. Các Bảng~\ref{tab:db-identity} đến~\ref{tab:db-operations} ghi, với mỗi bảng, mục đích, số cột và các cột khóa. Danh sách đầy đủ từng cột (kiểu, ràng buộc, giá trị hợp lệ) nằm trong tệp lược đồ \texttt{report/schema.dbml} của dự án, nguồn sinh duy nhất của bảng này và các hình ERD nên luôn khớp nhau. Quy ước cột cuối:
 \begin{itemize}
     \item \textbf{PK} --- khóa chính; \textbf{FK $\to$ bảng} --- khóa ngoại tới bảng trong cùng schema (48 khóa ngoại);
     \item \textbf{$\to$ schema.bảng} --- tham chiếu sang schema khác bằng định danh, không tạo khóa ngoại vật lý, theo ràng buộc RB3 tại mục~\ref{sec:kientruc}; tính nhất quán do mô-đun sở hữu bảng đích bảo đảm qua giao diện công khai và sự kiện.

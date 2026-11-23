@@ -275,7 +275,7 @@ Quản trị viên hệ thống & \texttt{platform\_owner} & Quản lý tài kho
 \subsubsection{Chân dung khách hàng đại diện (Customer Personas)}
 \label{subsec:customer-personas}
 
-Bốn persona dưới đây theo cách tiếp cận persona hướng mục tiêu của Cooper và cộng sự~\cite{cooper2014aboutface}; kỳ vọng ghi bằng lời người dùng, yêu cầu chỉ rút ra ở mục~\ref{sec:yeucau}. Hành trình của khách đi qua năm giai đoạn: khám phá, cân nhắc, đặt hàng, nhận hàng, đánh giá và quay lại; ở luồng lẻ khách chỉ giao dịch với Farmery, ở luồng sỉ khách giao dịch trực tiếp với từng nhà cung cấp.
+Bảng~\ref{tab:personas} trình bày bốn persona theo cách tiếp cận persona hướng mục tiêu của Cooper và cộng sự~\cite{cooper2014aboutface}; kỳ vọng ghi bằng lời người dùng, yêu cầu chỉ rút ra ở mục~\ref{sec:yeucau}. Hành trình của khách đi qua năm giai đoạn: khám phá, cân nhắc, đặt hàng, nhận hàng, đánh giá và quay lại; ở luồng lẻ khách chỉ giao dịch với Farmery, ở luồng sỉ khách giao dịch trực tiếp với từng nhà cung cấp.
 
 \begingroup
 \tblsetup\tblzebra
@@ -332,7 +332,7 @@ Yêu cầu xuất phát từ nhu cầu của các nhóm người dùng (mục~\r
 \subsection{Yêu cầu chức năng}
 \label{sec:yeucauchucnang}
 
-Các mã FRx.x đối chiếu 1--1 với use case (mục~\ref{sec:sddchitiet}) và phần hiện thực ở Chương~\ref{chap:hienthuc}. Mười ba nhóm được đánh giá theo MoSCoW, tính khả thi và phương pháp kiểm thử (Phụ lục~E): 11 nhóm ở mức Must vì thiếu nhóm nào thì trục bán lẻ đầu--cuối không chạy trọn; hai nhóm Should là tương tác người dùng (chỉ thiết kế) và hỗ trợ AI, vì khi dịch vụ AI ngưng hệ thống vẫn bán được nhờ tìm kiếm từ khóa. Dự báo giá là hạng mục duy nhất ở mức Challenging do thiếu dữ liệu giai đoạn đầu (mục~\ref{subsec:vandenghiencuu}).
+Các mã FRx.x đối chiếu 1--1 với use case (mục~\ref{sec:sddchitiet}) và phần hiện thực ở Chương~\ref{chap:hienthuc}. Mười ba nhóm được đánh giá theo MoSCoW, tính khả thi và phương pháp kiểm thử (Phụ lục~E): 11 nhóm ở mức Must vì thiếu nhóm nào thì trục bán lẻ đầu--cuối không chạy trọn; hai nhóm Should là tương tác người dùng (chỉ thiết kế) và hỗ trợ AI, vì khi dịch vụ AI ngưng hệ thống vẫn bán được nhờ tìm kiếm từ khóa. Dự báo giá là hạng mục duy nhất ở mức Challenging do thiếu dữ liệu giai đoạn đầu (mục~\ref{subsec:vandenghiencuu}). Bảng~\ref{tab:fr} liệt kê toàn bộ yêu cầu chức năng.
 
 \begingroup
 \tblsetup\tblzebra
@@ -428,7 +428,7 @@ FR13.6 & Thu hồi lô: khóa mọi dòng tồn của lô ở cả hai luồng, 
 \subsection{Yêu cầu phi chức năng}
 \label{sec:yeucauphichucnang}
 
-Mỗi ngưỡng truy được về một nhu cầu cụ thể của người dùng chứ không lấy từ thông lệ kỹ thuật: ngưỡng thời gian phản hồi xuất phát từ việc nhà cung cấp thao tác trên 4G không ổn định, ngưỡng khả dụng xuất phát từ điểm đau ``ngại biểu mẫu phức tạp''. Chỉ số và căn cứ của từng ngưỡng ở Bảng~\ref{tab:nguongNFR} (Phụ lục~E).\label{subsec:nguongNFR} Bảy nhóm (NFR1, 3, 4, 5, 7, 8, 9) ở mức Must --- khó nhất là chống bán vượt (NFR1.2) và chịu tải 100 người dùng đồng thời (NFR1.1); NFR2, NFR6 ở mức Should; NFR2.2 chỉ thiết kế nên mức Could. Yêu cầu định tính, tuân thủ pháp lý (NFR3.4, NFR5.1, NFR8.1--8.5) và yêu cầu chỉ thiết kế được nghiệm thu bằng checklist hoặc rà soát thiết kế thay vì chỉ số đo.
+Mỗi ngưỡng truy được về một nhu cầu cụ thể của người dùng chứ không lấy từ thông lệ kỹ thuật: ngưỡng thời gian phản hồi xuất phát từ việc nhà cung cấp thao tác trên 4G không ổn định, ngưỡng khả dụng xuất phát từ điểm đau ``ngại biểu mẫu phức tạp''. Bảng~\ref{tab:nfr} liệt kê toàn bộ yêu cầu phi chức năng; chỉ số và căn cứ của từng ngưỡng ở Bảng~\ref{tab:nguongNFR} (Phụ lục~E).\label{subsec:nguongNFR} Bảy nhóm (NFR1, 3, 4, 5, 7, 8, 9) ở mức Must --- khó nhất là chống bán vượt (NFR1.2) và chịu tải 100 người dùng đồng thời (NFR1.1); NFR2, NFR6 ở mức Should; NFR2.2 chỉ thiết kế nên mức Could. Yêu cầu định tính, tuân thủ pháp lý (NFR3.4, NFR5.1, NFR8.1--8.5) và yêu cầu chỉ thiết kế được nghiệm thu bằng checklist hoặc rà soát thiết kế thay vì chỉ số đo.
 
 \begingroup
 \tblsetup\tblzebra

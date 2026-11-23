@@ -13,7 +13,7 @@ Các quy trình ở mục~\ref{sec:quytrinhnghiepvu} được mô hình hóa b�
 
 Hình~\ref{fig:act-thu-mua} là bước đứng trước kênh bán lẻ và là điểm khác biệt căn bản so với sàn thuần trung gian: hàng chỉ thành dòng tồn của Farmery sau khi nhà cung cấp xác nhận đơn và nhân viên kho nghiệm thu. Hình~\ref{fig:act-dat-hang} cho thấy tồn kho bị khóa và giữ chỗ trước khi thanh toán nên hai khách không thể cùng mua phần hàng cuối; chỉ khi thanh toán thành công trong 15 phút (hoặc đơn COD đủ điều kiện) phần giữ chỗ mới thành trừ tồn.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/act-thu-mua.png}
@@ -22,7 +22,7 @@ Hình~\ref{fig:act-thu-mua} là bước đứng trước kênh bán lẻ và là
 \label{fig:act-thu-mua}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/act-dat-hang.png}
@@ -38,7 +38,7 @@ Các tác nhân khớp với vai trò RBAC ở mục~\ref{sec:doituongnguoidung}
 
 Hình~\ref{fig:usecase-overview} là sơ đồ tổng quan, nhóm theo năm gói ứng với năm khối mô-đun (Bảng~\ref{tab:module-io}): cột trái là use case của người dùng bên ngoài, cột phải của nhân sự nội bộ; use case của trục bán lẻ viền đậm, use case chỉ thiết kế vẽ xám nét đứt; mũi tên từ use case tới hệ thống bên ngoài mà nó gọi.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.82\textheight},center}
 \includegraphics{image/comparison/usecase-overview.png}
@@ -47,7 +47,7 @@ Hình~\ref{fig:usecase-overview} là sơ đồ tổng quan, nhóm theo năm gói
 \label{fig:usecase-overview}
 \end{figure}
 
-Ba use case được đặc tả, chọn để đủ các loại luồng: UC-B4 (nhân sự duyệt, hệ thống tự sinh mã QR), UC-C4 (trục bán lẻ có hệ thống bên ngoài), UC-C6 (đổi trả, hai bên thao tác và rẽ nhánh theo quyết định).
+Ba use case được đặc tả, chọn để đủ các loại luồng: UC-B4 (Bảng~\ref{tab:uc-b4}; nhân sự duyệt, hệ thống tự sinh mã QR), UC-C4 (Bảng~\ref{tab:uc-c4}; trục bán lẻ có hệ thống bên ngoài), UC-C6 (Bảng~\ref{tab:uc-c6}; đổi trả, hai bên thao tác và rẽ nhánh theo quyết định).
 
 \begingroup
 \tblsetup
@@ -153,7 +153,7 @@ Truy cập dữ liệu & Prisma & Lược đồ khai báo một nơi, sinh kiể
 Cơ sở dữ liệu & PostgreSQL (pgvector) & Một mình đáp ứng ba nhu cầu: giao dịch có khóa dòng để chống bán vượt (NFR4.1), JSON có chỉ mục cho nhật ký canh tác, và vector cho tìm kiếm ngữ nghĩa (FR12.3) không cần cơ sở dữ liệu vector riêng. Loại MySQL, MongoDB \\
 Tìm kiếm và lọc & Full-text của PostgreSQL & Đủ cho 100 người dùng đồng thời (NFR1.1) và các bộ lọc FR4.5; search engine riêng phát sinh bài toán đồng bộ. Chuyển khi truy vấn vượt ngưỡng NFR1.1 \\
 Lưu trữ tệp & MinIO (S3) & Không phình cơ sở dữ liệu, không cản nhân bản ngang (NFR2.2) \\
-Sự kiện và cache & Redis & Một thành phần cho cache đọc nhiều và hàng đợi tác vụ nền (thông báo, sinh QR, gửi dữ liệu sang AI); không cần message broker riêng \\
+Sự kiện và cache & Bus sự kiện trong tiến trình; Redis \emph{(chỉ thiết kế)} & Bản hiện thực phát và nhận sự kiện ngay trong máy chủ (bên nhận chỉ xử lý một lần); Redis làm hàng đợi bền và cache đọc nhiều khi cần chạy nhiều bản sao máy chủ. Không cần message broker riêng \\
 Thanh toán & VNPay (thử nghiệm) & Gom nhiều phương thức sau một lần tích hợp, có môi trường thử nghiệm; PayOS cho VietQR. Kết nối thật \emph{chỉ thiết kế}, bản hiện thực dùng giả lập \\
 Vận chuyển chặng cuối & GHN (thử nghiệm) & Có API vận đơn, webhook, môi trường thử nghiệm; chặng giữa do nhân viên kho cập nhật. \emph{Chỉ thiết kế} \\
 Hóa đơn điện tử & Lớp tích hợp, bản giả lập & Cùng giao diện với nhà cung cấp thật (VNPT, Viettel, MISA); kết nối thật cần hợp đồng và chứng thư số \\
@@ -177,7 +177,7 @@ Ba mô-đun AI tách thành một dịch vụ riêng bằng Python và FastAPI v
 
 Kiến trúc là hệ quả của các lựa chọn công nghệ trên, trình bày theo mô hình C4~\cite{brown_c4model}: mức 1 là ngữ cảnh (Hình~\ref{fig:c4-ngucanh}, mục~\ref{sec:luongvanhanh}); mức 2 là bảy container (Hình~\ref{fig:c4-container}, Bảng~\ref{tab:container-io}); mức 3 là 13 mô-đun của máy chủ nghiệp vụ (Hình~\ref{fig:c4-module}). Mức 4 (mã nguồn) không vẽ tay mà nên sinh tự động khi cần. Quy ước mũi tên chung: hai chiều khi bên được gọi trả dữ liệu nghiệp vụ về (nhãn ghi phần gửi trước dấu chấm phẩy, phần nhận sau); một chiều khi chỉ gửi đi; mũi tên chạm biên một khung áp cho mọi phần tử trong khung.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/c4-container.png}
@@ -186,7 +186,7 @@ Kiến trúc là hệ quả của các lựa chọn công nghệ trên, trình b
 \label{fig:c4-container}
 \end{figure}
 
-Hai điểm đáng chú ý ở Bảng~\ref{tab:container-io}: tệp đi thẳng từ trình duyệt lên kho tệp qua đường dẫn ký trước nên máy chủ không trung chuyển ảnh lớn; dịch vụ AI không đọc cơ sở dữ liệu mà nhận dữ liệu qua sự kiện hoặc lời gọi (\texttt{ProductChanged}) và trả vector qua sự kiện \texttt{ProductEmbedded} để mô-đun sản phẩm tự lưu, nên nếu dịch vụ AI ngừng, tìm kiếm lùi về từ khóa và trang chủ lùi về sản phẩm bán chạy, giao dịch không gián đoạn. Redis vừa là hàng đợi sự kiện (mô-đun phát sự kiện thay vì gọi và chờ từng mô-đun nhận) vừa là cache; giao dịch ghi như khóa dòng tồn chạy thẳng trên cơ sở dữ liệu.
+Hai điểm đáng chú ý ở Bảng~\ref{tab:container-io}: tệp đi thẳng từ trình duyệt lên kho tệp qua đường dẫn ký trước nên máy chủ không trung chuyển ảnh lớn; dịch vụ AI không đọc cơ sở dữ liệu mà nhận dữ liệu qua sự kiện hoặc lời gọi (\texttt{ProductChanged}) và trả vector qua sự kiện \texttt{ProductEmbedded} để mô-đun sản phẩm tự lưu, nên nếu dịch vụ AI ngừng, tìm kiếm lùi về từ khóa và trang chủ lùi về sản phẩm bán chạy, giao dịch không gián đoạn. Sự kiện đi qua một cổng phát sự kiện nên mô-đun phát không phải gọi và chờ từng mô-đun nhận; bản hiện thực chạy cổng này trong tiến trình máy chủ, còn Redis (hàng đợi bền và cache) chỉ thiết kế và thay vào mà không phải sửa nơi phát. Giao dịch ghi như khóa dòng tồn chạy thẳng trên cơ sở dữ liệu.
 
 \begingroup
 \tblsetup\tblzebra
@@ -207,10 +207,10 @@ Hai điểm đáng chú ý ở Bảng~\ref{tab:container-io}: tệp đi thẳng 
 \endfoot
 Ứng dụng mua hàng & Next.js, PWA & Thao tác của khách và nhà cung cấp & Lời gọi \texttt{/api}; tệp tải thẳng lên kho tệp; trang truy xuất dựng sẵn phía máy chủ \\
 Ứng dụng nội bộ & React, Vite, Refine & Thao tác sáu vai trò sau đăng nhập hai lớp & Lời gọi \texttt{/api/admin}; ảnh nghiệm thu tải thẳng lên kho tệp \\
-Máy chủ nghiệp vụ & NestJS, 13 mô-đun & Yêu cầu REST; kết quả của dịch vụ AI; webhook bên ngoài \emph{(chỉ thiết kế)} & Phản hồi JSON; sự kiện vào Redis; lời gọi hệ thống ngoài \\
+Máy chủ nghiệp vụ & NestJS, 13 mô-đun & Yêu cầu REST; kết quả của dịch vụ AI; webhook bên ngoài \emph{(chỉ thiết kế)} & Phản hồi JSON; sự kiện qua bus sự kiện (Redis \emph{chỉ thiết kế}); lời gọi hệ thống ngoài \\
 Cơ sở dữ liệu & PostgreSQL, pgvector & Đọc, ghi của từng mô-đun trên schema riêng & Dữ liệu nghiệp vụ; kết quả tìm kiếm toàn văn và vector \\
 Lưu trữ tệp & MinIO (S3) & Tệp tải lên qua đường dẫn ký trước & Ảnh công khai WebP nhiều cỡ; tệp riêng tư qua đường dẫn hạn ngắn \\
-Sự kiện và cache & Redis & Sự kiện, tác vụ nền, dữ liệu đọc nhiều & Sự kiện cho mô-đun và dịch vụ AI đã đăng ký \\
+Sự kiện và cache & Bus trong tiến trình; Redis \emph{(chỉ thiết kế)} & Sự kiện, tác vụ nền, dữ liệu đọc nhiều & Sự kiện cho mô-đun và dịch vụ AI đã đăng ký \\
 Dịch vụ AI & Python, FastAPI & \texttt{ProductChanged}; câu truy vấn; chuỗi giá theo tháng (offline) & Vector sản phẩm, vector truy vấn; giá dự báo kèm khoảng tin cậy \\
 \end{longtable}
 \endgroup
@@ -221,7 +221,7 @@ Dịch vụ AI & Python, FastAPI & \texttt{ProductChanged}; câu truy vấn; chu
 
 Hình~\ref{fig:c4-module} áp ba ràng buộc lên 13 mô-đun, gom theo năm khối chức năng; thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Bảng~\ref{tab:module-io} ghi dữ liệu vào, ra, sự kiện phát và lời gọi ra ngoài của từng mô-đun.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/c4-module.png}
@@ -263,14 +263,14 @@ Vận hành & \texttt{operations} (FR10) & Quyết định duyệt, khóa, thu h
 \end{longtable}
 \endgroup
 
-\noindent\textbf{Quyết định kiến trúc đáng chú ý.} (i) \emph{Giữ chỗ trước, trừ tồn sau:} khi đặt đơn ở bất kỳ luồng nào, hệ thống khóa dòng tồn trong một giao dịch, kiểm tra số lượng còn rồi mới giữ chỗ 15 phút; chỉ khi có \texttt{PaymentSucceeded} hoặc COD đủ điều kiện mới chuyển thành trừ tồn --- đó là lý do tồn kho và đơn hàng phải chung một cơ sở dữ liệu. (ii) \emph{Sự kiện đi qua hàng đợi} cho thông báo, cập nhật dòng thời gian, vòng phản hồi AI, nên mô-đun nhận chậm không làm chậm người dùng và việc chuyển sang message broker chuyên dụng về sau không phải sửa mã phát sự kiện. (iii) \emph{Kết quả từ bên ngoài được xử lý một lần} (theo thiết kế đi vào qua webhook \emph{(chỉ thiết kế)}): cổng thanh toán gửi lại cùng kết quả thì trạng thái đơn không đổi thêm. (iv) \emph{Trang truy xuất công khai} chỉ đọc, cache tích cực và tách khỏi vùng cần xác thực vì có thể bị quét dồn dập; đây là thành phần nên tách ra trước nếu hệ thống cần chia nhỏ.
+\noindent\textbf{Quyết định kiến trúc đáng chú ý.} (i) \emph{Giữ chỗ trước, trừ tồn sau:} khi đặt đơn ở bất kỳ luồng nào, hệ thống khóa dòng tồn trong một giao dịch, kiểm tra số lượng còn rồi mới giữ chỗ 15 phút; chỉ khi có \texttt{PaymentSucceeded} hoặc COD đủ điều kiện mới chuyển thành trừ tồn --- đó là lý do tồn kho và đơn hàng phải chung một cơ sở dữ liệu. (ii) \emph{Sự kiện đi qua một cổng phát sự kiện} (bản hiện thực chạy trong tiến trình, Redis \emph{chỉ thiết kế}) cho thông báo, cập nhật dòng thời gian, vòng phản hồi AI, nên mô-đun nhận chậm không làm chậm người dùng và việc chuyển sang Redis hay message broker chuyên dụng về sau không phải sửa mã phát sự kiện. (iii) \emph{Kết quả từ bên ngoài được xử lý một lần} (theo thiết kế đi vào qua webhook \emph{(chỉ thiết kế)}): cổng thanh toán gửi lại cùng kết quả thì trạng thái đơn không đổi thêm. (iv) \emph{Trang truy xuất công khai} chỉ đọc, cache tích cực và tách khỏi vùng cần xác thực vì có thể bị quét dồn dập; đây là thành phần nên tách ra trước nếu hệ thống cần chia nhỏ.
 
 \subsection{Thiết kế sitemap}
 \label{sec:sitemap}
 
 Sitemap thể hiện tổ chức trang theo cấp bậc~\cite{nngroup_sitemap}, bắc cầu giữa use case (người dùng làm được gì) và thiết kế giao diện; Hình~\ref{fig:sitemap} trình bày hai cấp đầu. Ứng dụng mua hàng có bốn khu theo luồng nghiệp vụ (công khai kèm đăng ký, đăng nhập; khách lẻ; khách sỉ; nhà cung cấp), trục bán lẻ đi trọn từ tìm kiếm, chi tiết, giỏ, thanh toán tới đơn hàng, đổi trả, đánh giá. Ứng dụng nội bộ có sáu mục theo vai trò, mỗi người chỉ thấy mục của vai trò mình. Không có trang tin nhắn chung: trao đổi gắn với đơn hoặc yêu cầu đổi trả (FR9.1, \emph{chỉ thiết kế}). Trang chỉ thiết kế vẽ xám nét đứt. Sitemap độc lập framework: khi hiện thực, mỗi khu ứng với một nhóm route có bố cục và kiểm tra đăng nhập riêng.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/sitemap-tong-quan.png}
@@ -282,9 +282,9 @@ Sitemap thể hiện tổ chức trang theo cấp bậc~\cite{nngroup_sitemap}, 
 \subsection{Thiết kế lược đồ tuần tự}
 \label{subsec:tuantu}
 
-Lược đồ tuần tự đi sâu hơn ở mức mô-đun: tách lời gọi khỏi giá trị trả về, vẽ nhánh loại trừ bằng khung \texttt{alt}, lặp bằng \texttt{loop}; mỗi đường đời là một mô-đun của Bảng~\ref{tab:module-io}, người dùng hoặc hệ thống bên ngoài; sự kiện qua Redis vẽ nét đứt màu tím. Hai luồng có nhiều mô-đun phối hợp nhất được chọn: đặt hàng và thanh toán đơn lẻ (Hình~\ref{fig:seq-dat-hang}) với ba nhánh trả trước thành công, COD đủ điều kiện, thất bại hoặc quá 15 phút; và từ yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ (Hình~\ref{fig:seq-hop-dong-si}), nơi báo giá được chấp nhận sinh hợp đồng có mã băm và mỗi bên xác nhận bằng OTP qua email. Qua hai lược đồ thấy rõ: mọi lời gọi cần kết quả ngay (giữ chỗ, trừ tồn, kiểm OTP) nằm trong cùng giao dịch, còn thông báo và cập nhật dòng thời gian đi qua sự kiện.
+Lược đồ tuần tự đi sâu hơn ở mức mô-đun: tách lời gọi khỏi giá trị trả về, vẽ nhánh loại trừ bằng khung \texttt{alt}, lặp bằng \texttt{loop}; mỗi đường đời là một mô-đun của Bảng~\ref{tab:module-io}, người dùng hoặc hệ thống bên ngoài; sự kiện qua bus sự kiện vẽ nét đứt màu tím. Hai luồng có nhiều mô-đun phối hợp nhất được chọn: đặt hàng và thanh toán đơn lẻ (Hình~\ref{fig:seq-dat-hang}) với ba nhánh trả trước thành công, COD đủ điều kiện, thất bại hoặc quá 15 phút; và từ yêu cầu báo giá đến xác nhận giao kết hợp đồng sỉ (Hình~\ref{fig:seq-hop-dong-si}), nơi báo giá được chấp nhận sinh hợp đồng có mã băm và mỗi bên xác nhận bằng OTP qua email. Qua hai lược đồ thấy rõ: mọi lời gọi cần kết quả ngay (giữ chỗ, trừ tồn, kiểm OTP) nằm trong cùng giao dịch, còn thông báo và cập nhật dòng thời gian đi qua sự kiện.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/seq-dat-hang.png}
@@ -293,7 +293,7 @@ Lược đồ tuần tự đi sâu hơn ở mức mô-đun: tách lời gọi kh
 \label{fig:seq-dat-hang}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/seq-hop-dong-si.png}
@@ -307,7 +307,7 @@ Lược đồ tuần tự đi sâu hơn ở mức mô-đun: tách lời gọi kh
 
 Hình~\ref{fig:class-mien} trình bày các lớp miền của trục bán lẻ và phần nguồn cung đứng trước nó (đúng phạm vi hiện thực ở mục~\ref{sec:phamvi}); mỗi lớp ứng với một bảng cùng tên (mục~\ref{sec:csdl}) và thuộc đúng một mô-đun. Phương thức là thao tác nghiệp vụ chứ không phải hàm đọc ghi trường: đơn chỉ đổi trạng thái qua \texttt{advance}, \texttt{cancel}, \texttt{complete}; dòng tồn chỉ đổi qua \texttt{reserve} rồi \texttt{consume} hoặc \texttt{release}, nên ràng buộc không bán vượt, không nhảy cóc trạng thái nằm ở một chỗ. Quan hệ hợp thành (hình thoi đặc) khi lớp con không tồn tại tách khỏi lớp chứa; liên kết xuyên mô-đun vẽ nét đứt vì hai lớp chỉ giữ định danh của nhau (RB3), ví dụ \texttt{OrderItem} lưu \texttt{holdingId} và \texttt{batchId}.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/class-mien.png}
@@ -324,7 +324,7 @@ Cơ sở dữ liệu gồm 13 schema trùng tên và ranh giới với 13 mô-đ
 
 Hình~\ref{fig:erd-tong-quan} là ma trận phụ thuộc giữa các schema: mỗi hàng là schema có cột tham chiếu, mỗi cột là schema được tham chiếu, số trong ô là số cột tham chiếu xuyên schema (\texttt{identity} và \texttt{media} không đưa vào cột vì gần như mọi schema đều tham chiếu). Trong các ERD chi tiết, nét liền là khóa ngoại thật trong cùng schema, nét đứt là tham chiếu xuyên schema bằng định danh (phản ánh trực tiếp RB3), bảng chỉ thiết kế vẽ nét đứt nền xám.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \begin{adjustbox}{max totalsize={\textwidth}{0.62\textheight},center}
 \includegraphics[width=\textwidth]{image/comparison/erd-tong-quan.png}
