@@ -1403,3 +1403,18 @@ merge vào `main` xung đột 81 điểm trong ít nhất 40 file (báo cáo, e2
 **Đánh đổi:** hai lần squash cũ vẫn nằm trong lịch sử `main` (không sửa vì không force-push). Repo vẫn cho phép squash và rebase, `main` và
 `develop` không có branch protection nên GitHub không chặn nếu bấm nhầm; có thể dùng ruleset giới hạn kiểu gộp cho `main` (chưa làm).
 
+### Dịch vụ AI nội bộ: POST /embed bằng BGE-M3, EmbeddingProvider ở API, bản băm cho test — 2026-11-23
+**Quyết định:**
+- `apps/ai` (Python, FastAPI) có `GET /health` và `POST /embed` (1–64 câu, vector 1024 chiều đã chuẩn hóa L2). Mô hình nạp ở luồng
+  nền: `/health` báo `loading`, `/embed` trả 503 cho tới khi xong. Token nội bộ `AI_SERVICE_TOKEN` bắt buộc, gửi ở header
+  `X-Internal-Token`; hợp đồng mô tả ở `apps/ai/README.md`, không vào `openapi.yaml`.
+- Phía API: `EmbeddingProvider` (abstract) với `HttpEmbeddingProvider` (hết hạn 2 giây, chia lô 64, lỗi ném
+  `EmbeddingUnavailableError`) và `HashingEmbeddingProvider` cho test. Có `AI_SERVICE_URL` + `AI_SERVICE_TOKEN` thì bật,
+  không thì provider là `null` và nơi dùng lùi về từ điển khái niệm; đặt URL mà thiếu token thì từ chối khởi động.
+- Bộ băm của Python và của API dùng cùng thuật toán và cho cùng vector (test API kiểm bằng một vector tính từ bản Python).
+- Không thêm `package.json` vào `apps/ai` (kế hoạch ban đầu muốn để `turbo dev` gọi `uv run`): thêm sẽ biến nó thành thành viên
+  pnpm workspace, làm `pnpm install --frozen-lockfile` lệch lockfile và kéo `uv` vào job `ci`. Python có job `ai` riêng ở CI.
+- `ruff` bỏ qua `forecast/` (mã dự báo giá có bộ kiểm riêng sau này).
+**Bối cảnh:** W8-8 trong kế hoạch tuần 8, chặn tìm kiếm ngữ nghĩa, sản phẩm tương tự và các chỉ số AI của bảng 5.7.
+**Đánh đổi:** `turbo dev` chưa khởi động được dịch vụ AI (chạy tay bằng `uvicorn`); CI không kiểm mô hình thật, chỉ bộ nhúng
+băm, nên chất lượng nhúng thật chỉ kiểm bằng lần chạy tay với BGE-M3 (đã làm ngày 23/11, xem `apps/ai/README.md`).

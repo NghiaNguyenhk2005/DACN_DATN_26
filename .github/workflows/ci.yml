@@ -101,3 +101,19 @@ jobs:
             apps/e2e/playwright-report
             apps/e2e/test-results
           retention-days: 7
+
+  # Dịch vụ AI (Python): lint và test bằng bộ nhúng giả, không tải mô hình BGE-M3 (2 GB) trên CI.
+  ai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/ai
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Cài thư viện nhẹ (không có sentence-transformers và torch)
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q fastapi uvicorn numpy pytest httpx ruff
+      - run: .venv/bin/ruff check .
+      - run: .venv/bin/python -m pytest -q
