@@ -148,7 +148,7 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 
 **Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`, `fig:act-dat-hang`,
 `fig:usecase-overview`, `fig:c4-container`, `fig:c4-module`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`,
-`fig:class-mien`, `fig:erd-tong-quan` (Ch.5). **Hình ở Phụ lục D:** 10 hình ERD theo miền `fig:erd-dinh-danh`,
+`fig:class-mien`, `fig:erd-tong-quan`, `fig:ai-luong` (Ch.5; sinh bởi `gen_aiflow.py`). **Hình ở Phụ lục D:** 10 hình ERD theo miền `fig:erd-dinh-danh`,
 `fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`,
 `fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh`.
 Ảnh và HTML của các hình đã loại cùng phụ lục cũ (`bmc-cum1`–`3`, 8 sơ đồ `act-*`, 5 `usecase-*` chi tiết, `luong-don-le`, `ocop-2024-2025`,
