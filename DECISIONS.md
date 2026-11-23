@@ -1451,3 +1451,4 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 **SỬA 2026-11-23 (lượt 2):** Phụ lục D rút từ điển từng cột (khoảng 31 trang) còn bảng mô tả 65 bảng (mục đích, số cột, khóa), đủ cột ở
 `report/schema.dbml`; kèm 10 ERD theo miền, Phụ lục D còn 20 trang, tổng PDF 160 trang. Đã xóa ảnh và HTML của các hình không còn dùng
 (8 sơ đồ hoạt động, 5 use case chi tiết, 3 cụm BMC, luồng đơn lẻ, OCOP, 2 tuần tự phụ).
+**SỬA 2026-11-24:** Phụ lục V (danh mục sự kiện) được giữ lại thành **Phụ lục G**: `apps/api/test/events.e2e-spec.ts` đọc `report/backmatter/phuluc-sukien.tex` để kiểm 17 tên sự kiện trong mã khớp báo cáo, nên xóa file làm CI đỏ. Phụ lục nay là A–G; nội dung đã sửa từ "phát vào Redis" thành bus sự kiện trong tiến trình.

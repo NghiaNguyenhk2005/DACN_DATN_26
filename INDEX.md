@@ -1,7 +1,7 @@
 # INDEX.md — Chỉ mục file/thư mục
 
 Cập nhật lần cuối: 2026-11-23 (tinh giản báo cáo: thân Ch.1–8 từ 149 xuống khoảng 78 trang, tổng 290 xuống 160 trang,
-phụ lục từ A–W xuống A–F). Trước đó: 2026-11-05 (thư mục `design/`; khu nhà cung cấp chia tab Tổng quan · Lô hàng · Sản phẩm · Hồ sơ;
+phụ lục từ A–W xuống A–G). Trước đó: 2026-11-05 (thư mục `design/`; khu nhà cung cấp chia tab Tổng quan · Lô hàng · Sản phẩm · Hồ sơ;
 tìm kiếm có gợi ý, mua sỉ, chứng nhận của nhà cung cấp; mô-đun `wholesale` của API).
 Trước đó: 2026-10-21 (khu nhà cung cấp trong shop; endpoint `/seller/*`, `identity`, `operations` của API).
 Trước đó: 2026-10-13 (chuẩn bị prototype làm nền MVP: tiền tố `/api`, nền `apps/api` kiểm hợp đồng,
@@ -81,9 +81,9 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 Mô-đun AI (không còn Kết chương) | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `report/backmatter/` — Phụ lục A–F
+## `report/backmatter/` — Phụ lục A–G
 
-Phụ lục đã được tinh giản từ 21 mục (A–W) xuống 6 mục để thân báo cáo ngắn lại; chữ cái đánh lại liên tục. Mỗi
+Phụ lục đã được tinh giản từ 21 mục (A–W) xuống 7 mục để thân báo cáo ngắn lại; chữ cái đánh lại liên tục. Mỗi
 phụ lục dùng `\section*` nên trong thân phải viết thẳng "Phụ lục B", không dùng `\ref`.
 
 | File | Nội dung |
@@ -94,6 +94,7 @@ phụ lục dùng `\section*` nên trong thân phải viết thẳng "Phụ lụ
 | `phuluc-yeucau.tex` | **Phụ lục C** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
 | `phuluc-csdl.tex`, `phuluc-erd.tex` | **Phụ lục D** — bảng mô tả 65 bảng theo 13 schema `tab:db-<schema>` (mục đích, số cột, khóa; **sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay; đủ từng cột nằm trong `schema.dbml`) và 10 ERD theo miền (viết tay, `fig:erd-*`) |
 | `phuluc-nguong.tex`, `phuluc-matran.tex` | **Phụ lục E** — E.1 ngưỡng NFR và AI kèm căn cứ (`tab:nguongNFR`, `tab:nguongAI`) · E.2 ma trận Priority/Feasibility/Testability |
+| `phuluc-sukien.tex` | **Phụ lục G** — danh mục 17 sự kiện nghiệp vụ (bên phát, bên nhận, tác dụng). `apps/api/test/events.e2e-spec.ts` đọc file này để kiểm tên sự kiện trong mã khớp báo cáo: đổi tên hay thứ tự sự kiện phải sửa cả hai |
 | `phuluc-congnghe.tex` | **Phụ lục F** — đối sánh các hướng tiếp cận cho 5 nhóm AI (`tab:sosanh-ai`); bảng công nghệ nền đã gộp vào `tab:congnghe` ở Ch.5 |
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ; tuần 4 (16–22/10) là prototype, tuần 5 thay lớp lưu trữ bằng Prisma |
 | `tailieuthamkhao.tex` | `\printbibliography` |

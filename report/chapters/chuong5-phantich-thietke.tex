@@ -219,7 +219,7 @@ Dịch vụ AI & Python, FastAPI & \texttt{ProductChanged}; câu truy vấn; chu
 
 \noindent\textbf{Ba ràng buộc để về sau vẫn tách được.} (RB1) Ranh giới mô-đun chia theo miền nghiệp vụ, không theo tầng kỹ thuật. (RB2) Mô-đun gọi nhau qua giao diện công khai, không truy vấn thẳng vào bảng của nhau. (RB3) Không kết nối bảng xuyên mô-đun ở tầng truy vấn: mỗi mô-đun sở hữu tập bảng riêng, tham chiếu nhau bằng định danh --- ràng buộc quan trọng nhất vì thứ khóa chặt một monolith là dữ liệu chứ không phải mã nguồn. Biện pháp rẻ nhất để giữ ba ràng buộc là cấp \textbf{mỗi mô-đun một schema riêng trong cùng một cơ sở dữ liệu}: giao dịch vẫn hoạt động bình thường nhưng mọi vi phạm RB3 lộ ngay khi đọc mã.
 
-Hình~\ref{fig:c4-module} áp ba ràng buộc lên 13 mô-đun, gom theo năm khối chức năng; thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Bảng~\ref{tab:module-io} ghi dữ liệu vào, ra, sự kiện phát và lời gọi ra ngoài của từng mô-đun.
+Hình~\ref{fig:c4-module} áp ba ràng buộc lên 13 mô-đun, gom theo năm khối chức năng; thu mua, bán lẻ và bán sỉ cùng gọi mô-đun tồn kho để khóa dòng tồn nên tồn kho là điểm hội tụ duy nhất của các luồng giao dịch. Bảng~\ref{tab:module-io} ghi dữ liệu vào, ra, sự kiện phát và lời gọi ra ngoài của từng mô-đun; danh mục đầy đủ 17 sự kiện, kèm bên phát và bên nhận, ở Phụ lục~G.
 
 \begin{figure}[H]
 \centering
