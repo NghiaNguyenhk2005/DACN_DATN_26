@@ -1,8 +1,7 @@
-% Phụ lục M — hai ma trận đánh giá yêu cầu, tách khỏi thân báo cáo.
+% Phụ lục E (mục E.2) — hai ma trận đánh giá yêu cầu, tách khỏi thân báo cáo.
 
-\section*{Phụ lục M. Ma trận Priority, Feasibility và Testability}
+\subsection*{E.2. Ma trận Priority, Feasibility và Testability}
 \label{apdx:matran}
-\addcontentsline{toc}{section}{Phụ lục M. Ma trận Priority, Feasibility và Testability}
 
 Hai bảng dưới đây đánh giá toàn bộ yêu cầu chức năng và phi chức năng theo ba
 thuộc tính: mức độ ưu tiên theo MoSCoW, tính khả thi kỹ thuật, và phương pháp
@@ -80,7 +79,7 @@ Bảng~\ref{tab:nfr-matrix} tích hợp mức độ ưu tiên, tính khả thi v
 \textbf{NFR4.1} & Nhất quán giao dịch cơ sở dữ liệu & Must & High & \textit{ACID Concurrency Test:} Giả lập lỗi mạng giữa bước trừ tồn và sinh đơn $\rightarrow$ Rollback hoàn toàn. \\
 \textbf{NFR5.1} & Mã nguồn tách mô-đun theo nghiệp vụ & Must & High & \textit{Manual Checklist / Static Check:} mỗi mô-đun chỉ đọc ghi qua repository của mình, mô-đun khác gọi qua service; kiểm tra phụ thuộc chéo trong CI. \\
 \textbf{NFR5.2} & Tài liệu API theo OpenAPI & Must & High & \textit{Contract Check:} 100\% endpoint thuộc FR1--FR13 có trong \texttt{openapi.yaml}; CI kiểm phản hồi theo hợp đồng. \\
-\textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Buổi thử ba tác vụ với nhóm nông dân, đo bốn chỉ số hành vi (Phụ lục B); kiểm tra tiếp cận bằng axe-core. \\
+\textbf{NFR6.1} & Khả dụng cho nông dân (TCR $\ge 80\%$) & Should & Medium & \textit{Usability Test:} Buổi thử ba tác vụ với nhóm nông dân, đo bốn chỉ số hành vi (Phụ lục A); kiểm tra tiếp cận bằng axe-core. \\
 \textbf{NFR7.3} & Ứng dụng web cài đặt được (PWA) & Must & Medium & \textit{Manual Checklist:} Trên hai điện thoại thật: cài ứng dụng mua hàng lên màn hình chính, ghi nhật ký canh tác khi mất mạng và đồng bộ đúng khi có mạng lại; ứng dụng nội bộ dùng được trên điện thoại. \\
 \textbf{NFR8.1--8.5} & Tuân thủ pháp lý: thương mại điện tử, dữ liệu cá nhân, hóa đơn, thuế, lưu trữ & Must & Medium & \textit{Compliance Checklist:} đối chiếu từng nghĩa vụ ở Bảng~\ref{tab:phaply} với tính năng tương ứng; NFR8.3 kiểm trọn vẹn khi kết nối hóa đơn thật, NFR8.4 chỉ thiết kế. \\
 \textbf{NFR9.1} & Tính bất biến của nhật ký canh tác & Must & High & \textit{Audit Trail Verification:} Rà soát log CSDL không cho phép lệnh \texttt{UPDATE}/\texttt{DELETE} trực tiếp bản ghi nhật ký. \\

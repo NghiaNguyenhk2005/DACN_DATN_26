@@ -17,7 +17,7 @@ Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\
     \item \textbf{Kho mã:} một monorepo quản lý bằng pnpm workspaces và Turborepo, gồm ứng dụng mua hàng, ứng dụng nội bộ, máy chủ nghiệp vụ và các gói dùng chung (kiểu dữ liệu TypeScript, thư viện thành phần giao diện).
     \item \textbf{Giao diện:} ứng dụng mua hàng bằng Next.js, đóng gói dạng PWA; ứng dụng nội bộ bằng React, Vite và Refine.
     \item \textbf{Máy chủ nghiệp vụ:} NestJS trên Node.js và TypeScript; truy cập dữ liệu qua Prisma, riêng khóa dòng tồn viết bằng SQL thô.
-    \item \textbf{Dữ liệu:} PostgreSQL kèm các tiện ích pgvector, \texttt{unaccent}, \texttt{pg\_trgm}; Redis cho hàng đợi sự kiện và cache; MinIO cho tệp.
+    \item \textbf{Dữ liệu:} PostgreSQL kèm các tiện ích pgvector, \texttt{unaccent}, \texttt{pg\_trgm}; bus sự kiện chạy trong tiến trình; Redis (hàng đợi sự kiện, cache) và MinIO (lưu tệp) \emph{chỉ thiết kế}.
     \item \textbf{Dịch vụ AI:} Python với FastAPI; mô hình nhúng BGE-M3; thư viện dự báo chuỗi thời gian cho SARIMA, Prophet.
     \item \textbf{Bên thứ ba:} cổng thanh toán và hóa đơn điện tử ở dạng bản giả lập đặt sau giao diện tích hợp; email qua SMTP. Kết nối VNPay, Giao Hàng Nhanh ở môi trường thử nghiệm và dịch vụ đẩy của trình duyệt (Web Push) \emph{(chỉ thiết kế)}.
 \end{itemize}
@@ -28,42 +28,88 @@ Công nghệ dùng khi hiện thực bám đúng các lựa chọn tại mục~\
 \label{sec:trienkhai}
 % TODO: mô tả hạ tầng triển khai thực tế (server/cloud, container hóa nếu có), đối chiếu với kiến trúc thiết kế tại mục~\ref{sec:kientruc}.
 
-\subsection{Hiện thực các module chính}
+\subsection{Hiện thực các mô-đun chính}
 \label{sec:hienthucmodule}
 
-\subsubsection*{Module xác thực \& quản lý tài khoản}
-% TODO
+Dựa trên kiến trúc và thiết kế chi tiết đã đề xuất tại Chương~\ref{chap:phantich}, hệ thống Farmery được hiện thực hóa trên máy chủ nghiệp vụ NestJS gồm 13 mô-đun (Hình~\ref{fig:c4-module}); mục này mô tả các mô-đun trọng tâm. Các mô-đun giao tiếp qua bus sự kiện nội bộ và ràng buộc dữ liệu chặt chẽ theo hợp đồng giao diện OpenAPI.
 
-\subsubsection*{Module sản phẩm \& truy xuất nguồn gốc (QR)}
-% TODO
+\subsubsection*{Mô-đun xác thực \& quản lý tài khoản}
+Mô-đun tài khoản (\texttt{identity}) đảm nhiệm vai trò định danh, cấp phát quyền hạn và bảo vệ an toàn giao dịch cho toàn bộ các tác nhân trong hệ thống:
+\begin{itemize}
+    \item \textbf{Xác thực không mật khẩu (Passwordless Authentication):} Người dùng đăng nhập thông qua mã xác thực một lần (OTP) 6 chữ số gửi trực tiếp qua email. Nhằm ngăn chặn lộ lọt thông tin, máy chủ chỉ lưu trữ giá trị băm HMAC của mã OTP trong bộ nhớ tạm thời với thời gian sống (TTL) 10 phút, giới hạn tối đa 5 lần thử sai và áp dụng cơ chế điều tiết tần suất gửi mã (\emph{rate limiting}) để chống tấn công vét cạn.
+    \item \textbf{Phân quyền dựa trên vai trò (RBAC):} Hệ thống có chín vai trò: ba vai trò người dùng bên ngoài là khách lẻ (\texttt{buyer\_retail}), khách sỉ (\texttt{buyer\_wholesale}), nhà cung cấp (\texttt{seller}), và sáu vai trò nội bộ là kiểm duyệt viên (\texttt{staff\_moderation}), nhân viên vận hành (\texttt{staff\_operations}), nhân viên thu mua (\texttt{staff\_sourcing}), nhân viên kho (\texttt{staff\_warehouse}), nhân viên hỗ trợ vùng (\texttt{staff\_support}) và quản trị viên hệ thống (\texttt{platform\_owner}). Quyền hạn được đóng gói trong mã thông báo JWT ký điện tử, được chặn và kiểm tra tự động tại tầng cổng bảo vệ (\texttt{AuthGuard}).
+\end{itemize}
 
-\subsubsection*{Module bán lẻ (B2C)}
-% TODO
+\subsubsection*{Mô-đun sản phẩm \& truy xuất nguồn gốc (QR)}
+Mô-đun danh mục và nguồn cung (\texttt{catalog}) là hạt nhân đảm bảo tính minh bạch xuất xứ nông sản từ nông trại đến người tiêu dùng:
+\begin{itemize}
+    \item \textbf{Quản lý lô hàng và nhật ký canh tác:} Nhà cung cấp khai báo lô hàng gắn liền với vùng trồng và thời vụ cụ thể. Hệ thống hỗ trợ sản lượng lô dưới dạng số thập phân (ví dụ 0,5~kg đối với các loại nông sản giá trị cao như nấm linh chi, dâu tây giống VIP), chuẩn hóa toàn bộ mốc thời gian theo giờ Việt Nam (\texttt{Asia/Ho\_Chi\_Minh}). Đồng thời, API thực hiện kiểm tra chặt chẽ quyền sở hữu, đảm bảo nhà cung cấp chỉ được phép tạo lô hàng cho các sản phẩm đã được phê duyệt của chính đơn vị mình.
+    \item \textbf{Nhật ký canh tác bất biến và cơ chế đính chính:} Nhằm chống gian lận dữ liệu nông nghiệp, các dòng nhật ký canh tác được tổ chức theo mô hình chỉ thêm (\emph{append-only}). Khi cần sửa đổi thông tin sai sót, nhà cung cấp thực hiện đính chính bằng cách tạo một bản ghi mới liên kết tường minh qua trường \texttt{supersedesId}; hệ thống tự động ẩn dòng cũ, hiển thị dòng đính chính mới nhất và ngăn chặn việc đính chính nhiều lần trên cùng một dòng nhật ký gốc.
+    \item \textbf{Hỗ trợ ghi nhật ký ngoại tuyến và mẫu theo loại cây trồng:} Giao diện khu nhà cung cấp tích hợp cơ chế tự động sao lưu bản thảo nhật ký vào bộ nhớ cục bộ trình duyệt (\texttt{localStorage}) khi mất kết nối mạng, giúp nông dân không bị mất dữ liệu khi đang thao tác ngoài đồng ruộng. Ngoài ra, biểu mẫu gợi ý sẵn các mẫu thao tác canh tác chuẩn VietGAP chuyên biệt cho từng nhóm cây trồng: Nấm, Rau ăn lá, Cây ăn trái, Dâu tây và Cà phê/Trà.
+    \item \textbf{Tem QR động và trang truy xuất nguồn gốc:} Sau khi lô hàng được kiểm duyệt viên phê duyệt, hệ thống kích hoạt mã QR định danh duy nhất dẫn tới trang truy xuất công khai (\texttt{/truy-xuat/[ma]}). Giao diện cung cấp bố cục in ấn chuyên dụng (\texttt{\#tem-qr-print}) tối ưu cho máy in nhiệt dán tem nhãn bao bì và tính năng xuất tệp ảnh QR độ phân giải cao phục vụ truyền thông, chia sẻ.
+    \item \textbf{Hồ sơ nhà cung cấp công khai:} Xây dựng trang hồ sơ định danh điện tử của từng nhà cung cấp (\texttt{/ho-so-nha-cung-cap/[id]}), liên kết trực tiếp từ thông tin vùng trồng ở trang chi tiết sản phẩm, công khai đầy đủ chứng nhận chất lượng (VietGAP, GlobalGAP, OCOP) đã được cơ quan chức năng hậu kiểm.
+\end{itemize}
 
-\subsubsection*{Module đánh giá \& uy tín}
-% TODO: hiện thực quy trình tại mục~\ref{subsec:danhgianghiepvu} (sơ đồ hoạt động Hình~\ref{fig:act-danh-gia}) -- thu thập đánh giá, kiểm duyệt, tính điểm uy tín tổng hợp.
+\subsubsection*{Mô-đun bán lẻ (B2C)}
+Mô-đun bán lẻ (\texttt{retail}) phục vụ luồng mua sắm của khách hàng cá nhân với cam kết nông sản tươi ngon giao nhanh:
+\begin{itemize}
+    \item \textbf{Khung mua hàng thông minh:} Tự động phân loại quy cách đóng gói, cho phép nhập số lượng lẻ đối với nông sản bán theo khối lượng (kg) và bắt buộc số nguyên đối với hàng đóng khay/hộp.
+    \item \textbf{Khóa dòng tồn và cơ chế chống bán vượt (Anti-overselling):} Để triệt tiêu tình trạng nhiều khách hàng cùng tranh chấp phần tồn kho cuối cùng của một lô hàng tươi sống, hệ thống áp dụng cơ chế khóa dòng bi quan (\emph{pessimistic locking}) trực tiếp bằng câu lệnh SQL thô \texttt{SELECT ... FOR UPDATE} trên bảng dòng tồn. Phần hàng được tạm giữ chỗ trong vòng 15 phút để khách hoàn tất thanh toán; quá thời hạn, hệ thống tự động giải phóng tồn kho về trạng thái khả dụng.
+    \item \textbf{Thanh toán và COD có điều kiện:} Hỗ trợ thanh toán điện tử qua cổng giả lập và phương thức trả tiền khi nhận hàng (COD). Nhằm bảo vệ quyền lợi của nông dân và nền tảng trước nguy cơ hủy đơn ảo, hệ thống tự động kiểm tra lịch sử từ chối nhận hàng để từ chối hình thức COD đối với các tài khoản từng vi phạm.
+\end{itemize}
 
-\subsubsection*{Module bán sỉ (B2B)}
-% TODO
+\subsubsection*{Mô-đun đánh giá \& uy tín}
+Mô-đun đánh giá (\texttt{engagement}) thiết lập cơ chế đánh giá của người mua, tổng hợp thành điểm uy tín của nhà cung cấp; phản hồi công khai của Farmery dưới đánh giá chỉ thiết kế:
+\begin{itemize}
+    \item \textbf{Thu thập đánh giá gắn với đơn hàng thực tế:} Chỉ những tài khoản đã nhận hàng thành công mới được quyền gửi đánh giá sao và nhận xét chi tiết kèm hình ảnh cho từng sản phẩm của lô hàng tương ứng.
+    \item \textbf{Kiểm duyệt và tính điểm uy tín tổng hợp:} Đánh giá phải trải qua hàng đợi kiểm duyệt tự động kết hợp thủ công để loại trừ ngôn từ vi phạm tiêu chuẩn cộng đồng. Điểm uy tín của nhà cung cấp chuẩn hóa về thang 0--100, tính tự động bằng trung bình có trọng số của các đánh giá hợp lệ trong 6 tháng gần nhất, đánh giá gần đây và đơn giá trị lớn có trọng số cao hơn (mục~\ref{subsec:danhgianghiepvu}).
+\end{itemize}
 
-\subsubsection*{Module quản lý tồn kho \& vận chuyển/khiếu nại}
-% TODO: hiện thực quản lý tồn kho theo lô (FEFO); chuyến trung chuyển và chuyển bước chặng cuối do nhân viên cập nhật -- mục~\ref{subsec:khobai}.
+\subsubsection*{Mô-đun bán sỉ (B2B)}
+Mô-đun bán sỉ (\texttt{wholesale}) tối ưu hóa quy trình phân phối sản lượng lớn giữa nông hộ/hợp tác xã và các doanh nghiệp thu mua:
+\begin{itemize}
+    \item \textbf{Bảng giá sỉ theo bậc (Tiered Pricing):} Nhà cung cấp thiết lập các bậc giá tương ứng với ngưỡng sản lượng tối thiểu (MOQ) và thời gian chuẩn bị hàng. Khung mua hàng phía người mua tự động nhận diện sản lượng đặt để áp dụng mức đơn giá chiết khấu tối ưu nhất.
+    \item \textbf{Thương lượng một vòng phản hồi giá (Single-round RFQ):} Nhằm đơn giản hóa thủ tục và giảm thiểu độ trễ giao dịch nông sản tươi, hệ thống quy định cơ chế thương lượng rút gọn duy nhất một vòng. Doanh nghiệp mua gửi yêu cầu báo giá (RFQ) $\rightarrow$ Nhà cung cấp gửi lại báo giá phản hồi duy nhất một lượt (chốt đơn giá, sản lượng đáp ứng và ngày giao cam kết) $\rightarrow$ Doanh nghiệp mua đưa ra quyết định cuối cùng: chấp nhận hoặc từ chối để đóng yêu cầu.
+    \item \textbf{Hợp đồng điện tử mẫu kèm mã băm SHA-256:} Khi bên mua chấp thuận mức giá phản hồi, hệ thống lập tức tự sinh một hợp đồng mua bán nông sản sỉ mẫu chuẩn (\texttt{Contract}) với mã số duy nhất (ví dụ \texttt{HD-2026-8002}). Văn bản hợp đồng được băm bằng thuật toán SHA-256 (\texttt{documentHash}) lưu trữ đồng hành để bảo đảm tính toàn vẹn và chống chối bỏ nội dung thỏa thuận.
+    \item \textbf{Xác nhận giao kết qua OTP và thanh toán giả lập:} Đại diện doanh nghiệp mua ký xác nhận giao kết hợp đồng thông qua mã OTP gửi về email định danh. Sau khi hợp đồng được giao kết (\texttt{concluded}), hệ thống chuyển sang bước thanh toán sỉ thông qua dịch vụ thanh toán \texttt{PaymentService} (sử dụng cổng thanh toán giả lập \texttt{DemoPaymentGateway}) và thiết lập lịch trình giao hàng một đợt (\texttt{single\_batch}) theo ngày đã ký; theo thiết kế, nhà cung cấp tự giao hoặc thuê đơn vị vận chuyển giao thẳng cho khách sỉ.
+\end{itemize}
 
-\subsubsection*{Module quản trị}
-% TODO
+\subsubsection*{Mô-đun quản lý tồn kho \& vận chuyển/khiếu nại}
+Mô-đun kho vận (\texttt{inventory} \& \texttt{fulfillment}) đảm bảo tính liên tục của chuỗi giao đơn bán lẻ ba chặng:
+\begin{itemize}
+    \item \textbf{Quản lý tồn kho theo lô (FEFO):} Toàn bộ hàng hóa nhập kho được quản lý định danh theo từng lô thu hoạch. Thuật toán xuất kho ưu tiên lô có hạn sử dụng gần nhất xuất trước (\emph{First Expired, First Out}) nhằm giảm thiểu tỷ lệ hao hụt nông sản.
+    \item \textbf{Quản lý đơn thu mua phía nhà cung cấp (FR13.1):} Giao diện khu nhà cung cấp cho phép theo dõi các đơn thu mua từ nền tảng, hiển thị tách biệt sản lượng theo từng quy cách đóng gói (không cộng gộp lẫn lộn giữa kg và hộp) và giám sát tỷ lệ nghiệm thu nhập kho thực tế của nhân viên kiểm hàng.
+    \item \textbf{Điều phối vận chuyển ba chặng:} Chặng~1 nhà cung cấp tự đưa hàng về kho sơ chế tại vùng trồng; Chặng~2 nhân viên kho lập chuyến trung chuyển xe lạnh Lâm Đồng--TP.HCM từ danh sách đơn sau giờ chốt và cập nhật trạng thái chuyến; Chặng~3 giao nội thành theo khung giờ khách chọn, do nhân viên vận hành chuyển trạng thái trên hệ thống (kết nối vận đơn 3PL chỉ thiết kế).
+\end{itemize}
 
-\subsubsection*{Module AI}
+\subsubsection*{Mô-đun vận hành}
+Mô-đun vận hành (\texttt{operations}) cung cấp công cụ vận hành toàn diện cho nhân sự nội bộ thông qua ứng dụng web chuyên biệt:
+\begin{itemize}
+    \item \textbf{Hàng đợi kiểm duyệt đa cấp:} Kiểm duyệt viên tiếp nhận và phê duyệt hồ sơ năng lực nhà cung cấp, bản quét chứng nhận an toàn thực phẩm, mẫu đăng ký sản phẩm mới và hồ sơ lô hàng trước khi cấp quyền lưu hành mã QR.
+    \item \textbf{Giám sát nghiệp vụ và xử lý vi phạm:} Cung cấp bảng giám sát tồn kho và giao hàng (lô sắp hết hạn, chuyến trung chuyển trong ngày, đơn trễ --- FR10.5), chức năng thu hồi lô khi phát hiện vấn đề an toàn thực phẩm và công cụ tạm khóa tài khoản khi có dấu hiệu gian lận. Báo cáo thống kê tổng quan (FR10.4) chỉ thiết kế.
+\end{itemize}
+
+\subsubsection*{Mô-đun AI}
 \label{sec:hienthucAI}
-% TODO: mô tả hiện thực cụ thể cho 3 mô-đun AI thiết kế tại mục~\ref{sec:thietkeAI} (tìm kiếm theo ngữ nghĩa, gợi ý sản phẩm, dự báo giá) -- mô hình/thư viện sử dụng, dữ liệu huấn luyện, cách tích hợp vào hệ thống chính. Riêng phần giám sát bất thường hiện thực bằng luật ngưỡng, không phải mô hình học máy.
+Mô-đun trí tuệ nhân tạo được xây dựng dưới dạng dịch vụ vi mô độc lập bằng Python (FastAPI), tích hợp sâu vào hệ thống qua các cổng API:
+\begin{itemize}
+    \item \textbf{Tìm kiếm thông minh và gợi ý tự động (Search Suggestion):} Hệ thống phân tích cú pháp câu truy vấn người dùng trong thời gian thực, tự động bóc tách từ khóa sản phẩm khỏi các điều kiện lọc (chứng nhận VietGAP/hữu cơ, khoảng giá bán lẻ, vùng trồng Đà Lạt/Đơn Dương). Bộ gợi ý xử lý trơn tru các trường hợp gõ tiếng Việt không dấu, viết dính từ và sai lỗi chính tả phổ biến.
+    \item \textbf{Tìm kiếm ngữ nghĩa lai ghép (Hybrid Search):} Dịch vụ AI (\texttt{apps/ai}, FastAPI) chỉ nghe địa chỉ nội bộ, nhận lời gọi kèm token và trả vector BGE-M3 1024 chiều đã chuẩn hóa L2 cho tối đa 64 câu mỗi lần (\texttt{POST /embed}); API nghiệp vụ gọi qua lớp \texttt{EmbeddingProvider} với thời gian chờ 2 giây. Vector của sản phẩm công khai (tên, danh mục, vùng trồng, chứng nhận, mô tả) được dựng ở nền khi khởi động và nhúng lại khi nhận sự kiện \texttt{ProductChanged}; chỉ mục hiện nằm trong bộ nhớ của API, chuyển sang \texttt{pgvector} khi lớp lưu trữ danh mục dùng PostgreSQL. Khi tìm, câu truy vấn được nhúng (có bộ nhớ đệm 500 câu), lấy tối đa 50 sản phẩm có cosine từ 0,45 trở lên, trộn với kết quả từ điển khái niệm (trọng số 0,5) rồi hợp nhất với kết quả tìm từ khóa bằng giải thuật dung hợp thứ hạng tương hỗ RRF (\emph{Reciprocal Rank Fusion}): hiểu được ý định trừu tượng của người mua (ví dụ \lq\lq rau ăn lẩu\rq\rq, \lq\lq hoa quả làm quà biếu\rq\rq) mà vẫn giữ độ chính xác của tên sản phẩm riêng biệt. Chỉ mục chưa dựng xong hoặc dịch vụ AI không phản hồi thì nhánh ngữ nghĩa lùi về từ điển khái niệm, người dùng không nhận lỗi 5xx.
+    \item \textbf{Sản phẩm tương tự (FR12.1):} Trang chi tiết lấy tối đa 5 sản phẩm có vector gần sản phẩm đang xem nhất (cosine từ 0,5 trở lên), loại sản phẩm hết hàng; thiếu thì bù bằng sản phẩm cùng danh mục, chưa có vector thì chỉ lấy cùng danh mục.
+    \item \textbf{Dự báo biến động giá nông sản:} Chuỗi huấn luyện lấy từ giá nhà sản xuất theo tháng của FAOSTAT cho Việt Nam \parencite{faostat_producerprices}, chuẩn hóa thành bảng (CSV) theo tháng và mặt hàng; bản tin giá tuần của Trung tâm Khuyến nông Lâm Đồng \parencite{khuyennong_lamdong_gia} chỉ được dùng làm bằng chứng giá trong nước vì mới có vài tuần liên tục. Bốn mô hình (seasonal naive làm mốc, SARIMA, Prophet, LightGBM) chạy offline, được kiểm tra ngược theo thời gian (16 lần dự báo 3 tháng, huấn luyện lại ở mỗi lần), đo MAPE, MASE và độ phủ khoảng tin cậy 80\% trên bốn mặt hàng khớp sản phẩm của nền tảng, rồi chọn mô hình có MAPE thấp nhất cho từng mặt hàng; kết quả ghi ra tệp \texttt{forecasts.json}. Hiển thị cho nhân viên thu mua khi lập đơn và đặt giá (FR12.2) chỉ thiết kế nên bản hiện thực chưa có màn hình.
+\end{itemize}
 
 \subsection{Giải thuật và đoạn code quan trọng}
 \label{sec:giaithuat}
 % TODO: trích các đoạn code/giải thuật tiêu biểu (vd sinh mã QR, tính giá bậc theo MOQ, middleware RBAC) kèm giải thích ngắn gọn.
 
 
-\section{Kiểm thử}
-\label{sec:ketquachucnang}
-% TODO: kết quả thực thi các test case thiết kế tại mục~\ref{sec:kichbankiemthu} (đạt/không đạt, lỗi phát hiện và cách khắc phục).
+\section{Giao diện, API và kiểm thử}
 
-\section{Kết chương}
-% TODO
+\subsection{Thiết kế API và giao diện}
+% TODO: danh sách endpoint chính theo nhóm FR (phương thức, đường dẫn, quyền RBAC, dữ liệu vào, ra), tài liệu hóa theo OpenAPI (NFR5.2); wireframe hoặc ảnh chụp các màn hình chính, lưu ý nguyên tắc tối giản cho nhóm nông dân và hợp tác xã (NFR6).
+
+\subsection{Thiết kế và kết quả kiểm thử}
+\label{sec:kichbankiemthu}
+\label{sec:ketquachucnang}
+% TODO: bảng test case theo từng nhóm FR (mã test, mô tả, dữ liệu vào, kết quả mong đợi) và test case phi chức năng bám theo Bảng~\ref{tab:nguongNFR}; kết quả thực thi (đạt hoặc không đạt, lỗi phát hiện và cách khắc phục).

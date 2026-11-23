@@ -665,14 +665,60 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/QuoteRequest' }
 
+  /seller/quote-requests/{id}/quote:
+    post:
+      tags: [Seller]
+      operationId: respondSellerQuoteRequest
+      summary: Nhà cung cấp phản hồi báo giá 1 lượt cho yêu cầu của bên mua (FR6.2)
+      x-roles: [seller]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [proposedPrice, proposedQty, proposedDelivery]
+              properties:
+                proposedPrice: { type: integer, minimum: 1, description: Đơn giá đề xuất }
+                proposedQty: { type: number, minimum: 1, description: Sản lượng đáp ứng }
+                proposedDelivery: { type: string, format: date, description: Ngày giao đề xuất }
+                note: { type: string, maxLength: 1000 }
+      responses:
+        '200':
+          description: Đã gửi báo giá phản hồi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
   # ---------------------------------------------------------------- Wholesale
   /wholesale/quote-requests:
+    get:
+      tags: [Wholesale]
+      operationId: listBuyerQuoteRequests
+      summary: Doanh nghiệp mua sỉ xem danh sách yêu cầu báo giá của mình (FR6.1-FR6.4)
+      x-roles: [buyer_wholesale]
+      responses:
+        '200':
+          description: Danh sách yêu cầu báo giá của bên mua
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
     post:
       tags: [Wholesale]
       operationId: createQuoteRequest
       summary: Doanh nghiệp mua sỉ gửi yêu cầu báo giá cho nhà cung cấp của sản phẩm (FR6.1)
       description: |
-        Prototype chỉ ghi nhận yêu cầu (trạng thái `sent`); phản hồi, thương lượng, hợp đồng (FR6.2–6.4) thuộc MVP.
+        Gửi yêu cầu báo giá sỉ theo bảng giá bậc của nhà cung cấp.
         Lỗi: `WHOLESALE_NOT_OFFERED` (sản phẩm không có bảng giá sỉ), `BELOW_MIN_QUANTITY`.
       x-roles: [buyer_wholesale]
       parameters:
@@ -691,6 +737,112 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /wholesale/quote-requests/{id}/respond:
+    post:
+      tags: [Wholesale]
+      operationId: respondBuyerQuoteDecision
+      summary: Doanh nghiệp mua sỉ phản hồi chấp nhận hoặc từ chối báo giá (1 vòng) (FR6.3)
+      x-roles: [buyer_wholesale]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [accept, reject], description: Chấp nhận hoặc từ chối }
+                rejectReason: { type: string, maxLength: 500 }
+      responses:
+        '200':
+          description: Đã xử lý phản hồi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /wholesale/quote-requests/{id}/request-otp:
+    post:
+      tags: [Wholesale]
+      operationId: requestWholesaleContractOtp
+      summary: Yêu cầu mã OTP xác nhận giao kết hợp đồng bán sỉ (FR6.3)
+      x-roles: [buyer_wholesale]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      responses:
+        '200':
+          description: Đã phát mã OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sent, message]
+                properties:
+                  sent: { type: boolean }
+                  message: { type: string }
+                  devCode: { type: string }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /wholesale/quote-requests/{id}/confirm-otp:
+    post:
+      tags: [Wholesale]
+      operationId: confirmWholesaleContractOtp
+      summary: Nhập mã OTP để xác nhận giao kết hợp đồng sỉ (FR6.3)
+      x-roles: [buyer_wholesale]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string, description: Mã OTP 6 chữ số }
+      responses:
+        '200':
+          description: Hợp đồng đã được giao kết thành công
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /wholesale/quote-requests/{id}/pay:
+    post:
+      tags: [Wholesale]
+      operationId: payWholesaleOrder
+      summary: Thanh toán đơn sỉ qua cổng thanh toán giả lập DemoPaymentGateway (FR6.3)
+      x-roles: [buyer_wholesale]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      responses:
+        '200':
+          description: Đã thanh toán đơn hàng sỉ thành công
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
 
   # ---------------------------------------------------------------- Moderation
   /admin/review-tasks:
@@ -1260,7 +1412,7 @@ components:
             similar:
               type: array
               maxItems: 5
-              description: Prototype lấy cùng danh mục; giai đoạn 2 dùng vector (FR12.1)
+              description: Láng giềng gần nhất theo vector BGE-M3 còn hàng (FR12.1); thiếu thì bù sản phẩm cùng danh mục, và chưa có vector thì chỉ lấy cùng danh mục
               items: { $ref: '#/components/schemas/ProductCard' }
 
     # ------------------------------------------------------------ nhà cung cấp, chứng nhận
@@ -1346,14 +1498,55 @@ components:
         productId: { $ref: '#/components/schemas/Id' }
         productName: { type: string }
         supplier: { $ref: '#/components/schemas/SupplierRef' }
+        buyerId: { type: [string, 'null'] }
         buyerName: { type: string, description: Tên hiển thị của doanh nghiệp mua sỉ }
+        buyerPhone: { type: [string, 'null'] }
+        buyerEmail: { type: [string, 'null'] }
         quantity: { type: number }
         saleUnit: { type: string }
         neededBy: { type: string, format: date }
         note: { type: [string, 'null'] }
         estimatedUnitPrice: { type: [integer, 'null'], description: Đơn giá theo bậc của bảng giá sỉ lúc gửi }
-        status: { type: string, enum: [sent], description: Prototype chỉ có `sent`; các bước sau thuộc MVP }
+        status:
+          type: string
+          enum: [sent, quoted, accepted, rejected, confirmed, paid, completed]
+          description: "Trạng thái: sent (chờ NCC), quoted (đã báo giá 1 lượt), accepted (chấp nhận giá), rejected (từ chối), confirmed (đã ký OTP), paid (đã thanh toán), completed (đã giao 1 đợt)"
+        rejectReason: { type: [string, 'null'] }
         createdAt: { type: string, format: date-time }
+        quoteResponse:
+          type: object
+          properties:
+            proposedPrice: { type: integer, description: Đơn giá đề xuất }
+            proposedQty: { type: number, description: Sản lượng đáp ứng }
+            proposedDelivery: { type: string, format: date, description: Ngày giao đề xuất }
+            note: { type: [string, 'null'] }
+            respondedAt: { type: string, format: date-time }
+        contract:
+          type: object
+          properties:
+            contractCode: { type: string, description: Mã hợp đồng }
+            agreedQty: { type: number, description: Số lượng chốt }
+            agreedUnitPrice: { type: integer, description: Đơn giá chốt }
+            totalAmount: { type: integer, description: Tổng giá trị hợp đồng }
+            deliveryDate: { type: string, format: date, description: Ngày giao cam kết 1 đợt }
+            documentHash: { type: string, description: Mã băm SHA-256 }
+            status: { type: string, enum: [draft, concluded] }
+            concludedAt: { type: [string, 'null'], format: date-time }
+        payment:
+          type: object
+          properties:
+            orderId: { type: string }
+            amount: { type: integer }
+            status: { type: string, enum: [succeeded, failed] }
+            reference: { type: string }
+            paidAt: { type: string, format: date-time }
+        delivery:
+          type: object
+          properties:
+            deliveryDate: { type: string, format: date }
+            deliveryType: { type: string, description: single_batch (giao một đợt) }
+            status: { type: string, enum: [awaiting_delivery, shipping, delivered] }
+            warehouseHub: { type: string }
     SearchSuggest:
       type: object
       required: [products, categories, regions, interpretation, correction]

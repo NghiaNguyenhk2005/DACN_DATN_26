@@ -1,85 +1,136 @@
 \chapter{Đánh giá hệ thống}
 \label{chap:danhgia}
 
-Chương này trình bày phương pháp và kết quả đánh giá hệ thống Farmery theo sáu trụ cột: kiểm thử chức năng, chất lượng mã nguồn, hiệu năng và khả năng chịu tải phía máy chủ, an toàn bảo mật, khả dụng của giao diện người dùng, và chất lượng của các mô-đun AI. Sáu trụ cột gộp vào bốn nhóm mục tiêu tại mục~\ref{sec:muctieudanhgia}: kiểm thử chức năng và chất lượng mã nguồn thuộc nhóm đánh giá chức năng; hiệu năng và an toàn bảo mật thuộc nhóm hiệu năng và độ tin cậy; hai trụ cột còn lại giữ nguyên nhóm. Kết quả là cơ sở kết luận mức độ hoàn thiện so với các mục tiêu đó.
+Chương này trình bày phương pháp và kết quả đánh giá Farmery theo sáu trụ cột: kiểm thử chức năng, chất lượng mã nguồn, hiệu năng và chịu tải phía máy chủ, an toàn bảo mật, khả dụng giao diện và chất lượng mô-đun AI. Sáu trụ cột gộp vào bốn nhóm mục tiêu ở mục~\ref{sec:muctieudanhgia}: chức năng và chất lượng mã thuộc nhóm đánh giá chức năng; hiệu năng và bảo mật thuộc nhóm hiệu năng và độ tin cậy.
 
 \section{Mục tiêu và phương pháp đánh giá}
 \label{sec:muctieuphuongphap}
 
-Nguyên tắc chi phối toàn chương: mọi ngưỡng đối chiếu đều được xác định \emph{trước} khi hiện thực --- tại Bảng~\ref{tab:nguongNFR} cho yêu cầu phi chức năng và Bảng~\ref{tab:nguongAI} cho các mô-đun AI --- nhằm tránh việc chọn chỉ số sau khi đã biết kết quả.
-
+Mọi ngưỡng đối chiếu được xác định \emph{trước} khi hiện thực --- Bảng~\ref{tab:nguongNFR} cho yêu cầu phi chức năng và Bảng~\ref{tab:nguongAI} cho mô-đun AI --- để không chọn chỉ số sau khi đã biết kết quả.
 \begin{itemize}
-    \item \textbf{Đánh giá chất lượng mã nguồn:} kiểm tra kiểu (typecheck), phân tích tĩnh bằng ESLint và đo độ phủ kiểm thử bằng Jest cho phần nghiệp vụ lõi. Cả ba chạy tự động mỗi lần đẩy mã lên kho GitHub qua GitHub Actions, với cổng độ phủ chặn mã không đạt ngưỡng tối thiểu (mục~\ref{sec:moitruong}).
-    \item \textbf{Đánh giá chức năng (functional testing):} kiểm thử hộp đen (black-box) cho các nhóm yêu cầu chức năng có phần hiện thực (FR9 chỉ ở mức thiết kế), trong mỗi nhóm chỉ kiểm phần không mang nhãn chỉ thiết kế, ưu tiên các luồng đi xuyên nhiều phân hệ --- đặc biệt là kịch bản hợp đồng bán sỉ và đơn thu mua cùng giành hàng của một lô, và luồng thu mua vào kho của nền tảng.
-    \item \textbf{Đánh giá hiệu năng và chống bán vượt (performance testing):} dùng k6 --- công cụ kiểm thử tải viết kịch bản bằng JavaScript, tốn ít tài nguyên hơn Apache JMeter và gắn được vào quy trình tích hợp liên tục --- đo thời gian phản hồi ở p95, thông lượng xử lý, và giả lập nhiều yêu cầu đồng thời tranh mua một lô có tồn kho giới hạn.
-    \item \textbf{Đánh giá bảo mật và kiểm soát truy cập (security audit):} kiểm thử tự động ma trận phân quyền RBAC trên toàn bộ endpoint nghiệp vụ; rà soát an toàn dữ liệu cá nhân theo Luật Bảo vệ dữ liệu cá nhân 2025 (NFR8.2).
-    \item \textbf{Đánh giá khả dụng phía giao diện:} kiểm tra giao diện đáp ứng trên ba kích thước màn hình chuẩn; đo ba chỉ số Core Web Vitals bằng Lighthouse; buổi thử tác vụ với nhóm nhà cung cấp đo bốn chỉ số hành vi --- tỷ lệ tự hoàn thành, thời gian hoàn thành, số lần nhờ giúp, số lỗi phải làm lại; kiểm tra khả năng tiếp cận tự động bằng axe-core; và kiểm tra ứng dụng web cài đặt được theo danh sách trên điện thoại thật.
-    \item \textbf{Đánh giá mô-đun AI:} đánh giá offline từng mô-đun bằng chỉ số phù hợp với bài toán của nó; riêng mô-đun dự báo giá đánh giá trên dữ liệu giá nông sản công khai, không phải dữ liệu giao dịch của nền tảng.
+    \item \textbf{Chất lượng mã nguồn:} typecheck, ESLint và độ phủ Jest cho phần nghiệp vụ lõi, chạy tự động qua GitHub Actions với cổng độ phủ chặn mã không đạt ngưỡng (mục~\ref{sec:moitruong}).
+    \item \textbf{Chức năng:} kiểm thử hộp đen các nhóm yêu cầu có phần hiện thực (FR9 chỉ thiết kế), chỉ kiểm phần không mang nhãn chỉ thiết kế, ưu tiên luồng đi xuyên nhiều phân hệ: hợp đồng sỉ và đơn thu mua cùng giành hàng một lô, thu mua vào kho.
+    \item \textbf{Hiệu năng và chống bán vượt:} k6 (kịch bản JavaScript, nhẹ hơn JMeter, gắn được vào tích hợp liên tục) đo p95, thông lượng, và giả lập nhiều yêu cầu đồng thời tranh một lô có tồn giới hạn.
+    \item \textbf{Bảo mật:} kiểm thử tự động ma trận RBAC trên mọi endpoint nghiệp vụ; rà soát dữ liệu cá nhân theo Luật Bảo vệ dữ liệu cá nhân 2025 (NFR8.2).
+    \item \textbf{Khả dụng giao diện:} giao diện đáp ứng trên ba kích thước màn hình; ba chỉ số Core Web Vitals bằng Lighthouse; buổi thử ba tác vụ với nhóm nhà cung cấp đo bốn chỉ số hành vi; axe-core; danh sách kiểm tra PWA trên điện thoại thật.
+    \item \textbf{Mô-đun AI:} đánh giá offline bằng chỉ số riêng từng bài toán; dự báo giá đánh giá trên dữ liệu giá công khai chứ không phải dữ liệu giao dịch của nền tảng.
 \end{itemize}
 
-% TODO: nêu rõ điều kiện đo của toàn chương (cấu hình máy, phiên bản công cụ, kích thước tập dữ liệu mô phỏng, ngày thực hiện) để kết quả có thể tái lập.
+% TODO: nêu điều kiện đo của toàn chương (cấu hình máy, phiên bản công cụ, kích thước tập dữ liệu mô phỏng, ngày thực hiện) để kết quả tái lập được.
 
 \section{Đánh giá chức năng}
 \label{sec:danhgiachucnang}
 
-Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu chức năng, với ba kịch bản trọng tâm: luồng thu mua từ chào giá lô tới nhập kho và mở bán; luồng bán sỉ từ yêu cầu báo giá, một vòng phản hồi giá tới giao hàng một đợt; và luồng bán lẻ từ đặt hàng tới đổi trả.
+Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu, với ba kịch bản trọng tâm: thu mua từ chào giá lô tới nhập kho và mở bán; bán sỉ từ yêu cầu báo giá, một vòng phản hồi giá tới giao một đợt; bán lẻ từ đặt hàng tới đổi trả.
 
-% TODO: điền bảng test case và kết quả đạt/không đạt theo từng nhóm yêu cầu chức năng. Bảng chi tiết đưa xuống phụ lục, thân chương giữ phần tổng hợp.
+% TODO: bảng tổng hợp đạt hoặc không đạt theo từng nhóm yêu cầu chức năng; bảng test case chi tiết ở mục~\ref{sec:kichbankiemthu}.
 
 \section{Đánh giá phía máy chủ (back-end)}
 \label{sec:danhgiahieunang}
 
-\subsection{Hiệu năng và khả năng chịu tải}
+\noindent\textbf{Hiệu năng và chịu tải.} Kịch bản tải tăng dần số người dùng đồng thời thực hiện chuỗi: tìm kiếm, xem chi tiết và nhật ký canh tác, thêm giỏ, tạo đơn. Theo Bảng~\ref{tab:nguongNFR}, báo cáo p95 dưới 2 giây ở tải thông thường, và ở mức mục tiêu 100 người dùng đồng thời thì thời gian phản hồi trung vị dưới 3 giây cùng tỷ lệ lỗi dưới 1\% (NFR1.1). Song song, bật \texttt{pg\_stat\_statements} để tìm truy vấn chậm nhất và truy vấn bị gọi lặp.
 
-Kịch bản tải giả lập tăng dần số người dùng đồng thời thực hiện chuỗi hành vi: tìm kiếm nông sản, xem chi tiết và nhật ký canh tác, thêm giỏ hàng, tạo đơn hàng. Hai chỉ số cần báo cáo là thời gian phản hồi ở p95 (đối chiếu NFR1.1) và tỷ lệ lỗi HTTP 5xx ở mức tải mục tiêu 100 người dùng đồng thời (cùng đối chiếu NFR1.1).
+\noindent\textbf{Chống bán vượt tồn kho.} Để kiểm chứng NFR1.2 và NFR4.1, kịch bản tranh chấp khởi tạo dòng tồn có số lượng giới hạn rồi kích hoạt đồng thời nhiều yêu cầu vượt số đó, theo hai kịch bản: nhiều đơn lẻ cùng đặt trên dòng tồn của Farmery; hợp đồng sỉ và đơn thu mua cùng giành dòng tồn của nhà cung cấp. Cần chứng minh khóa bi quan (\texttt{SELECT \ldots{} FOR UPDATE}) chặn mọi trường hợp bán vượt ở cả hai kịch bản.
 
-Song song với kiểm thử tải, bật thống kê truy vấn sẵn có của PostgreSQL (\texttt{pg\_stat\_statements}) để tìm truy vấn chậm nhất và truy vấn bị gọi lặp nhiều lần --- nguyên nhân phổ biến nhất khiến thời gian phản hồi vượt ngưỡng.
+\noindent\textbf{Phân quyền và bảo mật.} Script gọi endpoint nghiệp vụ bằng token của vai trò không đủ quyền (ví dụ \texttt{buyer\_retail} gọi endpoint đăng bán, token một vai trò nội bộ gọi endpoint vai trò khác) và xác nhận mọi lời gọi bị chặn với mã 403 (NFR3.1); rà soát cơ sở dữ liệu để xác nhận mã hóa dữ liệu định danh và băm mật khẩu (NFR3.2, NFR3.3).
 
-% TODO: điền số đo thực tế cho từng mức tải, kèm kết luận đạt/không đạt so với NFR1.1; liệt kê năm truy vấn tốn thời gian nhất.
+\noindent\textbf{Độ tin cậy và các yêu cầu còn lại.} Thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (NFR4.2). Các yêu cầu định tính hoặc chỉ thiết kế --- NFR2.1, NFR2.2, NFR3.4--NFR3.6, NFR5.1, NFR5.2, NFR7.1, NFR8.1--NFR8.5, NFR9.1 --- được nghiệm thu bằng danh sách kiểm tra hoặc rà soát thiết kế chứ không đo bằng chỉ số, đúng như mục~\ref{sec:yeucauphichucnang}.
 
-\subsection{Kiểm thử ràng buộc chống bán vượt tồn kho}
-
-Để kiểm chứng NFR1.2 và NFR4.1, kịch bản kiểm thử tranh chấp (race condition test) khởi tạo một dòng tồn có số lượng khả dụng giới hạn, rồi kích hoạt đồng thời nhiều yêu cầu vượt quá số lượng đó. Có hai kịch bản: nhiều đơn bán lẻ cùng đặt trên dòng tồn của Farmery; và một hợp đồng bán sỉ cùng một đơn thu mua cùng giành dòng tồn của nhà cung cấp. Điểm cần chứng minh là cơ chế khóa bi quan (\texttt{SELECT ... FOR UPDATE}) trong transaction cơ sở dữ liệu chặn được mọi trường hợp bán vượt ở cả hai kịch bản.
-
-% TODO: điền số yêu cầu đồng thời, số lượng ban đầu của dòng tồn, số yêu cầu được chấp nhận và bị từ chối cho từng kịch bản, tỷ lệ bán vượt thực đo.
-
-\subsection{Phân quyền và bảo mật}
-
-Kiểm thử tự động bằng script gọi các endpoint nghiệp vụ với token của vai trò không đủ quyền --- ví dụ dùng token \texttt{buyer\_retail} gọi endpoint đăng bán của \texttt{seller} hoặc endpoint duyệt chứng nhận của \texttt{staff\_moderation}, và dùng token của một vai trò nội bộ gọi endpoint thuộc vai trò nội bộ khác --- và xác nhận toàn bộ đều bị chặn ở lớp middleware với mã 403 (đối chiếu NFR3.1). Song song, rà soát cơ sở dữ liệu để xác nhận dữ liệu định danh được mã hóa và mật khẩu được băm đúng chuẩn (NFR3.2, NFR3.3).
-
-% TODO: điền số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa dữ liệu.
+% TODO: điền số đo từng mức tải kèm kết luận so với NFR1.1 và năm truy vấn tốn thời gian nhất; số yêu cầu đồng thời, số lượng ban đầu, số được chấp nhận và bị từ chối, tỷ lệ bán vượt thực đo; số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa.
 
 \section{Đánh giá phía giao diện (front-end)}
 \label{sec:danhgiaux}
 
-\subsection{Tính đáp ứng của giao diện}
+\noindent\textbf{Tính đáp ứng.} Kiểm thử trên điện thoại, máy tính bảng, máy tính để bàn với hai trình duyệt phổ biến ở Việt Nam, các màn hình chính: trang chủ, chi tiết sản phẩm, tra cứu QR, giỏ hàng, trang quản lý của nhà cung cấp; tiêu chí không tràn ngang, không che nút thao tác (NFR7.2). Lighthouse đo Core Web Vitals với ngưỡng ``tốt'': LCP không quá 2,5 giây, INP không quá 200 ms, CLS không quá 0,1 \parencite{webdev_vitals}. PWA không đo bằng Lighthouse (đã bỏ hạng mục này từ phiên bản 12) mà kiểm theo danh sách ở Phụ lục~A, mục A.6 (NFR7.3).
 
-Kiểm thử trên ba nhóm thiết bị đại diện --- điện thoại, máy tính bảng, máy tính để bàn --- trên hai trình duyệt phổ biến tại Việt Nam, với các màn hình chính: trang chủ, chi tiết sản phẩm, tra cứu QR, giỏ hàng và trang quản lý của nhà cung cấp. Tiêu chí là không tràn khung ngang và không che khuất nút thao tác (đối chiếu NFR7.2). Hiệu năng phía trình duyệt đo bằng Google Lighthouse theo ba chỉ số Core Web Vitals với ngưỡng ``tốt'' của Google: thời gian hiển thị khối nội dung lớn nhất (LCP) không quá 2,5 giây, độ trễ tương tác (INP) không quá 200 ms, độ dịch chuyển bố cục (CLS) không quá 0,1 \parencite{webdev_vitals}. Riêng tính năng ứng dụng web cài đặt được không đo bằng Lighthouse, vì công cụ này đã bỏ hạng mục PWA từ phiên bản 12; thay vào đó kiểm tra theo danh sách tại Phụ lục B, mục B.6 (đối chiếu NFR7.3).
+\noindent\textbf{Khả dụng với nhóm nhà cung cấp.} Nhóm đại diện gồm nông dân và thành viên ban điều hành hợp tác xã thử ba tác vụ khó và thường xuyên nhất: đăng một lô hàng kèm ảnh, ghi nhật ký canh tác cho lô, tìm và mở QR của lô. Bốn chỉ số hành vi: tỷ lệ hoàn thành không cần hỗ trợ (ngưỡng NFR6.1--NFR6.3), thời gian hoàn thành, số lần nhờ giúp, số lỗi phải làm lại; không dùng bảng câu hỏi chuẩn hóa vì điểm cảm nhận không chỉ ra chỗ người dùng vướng. Bổ sung axe-core theo WCAG mức AA, có nêu giới hạn của kiểm tra tự động. Kịch bản, phiếu ghi và cách tính ở Phụ lục~A.
 
-% TODO: điền kết quả trên từng nhóm thiết bị, ba chỉ số Core Web Vitals và kết quả danh sách kiểm tra PWA.
-
-\subsection{Đánh giá khả dụng với nhóm nhà cung cấp}
-
-Thử nghiệm với nhóm đại diện gồm nông dân và thành viên ban điều hành hợp tác xã. Ba tác vụ đánh giá là đăng một lô hàng mới kèm ảnh, ghi nhật ký canh tác cho lô đó, và tìm rồi mở mã QR của lô --- những việc nhóm này phải làm thường xuyên nhất và cũng khó nhất với họ. Bốn chỉ số hành vi: tỷ lệ hoàn thành tác vụ không cần hỗ trợ (đối chiếu ngưỡng NFR6.1--NFR6.3), thời gian hoàn thành, số lần phải nhờ giúp, và số lỗi thao tác phải làm lại. Không dùng bảng câu hỏi chuẩn hóa vì điểm tổng về cảm nhận không chỉ ra được người dùng vướng ở đâu. Bổ sung kiểm tra khả năng tiếp cận tự động bằng axe-core theo chuẩn WCAG mức AA, có ghi rõ giới hạn của kiểm tra tự động. Kịch bản, phiếu ghi và cách tính ở Phụ lục B.
-
-% TODO: điền số người tham gia, ngày và địa điểm, bốn chỉ số cho từng tác vụ, danh sách chỗ vướng, số lỗi axe-core trước và sau khi sửa.
+% TODO: điền kết quả từng nhóm thiết bị, ba chỉ số Core Web Vitals, kết quả danh sách PWA; số người tham gia, ngày, địa điểm, bốn chỉ số từng tác vụ, chỗ vướng, số lỗi axe-core trước và sau khi sửa.
 
 \section{Đánh giá mô-đun AI}
 \label{sec:danhgiaAI}
 
-Nghiệm thu ba mô-đun AI theo đúng chỉ số đã định nghĩa tại Bảng~\ref{tab:nguongAI}:
+Nghiệm thu theo chỉ số ở Bảng~\ref{tab:nguongAI}: \emph{tìm kiếm ngữ nghĩa} đo nDCG@10, Recall@10 trên bộ truy vấn gán nhãn tay so với tìm từ khóa làm đường cơ sở, kèm p95; \emph{sản phẩm tương tự} đo Precision@5 trên tập sản phẩm gán nhãn tay (CTR qua A/B chỉ áp dụng khi bật cá nhân hóa, ngoài phần hiện thực); \emph{dự báo giá} đo MAPE trên tập kiểm tra tách theo thời gian, dùng chuỗi giá theo tháng của FAOSTAT (đến 01/2025, đã nối tại điểm gãy mức giá 01/2022) cho bốn mặt hàng khớp sản phẩm của nền tảng là khoai tây, nấm, chè, cà phê --- dâu tây, cà chua và các mặt hàng đặc trưng Đà Lạt không có chuỗi đủ dài nên không đo được; mô hình chạy offline, MAPE là chỉ số nghiệm thu còn MASE và độ phủ khoảng 80\% là chỉ số phụ. Hai mô hình đối chứng ở Phụ lục~F --- Multilingual-E5 cho mô hình nhúng và gradient boosting cho dự báo giá --- được đo cùng chỉ số trên cùng tập kiểm tra. Giám sát bất thường dùng luật ngưỡng (Chương~\ref{chap:coso}) nên được nghiệm thu bằng việc kiểm tra luật kích hoạt đúng trên tập tình huống dựng sẵn.
 
+\noindent\textbf{Tìm kiếm theo ngữ nghĩa: dữ liệu và cách đo.} Đo trên dịch vụ nhúng thật (BGE-M3, chạy CPU, máy phát triển) với 39 sản phẩm công khai của dữ liệu mẫu. Ba bộ truy vấn gán nhãn tay, mỗi câu kèm danh sách sản phẩm liên quan:
 \begin{itemize}
-    \item \textbf{Tìm kiếm theo ngữ nghĩa:} đo nDCG@10 và Recall@10 trên bộ truy vấn do nhóm gán nhãn tay, so với tìm kiếm từ khóa làm đường cơ sở; đo thêm thời gian phản hồi ở p95.
-    \item \textbf{Sản phẩm tương tự:} đo Precision@5 trên tập sản phẩm gán nhãn tay; mỗi sản phẩm trong tập có danh sách sản phẩm được người gán nhãn coi là phù hợp thay thế hoặc mua kèm. Mức tăng CTR qua thử nghiệm A/B chỉ áp dụng khi bật gợi ý cá nhân hóa, ngoài phần hiện thực.
-    \item \textbf{Dự báo giá:} đo MAPE trên tập kiểm tra tách theo thời gian, dùng dữ liệu giá nông sản công khai; mô hình chạy offline và chỉ được đánh giá bằng MAPE; hiển thị kết quả cho nhân viên thu mua \emph{(chỉ thiết kế)}, nên không đánh giá theo thời gian phản hồi.
+    \item \textbf{Bộ chính:} 36 câu (33 trong danh mục, 3 ngoài danh mục), chia theo nhóm tên chính xác, không dấu, viết liền, gõ sai, danh mục, ý định, tiếng Anh.
+    \item \textbf{Bộ độc lập:} 18 câu (15 và 3), viết sau khi xong bản cài đặt đầu và không dùng để chỉnh tham số.
+    \item \textbf{Bộ mở rộng:} 12 câu (10 và 2) mà từ điển khái niệm không có khóa tương ứng (ví dụ \lq\lq quả mọng\rq\rq, \lq\lq đồ uống có caffeine\rq\rq), gán nhãn trước khi chạy bản vector.
+\end{itemize}
+Bộ chính và bộ độc lập cộng lại 54 câu, vượt mốc 50 của Bảng~\ref{tab:nguongAI}. Đường cơ sở là tìm từ khóa; \lq\lq bản chốt\rq\rq{} là nhánh vector (ngưỡng cosine 0,45) trộn từ điển khái niệm với trọng số 0,5 rồi hợp nhất với từ khóa bằng RRF. Bảng~\ref{tab:ketquaTimKiem} nêu kết quả.
+
+\begin{table}[t]
+\centering
+\caption{nDCG@10 và Recall@10 của các cấu hình tìm kiếm trên ba bộ truy vấn}
+\label{tab:ketquaTimKiem}
+\tblsetup\tblzebra
+\begin{tabular}{L{4.60cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm} L{1.70cm}}
+\toprule
+\rowcolor{tblheadbg}
+& \multicolumn{2}{l}{\textbf{Bộ chính}} & \multicolumn{2}{l}{\textbf{Bộ độc lập}} & \multicolumn{2}{l}{\textbf{Bộ mở rộng}} \\
+\rowcolor{tblheadbg}
+\textbf{Cấu hình} & nDCG & R@10 & nDCG & R@10 & nDCG & R@10 \\
+\midrule
+Chỉ từ khóa (đường cơ sở) & 0,59 & 0,56 & 0,62 & 0,61 & 0,02 & 0,02 \\
+Từ khóa và từ điển khái niệm & 1,00 & 1,00 & 0,89 & 0,92 & 0,52 & 0,52 \\
+Từ khóa và vector & 0,69 & 0,67 & 0,64 & 0,68 & 0,53 & 0,63 \\
+\textbf{Bản chốt} (vector và từ điển, cùng từ khóa) & \textbf{0,95} & \textbf{0,97} & \textbf{0,88} & \textbf{0,92} & \textbf{0,67} & \textbf{0,74} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Đối chiếu ngưỡng ở Bảng~\ref{tab:nguongAI}:
+\begin{itemize}
+    \item \textbf{nDCG@10 hơn từ khóa tối thiểu 15\%: đạt.} Bản chốt hơn 61\% ở bộ chính (0,95 so với 0,59) và 42\% ở bộ độc lập (0,88 so với 0,62); Recall@10 không thấp hơn (0,97 so với 0,56; 0,92 so với 0,61).
+    \item \textbf{p95 dưới 1 giây: đạt.} 66 câu chưa có trong bộ nhớ đệm vector cho p50 129 ms, p95 173 ms, lớn nhất 251 ms. Đo tuần tự trên một máy, dịch vụ AI chạy cùng máy; chưa đo khi nhiều người tìm đồng thời.
+    \item \textbf{Câu ngoài danh mục chưa chặn được trọn vẹn.} Cosine cao nhất của câu ngoài danh mục là 0,38--0,46, trong khi sản phẩm liên quan của câu trừu tượng (\lq\lq nướng\rq\rq, \lq\lq trẻ em\rq\rq, \lq\lq làm sinh tố\rq\rq) chỉ 0,30--0,45, nên một ngưỡng không vừa chặn vừa giữ được. Ngưỡng 0,45 là mức không tệ hơn bản không vector: trả rỗng đúng 3 trên 3 câu ngoài danh mục ở bộ chính, 1 trên 3 ở bộ độc lập và 1 trên 2 ở bộ mở rộng (các câu còn lại trả kết quả gần đúng từ đường lùi khớp gần đúng).
 \end{itemize}
 
-Riêng phần giám sát bất thường không dùng mô hình học máy trong phạm vi đồ án (lý do tại Chương~\ref{chap:coso}), nên được nghiệm thu bằng cách kiểm tra các luật ngưỡng có kích hoạt đúng trên tập tình huống dựng sẵn, không đo bằng chỉ số mô hình.
+\noindent\textbf{Giới hạn của kết quả tìm kiếm.} Từ điển khái niệm được viết khi đã biết nhãn của bộ chính và bộ độc lập nên số của dòng \lq\lq từ khóa và từ điển\rq\rq{} (1,00 và 0,89) lạc quan; bản chốt thấp hơn một chút ở hai bộ này nhưng hơn rõ ở bộ mở rộng (0,67 so với 0,52). Chỉ có 39 sản phẩm, nhãn do một người gán và bộ mở rộng chỉ 10 câu trong danh mục, nên các số đo cho thấy xu hướng chứ chưa đủ làm bằng chứng thống kê. Chỉ mục vector hiện nằm trong bộ nhớ của API; chưa đo bản lưu trên \texttt{pgvector}.
 
-% TODO: điền kết quả thực nghiệm và kết luận đạt/không đạt cho từng mô-đun; ghi rõ kích thước và nguồn của từng tập dữ liệu đã dùng.
+\noindent\textbf{Sản phẩm tương tự.} Với mỗi sản phẩm trong 39 sản phẩm mẫu, người gán nhãn ghi danh sách sản phẩm \lq\lq tương tự hợp lệ\rq\rq{} (cho phép khác danh mục: trái cây, rau lá, củ, đồ uống). Precision@5 trung bình đạt 0,65 với láng giềng vector (mọi sản phẩm nhận đủ 5 gợi ý, 100\% còn hàng), so với 0,52 của bản đầu chỉ lấy cùng danh mục (chỉ 33\% sản phẩm nhận đủ 5 gợi ý). Ngưỡng 0,6 ở Bảng~\ref{tab:nguongAI} \textbf{đạt nhưng sát}. Kết quả không đổi khi ngưỡng cosine nằm giữa 0,3 và 0,6; thử bốn cách ghép văn bản nhúng khác (bỏ mô tả, bỏ vùng và chứng nhận, chỉ tên và danh mục) cho Precision@5 từ 0,51 đến 0,63, không cách nào hơn. Giới hạn: 39 sản phẩm thấp hơn mốc 50 của Bảng~\ref{tab:nguongAI} (đã là toàn bộ dữ liệu mẫu) và nhãn do một người gán.
 
-\section{Kết chương}
-\label{sec:thaoluan}
+\noindent\textbf{Dự báo giá: dữ liệu và cách đo.} Chuỗi giá nhà sản xuất theo tháng của Việt Nam từ FAOSTAT \parencite{faostat_producerprices}, bốn mặt hàng khớp sản phẩm của nền tảng (khoai tây, chè, cà phê, nấm), chuỗi tháng liên tục từ 12/2011 (nấm từ 01/2013) đến 01/2025. Kiểm tra ngược kiểu rolling-origin: 16 lần dự báo, mỗi lần huấn luyện lại bốn mô hình trên phần đầu chuỗi rồi dự báo 3 tháng kế tiếp, lùi từ cuối chuỗi, tức 48 điểm kiểm tra mỗi mặt hàng (từ 02/2021 đến 01/2025). Bậc của SARIMA và tham số của LightGBM đặt cố định trước, không chỉnh theo tập kiểm tra. Ba chuỗi (chè, cà phê, nấm) gãy mức giá chưa rõ nguyên nhân giữa 12/2021 và 01/2022 dù mọi dòng mang cờ chính thức (cà phê từ 36,1 triệu xuống 13,7 triệu đồng/tấn), nên chuỗi được nối tại điểm gãy trước khi mô hình hóa; kết quả trên chuỗi thô được nêu kèm. Bảng~\ref{tab:ketquaDuBao} và Hình~\ref{fig:dubaigia-mape} nêu MAPE, Hình~\ref{fig:dubaigia-kiemtra} minh họa dự báo so với giá thực.
 
-% TODO: tổng hợp ưu điểm và hạn chế rút ra từ các kết quả đánh giá. Lưu ý nêu cả những chỉ số chưa đạt ngưỡng và phân tích nguyên nhân --- đây là phần hội đồng quan tâm hơn cả danh sách chỉ số đã đạt. Các hạn chế phát hiện ở đây cần được phản ánh lại vào mục Hạn chế tại Chương~\ref{chap:ketluan}.
+\begin{table}[t]
+\centering
+\caption{MAPE (\%) theo mô hình trên chuỗi đã nối điểm gãy, và chỉ số của mô hình được chọn}
+\label{tab:ketquaDuBao}
+\tblsetup\tblzebra
+\begin{tabular}{L{1.90cm} L{1.90cm} L{1.85cm} L{1.80cm} L{2.20cm} L{1.95cm} L{1.30cm} L{1.60cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mặt hàng} & \textbf{Seasonal naive} & \textbf{SARIMA} & \textbf{Prophet} & \textbf{LightGBM} & \textbf{Mô hình chọn} & \textbf{MASE} & \textbf{Độ phủ 80\%} \\
+\midrule
+Chè & 4,8 & 1,8 & 2,7 & 2,3 & SARIMA & 0,34 & 94\% \\
+Cà phê & 10,2 & 2,7 & 5,7 & 3,1 & SARIMA & 0,32 & 85\% \\
+Khoai tây & 8,4 & 3,6 & 8,6 & 4,1 & SARIMA & 0,44 & 94\% \\
+Nấm & 14,0 & 2,3 & 9,9 & 1,8 & LightGBM & 0,22 & 48\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/du-bao-gia-mape-mo-hinh.png}
+\caption{MAPE theo mô hình và mặt hàng, chuỗi đã nối điểm gãy (trái) và chuỗi thô (phải)}
+\label{fig:dubaigia-mape}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{image/comparison/du-bao-gia-kiem-tra-nguoc.png}
+\caption{Giá thực tế và dự báo 3 tháng của mô hình được chọn qua 16 lần kiểm tra ngược; vùng tô là khoảng 80\% cho ba tháng sau 01/2025}
+\label{fig:dubaigia-kiemtra}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{MAPE dưới 20\%: đạt.} Mô hình tốt nhất mỗi mặt hàng có MAPE 1,8--3,6\% trên chuỗi đã nối và 3,6--9,7\% trên chuỗi thô. Ở chuỗi thô, MAPE theo từng tầm cho thấy lỗi dồn vào tầm 3 tháng của chè (22,6\%) vì tháng gãy giá rơi đúng vào tầm đó.
+    \item \textbf{Hơn mốc seasonal naive.} SARIMA hoặc LightGBM thắng mốc ở cả bốn mặt hàng, MASE 0,22--0,44 (dưới 1 là sai số nhỏ hơn mốc). Prophet ít khi hơn mốc: kém nhẹ ở khoai tây (8,6 so với 8,4), hơn ở nấm, chè và cà phê. Trên chuỗi thô MASE của SARIMA ở nấm là 1,28, tức chưa hơn mốc.
+    \item \textbf{Khoảng tin cậy chưa đáng tin ở mọi mô hình.} Độ phủ khoảng 80\% của SARIMA 85--96\% (khoảng quá rộng), của LightGBM 42--69\% và Prophet 35--60\% (quá hẹp); mô hình được chọn cho nấm là LightGBM chỉ phủ 48\%, nên khoảng này chưa dùng được làm biên độ giá tham khảo.
+\end{itemize}
+
+\noindent\textbf{Giới hạn của kết quả dự báo giá.} Chỉ mười trong 39 sản phẩm mẫu (khoai tây, nấm, chè, cà phê) có mặt hàng tương ứng; dâu tây, cà chua, xà lách, ớt chuông, bơ không có trong FAOSTAT nên không đo được. Dữ liệu là giá nhà sản xuất cấp quốc gia, dừng ở 01/2025, không phải giá Đà Lạt hay giá giao dịch của nền tảng. Nối chuỗi tại điểm gãy làm MAPE thấp hơn thực tế của chuỗi thô, và nguyên nhân gãy chưa tra được. Mô hình được chọn bằng chính tập kiểm tra nên số đo hơi lạc quan. Bản tin giá tuần của Trung tâm Khuyến nông Lâm Đồng \parencite{khuyennong_lamdong_gia} chỉ có sáu kỳ liên tục nên không đủ để đo.
+
+% TODO: cuối chương tổng hợp ưu điểm và hạn chế, nêu cả chỉ số chưa đạt ngưỡng kèm nguyên nhân (hội đồng quan tâm phần này hơn danh sách chỉ số đã đạt) và phản ánh lại vào mục Hạn chế ở Chương~\ref{chap:ketluan}.
