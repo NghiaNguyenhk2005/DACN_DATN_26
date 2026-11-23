@@ -765,7 +765,7 @@ def appendix():
     L.append('')
     L.append('Cơ sở dữ liệu gồm %d bảng, %d cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại '
              'Bảng~\\ref{tab:module-io}; sơ đồ quan hệ ở Hình~\\ref{fig:erd-tong-quan} và các hình ERD theo miền cuối phụ lục này. '
-             'Mỗi bảng dưới đây ghi mục đích, số cột và các cột khóa. Danh sách đầy đủ từng cột (kiểu, ràng buộc, giá trị hợp lệ) '
+             'Các Bảng~\\ref{tab:db-identity} đến~\\ref{tab:db-operations} ghi, với mỗi bảng, mục đích, số cột và các cột khóa. Danh sách đầy đủ từng cột (kiểu, ràng buộc, giá trị hợp lệ) '
              'nằm trong tệp lược đồ \\texttt{report/schema.dbml} của dự án, nguồn sinh duy nhất của bảng này và các hình ERD nên luôn khớp nhau. '
              'Quy ước cột cuối:' % (n_tab, n_col))
     L.append('\\begin{itemize}')

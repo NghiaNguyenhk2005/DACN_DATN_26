@@ -162,7 +162,7 @@ cont(LX, rows['app'][0], LW, RHT, 'Ứng dụng mua hàng', 'Next.js, PWA', 'Ng�
 cont(LX, rows['minio'][0], LW, RHT, 'Lưu trữ tệp', 'MinIO, chuẩn S3', 'Ảnh công khai; giấy tờ riêng tư mã hóa')
 cont(LX, rows['staff'][0], LW, RHT, 'Ứng dụng nội bộ', 'React, Vite, Refine', 'Sáu vai trò nội bộ; 2FA, phiên ngắn')
 cont(LX, rows['pg'][0], LW, RHT, 'Cơ sở dữ liệu', 'PostgreSQL, pgvector', '13 schema theo mô-đun; vector sản phẩm')
-cont(LX, rows['redis'][0], LW, RHT, 'Hàng đợi sự kiện và cache (Redis)', 'Redis', 'Sự kiện, tác vụ nền, cache')
+cont(LX, rows['redis'][0], LW, RHT, 'Bus sự kiện', 'Trong tiến trình', 'Redis, cache: chỉ thiết kế')
 cont(LX, rows['ai'][0], LW, RHT, 'Dịch vụ AI', 'Python, FastAPI', 'Tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá')
 
 blocks = [('Nền tảng chung:', 'identity, notification, media'), ('Nguồn cung:', 'supplier, catalog, inventory'),
@@ -297,8 +297,8 @@ s.box(LXc, R[1] + 124, LWc, 272, [('Dịch vụ AI', 23, 700, INK, False), ('[Co
       ('vector truy vấn, dự báo giá', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1], pad=6)
 link(s, [(COLX[0], R[2] + 60), (LXc + LWc, R[2] + 60)])                     # thu mua <-> AI
 link(s, [(COLX[0], R[1] + 150), (LXc + LWc, R[1] + 150)])  # catalog <-> AI
-s.box(LXc, R[3] - 18, LWc, MH + 48, [('Hàng đợi sự kiện và cache (Redis)', 23, 700, INK, False), ('[Container: Redis]', 22, 400, '#1a4f86', False),
-      ('phát, nhận sự kiện', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
+s.box(LXc, R[3] - 18, LWc, MH + 48, [('Bus sự kiện', 23, 700, INK, False), ('[Trong tiến trình]', 22, 400, '#1a4f86', False),
+      ('Redis: chỉ thiết kế', 22, 400, INK, False)], fill=CONT[0], stroke=CONT[1])
 link(s, [(LXc + LWc, R[3] + MH / 2), (200, R[3] + MH / 2)])                    # chạm biên máy chủ nghiệp vụ
 link(s, [(LXc + 50, R[1] + 396), (LXc + 50, R[3] - 18)])                              # Redis <-> AI
 ext(s, LXc, R[4], LWc, 96, 'Google', 'đăng nhập; định danh', True, name_size=22, tag=False)
@@ -413,7 +413,7 @@ leg = (LEG_PERSON + ('<span><i class="sw" style="background:%s;border-color:%s;b
        ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun của máy chủ nghiệp vụ</span>' % BLK['gd'][1]) +
        ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài</span>' % EXT) +
        ('<span>%sGọi trực tiếp</span>' % icon()) + ('<span>%sGọi và nhận kết quả</span>' % icon(both=True)) +
-       ('<span>%sSự kiện qua Redis, mỗi bên nhận một mũi tên</span>' % icon(dash=True, color='#6b4fa0')))
+       ('<span>%sSự kiện qua bus sự kiện, mỗi bên nhận một mũi tên</span>' % icon(dash=True, color='#6b4fa0')))
 io.open(os.path.join(OUT, 'luong-don-le.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
     'Ngoại lệ: thanh toán thất bại hoặc quá 15 phút thì Bán lẻ hủy đơn, phát OrderCancelled, Tồn kho nhả giữ chỗ. COD đủ điều kiện bỏ qua bước 4–9. Ở bước 19, mô-đun Thanh toán gọi dịch vụ hóa đơn điện tử, là hệ thống ngoài chạy bản giả lập (hình 5.5). Kết nối VNPay, GHN qua webhook chỉ thiết kế.'))
