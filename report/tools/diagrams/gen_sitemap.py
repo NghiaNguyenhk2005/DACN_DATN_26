@@ -120,7 +120,7 @@ s.h = int(bottom2 + 6)
 
 leg = ('<span><i class="sw" style="background:#1a5fa8;border-color:#0f3d6e"></i>Ứng dụng</span>'
        '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
-       '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang (cấp 3 ở Phụ lục T)</span>'
+       '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang</span>'
        '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế</span>')
 io.open(os.path.join(OUT, 'sitemap-tong-quan.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,

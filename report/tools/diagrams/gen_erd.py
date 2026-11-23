@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Đọc schema.dbml, sinh các hình ERD (tools/design/erd-*.html) và Phụ lục K (backmatter/phuluc-csdl.tex)
+# Đọc schema.dbml, sinh các hình ERD (tools/design/erd-*.html) và Phụ lục D (backmatter/phuluc-csdl.tex)
 import html, io, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from svgkit import Svg, BLK, FONT
@@ -239,7 +239,7 @@ def draw_cell(s, c, x, y, bw):
                    '#44524b' if strong else '#6b7872', 'end')
     if c['more']:
         yy += 26
-        s.text(x + 12, yy - 8, '… +%d cột khác (xem Phụ lục K)' % c['more'], FS_DESC - 1, 400, '#7a8782', 'start',
+        s.text(x + 12, yy - 8, '… +%d cột khác (xem Phụ lục D)' % c['more'], FS_DESC - 1, 400, '#7a8782', 'start',
                italic=True)
 
 
@@ -700,7 +700,7 @@ FIGS = [
 ]
 
 
-# ---------------------------------------------------------------- Phụ lục K
+# ---------------------------------------------------------------- Phụ lục D
 def tex(s):
     s = s.replace('\\', '\\textbackslash{}')
     for a, b in (('&', '\\&'), ('%', '\\%'), ('#', '\\#'), ('_', '\\_'), ('$', '\\$'), ('{', '\\{'), ('}', '\\}')):
@@ -757,11 +757,11 @@ def appendix():
     n_col = sum(len(TABLES[t]['cols']) for t in ORDER)
     n_fk = sum(1 for t in ORDER for c in TABLES[t]['cols'] if c['ref'])
     L = []
-    L.append('% Phụ lục K — từ điển dữ liệu. SINH TỰ ĐỘNG từ schema.dbml bằng tools/diagrams/gen_erd.py; không sửa tay.')
+    L.append('% Phụ lục D — từ điển dữ liệu. SINH TỰ ĐỘNG từ schema.dbml bằng tools/diagrams/gen_erd.py; không sửa tay.')
     L.append('')
-    L.append('\\section*{Phụ lục K. Từ điển dữ liệu}')
+    L.append('\\section*{Phụ lục D. Từ điển dữ liệu và sơ đồ ERD}')
     L.append('\\label{apdx:tudien}')
-    L.append('\\addcontentsline{toc}{section}{Phụ lục K. Từ điển dữ liệu}')
+    L.append('\\addcontentsline{toc}{section}{Phụ lục D. Từ điển dữ liệu và sơ đồ ERD}')
     L.append('')
     L.append('Cơ sở dữ liệu gồm %d bảng, %d cột, chia thành 13 schema trùng tên và ranh giới với 13 mô-đun tại '
              'Bảng~\\ref{tab:module-io}; sơ đồ quan hệ từ Hình~\\ref{fig:erd-tong-quan} đến Hình~\\ref{fig:erd-danh-gia-van-hanh}. Mỗi bảng dưới '
