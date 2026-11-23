@@ -1403,6 +1403,50 @@ merge vào `main` xung đột 81 điểm trong ít nhất 40 file (báo cáo, e2
 **Đánh đổi:** hai lần squash cũ vẫn nằm trong lịch sử `main` (không sửa vì không force-push). Repo vẫn cho phép squash và rebase, `main` và
 `develop` không có branch protection nên GitHub không chặn nếu bấm nhầm; có thể dùng ruleset giới hạn kiểu gộp cho `main` (chưa làm).
 
+### Dịch vụ AI nội bộ: POST /embed bằng BGE-M3, EmbeddingProvider ở API, bản băm cho test — 2026-11-23
+**Quyết định:**
+- `apps/ai` (Python, FastAPI) có `GET /health` và `POST /embed` (1–64 câu, vector 1024 chiều đã chuẩn hóa L2). Mô hình nạp ở luồng
+  nền: `/health` báo `loading`, `/embed` trả 503 cho tới khi xong. Token nội bộ `AI_SERVICE_TOKEN` bắt buộc, gửi ở header
+  `X-Internal-Token`; hợp đồng mô tả ở `apps/ai/README.md`, không vào `openapi.yaml`.
+- Phía API: `EmbeddingProvider` (abstract) với `HttpEmbeddingProvider` (hết hạn 2 giây, chia lô 64, lỗi ném
+  `EmbeddingUnavailableError`) và `HashingEmbeddingProvider` cho test. Có `AI_SERVICE_URL` + `AI_SERVICE_TOKEN` thì bật,
+  không thì provider là `null` và nơi dùng lùi về từ điển khái niệm; đặt URL mà thiếu token thì từ chối khởi động.
+- Bộ băm của Python và của API dùng cùng thuật toán và cho cùng vector (test API kiểm bằng một vector tính từ bản Python).
+- Không thêm `package.json` vào `apps/ai` (kế hoạch ban đầu muốn để `turbo dev` gọi `uv run`): thêm sẽ biến nó thành thành viên
+  pnpm workspace, làm `pnpm install --frozen-lockfile` lệch lockfile và kéo `uv` vào job `ci`. Python có job `ai` riêng ở CI.
+- `ruff` bỏ qua `forecast/` (mã dự báo giá có bộ kiểm riêng sau này).
+**Bối cảnh:** W8-8 trong kế hoạch tuần 8, chặn tìm kiếm ngữ nghĩa, sản phẩm tương tự và các chỉ số AI của bảng 5.7.
+**Đánh đổi:** `turbo dev` chưa khởi động được dịch vụ AI (chạy tay bằng `uvicorn`); CI không kiểm mô hình thật, chỉ bộ nhúng
+băm, nên chất lượng nhúng thật chỉ kiểm bằng lần chạy tay với BGE-M3 (đã làm ngày 23/11, xem `apps/ai/README.md`).
+
+### Tìm theo vector BGE-M3 trộn từ điển khái niệm; sản phẩm tương tự theo láng giềng vector — 2026-11-23
+**Quyết định:**
+- `VectorSemanticSearch` (chỉ mục vector trong bộ nhớ, nhúng khi khởi động ở nền, nhúng lại khi nghe `ProductChanged`) chạy khi có
+  `EmbeddingProvider`; chưa dựng xong chỉ mục hoặc dịch vụ AI lỗi thì lùi về từ điển khái niệm, không trả 5xx.
+- Tham số chốt (`search/vector-config.ts`): `MIN_SIM = 0,45`; từ điển khái niệm trộn vào nhánh vector với trọng số 0,5 (KHÔNG bỏ
+  từ điển); `MIN_SIM_SIMILAR = 0,5`; tối đa 50 kết quả vector; sản phẩm tương tự hiển thị 5 (trước là 4).
+- Văn bản nhúng mỗi sản phẩm: tên, đường dẫn danh mục (cha > lá), vùng trồng, chứng nhận, mô tả. Thử bỏ mô tả, bỏ vùng và chứng
+  nhận, chỉ tên và danh mục: không biến thể nào hơn rõ rệt (Precision@5 sản phẩm tương tự 0,51–0,63 so với 0,65 của bản đầy đủ có đường dẫn cha).
+**Số đo (BGE-M3 thật, dữ liệu mẫu 39 sản phẩm; nDCG@10 / Recall@10 / P@5 / câu ngoài danh mục trả rỗng):**
+- Bộ chính (33 câu trong danh mục + 3 ngoài): chỉ từ khóa 0,59/0,56/0,58/1,00; từ khóa + từ điển 1,00/1,00/1,00/1,00; từ khóa + vector
+  0,69/0,67/0,65/1,00; bản chốt (vector + từ điển 0,5) 0,95/0,97/0,90/1,00.
+- Bộ độc lập (15 + 3): 0,62/0,61/0,61/0,33; 0,89/0,92/0,87/0,33; 0,64/0,68/0,61/0,33; bản chốt 0,88/0,92/0,85/0,33.
+- Bộ mở rộng (10 + 2, câu từ điển không có khóa, gán nhãn trước khi chạy): 0,02/0,02/0,02/0,50; 0,52/0,52/0,50/0,50; 0,53/0,63/0,47/0,50;
+  bản chốt 0,67/0,74/0,55/0,50.
+- Độ trễ `/products?q=` với 66 câu chưa có trong bộ nhớ đệm: p50 129 ms, p95 173 ms, max 251 ms (một máy, tuần tự, dịch vụ AI cục bộ);
+  p95 dưới 1 giây.
+- Sản phẩm tương tự (39 sản phẩm gán nhãn tay): Precision@5 cùng danh mục 0,52 (chỉ 33% sản phẩm đủ 5 gợi ý) lên vector 0,65 (100% đủ 5).
+  Kết quả không đổi khi ngưỡng giữa 0,3 và 0,6.
+**Bối cảnh:** kế hoạch giả định một ngưỡng cosine đủ để câu ngoài danh mục trả rỗng. Đo thực tế: cosine cao nhất của câu ngoài danh mục
+là 0,38–0,46, trong khi sản phẩm liên quan của câu trừu tượng ("nướng", "trẻ em", "làm sinh tố") chỉ 0,30–0,45; chỉ 23 trên 48 câu có
+cosine liên quan thấp nhất vẫn cao hơn cosine nhiễu cao nhất. Ngưỡng 0,5 trả rỗng cả ba câu ngoài danh mục nhưng bỏ phần lớn câu trừu tượng;
+0,4 giữ câu trừu tượng nhưng để lọt câu ngoài danh mục (bộ chính còn 0,33). 0,45 là mức lớn nhất không làm tệ hơn bản không vector ở việc
+chặn câu ngoài danh mục.
+**Đánh đổi:** bản chốt thấp hơn bản từ khóa + từ điển một chút trên bộ chính (0,95 so với 1,00) và bộ độc lập (0,88 so với 0,89), vì từ điển
+được viết khi đã biết nhãn của hai bộ đó; đổi lại hơn rõ trên bộ mở rộng (0,67 so với 0,52) và không còn phụ thuộc hoàn toàn vào việc người viết từ
+điển đoán đủ khái niệm. Hơn bản chỉ từ khóa +61% (chính), +42% (độc lập) về nDCG@10, Recall@10 không thấp hơn; đạt mốc Phụ lục L. Giới hạn: 39 sản
+phẩm là quá ít để có ý nghĩa thống kê; nhãn gán tay một người; bộ mở rộng chỉ 10 câu; sản phẩm tương tự 0,65 chỉ vừa qua mốc 0,6.
+
 ### Dự báo giá theo tháng trên giá FAOSTAT của bốn mặt hàng; dữ liệu mô phỏng chỉ để thử pipeline — 2026-11-23
 **Quyết định:**
 - FR12.2 đổi từ chuỗi tuần sang chuỗi THÁNG. Nguồn huấn luyện: FAOSTAT Producer Prices, giá nhà sản xuất của Việt Nam
@@ -1452,3 +1496,7 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 `report/schema.dbml`; kèm 10 ERD theo miền, Phụ lục D còn 20 trang, tổng PDF 160 trang. Đã xóa ảnh và HTML của các hình không còn dùng
 (8 sơ đồ hoạt động, 5 use case chi tiết, 3 cụm BMC, luồng đơn lẻ, OCOP, 2 tuần tự phụ).
 **SỬA 2026-11-24:** Phụ lục V (danh mục sự kiện) được giữ lại thành **Phụ lục G**: `apps/api/test/events.e2e-spec.ts` đọc `report/backmatter/phuluc-sukien.tex` để kiểm 17 tên sự kiện trong mã khớp báo cáo, nên xóa file làm CI đỏ. Phụ lục nay là A–G; nội dung đã sửa từ "phát vào Redis" thành bus sự kiện trong tiến trình.
+
+
+SỬA 24/11 (mục "Dự báo giá theo tháng..."): "8 trên 30 sản phẩm" sai vì mới đếm 30 sản phẩm đầu của dữ liệu mẫu; thực tế dữ liệu mẫu có 39 sản phẩm
+và 10 sản phẩm khớp bốn mặt hàng FAOSTAT (khoai tây 1, nấm 4, chè 2, cà phê 3), 29 sản phẩm không có mặt hàng tương ứng.

@@ -1,0 +1,27 @@
+[project]
+name = "farmery-ai"
+version = "0.1.0"
+description = "Dịch vụ AI nội bộ của Farmery: nhúng văn bản bằng BGE-M3 (POST /embed)"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "sentence-transformers>=3.0",
+  "numpy>=1.26",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+# Pipeline dự báo (forecast/) là mã riêng của phần dự báo giá, chưa áp bộ quy tắc này.
+extend-exclude = ["forecast"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
