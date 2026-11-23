@@ -175,7 +175,7 @@ LEGEND = (('<span><i class="sw" style="background:%s;border-color:%s;border-radi
           ('<span><i class="sw" style="background:#fff;border-color:%s"></i>Mô-đun (màu theo khối)</span>' % BLK['gd'][1]) +
           ('<span><i class="sw" style="background:%s;border-color:%s"></i>Hệ thống ngoài, dịch vụ AI</span>' % EXT) +
           ('<span>%sGọi</span>' % icon(ARR)) + ('<span>%sTrả về</span>' % icon(GREY, True, True)) +
-          ('<span>%sSự kiện qua Redis</span>' % icon(EVT, True)) +
+          ('<span>%sSự kiện qua bus sự kiện</span>' % icon(EVT, True)) +
           '<span>Khung alt: các nhánh loại trừ nhau · opt: tùy chọn · loop: lặp</span>')
 
 # ======================= 1. ĐẶT HÀNG VÀ THANH TOÁN ĐƠN LẺ =======================
