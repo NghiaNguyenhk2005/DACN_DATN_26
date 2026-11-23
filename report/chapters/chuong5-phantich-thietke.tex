@@ -336,7 +336,16 @@ Hình~\ref{fig:erd-tong-quan} là ma trận phụ thuộc giữa các schema: m�
 \subsection{Thiết kế mô-đun AI}
 \label{sec:thietkeAI}
 
-Cả ba mô-đun AI (Chương~\ref{chap:coso}) đi theo một luồng chung năm bước: \emph{thu thập} sự kiện từ quy trình nghiệp vụ (lượt xem, mua, đơn, đánh giá, hủy đơn); \emph{tiền xử lý} và trích đặc trưng; \emph{huấn luyện và suy luận} (dự báo giá tính lại theo lô định kỳ; vector sản phẩm tính khi sản phẩm được duyệt hoặc sửa mô tả; tìm kiếm và sản phẩm tương tự suy luận trực tuyến); \emph{phục vụ kết quả} qua API nội bộ (trang kết quả tìm kiếm, trang sản phẩm; màn hình thu mua \emph{(chỉ thiết kế)}); \emph{vòng phản hồi} ghi nhận phản ứng của người dùng để bổ sung tập đánh giá. Bảng~\ref{tab:tinhnangAI} cụ thể hóa cho từng tính năng.
+Cả ba mô-đun AI (Chương~\ref{chap:coso}) đi theo một luồng chung năm bước: \emph{thu thập} sự kiện từ quy trình nghiệp vụ (lượt xem, mua, đơn, đánh giá, hủy đơn); \emph{tiền xử lý} và trích đặc trưng; \emph{huấn luyện và suy luận} (dự báo giá tính lại theo lô định kỳ; vector sản phẩm tính khi sản phẩm được duyệt hoặc sửa mô tả; tìm kiếm và sản phẩm tương tự suy luận trực tuyến); \emph{phục vụ kết quả} qua API nội bộ (trang kết quả tìm kiếm, trang sản phẩm; màn hình thu mua \emph{(chỉ thiết kế)}); \emph{vòng phản hồi} ghi nhận phản ứng của người dùng để bổ sung tập đánh giá. Hình~\ref{fig:ai-luong} vẽ luồng này cho từng tính năng và Bảng~\ref{tab:tinhnangAI} cụ thể hóa thêm.
+
+\begin{figure}[H]
+\centering
+\begin{adjustbox}{max totalsize={\textwidth}{0.5\textheight},center}
+\includegraphics[width=\textwidth]{image/comparison/ai-luong-du-lieu.png}
+\end{adjustbox}
+\caption{Luồng dữ liệu năm bước của ba tính năng AI}
+\label{fig:ai-luong}
+\end{figure}
 
 \begingroup
 \tblsetup\tblzebra
