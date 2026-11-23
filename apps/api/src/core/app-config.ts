@@ -3,6 +3,11 @@ export interface SmtpConfig {
   from: string;
 }
 
+export interface AiServiceConfig {
+  url: string;
+  token: string;
+}
+
 export interface AppConfig {
   production: boolean;
   port: number;
@@ -23,6 +28,8 @@ export interface AppConfig {
   storage: StorageKind;
   /** Chỉ có khi storage = "prisma". */
   databaseUrl: string | null;
+  /** Dịch vụ AI nội bộ (apps/ai); null thì không bật vector, tìm kiếm dùng từ điển khái niệm. */
+  ai: AiServiceConfig | null;
 }
 
 export type StorageKind = "memory" | "prisma";
@@ -72,6 +79,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const databaseUrl = env.DATABASE_URL?.trim() || null;
   if (storageRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi STORAGE=prisma");
 
+  const aiUrl = env.AI_SERVICE_URL?.trim();
+  const aiToken = env.AI_SERVICE_TOKEN?.trim();
+  if (aiUrl && !/^https?:\/\//.test(aiUrl)) throw new Error("AI_SERVICE_URL phải bắt đầu bằng http:// hoặc https://");
+  if (aiUrl && !aiToken) throw new Error("Thiếu AI_SERVICE_TOKEN khi đã đặt AI_SERVICE_URL");
+  const ai = aiUrl && aiToken ? { url: aiUrl, token: aiToken } : null;
+
   return {
     production,
     port: int(env, "PORT", 4000, 1, 65535),
@@ -97,5 +110,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     accessLog: flag(env, "LOG_REQUESTS", production),
     storage: storageRaw,
     databaseUrl,
+    ai,
   };
 }
