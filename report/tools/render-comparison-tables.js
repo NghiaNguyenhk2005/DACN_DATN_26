@@ -28,6 +28,7 @@ const pages = [
   'erd-giao-hang-doi-tra.html',
   'erd-danh-gia-van-hanh.html',
   'sitemap-tong-quan.html',
+  'ai-luong-du-lieu.html',
   // Sơ đồ hoạt động UML; HTML sinh từ tools/diagrams/gen_activity.py
   'act-thu-mua.html',
   'act-dat-hang.html',

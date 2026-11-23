@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from svgkit import Svg, page, wrap
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'design')
-W = 1340
+W = 1360
 INK = '#16241e'
 GREY = '#8a948f'
 LINE = '#44524b'
@@ -119,7 +119,7 @@ for i, (name, code, pages) in enumerate(STAFF):
 s.h = int(bottom2 + 6)
 
 leg = ('<span><i class="sw" style="background:#1a5fa8;border-color:#0f3d6e"></i>Ứng dụng</span>'
-       '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:3px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
+       '<span><i class="sw" style="background:#eaf7ef;border-color:#1f8a4c;border-width:5px"></i>Cấp 1: khu vực, vai trò, hoặc nhóm trang dùng chung</span>'
        '<span><i class="sw" style="background:#fff;border-color:#1f8a4c"></i>Cấp 2: trang, nhóm trang</span>'
        '<span><i class="sw" style="background:#f6f7f6;border-color:#8a948f;border-style:dashed"></i>Chỉ thiết kế</span>')
 io.open(os.path.join(OUT, 'sitemap-tong-quan.html'), 'w', encoding='utf-8').write(page(

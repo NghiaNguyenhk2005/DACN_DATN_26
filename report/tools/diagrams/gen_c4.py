@@ -344,7 +344,7 @@ leg = ''.join('<span><i class="sw" style="background:%s;border-color:%s;border-w
       ('<span>%sMột chiều</span><span>%sHai chiều</span>' % (icon(), icon(both=True)))
 io.open(os.path.join(OUT, 'c4-module.html'), 'w', encoding='utf-8').write(page(
     '', '', s.svg(), leg,
-    'Chữ đơn cách: tên schema. Mũi tên chạm biên máy chủ nghiệp vụ áp cho mọi mô-đun; dữ liệu vào, ra từng mô-đun xem Bảng 5.6, phụ thuộc khác đi qua sự kiện.'))
+    'Chữ đơn cách: tên schema. Mũi tên chạm biên máy chủ nghiệp vụ áp cho mọi mô-đun; dữ liệu vào, ra từng mô-đun xem bảng 13 mô-đun ở Chương 5, phụ thuộc khác đi qua sự kiện.'))
 
 # ======================= LUỒNG ĐẦU–CUỐI MỘT ĐƠN LẺ =======================
 # (khóa, tên, schema/ghi chú, kiểu): kiểu = person | mod:<khối> | ext
