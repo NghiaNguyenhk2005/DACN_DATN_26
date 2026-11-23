@@ -524,3 +524,4 @@ Status: open
   và nguyên tắc "Farmery không bán sỉ" ở Ch.1, Ch.4, Ch.8.
 - Ch.6 đã viết theo thiết kế (giao thẳng), có ghi chú rằng mã còn lệch.
 Status: open
+**Cập nhật 2026-11-23:** đã sửa chỗ nhắc Redis ở Ch.5, Ch.6, Ch.8, Phụ lục E, ảnh C4 (container, mô-đun) và tuần tự: nay ghi bus sự kiện trong tiến trình, Redis và MinIO là chỉ thiết kế. Phụ lục V đã bỏ khỏi báo cáo. Ý "chống lặp trong bộ nhớ" vẫn ở mức một câu ngắn ở Ch.5; còn lại khi lên PostgreSQL (phát sau commit hoặc outbox).
