@@ -515,3 +515,12 @@ Status: open
 - Bên nhận chạy trong yêu cầu của bên phát: không đặt việc nặng (gọi dịch vụ ngoài) trong bên nhận; AI W8-8 nghe `ProductChanged` phải đẩy việc
   nhúng ra nền, không chờ.
 Status: open
+
+### Bán sỉ: mã còn gán kho trung chuyển Farmery cho đơn sỉ, trái thiết kế — Claude — 2026-11-23
+- `apps/api/src/modules/wholesale/wholesale.service.ts` (khoảng dòng 225–230) và dữ liệu mẫu ở `quote-request.repository.ts` đặt
+  `warehouseHub: "Kho trung chuyển Farmery Đức Trọng, Lâm Đồng"` khi hợp đồng sỉ được giao kết.
+- Thiết kế (Ch.4 quy trình 6, ToS Phụ lục B) là nhà cung cấp tự giao hoặc thuê 3PL giao thẳng cho khách sỉ, Farmery không giữ hàng sỉ.
+  Cần bỏ hoặc đổi trường `warehouseHub` (và các màn hình đang hiển thị nó) cho khớp; nếu nhóm muốn giữ kho trung chuyển thì phải đổi thiết kế
+  và nguyên tắc "Farmery không bán sỉ" ở Ch.1, Ch.4, Ch.8.
+- Ch.6 đã viết theo thiết kế (giao thẳng), có ghi chú rằng mã còn lệch.
+Status: open

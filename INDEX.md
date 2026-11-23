@@ -1,12 +1,13 @@
 # INDEX.md — Chỉ mục file/thư mục
 
-Cập nhật lần cuối: 2026-11-05 (thư mục `design/`; khu nhà cung cấp chia tab Tổng quan · Lô hàng · Sản phẩm · Hồ sơ;
+Cập nhật lần cuối: 2026-11-23 (tinh giản báo cáo: thân Ch.1–8 từ 149 xuống khoảng 78 trang, tổng 290 xuống 181 trang,
+phụ lục từ A–W xuống A–F). Trước đó: 2026-11-05 (thư mục `design/`; khu nhà cung cấp chia tab Tổng quan · Lô hàng · Sản phẩm · Hồ sơ;
 tìm kiếm có gợi ý, mua sỉ, chứng nhận của nhà cung cấp; mô-đun `wholesale` của API).
 Trước đó: 2026-10-21 (khu nhà cung cấp trong shop; endpoint `/seller/*`, `identity`, `operations` của API).
 Trước đó: 2026-10-13 (chuẩn bị prototype làm nền MVP: tiền tố `/api`, nền `apps/api` kiểm hợp đồng,
 13 mô-đun, test e2e; `MVP.md` mục 6; kế hoạch có tuần prototype). Cùng ngày: dựng khung monorepo prototype
 (`apps/shop`, `apps/admin`, `apps/api`, `packages/contract`, `packages/mock-data`, CI); tách báo cáo LaTeX vào `report/`; lược đồ CSDL 13 schema,
-ERD và Phụ lục K sinh từ `schema.dbml`. Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
+ERD và từ điển dữ liệu (nay là Phụ lục D) sinh từ `schema.dbml`. Trước đó: 2026-10-08 (phiên siết phạm vi theo trục bán lẻ
 đầu–cuối: hai ứng dụng, sáu vai trò nội bộ, 13 mô-đun, Phụ lục U–V, vẽ lại C4, use case, sơ đồ hoạt động UML,
 sitemap; thân báo cáo 125 trang).
 
@@ -55,9 +56,9 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 | File | Vai trò |
 |---|---|
 | `main.tex` | File LaTeX chính, `\input` toàn bộ front/back matter + 8 chương theo đúng thứ tự |
-| `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục K (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
+| `schema.dbml` | Lược đồ CSDL, 13 schema / 65 bảng (`schema.table`); khóa ngoại chỉ trong cùng schema, tham chiếu xuyên schema ghi `→ schema.bảng` trong note cột (RB3). Nguồn sinh ERD và Phụ lục D (`tools/diagrams/gen_erd.py`); vẫn dán được vào dbdiagram |
 | `references.bib` | Toàn bộ tài liệu tham khảo, dùng `biblatex` style `ieee` |
-| `main.pdf` | Bản build gần nhất, 286 trang |
+| `main.pdf` | Bản build gần nhất, 181 trang (thân Ch.1–8 khoảng 78 trang) |
 | `package.json` | Tooling: `npm run shot` (Playwright chụp HTML ở `tools/design/` → PNG ở `image/comparison/`); chạy `npm install` trong `report/`, không thuộc pnpm workspace của mã nguồn |
 | `_archive-old-tex/` | File .tex gốc trước khi tái cấu trúc — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10) |
 | `prism-uploads/` | Bản thảo gốc nhóm tải lên ban đầu (`.docx`, `.md`) — chỉ lưu tham khảo trên máy, **không theo dõi trong git** (gitignore từ 13/10); `chapters/_incoming/` cũng vậy |
@@ -71,36 +72,29 @@ Mọi đường dẫn từ đây trở xuống (`chapters/`, `backmatter/`, `too
 
 | File | Nội dung | Trạng thái |
 |---|---|---|
-| `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, đặc thù nông sản, 4 vấn đề V1–V4) · 1.2 Mục tiêu (MT1–MT7, mục tiêu đánh giá) · 1.3 Phạm vi (không gian, thời gian, nội dung, **1.3.4 phạm vi hiện thực**, giới hạn kỹ thuật) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong (9 trang) |
-| `chuong2-kienthuc-nentang.tex` | 2.1 Đặc điểm hàng nông sản · 2.2 Bối cảnh chính sách (**bảng văn bản → nghĩa vụ → tác động thiết kế** `tab:phaply`) · 2.3 Lý thuyết nền (B2B/B2C/B2B2C, 1P/3P) · 2.4 Ứng dụng AI (tìm kiếm ngữ nghĩa, sản phẩm tương tự, dự báo giá) | Xong (20 trang); còn TODO trích dẫn mục 2.1 |
-| `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế · 3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này · 3.4 Kết chương | Xong (7 trang); còn TODO 3.1 |
-| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (hai luồng 3P/1P, dòng thu và **điều kiện hòa vốn 1P**, 10 quy trình, dòng tồn, **giao hàng ba chặng**, **đổi trả–khiếu nại kèm cam kết thời gian**, chính sách pháp lý) · 4.2 Mô tả hệ thống (5 khối, **hai ứng dụng**, sơ đồ ngữ cảnh C4, nhóm người dùng + **6 vai trò nội bộ**, persona, customer journey) · 4.3 Yêu cầu (user story → FR1–FR13 có quy ước *(chỉ thiết kế)*, 5 mã đã rút; NFR1–NFR9; MoSCoW 11 Must + 2 Should) | Xong (46 trang) |
-| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: **sơ đồ hoạt động UML** (2 ở thân, 8 ở Phụ lục R) · use case (tổng quan + 5 chi tiết ở Phụ lục S; đặc tả UC-B4, UC-C4, **UC-C6** ở thân) · 5.2 Giải pháp công nghệ (2 ứng dụng, monorepo, NestJS, Prisma, PostgreSQL, dịch vụ bên thứ ba, AI) · 5.3 Thiết kế: kiến trúc C4 (container + **bảng I/O 7 container**, mô-đun + **bảng I/O 13 mô-đun**, **luồng một đơn lẻ**) · sitemap hai ứng dụng · **lược đồ tuần tự** (2 ở thân: đặt hàng, hợp đồng sỉ; 2 ở Phụ lục W) · **lược đồ lớp miền** (17 lớp, `fig:class-mien`) · CSDL 13 schema + **ERD hai hình** (`fig:erd`, `fig:erd2`) · AI (`tab:tinhnangAI`) · chính sách bên thứ ba | Xong phần thiết kế; API, UI/UX, test case còn TODO |
-| `chuong6-hienthuc-kiemthu.tex` | Môi trường, triển khai, các module, kiểm thử | §6.1.1 danh sách công nghệ; còn lại TODO |
-| `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2–7.5 · 7.6 Kết chương | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
+| `chuong1-gioithieu.tex` | 1.1 Động cơ (bối cảnh, 4 vấn đề V1–V4) · 1.2 Mục tiêu (MT1–MT7, mục tiêu đánh giá) · 1.3 Phạm vi (không gian, thời gian, nội dung, mức hiện thực, giới hạn kỹ thuật) · 1.4 Ý nghĩa · 1.5 Cấu trúc báo cáo | Xong (5 trang) |
+| `chuong2-kienthuc-nentang.tex` | 2.1 Đặc điểm hàng nông sản (phạm vi, khác biệt, chứng nhận, vì sao xuất khẩu ngoài phạm vi) · 2.2 Bối cảnh chính sách (**bảng pháp lý** `tab:phaply`) · 2.3 Lý thuyết nền (hai trục TMĐT và SFSC, GS1/blockchain/TraceViet, uy tín, công nghệ–doanh thu–kho 3PL) · 2.4 Ứng dụng AI (gồm nguồn dữ liệu giá) | Xong (8 trang) |
+| `chuong3-congtrinh-lienquan.tex` | 3.1 Nghiên cứu liên quan · 3.2 Nền tảng trong nước/quốc tế (một bảng so sánh, bảng quốc tế gộp thành đoạn) · 3.3 Vì sao các nền tảng hiện có chưa đi theo hướng này · 3.4 Khoảng trống nghiên cứu (`tab:researchgap`) | Xong (5 trang); còn TODO 3.1 |
+| `chuong4-hethong-dexuat.tex` | 4.1 Ngữ cảnh nghiệp vụ (hai luồng, **BMC dạng bảng `tab:bmc`**, điều kiện hòa vốn 1P, 10 quy trình dạng gạch đầu dòng, bảng `tab:chi-thiet-ke`, chính sách) · 4.2 Mô tả hệ thống (5 khối, hai ứng dụng, sơ đồ ngữ cảnh C4, nhóm người dùng + 6 vai trò, 4 persona dạng bảng) · 4.3 Yêu cầu (FR1–FR13 và NFR1–NFR9 dạng bảng `tab:fr`, `tab:nfr`; yêu cầu dữ liệu) | Xong (24 trang) |
+| `chuong5-phantich-thietke.tex` | 5.1 Phân tích: 2 sơ đồ hoạt động UML (thu mua, đặt hàng) · use case tổng quan · đặc tả UC-B4, UC-C4, UC-C6 · 5.2 Giải pháp công nghệ (một bảng `tab:congnghe` + đoạn AI) · 5.3 Thiết kế: kiến trúc C4 (container, 13 mô-đun, bảng I/O) · sitemap · lược đồ tuần tự (đặt hàng, hợp đồng sỉ) · lược đồ lớp miền · CSDL (chỉ ERD tổng quan; 10 ERD theo miền ở Phụ lục D) · mô-đun AI · chính sách bên thứ ba | Xong (23 trang) |
+| `chuong6-hienthuc-kiemthu.tex` | 6.1 Hiện thực (môi trường, triển khai, các mô-đun, giải thuật) · 6.2 Giao diện, API và kiểm thử (TODO: thiết kế API, UI/UX, test case, kết quả — chuyển từ 5.3.7–5.3.9 cũ) | §6.1 đã có nội dung các mô-đun; §6.2 còn TODO |
+| `chuong7-danhgia.tex` | 7.1 Mục tiêu và phương pháp (6 trụ cột) · 7.2 Chức năng · 7.3 Back-end · 7.4 Front-end · 7.5 Mô-đun AI (không còn Kết chương) | Phương pháp, công cụ đã chốt; số liệu chờ đo thật |
 | `chuong8-tongket.tex` | Kết quả · Hạn chế · Hướng phát triển (gồm các mã FR đã rút: TraceViet, ký số, khan hiếm, thuê kho, chào sỉ tồn dư, đội giao riêng) | Phần hạn chế và hướng phát triển xong |
 
-## `report/backmatter/` — Phụ lục A–W
+## `report/backmatter/` — Phụ lục A–F
 
-Phụ lục dài được tách thành file riêng để thân báo cáo không bị bảng chiếm chỗ. Phụ lục mới nối đuôi (U, V)
-thay vì đánh lại chữ cái.
+Phụ lục đã được tinh giản từ 21 mục (A–W) xuống 6 mục để thân báo cáo ngắn lại; chữ cái đánh lại liên tục. Mỗi
+phụ lục dùng `\section*` nên trong thân phải viết thẳng "Phụ lục B", không dùng `\ref`.
 
 | File | Nội dung |
 |---|---|
-| `phuluc.tex` | Khung phụ lục A, C (còn TODO) và E (Business Model Canvas dạng bảng); `\input` các file bên dưới |
-| `phuluc-khaosat.tex` | **Phụ lục B** — bộ công cụ đánh giá khả dụng |
-| `phuluc-tos.tex` | **Phụ lục D — Điều khoản dịch vụ**, 17 điều, viết để đọc độc lập |
-| `phuluc-bang.tex` | **Phụ lục F** ánh xạ vấn đề–mục tiêu · **G** đối chiếu nông sản với hàng hóa khác · **H** chứng nhận nông sản |
-| `phuluc-congnghe.tex` | **Phụ lục I** — đối sánh 17 hạng mục công nghệ và 5 nhóm AI; cột nhận xét là nhận định của nhóm |
-| `phuluc-yeucau.tex` | **Phụ lục J** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
-| `phuluc-csdl.tex` | **Phụ lục K** — từ điển dữ liệu đủ 13 schema, mỗi schema một bảng `tab:db-<schema>` (~30 trang). **Sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay |
-| `phuluc-nguong.tex` | **Phụ lục L** — ngưỡng NFR và ngưỡng AI kèm căn cứ |
-| `phuluc-matran.tex` | **Phụ lục M** — ma trận Priority/Feasibility/Testability cho FR và NFR |
-| `phuluc-xuatkhau.tex` | **Phụ lục N** khoảng cách với thị trường xuất khẩu · **O** nguồn dữ liệu nông sản cho AI |
-| `phuluc-chitiet.tex` | **P** số liệu OCOP · **Q** hành trình khách hàng và 13 nguồn giao dịch kho · **R** 8 sơ đồ hoạt động · **S** 5 sơ đồ use case chi tiết, đặc tả UC-B2, UC-B5, UC-D4, UC-C7 · **T** sitemap cấp 3 theo hai ứng dụng kèm mã FR |
-| `phuluc-chinhsach.tex` | **Phụ lục U** — bộ 10 chính sách (`tab:bochinhsach`) và toàn văn U.1 kiểm hàng, U.2 đổi trả–hoàn tiền, U.3 bảo mật |
-| `phuluc-sukien.tex` | **Phụ lục V** — danh mục 17 sự kiện nghiệp vụ (phát bởi, nhận bởi, tác dụng) |
-| `phuluc-tuantu.tex` | **Phụ lục W** — lược đồ tuần tự đăng lô–duyệt–QR (`fig:seq-duyet-lo`) và đánh giá (`fig:seq-danh-gia`) |
+| `phuluc.tex` | Khung phụ lục; `\input` các file bên dưới theo thứ tự A–F |
+| `phuluc-khaosat.tex` | **Phụ lục A** — bộ công cụ đánh giá khả dụng (A.1–A.6) |
+| `phuluc-tos.tex`, `phuluc-chinhsach.tex` | **Phụ lục B** — B.1 Điều khoản dịch vụ (17 điều, viết để đọc độc lập) · B.2 bộ chính sách (`tab:bochinhsach`) |
+| `phuluc-yeucau.tex` | **Phụ lục C** — truy vết user story → yêu cầu, bảng FR theo nhóm người dùng |
+| `phuluc-csdl.tex`, `phuluc-erd.tex` | **Phụ lục D** — từ điển dữ liệu 13 schema `tab:db-<schema>` (**sinh tự động** từ `schema.dbml` bằng `gen_erd.py`, không sửa tay) và 10 ERD theo miền (viết tay, `fig:erd-*`) |
+| `phuluc-nguong.tex`, `phuluc-matran.tex` | **Phụ lục E** — E.1 ngưỡng NFR và AI kèm căn cứ (`tab:nguongNFR`, `tab:nguongAI`) · E.2 ma trận Priority/Feasibility/Testability |
+| `phuluc-congnghe.tex` | **Phụ lục F** — đối sánh các hướng tiếp cận cho 5 nhóm AI (`tab:sosanh-ai`); bảng công nghệ nền đã gộp vào `tab:congnghe` ở Ch.5 |
 | `kehoach.tex` | Kế hoạch hai giai đoạn (giữa kỳ 15/10/2026, cuối kỳ 31/12/2026) kèm rủi ro tiến độ; tuần 4 (16–22/10) là prototype, tuần 5 thay lớp lưu trữ bằng Prisma |
 | `tailieuthamkhao.tex` | `\printbibliography` |
 
@@ -150,32 +144,29 @@ Quy trình sửa hình (chạy trong `report/`): sửa bộ sinh → `python too
 `sec:yeucauchucnang`, `sec:yeucauphichucnang`; `subsec:mohinhquytrinh`, `sec:sddchitiet`, `sec:giaiphapcongnghe`,
 `sec:kientruc`, `sec:sitemap`, `subsec:tuantu`, `sec:csdl`, `subsec:dacta-csdl`, `subsec:erd`, `sec:thietkeAI`,
 `subsec:nguongAI`, `subsec:chinhsachbenthuba`; `sec:muctieuphuongphap`, `sec:danhgiaux`, `sec:danhgiahieunang`,
-`sec:danhgiaAI`. Phụ lục: `apdx:luudo` (R, nay là sơ đồ hoạt động), `apdx:usecase`, `apdx:sitemap`, `apdx:chinhsach`,
-`apdx:sukien`.
+`sec:danhgiaAI`. Phụ lục: `apdx:tos`, `apdx:chinhsach`, `apdx:nguong`, `apdx:matran`, `apdx:congnghe`, `apdx:khaosat`, `apdx:yeucau`.
 
-**Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:bmc-cum1`–`3`, `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`,
-`fig:act-dat-hang`, `fig:usecase-overview`, `fig:c4-container`,
-`fig:c4-module`, `fig:luong-don-le`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`, `fig:class-mien`, 11 hình ERD `fig:erd-tong-quan`, `fig:erd-dinh-danh`, `fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`, `fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh` (Ch.5); `fig:seq-duyet-lo`, `fig:seq-danh-gia` (Phụ lục W).
-**Hình ở phụ lục:** `fig:ocop` (P); `fig:act-giao-hang`, `fig:act-doi-tra`, `fig:act-dang-ky-ncc`, `fig:act-dang-san-pham`, `fig:act-ban-si`,
-`fig:act-danh-gia`, `fig:act-thu-hoi`, `fig:act-vi-pham` (R); `fig:usecase-nhaban`, `fig:usecase-khachle`,
-`fig:usecase-khachsi`, `fig:usecase-noibo-nguonhang`, `fig:usecase-noibo-vanhanh` (S).
+**Hình ở thân báo cáo:** `fig:thuctrang` (Ch.1); `fig:c4-ngucanh` (Ch.4); `fig:act-thu-mua`, `fig:act-dat-hang`,
+`fig:usecase-overview`, `fig:c4-container`, `fig:c4-module`, `fig:sitemap`, `fig:seq-dat-hang`, `fig:seq-hop-dong-si`,
+`fig:class-mien`, `fig:erd-tong-quan` (Ch.5). **Hình ở Phụ lục D:** 10 hình ERD theo miền `fig:erd-dinh-danh`,
+`fig:erd-thong-bao-tep`, `fig:erd-nha-cung-cap-ton-kho`, `fig:erd-danh-muc`, `fig:erd-ban-le`, `fig:erd-thu-mua`,
+`fig:erd-thanh-toan`, `fig:erd-ban-si`, `fig:erd-giao-hang-doi-tra`, `fig:erd-danh-gia-van-hanh`.
+Các hình đã loại khỏi bản build cùng phụ lục cũ (ảnh vẫn nằm ở `image/comparison/`): `bmc-cum1`–`3`, `act-*` (8 sơ đồ còn lại),
+`usecase-*` chi tiết, `luong-don-le`, `ocop-2024-2025`.
 
-**Bảng ở thân báo cáo:** `tab:phaply` (Ch.2); `tab:sosanhtrongnuoc`, `tab:sosanhquocte`, `tab:researchgap` (Ch.3);
-`tab:hailuong`, `tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:kiemduyet-giaidoan`, `tab:chi-thiet-ke` (Ch.4; ba nhãn trạng thái Đã hiện thực / Chỉ thiết kế / Để sau prototype định nghĩa ở mục Yêu cầu chức năng); `tab:actor-usecase`, `tab:uc-b4`, `tab:uc-c4`,
-`tab:uc-c6`, `tab:container-io`, `tab:module-io`, `tab:tinhnangAI` (Ch.5).
-**Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` (B); `tab:bmc-full` (E); `tab:vande-muctieu` (F);
-`tab:dacdiem-hanghoa` (G); `tab:chungnhan` (H); `tab:sosanh-congnghe`, `tab:sosanh-ai` (I); `tab:truyvet-us`,
-`tab:fr-nguoidung` (J); `tab:db-<schema>` ×13 (K); `tab:nguongNFR`, `tab:nguongAI` (L); `tab:fr-matrix`, `tab:nfr-matrix`
-(M); `tab:khoangcachxuatkhau`, `tab:nguondulieu` (N, O); `tab:customer-journey`, `tab:nguon-giaodich` (Q);
-`tab:uc-b2`, `tab:uc-b5`, `tab:uc-d4`, `tab:uc-c7` (S); `tab:sitemap-chitiet` (T); `tab:bochinhsach` (U);
-`tab:sukien` (V); `tab:kehoach`.
+**Bảng ở thân báo cáo:** `tab:phaply` (Ch.2); `tab:sosanhtrongnuoc`, `tab:researchgap` (Ch.3); `tab:hailuong`, `tab:bmc`,
+`tab:chi-thiet-ke`, `tab:nhomnguoidung`, `tab:vaitro-noibo`, `tab:personas`, `tab:fr`, `tab:nfr` (Ch.4; hai nhãn trạng thái
+*đã hiện thực* và *chỉ thiết kế* định nghĩa cuối mục 4.1.2); `tab:uc-b4`, `tab:uc-c4`, `tab:uc-c6`, `tab:congnghe`,
+`tab:container-io`, `tab:module-io`, `tab:tinhnangAI` (Ch.5).
+**Bảng ở phụ lục:** `tab:kichban-khaosat`, `tab:phieu-quansat` (A); `tab:bochinhsach` (B); `tab:truyvet-us`, `tab:fr-nguoidung` (C);
+`tab:db-<schema>` ×13 (D); `tab:nguongNFR`, `tab:nguongAI`, `tab:fr-matrix`, `tab:nfr-matrix` (E); `tab:sosanh-ai` (F); `tab:kehoach`.
 
 **Quy ước bảng:** macro `\tblsetup` (cỡ `\small`, giãn dòng 1,25, khoảng cách cột 5pt) và `\tblzebra` (tô xen kẽ
 tự động) định nghĩa trong `main.tex`. Tổng bề rộng cột ≤ 16 cm − số cột × 0,353 cm.
 
 ## Hai điểm dễ vấp khi sửa
 
-1. **Phụ lục dùng `\section*` nên không đánh số tự động** — trong thân báo cáo phải viết thẳng "Phụ lục G",
+1. **Phụ lục dùng `\section*` nên không đánh số tự động** — trong thân báo cáo phải viết thẳng "Phụ lục B",
    không dùng `\ref`.
 2. **Hình và bảng ở phần sau Chương 8 có tiền tố riêng** — `KH.` cho Kế hoạch thực hiện, `PL.` cho Phụ lục, đặt
    trong `main.tex` ngay trước phần kết thúc. Nếu bỏ đoạn `\setcounter` và `\renewcommand` đó, bảng phụ lục sẽ bị
