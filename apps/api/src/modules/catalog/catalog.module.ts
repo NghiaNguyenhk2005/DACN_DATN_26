@@ -8,8 +8,10 @@ import { PrismaCategoryRepository } from "./prisma-category.repository";
 import { storageProvider } from "../../core/storage";
 import { ProductRepository } from "./product.repository";
 import { InMemoryProductRepository } from "./in-memory-product.repository";
+import { PrismaProductRepository } from "./prisma-product.repository";
 import { BatchRepository } from "./batch.repository";
 import { InMemoryBatchRepository } from "./in-memory-batch.repository";
+import { PrismaBatchRepository } from "./prisma-batch.repository";
 import { SupplierModule } from "../supplier/supplier.module";
 import { OperationsModule } from "../operations/operations.module";
 import { CoreModule } from "../../core/core.module";
@@ -30,8 +32,8 @@ import { SearchCorpus } from "./search/search-corpus";
   providers: [
     CatalogService,
     storageProvider(CategoryRepository, InMemoryCategoryRepository, PrismaCategoryRepository),
-    { provide: ProductRepository, useClass: InMemoryProductRepository },
-    { provide: BatchRepository, useClass: InMemoryBatchRepository },
+    storageProvider(ProductRepository, InMemoryProductRepository, PrismaProductRepository),
+    storageProvider(BatchRepository, InMemoryBatchRepository, PrismaBatchRepository),
     SearchCorpus,
     { provide: KeywordSearch, useClass: InMemoryKeywordSearch },
     { provide: SemanticSearch, useClass: ConceptSemanticSearch },
