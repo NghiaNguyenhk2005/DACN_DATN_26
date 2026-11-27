@@ -14,7 +14,7 @@ import { ProductTabs } from "@/components/farmery/product-tabs";
 import { TraceQr } from "@/components/farmery/trace-qr";
 import { TraceTimeline } from "@/components/farmery/trace-timeline";
 import { WholesalePanel } from "@/components/farmery/wholesale-panel";
-import { getCategories, getProduct, getSupplier, getTrace } from "@/lib/data";
+import { getCategories, getDeliverySettings, getProduct, getSupplier, getTrace } from "@/lib/data";
 import { deliveryEstimate, freshness, harvestedText, pricePerKg, shelfLifeText, todayVn } from "@/lib/decision";
 import { formatDateVi, formatVnd } from "@/lib/format";
 import { CERT_LABELS } from "@/lib/labels";
@@ -51,11 +51,12 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
 
   // Lô đang bán có hạn sử dụng sớm nhất: tab nhật ký và ô thông tin lô lấy theo lô này.
   const batch = [...product.batchesOnSale].sort((a, b) => a.bestBefore.localeCompare(b.bestBefore))[0];
-  const [supplier, trace, categories, h] = await Promise.all([
+  const [supplier, trace, categories, h, settings] = await Promise.all([
     getSupplier(product.supplier.id).catch(() => null),
     batch ? getTrace(batch.traceCode).catch(() => null) : null,
     getCategories().catch(() => []),
     headers(),
+    getDeliverySettings().catch(() => null),
   ]);
   const origin = `${h.get("x-forwarded-proto") ?? "http"}://${h.get("x-forwarded-host") ?? h.get("host")}`;
 
@@ -164,7 +165,8 @@ export default async function ProductPage({ params }: PageProps<"/san-pham/[slug
         <BuyBox
           productId={product.id}
           wholesale={product.wholesale}
-          deliveryNote={deliveryEstimate()}
+          deliveryNote={settings ? deliveryEstimate(settings.cutoffTime) : null}
+          settings={settings}
           listing={listing}
           seller={{
             id: product.supplier.id,

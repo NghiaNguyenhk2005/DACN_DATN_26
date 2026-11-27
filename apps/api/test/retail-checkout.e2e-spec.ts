@@ -185,7 +185,7 @@ describe("Giỏ hàng, tính tiền, đặt đơn giữ chỗ 15 phút", () => {
       const rival = await login(t, "khachtuchoi@example.com");
       const rivalAddr = await addAddress(t, rival);
       // L227 còn 90: mỗi người đặt 60, chỉ một đơn được giữ chỗ.
-      await setCart(t, buyer, L227, 60).expect(200);
+      const cart = await setCart(t, buyer, L227, 60).expect(200);
       await setCart(t, rival, L227, 60).expect(200);
       const [a, b] = await Promise.all([
         place(t, buyer, await body("prepaid")),
@@ -194,6 +194,7 @@ describe("Giỏ hàng, tính tiền, đặt đơn giữ chỗ 15 phút", () => {
       expect([a.status, b.status].sort()).toEqual([201, 409]);
       const failed = a.status === 409 ? a : b;
       expect(failed.body.code).toBe("STOCK_CONFLICT");
+      expect(failed.body.detail).toContain(cart.body.items[0].productName);
       expect(await holdingOf(t, ops, "1014")).toMatchObject({ qtyOnHand: 90, qtyReserved: 60 });
     });
   });
@@ -239,8 +240,28 @@ describe("Giỏ hàng, tính tiền, đặt đơn giữ chỗ 15 phút", () => {
 
       await setCart(t, buyer, L201, 1).expect(200);
       const c = (await place(t, buyer, await body("cod")).expect(201)).body;
-      await request(t.http()).post(`/api/admin/orders/${c.id}/advance`).auth(ops, { type: "bearer" }).expect(200); // packing
+      await request(t.http()).post(`/api/admin/orders/${c.id}/advance`).auth(ops, { type: "bearer" }).send({ expectedStatus: "paid" }).expect(200); // packing
       expect((await request(t.http()).post(`/api/orders/${c.id}/cancel`).auth(buyer, { type: "bearer" }).expect(409)).body.code).toBe("ORDER_NOT_CANCELLABLE");
+    });
+
+    it("đơn trả trước đã thanh toán: hủy trước đóng gói hoàn tồn, sau đóng gói bị chặn", async () => {
+      for (const packing of [false, true]) {
+        await setCart(t, buyer, L201, 2).expect(200);
+        const order = (await place(t, buyer, await body("prepaid")).expect(201)).body;
+        const path = `/api/orders/${order.id}`;
+        const paid = await request(t.http()).post(`${path}/pay`).auth(buyer, { type: "bearer" }).expect(200);
+        expect(paid.body).toMatchObject({ status: "paid", cancellable: true });
+        if (packing) {
+          await request(t.http()).post(`/api/admin/orders/${order.id}/advance`).auth(ops, { type: "bearer" })
+            .send({ expectedStatus: "paid" }).expect(200);
+          const cancelled = await request(t.http()).post(`${path}/cancel`).auth(buyer, { type: "bearer" }).expect(409);
+          expect(cancelled.body.code).toBe("ORDER_NOT_CANCELLABLE");
+        } else {
+          const cancelled = await request(t.http()).post(`${path}/cancel`).auth(buyer, { type: "bearer" }).expect(200);
+          expect(cancelled.body).toMatchObject({ status: "cancelled", cancellable: false });
+        }
+        expect(await holdingOf(t, ops, "1001")).toMatchObject({ qtyOnHand: packing ? 148 : 150, qtyReserved: 0 });
+      }
     });
 
     it("không xem hay hủy được đơn của người khác (404)", async () => {

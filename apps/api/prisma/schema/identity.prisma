@@ -73,6 +73,7 @@ model User {
   oauthProvider   String?       @map("oauth_provider") @db.VarChar
   oauthSubject    String?       @map("oauth_subject") @db.VarChar
   totpSecretEnc   String?       @map("totp_secret_enc") @db.VarChar
+  totpLastStep    BigInt?       @map("totp_last_step")
   status          AccountStatus @default(pending)
   lockedUntil     DateTime?     @map("locked_until") @db.Timestamp(6)
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamp(6)

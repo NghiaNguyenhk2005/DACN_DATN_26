@@ -6,7 +6,7 @@ import { Clock, CreditCard, ShieldCheck, ShoppingBag, Truck } from "lucide-react
 import type { Schema } from "@farmery/contract";
 import { Button } from "@/components/ui/button";
 import { defaultQty, LOW_STOCK, quantityRule } from "@/lib/decision";
-import { formatVnd } from "@/lib/format";
+import { formatSlot, formatVnd } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { FeedbackText, useAddToCart } from "./add-to-cart";
 import { QuantityInput } from "./quantity-input";
@@ -26,7 +26,8 @@ interface Props {
   /** Bảng giá sỉ của nhà cung cấp; có thì khung mua có nút gạt Mua lẻ | Mua sỉ */
   wholesale?: Schema<"WholesaleOffer"> | null;
   /** Câu ước tính giao, tính phía máy chủ */
-  deliveryNote: string;
+  deliveryNote: string | null;
+  settings: Schema<"DeliverySettings"> | null;
 }
 
 type Mode = "retail" | "wholesale";
@@ -58,7 +59,7 @@ function ModeSwitch({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void 
  * Khung mua. ≥lg: thẻ cột phải 300px; <lg: thanh dính đáy [số lượng] [giỏ] [Mua ngay + tạm tính] (trang chừa pb-28).
  * Thêm vào giỏ ở lại trang; Mua ngay thêm vào giỏ rồi sang /thanh-toan.
  */
-export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: Props) {
+export function BuyBox({ listing, seller, productId, wholesale, deliveryNote, settings }: Props) {
   const [mode, setMode] = useState<Mode>(listing || !wholesale ? "retail" : "wholesale");
   const startQty = listing ? defaultQty(listing.saleUnit, listing.available) : null;
   const [qty, setQty] = useState(startQty ?? 1);
@@ -145,13 +146,13 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
         </div>
         {mode === "retail" && (
           <ul className="flex flex-col gap-[11px] rounded-card border border-line px-[18px] py-4 text-caption leading-[1.5] text-ink-2">
-            <li className="flex gap-2.5 font-medium text-ink">
+            {deliveryNote && <li className="flex gap-2.5 font-medium text-ink">
               <Clock className="mt-px size-[17px] flex-none text-primary" aria-hidden />
               {deliveryNote}
-            </li>
+            </li>}
             <li className="flex gap-2.5">
               <Truck className="mt-px size-[17px] flex-none text-primary" aria-hidden />
-              Giao tại TP.HCM theo khung giờ 8–11h, 14–17h hoặc 18–21h; miễn phí giao từ 300.000₫
+              Giao tại TP.HCM{settings && ` theo khung giờ ${settings.deliverySlots.map(formatSlot).join(", ")} · Miễn phí từ ${formatVnd(settings.freeShippingThreshold)}`}
             </li>
             <li className="flex gap-2.5">
               <ShieldCheck className="mt-px size-[17px] flex-none text-primary" aria-hidden />
@@ -159,7 +160,7 @@ export function BuyBox({ listing, seller, productId, wholesale, deliveryNote }: 
             </li>
             <li className="flex gap-2.5">
               <CreditCard className="mt-px size-[17px] flex-none text-primary" aria-hidden />
-              Thanh toán trực tuyến hoặc tiền mặt khi nhận (đơn tới 1.000.000₫)
+              Thanh toán trực tuyến{settings && settings.codMaxAmount > 0 && ` hoặc tiền mặt khi nhận (đơn tới ${formatVnd(settings.codMaxAmount)})`}
             </li>
           </ul>
         )}

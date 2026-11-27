@@ -1,9 +1,9 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { createApiClient, type ApiClient, type Schema } from "@farmery/contract";
-import { API_URL } from "@/lib/api";
+import type { ApiClient, Schema } from "@farmery/contract";
 import { NETWORK_MESSAGE, problemMessage, type ActionResult } from "@/lib/problem";
+import { createServerClient } from "@/lib/server-api";
 import { getSessionToken, loginHref } from "@/lib/session";
 import { ApiUnavailableError, send, type Sent } from "./index";
 
@@ -12,7 +12,7 @@ import { ApiUnavailableError, send, type Sent } from "./index";
 /** Client có gắn token của phiên hiện tại; null khi chưa đăng nhập. */
 export async function authedClient(): Promise<ApiClient | null> {
   const token = await getSessionToken();
-  return token ? createApiClient({ baseUrl: API_URL, getToken: () => token }) : null;
+  return token ? createServerClient(token) : null;
 }
 
 export async function read<T>(call: (api: ApiClient) => Promise<Sent<T>>): Promise<T> {

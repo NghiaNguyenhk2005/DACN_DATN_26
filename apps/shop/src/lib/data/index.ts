@@ -1,12 +1,13 @@
 import "server-only";
 import { cache } from "react";
 import { connection } from "next/server";
-import { createApiClient, type Schema } from "@farmery/contract";
-import { API_URL } from "@/lib/api";
+import type { Schema } from "@farmery/contract";
+import { createServerClient } from "@/lib/server-api";
 import type { ProductQuery } from "@/lib/filters";
 
 // Lớp dữ liệu cho Server Components: mọi trang công khai gọi API qua đây, không gọi thẳng client.
-const api = createApiClient({ baseUrl: API_URL });
+// Client chuyển IP khách sang API (xem lib/server-api.ts) nên giới hạn tần suất tính theo từng khách.
+const api = createServerClient();
 
 export class ApiUnavailableError extends Error {
   constructor(
@@ -53,6 +54,9 @@ export type ProductPage = { items: Schema<"ProductCard">[]; nextCursor: string |
 
 // Layout và trang danh mục cùng cần cây danh mục: gộp thành một lần gọi trong mỗi request.
 export const getCategories = cache((): Promise<Schema<"Category">[]> => required(() => api.GET("/categories")));
+
+export const getDeliverySettings = cache((): Promise<Schema<"DeliverySettings">> =>
+  required(() => api.GET("/shop/delivery-settings")));
 
 export const searchProducts = (query: ProductQuery): Promise<ProductPage> =>
   required(() => api.GET("/products", { params: { query } }));

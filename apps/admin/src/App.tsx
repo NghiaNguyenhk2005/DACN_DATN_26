@@ -19,7 +19,7 @@ import { ReviewTaskList } from "./pages/review-tasks/list";
 import { ReviewTaskShow } from "./pages/review-tasks/show";
 import { SettingsPage } from "./pages/settings";
 import { accessControlProvider } from "./providers/access-control-provider";
-import { authProvider } from "./providers/auth-provider";
+import { AdminSessionExpiry, authProvider } from "./providers/auth-provider";
 import { dataProvider } from "./providers/data-provider";
 import { i18nProvider } from "./providers/i18n-provider";
 import { adminTheme } from "./theme";
@@ -77,6 +77,7 @@ export function App() {
               <Route
                 element={
                   <Authenticated key="authenticated-routes" fallback={<CatchAllNavigate to="/login" />}>
+                    <AdminSessionExpiry />
                     <ThemedLayout Title={({ collapsed }) => <ThemedTitle collapsed={collapsed} text="Farmery" />}>
                       <CanAccess
                         fallback={<Result status="403" title="Không có quyền" subTitle="Tài khoản của bạn không có quyền vào mục này." />}

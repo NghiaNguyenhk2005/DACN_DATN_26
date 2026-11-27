@@ -29,8 +29,8 @@ export class AdminOrderController {
   advance(
     @CurrentUser() user: AuthUser,
     @Param("orderId") orderId: string,
-    @Body() body?: { note?: string },
+    @Body() body: { note?: string; expectedStatus: Schema<"OrderStatus"> },
   ): Promise<Schema<"OrderDetail">> {
-    return this.retail.advanceOrder(orderId, user.roles, body?.note);
+    return this.retail.advanceOrder(orderId, user.roles, body.expectedStatus, body.note);
   }
 }

@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import type { Schema } from "@farmery/contract";
 import { api } from "../../lib/api";
 import { EVENT_SOURCE_LABELS, nextOrderStep, ORDER_STATUS, ORDER_STEPS } from "../../lib/labels";
+import { currentRoles } from "../../providers/auth-provider";
 import { unwrap } from "../../lib/problem";
 
 type OrderDetail = Schema<"OrderDetail">;
@@ -20,29 +21,36 @@ export function OrderShow() {
   const { query, result: order } = useShow<OrderDetail>({ resource: "orders", id });
   const invalidate = useInvalidate();
   const { message } = App.useApp();
-  const [open, setOpen] = useState(false);
+  const [expectedStatus, setExpectedStatus] = useState<OrderDetail["status"] | null>(null);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const next = order ? nextOrderStep(order.status) : null;
+  const roles = currentRoles();
+  const candidate = order ? nextOrderStep(order.status) : null;
+  const next = candidate && (
+    roles.includes("staff_operations") ||
+    (roles.includes("staff_warehouse") && ["packing", "on_trip", "handed_to_3pl"].includes(candidate))
+  ) ? candidate : null;
+  const confirmedNext = expectedStatus ? nextOrderStep(expectedStatus) : null;
 
   const advance = async () => {
+    if (!expectedStatus || busy) return;
     setBusy(true);
     try {
       const trimmed = note.trim();
       const updated = await unwrap(
         api.POST("/admin/orders/{orderId}/advance", {
           params: { path: { orderId: id } },
-          body: trimmed ? { note: trimmed } : {},
+          body: { expectedStatus, ...(trimmed ? { note: trimmed } : {}) },
         }),
         "Chưa chuyển được bước, vui lòng thử lại.",
       );
       message.success(`Đơn đã chuyển sang: ${ORDER_STATUS[updated.status].label}.`);
-      setOpen(false);
       setNote("");
     } catch (e) {
       message.error((e as { message: string }).message);
     } finally {
+      setExpectedStatus(null);
       setBusy(false);
       await invalidate({ resource: "orders", invalidates: ["list", "detail"], id });
     }
@@ -58,8 +66,8 @@ export function OrderShow() {
       canEdit={false}
       canDelete={false}
       headerButtons={() =>
-        next && (
-          <Button type="primary" onClick={() => setOpen(true)}>
+        next && order && (
+          <Button type="primary" onClick={() => setExpectedStatus(order.status)}>
             Chuyển sang: {ORDER_STATUS[next].label}
           </Button>
         )
@@ -157,13 +165,13 @@ export function OrderShow() {
       )}
 
       <Modal
-        title={next ? `Chuyển đơn sang: ${ORDER_STATUS[next].label}` : ""}
-        open={open}
+        title={confirmedNext ? `Chuyển đơn sang: ${ORDER_STATUS[confirmedNext].label}` : ""}
+        open={expectedStatus !== null}
         okText="Chuyển bước"
         cancelText="Hủy"
         okButtonProps={{ loading: busy }}
         onOk={advance}
-        onCancel={() => setOpen(false)}
+        onCancel={() => setExpectedStatus(null)}
       >
         <Typography.Paragraph type="secondary">Ghi chú (không bắt buộc) hiện trên nhật ký trạng thái của đơn.</Typography.Paragraph>
         <Input.TextArea rows={3} maxLength={500} showCount value={note} onChange={(e) => setNote(e.target.value)} />
