@@ -1,0 +1,121 @@
+% Phụ lục H — bộ test case.
+
+\section*{Phụ lục H. Bộ test case}
+\label{apdx:testcase}
+\addcontentsline{toc}{section}{Phụ lục H. Bộ test case}
+
+Bảng~\ref{tab:testcase} liệt kê 69 test case theo nhóm yêu cầu. Mỗi ca ghi yêu cầu được kiểm (FR, NFR), điều kiện và dữ liệu vào, kết quả mong đợi, cách chạy và trạng thái. Cột \lq\lq Cách chạy\rq\rq{} nêu bộ kiểm thử tự động chứa ca đó (Jest cho máy chủ, hộp đen là bộ chạy trên máy chủ đã dựng, Playwright cho giao diện, k6 cho hiệu năng, pytest cho dịch vụ AI) hoặc \lq\lq Thủ công\rq\rq. Trạng thái dùng bốn giá trị:
+\begin{itemize}
+    \item \textbf{Đạt:} bộ tự động đã chạy và qua ở lần chạy CI gần nhất trên nhánh chính (23/11), hoặc đã đo thật và ghi kết quả ở Chương~\ref{chap:danhgia}; \lq\lq bản bộ nhớ\rq\rq{} là đo trên lớp lưu trữ trong bộ nhớ, chưa phải PostgreSQL.
+    \item \textbf{Chưa chạy lại:} có mã kiểm thử nhưng không nằm trong CI chặn gộp (bộ hộp đen, Playwright) nên chưa chạy lại sau lần sửa cuối.
+    \item \textbf{Chưa chạy:} ca thủ công, hoặc ca chờ điều kiện (PostgreSQL thật, điện thoại thật, nhóm nhà cung cấp).
+    \item \textbf{Chưa gộp:} ca thuộc phần mã chưa gộp vào nhánh chính.
+\end{itemize}
+Chưa có ca cho các phần còn đang làm hoặc mới có thiết kế: thu mua và nhập kho (FR13.1, FR13.2, FR13.4), giao hàng ba chặng, đổi trả và hoàn tiền (FR8), đánh giá và uy tín (FR5.5), thông báo web (FR11.1), điều khoản dịch vụ (FR1.6); các ca này được thêm khi phần mã tương ứng xong.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{1.40cm} L{1.55cm} L{4.00cm} L{4.05cm} L{1.95cm} L{1.95cm}}
+\caption{Bộ test case theo nhóm yêu cầu}
+\label{tab:testcase} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Yêu cầu} & \textbf{Điều kiện, dữ liệu vào} & \textbf{Kết quả mong đợi} & \textbf{Cách chạy} & \textbf{Trạng thái} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mã} & \textbf{Yêu cầu} & \textbf{Điều kiện, dữ liệu vào} & \textbf{Kết quả mong đợi} & \textbf{Cách chạy} & \textbf{Trạng thái} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Tài khoản và đăng nhập (FR1, NFR3)}} \\
+TC-01 & FR1.1, FR1.2 & Gửi OTP cho email hợp lệ rồi đăng nhập bằng mã, đọc \texttt{/me} & 200 kèm mã truy cập; \texttt{/me} trả đúng email đã đăng nhập & Jest: auth & Đạt \\
+TC-02 & FR1.2 & Nhập sai mã; dùng lại mã đã dùng; dùng mã quá 10 phút & 401 ở cả ba trường hợp & Jest: auth & Đạt \\
+TC-03 & FR1.2, NFR3.5 & Nhập sai mã 5 lần liên tiếp & Mã bị khóa, nhập đúng sau đó vẫn bị từ chối & Jest: auth & Đạt \\
+TC-04 & NFR3.5 & Gửi OTP quá số lần cho phép trong một giờ & 429 \texttt{RATE\_LIMITED}; qua giờ mới gửi lại được & Jest: hardening & Đạt \\
+TC-05 & FR1.1 & Email chưa đăng ký ở chế độ production & Trả như thành công, không gửi thư (không lộ tài khoản); ở demo trả 404 & Hộp đen: security & Chưa chạy lại \\
+TC-06 & FR1.5 & Thêm địa chỉ đầu tiên, rồi đặt địa chỉ mới làm mặc định; thêm địa chỉ thứ 21 & Địa chỉ đầu là mặc định, mặc định cũ bị bỏ; địa chỉ thứ 21 trả 422 & Jest: auth, hardening & Đạt \\
+TC-07 & NFR3.6 & Nhân sự nội bộ bật xác thực hai lớp bằng mã QR, đăng nhập admin & Bắt buộc nhập mã 6 số; sai mã bị từ chối & Thủ công & Chưa gộp \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Danh mục, tìm kiếm và sản phẩm (FR4, FR12.3)}} \\
+TC-08 & FR4.4 & Gọi cây danh mục & Cây đa cấp; số sản phẩm của danh mục cha gồm cả danh mục con & Jest: catalog-public & Đạt \\
+TC-09 & FR4.5 & Tìm \lq\lq dau tay\rq\rq{} và \lq\lq dautay\rq\rq{} (không dấu, viết liền) & Cả hai trả Dâu tây & Jest: catalog-public & Đạt \\
+TC-10 & FR4.5 & Lọc theo vùng, chứng nhận, còn mùa, khoảng giá & Chỉ trả sản phẩm thỏa đủ điều kiện & Jest: catalog-public & Đạt \\
+TC-11 & FR4.5 & Câu có cụm lọc: \lq\lq rau hữu cơ\rq\rq, \lq\lq từ \ldots{} đến \ldots{}\rq\rq & Tách cụm lọc khỏi từ khóa; hiểu vùng và khoảng giá & Jest: search-cert-wholesale & Đạt \\
+TC-12 & FR4.5 & Gõ sai: \lq\lq xà láhc\rq\rq, \lq\lq khoai tya\rq\rq & Ra đúng sản phẩm hoặc có gợi ý sửa & Jest: search-cert-wholesale & Đạt \\
+TC-13 & FR4.1, FR2.1 & Xem chi tiết sản phẩm; mã sản phẩm không có & Kèm lô đang bán và sản phẩm tương tự; mã lạ trả 404 & Jest: catalog-public & Đạt \\
+TC-14 & FR2.1 & Xem hồ sơ nhà cung cấp; mã không có & Kèm chứng nhận và danh sách sản phẩm; mã lạ trả 404 & Jest: catalog-public & Đạt \\
+TC-15 & FR4.1, FR4.6 & Nhà cung cấp đăng sản phẩm; gắn chứng nhận chưa khai; chọn danh mục cha & Chờ duyệt, ẩn khỏi tìm kiếm; duyệt xong tìm thấy; hai trường hợp sau trả 422 & Jest: search-cert-wholesale & Đạt \\
+TC-16 & FR12.3 & Tìm \lq\lq salad\rq\rq, \lq\lq đồ uống\rq\rq & Ra xà lách; ra trà, cà phê (mở rộng nghĩa) & Jest: search-cert-wholesale & Đạt \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Chứng nhận, lô hàng, nhật ký và truy xuất (FR3, FR4.2, FR10.1, NFR9.1)}} \\
+TC-17 & FR3.1, FR3.2 & Khai chứng nhận; kiểm duyệt viên duyệt; ngày hết hiệu lực trước ngày cấp; khách lẻ gọi & Chờ duyệt, chưa công khai, duyệt xong công khai; ngày sai trả 422; khách lẻ trả 403 & Jest: search-cert-wholesale & Đạt \\
+TC-18 & FR4.2 & Tạo lô mới; ngày dùng trước ngày thu hoạch; sản phẩm không thuộc mình; gửi trùng \texttt{Idempotency-Key} & Lô ở trạng thái chờ duyệt kèm việc duyệt; 422; 403; chỉ tạo một lô & Jest: seller-batches-moderation & Đạt \\
+TC-19 & FR4.2, NFR9.1 & Ghi nhật ký; ghi bản đính chính trỏ về bản cũ; đính chính dòng đã đính chính; ngày ở tương lai & Bản cũ thành đã thay thế; lần đính chính thứ hai trả 422; ngày tương lai trả 422 & Jest: seller-batches-moderation & Đạt \\
+TC-20 & FR10.1 & Duyệt lô; từ chối lô kèm lý do & Duyệt: sinh mã truy xuất, mở trang công khai; từ chối: không truy xuất được & Jest: seller-batches-moderation & Đạt \\
+TC-21 & FR4.2 & Quét mã truy xuất hợp lệ; mã không có & Trả hành trình lô và nhật ký theo thời gian; mã lạ trả 404 & Jest: catalog-public & Đạt \\
+TC-22 & NFR3.1 & Gọi khu nhà cung cấp không có token, sai vai trò, xem lô của người khác & 401; 403; 403 & Jest: seller-batches-moderation & Đạt \\
+TC-23 & FR4.2 & Nhà cung cấp đăng lô, ghi nhật ký, kiểm duyệt viên duyệt, quét QR & Hành trình hiện trên trang truy xuất công khai & Playwright: lo-hang & Chưa chạy lại \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Bán lẻ: giỏ, đặt hàng, thanh toán, hủy (FR4.3, FR5, FR7.1, NFR4.1)}} \\
+TC-24 & FR5.1 & Thêm, đổi, xóa dòng giỏ; đặt số lượng vượt tồn; hai người dùng giỏ riêng & Cộng tiền đúng; vượt tồn trả 422 \texttt{CART\_QTY\_EXCEEDS\_STOCK}; giỏ tách nhau & Jest: retail-checkout & Đạt \\
+TC-25 & FR5.2, NFR8.1 & Báo giá đơn dưới và từ 300.000\,đ & Thuế GTGT 5\% đã gồm trong giá; cước 25.000\,đ, miễn từ 300.000\,đ & Jest: retail-checkout & Đạt \\
+TC-26 & FR7.1 & Đặt COD vượt 1.000.000\,đ; tài khoản từng từ chối nhận; COD hợp lệ & Hai ca đầu trả 422 \texttt{COD\_NOT\_ALLOWED}; ca hợp lệ sang đã thanh toán ngay và trừ tồn & Jest: retail-checkout & Đạt \\
+TC-27 & FR5.2 & Chọn khung giờ sau giờ chốt 16:00; khung ngoài báo giá; giỏ rỗng; địa chỉ của người khác & 422 \texttt{SLOT\_UNAVAILABLE}; 422 \texttt{CART\_EMPTY}; 422 \texttt{ADDRESS\_NOT\_FOUND} & Jest: retail-checkout & Đạt \\
+TC-28 & FR4.3, FR5.2 & Đặt đơn trả trước, không trả trong 15 phút & Giữ chỗ đúng 15 phút, tồn khả dụng giảm; quá hạn tự hủy, nhả tồn; trả muộn trả 409 & Jest: retail-checkout & Đạt \\
+TC-29 & FR7.1 & Trả tiền trong hạn; trả lần hai & Giữ chỗ thành trừ tồn, đơn đã thanh toán; lần hai trả 409 & Jest: retail-checkout & Đạt \\
+TC-30 & FR7.1 & Cổng thanh toán giả lập trả thất bại & 409 \texttt{PAYMENT\_FAILED}, đơn vẫn chờ thanh toán và giữ chỗ, thử lại được & Jest: hardening & Đạt \\
+TC-31 & NFR1.2, NFR4.1 & Hai khách cùng đặt phần hàng cuối của một dòng tồn & Một người được, người kia 409 \texttt{STOCK\_CONFLICT}, không bán vượt & Jest: retail-checkout & Đạt \\
+TC-32 & NFR4.1 & Đặt thiếu \texttt{Idempotency-Key}; gửi lại cùng khóa; gửi song song 5 lần & Bị chặn; trả đúng đơn cũ; chỉ tạo một đơn & Jest: retail-checkout; hộp đen: journey & Đạt \\
+TC-33 & FR13.3 & Đặt số lượng lớn hơn một lô & Lấy lô hết hạn trước, tách nhiều dòng khi một lô không đủ & Jest: retail-checkout & Đạt \\
+TC-34 & FR5.4 & Hủy đơn ở từng trạng thái; xem hoặc hủy đơn của người khác & Hủy được khi chờ thanh toán hoặc đã trả, nhả giữ chỗ hay hoàn tồn; sau đóng gói không hủy được; đơn người khác trả 404 & Jest: retail-checkout, order-state-machine & Đạt \\
+TC-35 & FR5 & Tìm, đăng nhập khi thêm giỏ, đặt đơn, trả tiền giả lập, vận hành chuyển bước & Đơn đi hết luồng trên giao diện thật & Playwright: mua-hang & Chưa chạy lại \\
+TC-36 & FR5.1 & Nhập số lượng lẻ cho hàng bán theo kg; hàng đóng hộp; cập nhật giỏ lỗi & Hàng kg nhận số lẻ; hàng hộp chỉ nhận số nguyên kèm giải thích; ô quay về số đang có trong giỏ & Playwright: so-luong & Chưa chạy lại \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Vận hành, kho và cấu hình (FR8.1, FR10, FR13.3)}} \\
+TC-37 & FR8.1, FR10.5 & Vận hành chuyển đơn qua đủ tám bước; kho chuyển bước phía vận hành & Mỗi bước ghi một sự kiện của nhân viên; kho chỉ chuyển bước phía kho (bước sau trả 403) & Jest: operations & Đạt \\
+TC-38 & FR10.5 & Xem danh sách đơn theo trạng thái, phân trang; khách và nhân sự khác gọi & Mới nhất trước, có tên người mua; người ngoài vận hành và kho bị chặn & Jest: operations & Đạt \\
+TC-39 & FR13.3 & Xem dòng tồn và sổ nhập xuất sau một chuỗi đặt, giữ chỗ, hủy & Dòng tồn khớp lô đã duyệt; sổ ghi đủ nhập, giữ chỗ, trừ, hoàn & Jest: operations & Đạt \\
+TC-40 & FR10.6 & Đổi cấu hình bằng chủ nền tảng; bằng vận hành; giá trị sai (khóa lạ, giờ chốt 29:00, khung giờ ngược) & Chủ nền tảng đổi được và có hiệu lực ngay; vận hành chỉ đọc; giá trị sai trả 400 & Jest: operations & Đạt \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Bán sỉ (FR6)}} \\
+TC-41 & FR6.1 & Khách sỉ gửi yêu cầu báo giá; dưới lượng tối thiểu, sản phẩm không bán sỉ, ngày quá khứ, khách lẻ gọi & Đơn giá theo bậc, nhà cung cấp thấy yêu cầu; ba ca đầu 422; khách lẻ 403 & Jest: search-cert-wholesale & Đạt \\
+TC-42 & FR6.2--FR6.4 & Gửi yêu cầu, nhà cung cấp báo giá một lần, khách sỉ chấp nhận, ký OTP, thanh toán & Sinh hợp đồng một lần, thanh toán qua dịch vụ thanh toán & Jest: search-cert-wholesale & Đạt \\
+TC-43 & FR6.2 & Khách sỉ từ chối báo giá & Yêu cầu đóng & Jest: search-cert-wholesale & Đạt \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Ba tính năng AI (FR12)}} \\
+TC-44 & FR12.3 & Chạy 54 câu truy vấn gán nhãn tay (bộ chính và bộ độc lập), so với tìm từ khóa & nDCG@10 hơn từ khóa tối thiểu 15\%, Recall@10 không thấp hơn & Jest: ai-eval (cần dịch vụ AI thật) & Đạt \\
+TC-45 & FR12.3 & Đo thời gian \texttt{/products?q=} với câu chưa có trong bộ nhớ đệm & p95 dưới 1 giây & Jest: ai-eval & Đạt \\
+TC-46 & FR12.3 & Dịch vụ AI chưa cấu hình, lỗi từ đầu, hoặc lỗi giữa chừng & Tìm kiếm và trang sản phẩm vẫn trả 200, lùi về từ điển khái niệm & Jest: vector-search & Đạt \\
+TC-47 & FR12.3 & Sản phẩm đổi mô tả, phát \texttt{ProductChanged} & Vector được nhúng lại, không chặn bên phát & Jest: vector-search & Đạt \\
+TC-48 & FR12.1 & Mở trang chi tiết một sản phẩm & Tối đa 5 sản phẩm tương tự, không gồm chính nó, không trùng, còn hàng & Jest: vector-search & Đạt \\
+TC-49 & FR12.1 & Gán nhãn tay danh sách tương tự hợp lệ cho 39 sản phẩm, đo Precision@5 & Từ 0,6 trở lên & Jest: ai-eval & Đạt \\
+TC-50 & FR12.2 & Kiểm tra ngược theo thời gian trên chuỗi giá tháng của bốn mặt hàng & MAPE dưới 20\% & Python: run\_forecast & Đạt \\
+TC-51 & FR12 & Gọi dịch vụ nhúng: sai token; câu rỗng, trên 64 câu, dài quá 8000 ký tự; hợp lệ & 401; 422; vector 1024 chiều đã chuẩn hóa & pytest: test\_embed & Đạt \\
+TC-52 & NFR7.1 & Lớp gọi dịch vụ nhúng gặp HTTP lỗi, quá 2 giây, mất kết nối, phản hồi sai dạng & Ném lỗi riêng để phía gọi lùi về đường dự phòng, không treo & Jest: embedding-provider & Đạt \\
+TC-53 & FR12.3, FR6.1 & Câu có cụm lọc đổi thành bộ lọc trên giao diện; luồng mua sỉ & Bộ lọc đúng, link tìm nguyên văn còn & Playwright: tim-kiem-mua-si & Chưa chạy lại \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Sự kiện giữa các mô-đun (NFR2.1, NFR5.1)}} \\
+TC-54 & NFR2.1 & Đối chiếu tên 17 sự kiện trong mã với Phụ lục G & Khớp từng tên; sự kiện đã có điểm phát đều nằm trong danh mục & Jest: events & Đạt \\
+TC-55 & NFR2.1 & Duyệt lô; bên nhận khác ném lỗi; gửi lại cùng một sự kiện & Kho mở dòng tồn đúng số khai báo; yêu cầu duyệt không hỏng; chỉ có tác dụng một lần & Jest: events & Đạt \\
+TC-56 & FR5, FR7.1 & Đặt đơn; trả tiền; hủy đơn đã trả; hủy đơn chưa trả; đơn quá hạn giữ chỗ & Phát đúng \texttt{OrderPlaced}, \texttt{PaymentSucceeded}, \texttt{OrderCancelled}, \texttt{Refunded}; hủy chưa trả không hoàn tiền & Jest: events & Đạt \\
+\rowcolor{tblheadbg}
+\multicolumn{6}{l}{\textbf{Phi chức năng: bảo mật, hiệu năng, giao diện (NFR1, NFR3, NFR5--NFR7)}} \\
+TC-57 & NFR3.1, NFR5.2 & Gọi thiếu token; sai vai trò; dữ liệu vào sai hợp đồng; đường dẫn ngoài hợp đồng & 401; 403; 400 \texttt{problem+json}; 404 (thao tác chưa làm trả 501) & Jest: app & Đạt \\
+TC-58 & NFR3.5 & Vượt ngưỡng gọi \texttt{/api/auth}; gọi \texttt{/health} & 429 \texttt{problem+json} kèm \texttt{Retry-After}; \texttt{/health} không bị tính & Jest: hardening; hộp đen: security & Đạt \\
+TC-59 & NFR3 & Khởi động production với khóa JWT ngắn; thiếu SMTP; CORS dấu \texttt{*} & Từ chối khởi động; nguồn lạ bị CORS chặn & Jest: hardening & Đạt \\
+TC-60 & NFR3 & Token sai: cắt chữ ký, \texttt{alg: none}, ký bằng thuật toán khác, sai issuer hoặc audience & 401 kèm \texttt{WWW-Authenticate} & Hộp đen: security & Chưa chạy lại \\
+TC-61 & NFR3 & Xem header của API và cấu hình production & Chống sniff và nhúng khung, không cache, HSTS; Swagger và \texttt{/dev/reset} đóng & Hộp đen: security & Chưa chạy lại \\
+TC-62 & NFR3.1 & Khách A đọc, thanh toán, hủy đơn của khách B & 404 (không lộ đơn tồn tại) & Jest: retail-checkout; hộp đen: security & Đạt \\
+TC-63 & NFR1.1 & Tải tăng dần đến 100 người dùng đồng thời duyệt và tìm & p95 dưới 2 giây, lỗi dưới 1\%, trung vị dưới 3 giây & k6: browse & Đạt (bản bộ nhớ) \\
+TC-64 & NFR1.2, NFR4.1 & 50 vòng, mỗi vòng 50 người mua cùng đặt trên một dòng tồn & Số đơn nhận không vượt tồn; vượt tồn bằng 0 & k6: oversell & Đạt (bản bộ nhớ) \\
+TC-65 & NFR1.1, NFR1.2 & Chạy lại hai kịch bản k6 trên PostgreSQL thật với dữ liệu mẫu đủ lớn & Đạt cùng ngưỡng, kèm truy vấn chậm nhất & k6 & Chưa chạy \\
+TC-66 & NFR7.1 & Cổng thanh toán giả lập chậm hơn 5 giây & Hết thời gian chờ, thử lại tối đa 2 lần có giãn cách & Jest: payment-lifecycle & Chưa gộp \\
+TC-67 & NFR7.2 & Mở các màn chính ở điện thoại, máy tính bảng, máy tính và hai trình duyệt & Không vỡ bố cục, không cuộn ngang & Thủ công & Chưa chạy \\
+TC-68 & NFR7.3 & Cài ứng dụng mua hàng lên màn hình chính; tắt mạng; gõ dở biểu mẫu nhật ký rồi mở lại & Cài được; hiện trang báo mất mạng; bản nháp còn nguyên & Thủ công, hai điện thoại & Chưa chạy \\
+TC-69 & NFR6.1--6.3 & Nhóm nhà cung cấp làm ba tác vụ: đăng lô, ghi nhật ký, tìm và mở QR & Từ 80\% hoàn thành không cần hỗ trợ & Thủ công (Phụ lục A) & Chưa chạy \\
+\end{longtable}
+\endgroup
