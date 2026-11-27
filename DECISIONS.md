@@ -1500,3 +1500,25 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 
 SỬA 24/11 (mục "Dự báo giá theo tháng..."): "8 trên 30 sản phẩm" sai vì mới đếm 30 sản phẩm đầu của dữ liệu mẫu; thực tế dữ liệu mẫu có 39 sản phẩm
 và 10 sản phẩm khớp bốn mặt hàng FAOSTAT (khoai tây 1, nấm 4, chè 2, cà phê 3), 29 sản phẩm không có mặt hàng tương ứng.
+
+### Dựng k6 trước, đo trên bản bộ nhớ có nhãn rõ; thêm người mua giả cho kiểm thử tải — 2026-11-24
+**Quyết định:**
+- Kịch bản k6 nằm ở `apps/perf/` (browse: tải tăng dần tới 100 VU; oversell: nhiều người mua cùng đặt trên dòng tồn 8). Dựng và chạy ngay trên
+  `STORAGE=memory`, không chờ Prisma. Mọi số đo từ nền này phải ghi nhãn "đo trên bản bộ nhớ" ở Chương 7 và không dùng làm bằng chứng cho PostgreSQL.
+- Kịch bản oversell chỉ đo tranh chấp của đơn lẻ trên cùng dòng tồn. Kịch bản hợp đồng sỉ và đơn thu mua cùng giành tồn bỏ khỏi phạm vi đo vì
+  wholesale chưa gọi `InventoryService` và `ProcurementModule` còn rỗng; ghi là hạn chế ở Chương 7.
+- Thêm biến `LOADTEST_BUYERS=n` (0..1000, mặc định 0, chỉ cho phép khi `DEMO_MODE=true`) nạp n tài khoản người mua giả `loadtest-buyer-NNN@loadtest.example`
+  (id 4001..) vào kho bộ nhớ. Không đổi `SEED_ACCOUNTS` nên `prisma/seed.ts` không nạp chúng vào PostgreSQL.
+- SỬA 2026-11-24 (mục 2026-11-16 "hiệu năng đo bằng k6"): phần "chạy trên PostgreSQL thật" chưa thực hiện được. Hiện chỉ `CategoryRepository` có bản Prisma,
+  retail/inventory/catalog/wholesale vẫn ở bộ nhớ và trong mã không có `SELECT ... FOR UPDATE` (chống bán vượt hiện là `KeyedMutex` trong tiến trình).
+  Quyết định 16/11 vẫn là đích; kịch bản giữ nguyên để chạy lại khi các mô-đun chuyển sang Prisma.
+**Bối cảnh:** khảo sát API ngày 24/11 cho thấy hai điều kiện của quyết định 16/11 chưa có. Mốc đóng băng nội dung 15/12 nên cần có kịch bản và số đo
+sơ bộ sớm, tránh dồn việc vào tuần 13.
+**Đánh đổi:** có số đo và kịch bản chạy lại được từ bây giờ, nhưng số đo chưa chứng minh được khóa dòng của PostgreSQL và chưa đo `pg_stat_statements`.
+Chương 7 hiện còn nói "khóa bi quan `SELECT ... FOR UPDATE`" — phải sửa cho khớp thực tế khi điền kết quả. Thêm `LOADTEST_BUYERS` là một biến cấu hình nữa
+phải nhớ tắt ngoài môi trường thử (đã chặn khi `DEMO_MODE=false`).
+Kết quả sơ bộ trên máy Nghĩa (bộ nhớ, RATE_LIMIT và VALIDATE_RESPONSES tắt): browse đạt ngưỡng (p95 khoảng 10 ms, lỗi 0%); oversell 50 vòng × 50 người mua
+giả: 188 đơn nhận, 2312 đơn bị từ chối, 0 bán vượt. Đây là số thử, chưa phải số báo cáo (chưa lặp 3 lượt, chưa ghi cấu hình máy).
+
+Bổ sung 2026-11-27 (mục k6 ngày 24/11): đã chạy 3 lượt mỗi kịch bản (oversell 50 vòng × 50 người mua: 190/180/182 đơn nhận, 0 bán vượt; browse tới 100 VU: p95 luồng duyệt 6,5–10,6 ms, lỗi 0%)
+và điền Ch.7. Ch.6 mục "Khóa dòng tồn" đã sửa từ "áp dụng FOR UPDATE" thành "hiện là KeyedMutex, đích là FOR UPDATE" cho khớp mã. Ch.5 (bảng chọn công nghệ) giữ nguyên vì chỉ nêu quyết định thiết kế.

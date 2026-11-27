@@ -1,19 +1,24 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { APP_CONFIG, type AppConfig } from "../../core/app-config";
 import { DemoResetRegistry, type Resettable } from "../../core/demo-reset.registry";
 import { AccountRepository, type Account } from "./account.repository";
+import { loadtestBuyerAccounts } from "./loadtest-accounts";
 import { SEED_ACCOUNTS } from "./seed-accounts";
 
 @Injectable()
 export class InMemoryAccountRepository extends AccountRepository implements Resettable {
-  private accounts: Account[] = structuredClone(SEED_ACCOUNTS);
+  private readonly initial: Account[];
+  private accounts: Account[];
 
-  constructor(registry: DemoResetRegistry) {
+  constructor(registry: DemoResetRegistry, @Inject(APP_CONFIG) config: AppConfig) {
     super();
+    this.initial = [...SEED_ACCOUNTS, ...loadtestBuyerAccounts(config.loadtestBuyers)];
+    this.accounts = structuredClone(this.initial);
     registry.register(this);
   }
 
   reset(): void {
-    this.accounts = structuredClone(SEED_ACCOUNTS);
+    this.accounts = structuredClone(this.initial);
   }
 
   async findByEmail(email: string): Promise<Account | null> {
