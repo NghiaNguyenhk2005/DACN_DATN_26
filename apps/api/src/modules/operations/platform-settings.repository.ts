@@ -12,6 +12,7 @@ export const DEFAULT_SETTINGS: ResolvedSettings = {
   freeShippingThreshold: 300_000,
   reservationMinutes: 15,
   retailVatPercent: 5,
+  wholesaleCommissionRate: 0,
 };
 
 export abstract class PlatformSettingsRepository {

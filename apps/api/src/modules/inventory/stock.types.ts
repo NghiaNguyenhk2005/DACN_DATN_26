@@ -34,6 +34,9 @@ export interface Reservation {
 export interface StockLine {
   listingId: string;
   quantity: number;
+  /** Tên và đơn vị để thông báo thiếu hàng nêu đúng sản phẩm; không có thì nêu mã tin bán. */
+  productName?: string;
+  saleUnit?: string;
 }
 
 export interface Allocation {

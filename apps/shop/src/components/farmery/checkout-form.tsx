@@ -8,7 +8,7 @@ import type { Schema } from "@farmery/contract";
 import { Button } from "@/components/ui/button";
 import { placeOrder } from "@/lib/data/order-actions";
 import { formatDayVi, formatQty, formatSlot, formatVnd } from "@/lib/format";
-import type { ActionResult } from "@/lib/problem";
+import { isStockCode, type ActionResult } from "@/lib/problem";
 import { cn } from "@/lib/utils";
 import { AddressForm } from "./address-form";
 
@@ -31,6 +31,27 @@ const optionClass = (selected: boolean, disabled?: boolean) =>
     disabled && "cursor-not-allowed opacity-60 hover:border-border",
   );
 
+/**
+ * Lỗi đặt hàng. Vượt tồn (câu báo đã nêu tên sản phẩm) kèm liên kết về giỏ để sửa số lượng.
+ * Hiện ở hai nơi sát nút Đặt hàng: cột tóm tắt (máy tính) và thanh dính đáy màn hình (điện thoại), nơi người dùng đang nhìn.
+ */
+function OrderError({ error, className }: { error: PlaceError | null; className?: string }) {
+  if (!error) return null;
+  return (
+    <div role="alert" className={cn("text-small text-danger", className)}>
+      <p>{error.message}</p>
+      {isStockCode(error.code) && (
+        <Link href="/gio-hang" className="mt-1 inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-2">
+          Quay lại giỏ hàng để điều chỉnh
+        </Link>
+      )}
+    </div>
+  );
+}
+
+/** Lỗi đặt hàng kèm mã của API để biết có cần đưa người dùng về giỏ hay không. */
+type PlaceError = { message: string; code?: string };
+
 function Section({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
     <section className="rounded-panel border border-border p-4 md:p-5">
@@ -52,9 +73,10 @@ export function CheckoutForm({ cart, addresses, selectedAddressId, quote, idempo
   const [placing, startPlacing] = useTransition();
   const [chosenSlot, setChosenSlot] = useState<string | null>(null);
   const [chosenPayment, setChosenPayment] = useState<Schema<"PaymentOption">>("prepaid");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<PlaceError | null>(null);
 
   const q = quote?.ok ? quote.data : null;
+  const orderError = error ?? (quote && !quote.ok ? quote : null);
   const slots = q?.deliverySlots ?? [];
   const firstAvailable = slots.find((s) => s.available);
   const slot = slots.find((s) => s.available && slotKey(s) === chosenSlot) ?? firstAvailable ?? null;
@@ -82,7 +104,7 @@ export function CheckoutForm({ cart, addresses, selectedAddressId, quote, idempo
         idempotencyKey: key,
       });
       if (result && !result.ok) {
-        setError(result.message);
+        setError({ message: result.message, code: result.code });
         // Báo giá có thể đã đổi (khung giờ qua giờ chốt, COD, tồn kho): tải lại để hiện đúng lựa chọn còn hợp lệ.
         router.refresh();
       }
@@ -135,11 +157,7 @@ export function CheckoutForm({ cart, addresses, selectedAddressId, quote, idempo
             <p className="flex items-center gap-2 text-small text-muted-foreground">
               <MapPin className="size-4" aria-hidden /> Thêm địa chỉ giao hàng để xem khung giờ còn nhận đơn.
             </p>
-          ) : quote && !quote.ok ? (
-            <p role="alert" className="text-small text-danger">
-              {quote.message}
-            </p>
-          ) : !firstAvailable ? (
+          ) : !q ? null : !firstAvailable ? (
             <p className="text-small text-danger">Hiện không còn khung giờ nào nhận đơn. Vui lòng quay lại sau.</p>
           ) : (
             <div className={cn("flex flex-col gap-4", requoting && "opacity-60")}>
@@ -262,9 +280,7 @@ export function CheckoutForm({ cart, addresses, selectedAddressId, quote, idempo
         ) : (
           <p className="text-small text-muted-foreground">Tổng tiền hiện sau khi chọn địa chỉ giao hàng.</p>
         )}
-        <p role="alert" className="mt-3 text-small text-danger empty:hidden">
-          {error}
-        </p>
+        <OrderError error={orderError} className="mt-3 hidden lg:block" />
         <Button
           type="button"
           onClick={submit}
@@ -277,20 +293,23 @@ export function CheckoutForm({ cart, addresses, selectedAddressId, quote, idempo
         <p className="mt-3 text-caption text-muted-foreground">Bấm Đặt hàng là bạn đồng ý với điều khoản mua bán và chính sách đổi trả của Farmery.</p>
       </aside>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-border bg-background px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
-        <div className="min-w-0 flex-1">
-          <p className="text-caption text-muted-foreground">Tổng cộng</p>
-          <p className="text-price font-bold text-cta">{q ? formatVnd(q.totalAmount) : "—"}</p>
+      <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col gap-2 border-t border-border bg-background px-4 py-2.5 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
+        <OrderError error={orderError} className="rounded-tile bg-danger-soft px-3 py-2" />
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-caption text-muted-foreground">Tổng cộng</p>
+            <p className="text-price font-bold text-cta">{q ? formatVnd(q.totalAmount) : "—"}</p>
+          </div>
+          <Button
+            type="button"
+            onClick={submit}
+            disabled={!canPlace}
+            aria-busy={placing}
+            className="h-12 rounded-btn bg-cta px-6 text-title font-semibold text-white hover:bg-cta-hover"
+          >
+            {placing ? "Đang đặt…" : "Đặt hàng"}
+          </Button>
         </div>
-        <Button
-          type="button"
-          onClick={submit}
-          disabled={!canPlace}
-          aria-busy={placing}
-          className="h-12 rounded-btn bg-cta px-6 text-title font-semibold text-white hover:bg-cta-hover"
-        >
-          {placing ? "Đang đặt…" : "Đặt hàng"}
-        </Button>
       </div>
     </div>
   );

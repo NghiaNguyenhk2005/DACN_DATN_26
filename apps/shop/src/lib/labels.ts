@@ -37,7 +37,7 @@ export const ORDER_STEPS = [
 ] as const satisfies readonly Schema<"OrderStatus">[];
 
 export const ORDER_STATUS_LABELS: Record<Schema<"OrderStatus">, string> = {
-  placed: "Đã đặt",
+  placed: "Chờ thanh toán",
   paid: "Đã xác nhận",
   packing: "Đang đóng gói",
   on_trip: "Lên chuyến trung chuyển",

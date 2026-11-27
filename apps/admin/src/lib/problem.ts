@@ -10,6 +10,7 @@ const MESSAGES: Record<string, string> = {
   FORBIDDEN_ROLE: "Tài khoản của bạn không có quyền thực hiện thao tác này.",
   TASK_ALREADY_DECIDED: "Việc duyệt này đã có quyết định trước đó.",
   CONFLICT: "Việc duyệt này đã có quyết định trước đó.",
+  ORDER_STATUS_CHANGED: "Đơn vừa được chuyển bước. Kiểm tra trạng thái mới trước khi thao tác lại.",
   ORDER_TRANSITION_INVALID: "Đơn ở trạng thái này không chuyển bước được. Tải lại để xem trạng thái mới nhất.",
   NOT_FOUND: "Không tìm thấy dữ liệu yêu cầu.",
   VALIDATION_FAILED: "Thông tin chưa hợp lệ, vui lòng kiểm tra lại.",
@@ -29,6 +30,8 @@ export function problemMessage(problem: Partial<Problem> | undefined, status: nu
   return fallback;
 }
 
+export type ApiError = HttpError & { code?: string; retryAfter?: number };
+
 type ApiResult<T> = { data?: T; error?: unknown; response: Response };
 
 /** Trả `data` của client openapi-fetch, hoặc ném `HttpError` để Refine báo lỗi và tự đăng xuất khi 401. */
@@ -41,6 +44,15 @@ export async function unwrap<T>(request: Promise<ApiResult<T>>, fallback: string
   }
   if (result.data !== undefined) return result.data;
   const status = result.response.status;
-  const message = problemMessage(result.error as Partial<Problem> | undefined, status, fallback);
-  throw { message, statusCode: status } satisfies HttpError;
+  const problem = result.error as Partial<Problem> | undefined;
+  const retryAfter = Number(result.response.headers.get("Retry-After"));
+  const message = (status === 429 || problem?.code === "OTP_EXPIRED") && problem?.detail
+    ? problem.detail
+    : problemMessage(problem, status, fallback);
+  throw {
+    message,
+    statusCode: status,
+    code: problem?.code,
+    retryAfter: Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined,
+  } satisfies ApiError;
 }

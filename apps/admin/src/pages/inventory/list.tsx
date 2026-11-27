@@ -14,12 +14,13 @@ type StockMovement = Schema<"StockMovement">;
 const qty = (n: number) => n.toLocaleString("vi-VN");
 
 export function InventoryList() {
-  const [batchId, setBatchId] = useState<string>();
+  const [search, setSearch] = useState("");
+  const keyword = search.trim().toLocaleLowerCase("vi-VN");
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["inventory", "holdings", batchId],
+    queryKey: ["inventory", "holdings"],
     queryFn: () =>
       unwrap(
-        api.GET("/admin/inventory/holdings", { params: { query: { batchId } } }),
+        api.GET("/admin/inventory/holdings"),
         "Không tải được tồn kho.",
       ),
   });
@@ -29,14 +30,20 @@ export function InventoryList() {
       <Flex wrap gap={8} style={{ marginBottom: 16 }}>
         <Input.Search
           allowClear
-          placeholder="Lọc theo mã định danh lô (batchId)"
+          aria-label="Lọc theo tên sản phẩm hoặc mã lô"
+          placeholder="Tên sản phẩm hoặc mã lô"
           style={{ maxWidth: 320 }}
-          onSearch={(v) => setBatchId(v.trim() || undefined)}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
         />
       </Flex>
       {isError && <Alert type="warning" showIcon style={{ marginBottom: 16 }} message={(error as { message?: string }).message} />}
       <Table<StockHolding>
-        dataSource={data}
+        dataSource={data?.filter((row) =>
+          [row.productName, row.batchCode].some((value) => value.toLocaleLowerCase("vi-VN").includes(keyword)),
+        )}
+        rowClassName={(row) => row.qtyOnHand === 0 ? "inventory-out-of-stock" : ""}
+        onRow={(row) => ({ style: row.qtyOnHand === 0 ? { backgroundColor: "#fff1f0" } : undefined })}
         loading={isLoading}
         rowKey="id"
         scroll={{ x: 900 }}
@@ -45,6 +52,12 @@ export function InventoryList() {
       >
         <Table.Column<StockHolding> dataIndex="batchCode" title="Mã lô" />
         <Table.Column<StockHolding> dataIndex="productName" title="Sản phẩm" />
+        <Table.Column<StockHolding>
+          dataIndex="bestBefore"
+          title="Hạn sử dụng"
+          width={125}
+          render={(date: string) => dayjs(date).format("DD/MM/YYYY")}
+        />
         <Table.Column<StockHolding>
           dataIndex="ownerType"
           title="Sở hữu"
@@ -61,7 +74,7 @@ export function InventoryList() {
           title="Tồn"
           width={110}
           align="right"
-          render={(_, row) => `${qty(row.qtyOnHand)} ${row.saleUnit}`}
+          render={(_, row) => row.qtyOnHand === 0 ? <Tag color="red">Hết hàng</Tag> : `${qty(row.qtyOnHand)} ${row.saleUnit}`}
         />
         <Table.Column<StockHolding>
           title="Đang giữ chỗ"

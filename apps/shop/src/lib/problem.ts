@@ -24,8 +24,29 @@ const MESSAGES: Record<string, string> = {
 
 export const NETWORK_MESSAGE = "Không kết nối được máy chủ Farmery. Vui lòng thử lại sau ít phút.";
 
+export function isStockCode(code: string | undefined): boolean {
+  return code === "STOCK_CONFLICT" || code === "CART_QTY_EXCEEDS_STOCK";
+}
+
+/** Số giây từ Retry-After, có thể là khoảng thời gian hoặc ngày giờ HTTP. */
+export function retryAfterSeconds(response: Response): number | undefined {
+  const raw = response.headers.get("retry-after")?.trim();
+  if (!raw) return undefined;
+  const seconds = Number(raw);
+  const delay = Number.isFinite(seconds) ? seconds : (Date.parse(raw) - Date.now()) / 1000;
+  return Number.isFinite(delay) ? Math.max(0, Math.ceil(delay)) : undefined;
+}
+
+export function waitText(seconds: number): string {
+  if (seconds < 60) return `${seconds} giây`;
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  return rest === 0 ? `${minutes} phút` : `${minutes} phút ${rest} giây`;
+}
+
 /** Câu báo lỗi tiếng Việt theo `Problem.code`; mã lạ thì dùng câu dự phòng của từng thao tác. */
 export function problemMessage(problem: Partial<Problem> | undefined, status: number, fallback: string): string {
+  if (isStockCode(problem?.code) && problem?.detail) return `${problem.detail}. Vui lòng điều chỉnh số lượng trong giỏ hàng.`;
   if (problem?.code && MESSAGES[problem.code]) return MESSAGES[problem.code];
   if (status === 429) return MESSAGES.RATE_LIMITED;
   if (status === 501) return MESSAGES.NOT_IMPLEMENTED;

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import request from "supertest";
+import { PaymentGateway } from "../src/integrations/payment-gateway";
 import { createTestApp, login, type TestApp } from "./support";
 
 describe("Tìm kiếm có gợi ý, chứng nhận và sản phẩm của nhà cung cấp, yêu cầu báo giá sỉ", () => {
@@ -211,8 +212,21 @@ describe("Tìm kiếm có gợi ý, chứng nhận và sản phẩm của nhà c
         expect(confirmed.contract.status).toBe("concluded");
         expect(confirmed.contract.concludedAt).toBeDefined();
 
-        // 8. Thanh toán qua PaymentService (DemoPaymentGateway)
-        const paid = (await post(`/api/wholesale/quote-requests/${rfq.id}/pay`, wholesale, {}).expect(200)).body;
+        // 8. Có thể thử lại khi cổng thanh toán từ chối hoặc hết hạn.
+        const payPath = `/api/wholesale/quote-requests/${rfq.id}/pay`;
+        const charge = jest.spyOn(t.app.get(PaymentGateway), "charge")
+          .mockResolvedValueOnce({ status: "failed", reference: null })
+          .mockResolvedValueOnce({ status: "expired", reference: null });
+        try {
+          for (const expected of ["failed", "expired"]) {
+            const rejected = await post(payPath, wholesale, {}).expect(409);
+            expect(rejected.body.code).toBe("PAYMENT_FAILED");
+            expect(await charge.mock.results.at(-1)?.value).toMatchObject({ status: expected });
+          }
+        } finally {
+          charge.mockRestore();
+        }
+        const paid = (await post(payPath, wholesale, {}).expect(200)).body;
         expect(paid.status).toBe("paid");
         expect(paid.payment).toMatchObject({
           amount: 19000000,

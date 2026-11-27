@@ -4,7 +4,7 @@ import { AppModule } from "../src/app.module";
 import { configureApp } from "../src/app.setup";
 import { loadConfig } from "../src/core/app-config";
 import { Clock } from "../src/core/clock";
-import { PaymentGateway } from "../src/integrations/payment-gateway";
+import { DemoPaymentGateway, PaymentGateway } from "../src/integrations/payment-gateway";
 import { addAddress, ADDRESS, createTestApp, firstSlot, holdingOf, login, place, setCart, TestClock } from "./support";
 
 describe("loadConfig từ chối cấu hình nguy hiểm", () => {
@@ -51,6 +51,32 @@ describe("Trần OTP theo giờ (đồng hồ chỉnh tay)", () => {
 });
 
 describe("Giới hạn tần suất theo IP trả 429 kèm header CORS", () => {
+  it.each([0, 1])("TRUST_PROXY=%d chỉ tách hạn mức khi API tin proxy", async (proxyHops) => {
+    const previousTrustProxy = process.env.TRUST_PROXY;
+    const previousRateLimit = process.env.RATE_LIMIT_ENABLED;
+    const previousAuthMax = process.env.RATE_LIMIT_AUTH_MAX;
+    process.env.TRUST_PROXY = String(proxyHops);
+    process.env.RATE_LIMIT_ENABLED = "true";
+    process.env.RATE_LIMIT_AUTH_MAX = "1";
+    const t = await createTestApp();
+    try {
+      const ask = (ip: string) =>
+        request(t.http()).post("/api/auth/otp").set("X-Forwarded-For", ip).send({ email: "khachle@example.com" });
+      await ask("198.51.100.10").expect(200);
+      const limited = await ask("198.51.100.10").expect(429);
+      expect(limited.headers["retry-after"]).toMatch(/^\d+$/);
+      await ask("198.51.100.11").expect(proxyHops === 1 ? 200 : 429);
+    } finally {
+      if (previousTrustProxy === undefined) delete process.env.TRUST_PROXY;
+      else process.env.TRUST_PROXY = previousTrustProxy;
+      if (previousRateLimit === undefined) delete process.env.RATE_LIMIT_ENABLED;
+      else process.env.RATE_LIMIT_ENABLED = previousRateLimit;
+      if (previousAuthMax === undefined) delete process.env.RATE_LIMIT_AUTH_MAX;
+      else process.env.RATE_LIMIT_AUTH_MAX = previousAuthMax;
+      await t.app.close();
+    }
+  });
+
   it("trình duyệt của shop/admin đọc được 429 RATE_LIMITED; nguồn lạ vẫn không được CORS", async () => {
     process.env.RATE_LIMIT_ENABLED = "true";
     process.env.RATE_LIMIT_AUTH_MAX = "2";
@@ -80,9 +106,10 @@ describe("Giới hạn tần suất theo IP trả 429 kèm header CORS", () => {
 describe("Cổng thanh toán từ chối", () => {
   it("trả 409 PAYMENT_FAILED, đơn vẫn chờ thanh toán và giữ chỗ; thử lại được", async () => {
     let approve = false;
-    const gateway: PaymentGateway = {
-      charge: async (orderId: string) => ({ status: approve ? "succeeded" : "failed", reference: approve ? `ref-${orderId}` : null }),
-    } as PaymentGateway;
+    const gateway = new DemoPaymentGateway();
+    jest.spyOn(gateway, "charge").mockImplementation(async (orderId) => ({
+      status: approve ? "succeeded" : "failed", reference: approve ? `ref-${orderId}` : null,
+    }));
     const clock = new TestClock();
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(Clock).useValue(clock)

@@ -1,8 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Get, Header, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import type { Schema } from "@farmery/contract";
 import { CurrentUser } from "../../core/current-user.decorator";
 import type { AuthUser } from "../../core/token.service";
-import { IdentityService } from "./identity.service";
+import { IdentityService, type LoginResult } from "./identity.service";
 
 @Controller()
 export class IdentityController {
@@ -16,8 +16,21 @@ export class IdentityController {
 
   @Post("auth/login")
   @HttpCode(HttpStatus.OK)
-  login(@Body() body: { challengeId: string; code: string }): Promise<{ accessToken: string; user: Schema<"Me"> }> {
-    return this.identity.login(body.challengeId, body.code);
+  login(@Body() body: { challengeId: string; code: string; totpCode?: string }): Promise<LoginResult> {
+    return this.identity.login(body.challengeId, body.code, body.totpCode);
+  }
+
+  @Post("auth/register")
+  @HttpCode(HttpStatus.CREATED)
+  register(@Body() body: { challengeId: string; code: string; displayName: string }): Promise<LoginResult> {
+    return this.identity.register(body.challengeId, body.code, body.displayName);
+  }
+
+  @Post("auth/totp/setup")
+  @HttpCode(HttpStatus.OK)
+  @Header("Cache-Control", "no-store")
+  setupTotp(@Body() body: { challengeId: string; code: string }): Promise<{ provisioningUri: string }> {
+    return this.identity.setupTotp(body.challengeId, body.code);
   }
 
   @Get("me")

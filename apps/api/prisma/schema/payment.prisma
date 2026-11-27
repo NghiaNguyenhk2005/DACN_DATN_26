@@ -12,6 +12,7 @@ enum PaymentStatus {
   pending
   succeeded
   failed
+  expired
   cancelled
   refunded
   partially_refunded
@@ -44,6 +45,7 @@ model Payment {
 
   refunds Refund[] @relation("Refund_payment")
 
+  @@unique([sourceType, sourceId])
   @@map("payments")
   @@schema("payment")
 }
@@ -56,7 +58,7 @@ model Refund {
   amount           Decimal       @db.Decimal(14, 2)
   status           PaymentStatus @default(pending)
   gatewayRefundRef String?       @map("gateway_refund_ref") @db.VarChar
-  requestedBy      BigInt        @map("requested_by")
+  requestedBy      BigInt?       @map("requested_by")
   completedAt      DateTime?     @map("completed_at") @db.Timestamp(6)
 
   payment Payment @relation("Refund_payment", fields: [paymentId], references: [id])
