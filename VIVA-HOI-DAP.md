@@ -639,7 +639,7 @@ Soạn 2026-10-28, bổ trợ cho `VIVA-TOMTAT.md` (đọc file đó trước). 
 
 **Q91. Vì sao Next.js cho ứng dụng mua hàng và Refine cho ứng dụng nội bộ?**
 - **Ý chính: ứng dụng mua hàng cần SSR/SEO và PWA; ứng dụng nội bộ là CRUD quản trị nhiều, Refine dựng nhanh.**
-- Trang QR công khai cần SSR; PWA (NFR7.3) cài được, ghi nhật ký canh tác khi mất mạng.
+- Trang QR công khai cần SSR; PWA (NFR7.3) cài được, giữ bản nháp nhật ký khi mất mạng; đồng bộ ngoại tuyến chỉ thiết kế.
 - Ứng dụng nội bộ chỉ có giao diện đáp ứng, không thao tác ngoại tuyến.
 
 **Q92. MinIO để làm gì?**
@@ -649,7 +649,7 @@ Soạn 2026-10-28, bổ trợ cho `VIVA-TOMTAT.md` (đọc file đó trước). 
 
 **Q93. Vì sao không làm app di động gốc, và Web Push là gì?**
 - **Ý chính: PWA đủ cho nhu cầu hiện tại; thông báo đẩy dùng Web Push, một chuẩn mở của trình duyệt chứ không phải đối tác thương mại.**
-- PWA cài được, ghi nhật ký canh tác ngoại tuyến, nhận thông báo đẩy (NFR7.3); app gốc là hướng phát triển khi nhu cầu ngoại tuyến vượt web (Ch8 §8.2). **[Ngoài phạm vi]**
+- PWA cài được, giữ bản nháp nhật ký khi mất mạng (NFR7.3); ghi nhật ký ngoại tuyến tự đồng bộ và thông báo đẩy chỉ thiết kế; app gốc là hướng phát triển khi nhu cầu ngoại tuyến vượt web (Ch8 §8.2). **[Ngoài phạm vi]**
 - Web Push là gì: chuẩn W3C (Push API + Notifications API), khóa VAPID (RFC 8292) để máy chủ tự định danh, tải tin mã hóa (RFC 8291).
 - Cơ chế: PWA đăng ký service worker; trình duyệt đăng ký với dịch vụ đẩy do hãng trình duyệt vận hành (Google, Mozilla, Apple; miễn phí, Farmery không có hợp đồng hay tài khoản riêng) và nhận subscription (địa chỉ + khóa); máy chủ nghiệp vụ lưu ở `notification.push_subscriptions`; khi đơn đổi trạng thái, máy chủ gửi yêu cầu HTTP ký VAPID tới địa chỉ đó; service worker hiển thị thông báo kể cả khi đã đóng tab.
 - Trạng thái: prototype hỏi lại trạng thái đơn mỗi 5 giây; MVP dùng Web Push: **[Để sau prototype]** (FR11.1). Trong hình C4 ghi "Dịch vụ đẩy của trình duyệt (Web Push)", một trong 5 hệ thống thuộc phạm vi MVP.

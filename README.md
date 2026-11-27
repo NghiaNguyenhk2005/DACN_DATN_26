@@ -76,7 +76,7 @@ Mọi NFR đều hiện thực, trừ:
 - NFR8.4 khấu trừ, nộp thuế thay *(chỉ thiết kế)*.
 
 Hai điểm cần biết:
-- **NFR7.3:** ứng dụng mua hàng là PWA (cài được, thông báo đẩy, ghi nhật ký canh tác khi mất mạng).
+- **NFR7.3:** ứng dụng mua hàng là PWA (cài được, trang báo mất mạng, biểu mẫu nhật ký giữ bản nháp trên máy); ghi nhật ký ngoại tuyến rồi tự đồng bộ chỉ thiết kế.
 - **NFR3.6:** nhân sự nội bộ đăng nhập hai lớp bằng TOTP.
 
 ### Giới hạn kỹ thuật

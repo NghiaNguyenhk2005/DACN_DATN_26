@@ -75,8 +75,8 @@ Hệ thống phụ thuộc vào đối tác bên ngoài mà nhóm không kiểm 
 Giao diện hiển thị đúng bố cục (không vỡ layout, không cuộn ngang) trên tối thiểu 3 kích thước màn hình đại diện (điện thoại, máy tính bảng, máy tính để bàn) và 2 trình duyệt phổ biến nhất tại Việt Nam. &
 Nhóm nông dân/HTX và phần lớn người tiêu dùng cá nhân được xác định truy cập chủ yếu qua điện thoại (mục~\ref{sec:doituongnguoidung}), nên hiển thị tốt trên di động là điều kiện bắt buộc phải kiểm chứng, không chỉ là tính năng ``hỗ trợ thêm''. \\
 \textbf{NFR7.3} &
-Kiểm tra thủ công theo danh sách trên tối thiểu 2 điện thoại thật (một Android tầm trung, một iOS): cài được lên màn hình chính; ghi nhật ký canh tác khi tắt mạng, dữ liệu được gửi đủ, không trùng khi bật mạng lại. &
-Không đo bằng điểm số công cụ vì Lighthouse đã bỏ hạng mục PWA từ phiên bản 12; các tiêu chí được chọn đúng theo lý do phải dùng PWA --- nhân sự hiện trường cần cài lên máy và làm việc ở nơi sóng yếu (persona 1, mục~\ref{sec:doituongnguoidung}); nhận thông báo đẩy \emph{chỉ thiết kế} nên không đo. \\
+Kiểm tra thủ công theo danh sách trên tối thiểu 2 điện thoại thật (một Android tầm trung, một iOS): cài được lên màn hình chính; khi tắt mạng thấy trang báo mất mạng và biểu mẫu nhật ký canh tác còn bản nháp khi mở lại; ghi và đồng bộ ngoại tuyến \emph{chỉ thiết kế} nên không đo. &
+Không đo bằng điểm số công cụ vì Lighthouse đã bỏ hạng mục PWA từ phiên bản 12; các tiêu chí được chọn đúng theo lý do phải dùng PWA --- nhân sự hiện trường cần cài lên máy và làm việc ở nơi sóng yếu (persona 1, mục~\ref{sec:doituongnguoidung}); nhận thông báo đẩy và đồng bộ ngoại tuyến \emph{chỉ thiết kế} nên không đo. \\
 \textbf{NFR9.1} &
 0 bản ghi đã công khai bị chỉnh sửa/xóa trực tiếp -- mọi thay đổi sau khi công khai chỉ qua cơ chế correction có ghi log (bản ghi mới kèm lý do, không ghi đè); kiểm tra qua rà soát log thao tác. &
 Mục tiêu là tính bất biến sau khi công khai nên chỉ tiêu đo phải tuyệt đối, nhất quán với lý do chọn giải pháp cơ sở dữ liệu tập trung có kiểm soát thay vì blockchain tại mục~\ref{subsec:gs1blockchain}. \\
