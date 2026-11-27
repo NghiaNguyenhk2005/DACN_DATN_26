@@ -1522,3 +1522,15 @@ giả: 188 đơn nhận, 2312 đơn bị từ chối, 0 bán vượt. Đây là 
 
 Bổ sung 2026-11-27 (mục k6 ngày 24/11): đã chạy 3 lượt mỗi kịch bản (oversell 50 vòng × 50 người mua: 190/180/182 đơn nhận, 0 bán vượt; browse tới 100 VU: p95 luồng duyệt 6,5–10,6 ms, lỗi 0%)
 và điền Ch.7. Ch.6 mục "Khóa dòng tồn" đã sửa từ "áp dụng FOR UPDATE" thành "hiện là KeyedMutex, đích là FOR UPDATE" cho khớp mã. Ch.5 (bảng chọn công nghệ) giữ nguyên vì chỉ nêu quyết định thiết kế.
+
+### Tồn kho chạy trên PostgreSQL với khóa dòng FOR UPDATE; chế độ hỗn hợp INVENTORY_STORAGE — 2026-11-27
+**Quyết định:**
+- Chuyển riêng mô-đun tồn kho sang PostgreSQL (`PrismaInventoryRepository`); giỏ, đơn, danh mục, wholesale vẫn ở bộ nhớ. Chống bán vượt trên PostgreSQL bằng `SELECT ... FOR UPDATE` trong transaction,
+  khóa theo thứ tự id, `CHECK stock_holdings_qty_check` là chốt chặn cuối. `InventoryRepository` đổi thành các thao tác ghi nguyên tử (`openFromBatch`, `reserve`, `settle`); phần tính FEFO và quy tắc khép giữ chỗ tách ra `stock-math.ts` dùng chung hai kho.
+- Ba thay đổi lược đồ đã duyệt: số lượng tồn `Decimal(12,3)` (khớp `round3` của mã, giỏ tối thiểu 0,001); thêm `returned` vào `reservation_status`; thêm 6 cột chụp thông tin lô vào `stock_holdings`
+  (`product_id`, `listing_id`, `batch_code`, `product_name`, `harvest_date`, `best_before`) kèm chỉ mục `listing_id`, `batch_id`.
+- Thêm `INVENTORY_STORAGE` (mặc định theo `STORAGE`) để chạy hỗn hợp; `DemoResetRegistry.resetAll()` đổi sang bất đồng bộ để đặt lại được kho PostgreSQL (TRUNCATE rồi nạp lại dữ liệu mẫu, chỉ `DEMO_MODE`).
+- SỬA 2026-11-27 (mục 2026-11-24 "Dựng k6 trước"): phần "chạy trên PostgreSQL" đã thực hiện được cho riêng tồn kho; số đo trên bộ nhớ vẫn giữ làm cột đối chiếu.
+**Bối cảnh:** NFR1.2 và NFR4.1 chỉ cần tồn kho có khóa dòng thật; chuyển cả retail và catalog không kịp mốc đóng băng 15/12. Plan làm giàu `HoldingRecord` từ catalog bị bỏ vì `CatalogModule` đã import `InventoryModule` (vòng phụ thuộc), nên chụp thông tin lô vào chính dòng tồn.
+**Đánh đổi:** thông tin lô lặp ở dòng tồn (bất biến sau khi duyệt lô, riêng tên sản phẩm có thể lệch nếu đổi sau). Giữ chỗ (PostgreSQL) và ghi đơn (bộ nhớ) chưa chung giao dịch. Cần thêm một `ci-pg` bước chạy bài kiểm tích hợp `inventory-pg`.
+Kết quả (máy Nghĩa, PostgreSQL 17 trong Docker, 3 lượt, API mới mỗi lượt): oversell 188/197/186 đơn nhận, 0 bán vượt trong 150 vòng × 50 yêu cầu; browse p95 luồng duyệt 125–372 ms, lỗi 0%; truy vấn chậm nhất là câu `FOR UPDATE` theo tin bán (trung bình 13,5–25,7 ms, phần lớn là đợi khóa). Bỏ `FOR UPDATE` thì bài kiểm đỏ (tổng giữ chỗ 58/75/77 trên tồn 8).
