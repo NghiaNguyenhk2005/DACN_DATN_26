@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 export interface Resettable {
-  reset(): void;
+  reset(): void | Promise<void>;
 }
 
 // Kho trong bộ nhớ tự đăng ký vào đây; POST /dev/reset gọi reset() của tất cả.
@@ -13,7 +13,7 @@ export class DemoResetRegistry {
     this.items.push(item);
   }
 
-  resetAll(): void {
-    for (const item of this.items) item.reset();
+  async resetAll(): Promise<void> {
+    for (const item of this.items) await item.reset();
   }
 }

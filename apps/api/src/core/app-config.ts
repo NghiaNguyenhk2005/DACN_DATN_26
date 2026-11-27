@@ -26,7 +26,9 @@ export interface AppConfig {
   accessLog: boolean;
   /** Kho dữ liệu của các repository: bộ nhớ (mặc định, có dữ liệu mẫu) hoặc Prisma + PostgreSQL. */
   storage: StorageKind;
-  /** Chỉ có khi storage = "prisma". */
+  /** Kho của mô-đun tồn kho; mặc định theo `storage`, đặt riêng để chạy hỗn hợp (tồn ở PostgreSQL, còn lại bộ nhớ). */
+  inventoryStorage: StorageKind;
+  /** Có khi storage hoặc inventoryStorage là "prisma". */
   databaseUrl: string | null;
   /** Dịch vụ AI nội bộ (apps/ai); null thì không bật vector, tìm kiếm dùng từ điển khái niệm. */
   ai: AiServiceConfig | null;
@@ -80,6 +82,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   if (storageRaw !== "memory" && storageRaw !== "prisma") throw new Error("STORAGE phải là memory hoặc prisma");
   const databaseUrl = env.DATABASE_URL?.trim() || null;
   if (storageRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi STORAGE=prisma");
+  const inventoryRaw = env.INVENTORY_STORAGE?.trim() || storageRaw;
+  if (inventoryRaw !== "memory" && inventoryRaw !== "prisma") throw new Error("INVENTORY_STORAGE phải là memory hoặc prisma");
+  if (inventoryRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi INVENTORY_STORAGE=prisma");
 
   const aiUrl = env.AI_SERVICE_URL?.trim();
   const aiToken = env.AI_SERVICE_TOKEN?.trim();
@@ -114,6 +119,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     smtp,
     accessLog: flag(env, "LOG_REQUESTS", production),
     storage: storageRaw,
+    inventoryStorage: inventoryRaw,
     databaseUrl,
     ai,
     loadtestBuyers,
