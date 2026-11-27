@@ -119,6 +119,12 @@ interface CodeStepProps {
 function CodeStep({ otp, sendAction, sending, next, them, onChangeEmail }: CodeStepProps) {
   const [state, verifyAction, verifying] = useActionState<VerifyState, FormData>(verifyOtp, null);
   const [code, setCode] = useState("");
+  // Ô mã giữ giá trị để bước nhập họ tên không mất mã; nhập sai thì xóa trống để gõ lại.
+  const [seenState, setSeenState] = useState(state);
+  if (state !== seenState) {
+    setSeenState(state);
+    if (state?.message && !state.registering) setCode("");
+  }
   // Mã hết hạn hoặc nhập sai quá 5 lần: phiên mã đã hủy, nhập tiếp vô ích, chỉ còn cách xin mã mới.
   const dead = state?.code === "OTP_EXPIRED";
   const locked = state?.code === "RATE_LIMITED" ? state : null;

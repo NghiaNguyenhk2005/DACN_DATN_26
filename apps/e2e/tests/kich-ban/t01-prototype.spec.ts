@@ -25,8 +25,8 @@ test("điện thoại: báo tên món hết hàng cạnh nút đặt, kho hiển
   await loginShop(page, "khachle@example.com");
   const shopperToken = await shopToken(page);
   await page.goto(`${SHOP_URL}/san-pham/dau-tay-1`);
-  await page.getByRole("button", { name: "Thêm vào giỏ" }).click();
-  await expect(page.getByText("Đã thêm vào giỏ").first()).toBeVisible();
+  await page.getByRole("button", { name: "Thêm vào giỏ" }).first().click();
+  await expect(page.locator("p[role='status']:visible", { hasText: "Đã thêm vào giỏ" })).toBeVisible();
   await page.goto(`${SHOP_URL}/thanh-toan`);
   const place = page.getByRole("button", { name: "Đặt hàng", exact: true });
   await expect(place).toBeEnabled();
@@ -100,8 +100,8 @@ test("điện thoại: báo tên món hết hàng cạnh nút đặt, kho hiển
 test("trang chờ tự đổi trạng thái khi thanh toán ở nơi khác và cho hủy đơn đã trả", async ({ page, request }) => {
   await loginShop(page, "khachle@example.com");
   await page.goto(`${SHOP_URL}/san-pham/dau-tay-1`);
-  await page.getByRole("button", { name: "Thêm vào giỏ" }).click();
-  await expect(page.getByText("Đã thêm vào giỏ").first()).toBeVisible();
+  await page.getByRole("button", { name: "Thêm vào giỏ" }).first().click();
+  await expect(page.locator("p[role='status']:visible", { hasText: "Đã thêm vào giỏ" })).toBeVisible();
   await page.goto(`${SHOP_URL}/thanh-toan`);
   await page.getByRole("button", { name: "Đặt hàng", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Chờ thanh toán" })).toBeVisible();

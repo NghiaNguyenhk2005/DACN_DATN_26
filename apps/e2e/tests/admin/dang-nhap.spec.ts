@@ -47,7 +47,7 @@ test.describe("Admin — đăng nhập OTP", () => {
     const code = await requestOtp(page, "nongdan@example.com");
     await submitOtp(page, code);
 
-    await expect(page.getByText("Tài khoản này không có quyền vào ứng dụng nội bộ.")).toBeVisible();
+    await expect(page.getByText("Tài khoản này không có quyền vào ứng dụng nội bộ.").first()).toBeVisible();
     await expect(page).toHaveURL(/\/login/);
   });
 
@@ -58,7 +58,7 @@ test.describe("Admin — đăng nhập OTP", () => {
     await expect(page).toHaveURL(/\/login/);
 
     const response = page.waitForResponse((r) => r.url().endsWith("/api/auth/otp") && r.status() === 429);
-    const resend = page.getByRole("button", { name: /^Gửi lại mã/ });
+    const resend = page.locator("button").filter({ hasText: /^Gửi lại mã/ });
     await resend.click();
     expect(Number((await response).headers()["retry-after"])).toBeGreaterThan(0);
     await expect(resend).toHaveText(/Gửi lại mã \(\d+s\)/);
@@ -79,7 +79,7 @@ test.describe("Admin — đăng nhập OTP", () => {
       if (i < 4) await expect(page.getByRole("button", { name: "Đăng nhập" })).toBeEnabled();
     }
     await expect(page.locator(".ant-otp input").first()).toBeDisabled();
-    const resend = page.getByRole("button", { name: /^Gửi mã mới/ });
+    const resend = page.locator("button").filter({ hasText: /^Gửi mã mới/ });
     const otpResponse = () => page.waitForResponse((r) => r.url().endsWith("/api/auth/otp") && r.request().method() === "POST");
     let response = otpResponse();
     await resend.click();
