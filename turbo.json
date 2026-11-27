@@ -20,6 +20,10 @@
         "src/generated/**"
       ]
     },
+    "@farmery/api#generate": {
+      "inputs": ["prisma.config.ts", "prisma/schema/**", "package.json"],
+      "outputs": ["src/generated/**"]
+    },
     "build": {
       "dependsOn": [
         "^build",
