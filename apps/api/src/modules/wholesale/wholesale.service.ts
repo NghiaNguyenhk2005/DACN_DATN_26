@@ -213,12 +213,15 @@ export class WholesaleService {
     }
 
     const chargeResult = await this.payments.charge(orderId, amount);
+    if (chargeResult.status !== "succeeded") {
+      throw new ProblemException(HttpStatus.CONFLICT, "PAYMENT_FAILED", "Cổng thanh toán chưa xác nhận giao dịch");
+    }
 
     req.payment = {
       orderId,
       amount,
-      status: chargeResult.status === "succeeded" ? "succeeded" : "failed",
-      reference: chargeResult.reference,
+      status: "succeeded",
+      ...(chargeResult.reference !== null ? { reference: chargeResult.reference } : {}),
       paidAt: this.clock.now().toISOString(),
     };
 

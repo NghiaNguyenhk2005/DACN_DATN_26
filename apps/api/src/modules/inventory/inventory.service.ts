@@ -19,6 +19,7 @@ function toHolding(h: HoldingRecord): StockHolding {
     batchId: h.batchId,
     batchCode: h.batchCode,
     productName: h.productName,
+    bestBefore: h.bestBefore,
     ownerType: h.ownerType,
     locationType: h.locationType,
     saleUnit: h.saleUnit,

@@ -4,13 +4,16 @@ import type { Schema } from "@farmery/contract";
 import { APP_CONFIG, type AppConfig } from "../../core/app-config";
 import { Clock } from "../../core/clock";
 import { DemoResetRegistry, type Resettable } from "../../core/demo-reset.registry";
+import { KeyedMutex } from "../../core/mutex";
 import { ProblemException, RateLimitedException } from "../../core/problem";
 import { TokenService } from "../../core/token.service";
 import { OtpSender } from "../../integrations/otp-sender";
 import { AccountRepository, type Account } from "./account.repository";
 import { AddressRepository, type Address, type AddressInput } from "./address.repository";
+import { decryptTotp, encryptTotp, newTotpSecret, provisioningUri, verifyTotp } from "./totp";
 
 export type Me = Schema<"Me">;
+export interface LoginResult { accessToken: string; user: Me }
 
 const DEMO_OTP_CODE = "123456";
 const OTP_TTL_MS = 10 * 60 * 1000;
@@ -27,6 +30,7 @@ interface OtpChallenge {
   codeHash: Buffer;
   expiresAt: number;
   attemptsLeft: number;
+  pendingTotpSecret?: Buffer;
 }
 
 /** Dấu vết theo email để chặn gửi dồn dập và dò mã, tính cả email không tồn tại để không lộ tài khoản nào có thật. */
@@ -48,6 +52,7 @@ function normalizePhone(raw: string): string {
 export class IdentityService implements Resettable {
   private challenges = new Map<string, OtpChallenge>();
   private activity = new Map<string, EmailActivity>();
+  private readonly challengeMutex = new KeyedMutex();
   /** Email vừa dùng để đăng nhập mỗi tài khoản: GET /me trả đúng email đó dù tài khoản có nhiều bí danh. */
   private loginEmails = new Map<string, string>();
 
@@ -79,12 +84,8 @@ export class IdentityService implements Resettable {
     const challengeId = randomUUID();
     const expiresAt = now + OTP_TTL_MS;
 
-    if (!account) {
-      // Demo (và hợp đồng): email lạ trả 404. Chạy thật: trả y như thành công để không lộ email nào có tài khoản.
-      if (this.config.demoMode) {
-        throw new ProblemException(HttpStatus.NOT_FOUND, "NOT_FOUND", "Không có tài khoản với email này");
-      }
-      return { challengeId, expiresAt: new Date(expiresAt).toISOString() };
+    if (!account && this.config.demoMode) {
+      throw new ProblemException(HttpStatus.NOT_FOUND, "NOT_FOUND", "Không có tài khoản với email này");
     }
 
     const code = this.config.demoMode ? DEMO_OTP_CODE : String(randomInt(0, 1_000_000)).padStart(6, "0");
@@ -104,7 +105,68 @@ export class IdentityService implements Resettable {
     };
   }
 
-  async login(challengeId: string, code: string): Promise<{ accessToken: string; user: Me }> {
+  login(challengeId: string, code: string, totpCode?: string): Promise<LoginResult> {
+    return this.challengeMutex.runExclusive(challengeId, async () => {
+      const challenge = this.requireEmailOtp(challengeId, code);
+      const account = await this.accounts.findByEmail(challenge.email);
+      if (!account) {
+        throw new ProblemException(HttpStatus.CONFLICT, "REGISTRATION_REQUIRED", "Email đã xác minh. Nhập họ tên để tạo tài khoản.");
+      }
+
+      if (this.isStaff(account)) {
+        const encrypted = account.totpSecretEnc;
+        const pending = challenge.pendingTotpSecret;
+        if (!encrypted && !pending && !this.config.demoMode) {
+          throw new ProblemException(HttpStatus.UNAUTHORIZED, "TOTP_SETUP_REQUIRED", "Thiết lập ứng dụng xác thực để đăng nhập nội bộ");
+        }
+        if (encrypted || pending) {
+          if (!totpCode) {
+            throw new ProblemException(HttpStatus.UNAUTHORIZED, "TOTP_REQUIRED", "Nhập mã từ ứng dụng xác thực");
+          }
+          const secret = encrypted ? decryptTotp(encrypted, account.id, this.config.jwtSecret) : pending!;
+          const step = verifyTotp(secret, totpCode, this.clock.now().getTime());
+          const accepted = step !== null && (encrypted
+            ? await this.accounts.consumeTotp(account.id, step)
+            : await this.accounts.enableTotp(account.id, encryptTotp(secret, account.id, this.config.jwtSecret), step));
+          if (!accepted) this.rejectCode(challengeId, challenge, "TOTP_INVALID", "Mã xác thực không đúng hoặc đã dùng");
+        }
+      }
+      return this.finishLogin(challengeId, challenge, account);
+    });
+  }
+
+  register(challengeId: string, code: string, rawName: string): Promise<LoginResult> {
+    return this.challengeMutex.runExclusive(challengeId, async () => {
+      const challenge = this.requireEmailOtp(challengeId, code);
+      const name = rawName.trim();
+      if (!name || name.length > 120) {
+        throw new ProblemException(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", "Họ tên phải có từ 1 đến 120 ký tự");
+      }
+      if (this.config.demoMode || await this.accounts.findByEmail(challenge.email)) {
+        throw new ProblemException(HttpStatus.CONFLICT, "REGISTRATION_UNAVAILABLE", "Không thể đăng ký bằng email này");
+      }
+      const account = await this.accounts.register(challenge.email, name, this.clock.now());
+      if (!account) throw new ProblemException(HttpStatus.CONFLICT, "REGISTRATION_UNAVAILABLE", "Không thể đăng ký bằng email này");
+      return this.finishLogin(challengeId, challenge, account);
+    });
+  }
+
+  setupTotp(challengeId: string, code: string): Promise<{ provisioningUri: string }> {
+    return this.challengeMutex.runExclusive(challengeId, async () => {
+      const challenge = this.requireEmailOtp(challengeId, code);
+      const account = await this.accounts.findByEmail(challenge.email);
+      if (!account || !this.isStaff(account)) {
+        throw new ProblemException(HttpStatus.FORBIDDEN, "FORBIDDEN_ROLE", "Chỉ tài khoản nội bộ được thiết lập xác thực tại đây");
+      }
+      if (account.totpSecretEnc) {
+        throw new ProblemException(HttpStatus.CONFLICT, "TOTP_ALREADY_ENABLED", "Tài khoản đã bật ứng dụng xác thực");
+      }
+      challenge.pendingTotpSecret ??= newTotpSecret();
+      return { provisioningUri: provisioningUri(challenge.email, challenge.pendingTotpSecret) };
+    });
+  }
+
+  private requireEmailOtp(challengeId: string, code: string): OtpChallenge {
     const now = this.clock.now().getTime();
     const challenge = this.challenges.get(challengeId);
     if (!challenge || challenge.expiresAt <= now) {
@@ -114,19 +176,28 @@ export class IdentityService implements Resettable {
     this.assertNotLockedOut(challenge.email, now);
 
     if (!this.matches(challengeId, code, challenge.codeHash)) {
-      this.recordFailure(challenge.email, now);
-      challenge.attemptsLeft -= 1;
-      if (challenge.attemptsLeft <= 0) {
-        this.challenges.delete(challengeId);
-        throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_EXPIRED", "Nhập sai quá số lần cho phép, hãy gửi lại mã");
-      }
-      throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_INVALID", "Mã OTP không đúng");
+      this.rejectCode(challengeId, challenge, "OTP_INVALID", "Mã OTP không đúng");
     }
-    this.challenges.delete(challengeId); // mỗi mã chỉ dùng một lần
-    this.activity.delete(challenge.email);
+    return challenge;
+  }
 
-    const account = await this.accounts.findByEmail(challenge.email);
-    if (!account) throw new ProblemException(HttpStatus.UNAUTHORIZED, "UNAUTHENTICATED", "Tài khoản không còn tồn tại");
+  private rejectCode(challengeId: string, challenge: OtpChallenge, code: string, detail: string): never {
+    this.recordFailure(challenge.email, this.clock.now().getTime());
+    challenge.attemptsLeft -= 1;
+    if (challenge.attemptsLeft <= 0) {
+      this.challenges.delete(challengeId);
+      throw new ProblemException(HttpStatus.UNAUTHORIZED, "OTP_EXPIRED", "Nhập sai quá số lần cho phép, hãy gửi lại mã");
+    }
+    throw new ProblemException(HttpStatus.UNAUTHORIZED, code, detail);
+  }
+
+  private isStaff(account: Account): boolean {
+    return account.roles.some((role) => role.startsWith("staff_") || role === "platform_owner");
+  }
+
+  private async finishLogin(challengeId: string, challenge: OtpChallenge, account: Account): Promise<LoginResult> {
+    this.challenges.delete(challengeId);
+    this.activity.delete(challenge.email);
     this.loginEmails.set(account.id, challenge.email);
     const accessToken = await this.tokens.sign({ id: account.id, roles: account.roles });
     return { accessToken, user: this.toMe(account) };

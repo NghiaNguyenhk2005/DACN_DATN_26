@@ -52,10 +52,17 @@ export function planReserve(holdings: HoldingRecord[], lines: StockLine[]): { pl
       remaining = round3(remaining - take);
     }
     if (remaining > 0) {
+      // Nêu tên sản phẩm và lượng còn lại để khách biết phải sửa dòng nào trong giỏ.
+      const left = round3(line.quantity - remaining);
+      const unit = line.saleUnit ? ` ${line.saleUnit}` : "";
       throw new ProblemException(
         HttpStatus.CONFLICT,
         "STOCK_CONFLICT",
-        `Tin bán ${line.listingId} không đủ hàng: còn thiếu ${remaining}`,
+        line.productName
+          ? left > 0
+            ? `${line.productName}: chỉ còn ${left}${unit}`
+            : `${line.productName}: vừa hết hàng`
+          : `Tin bán ${line.listingId} không đủ hàng: còn thiếu ${remaining}`,
       );
     }
   }

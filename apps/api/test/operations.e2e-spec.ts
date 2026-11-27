@@ -1,4 +1,5 @@
 import request from "supertest";
+import type { Schema } from "@farmery/contract";
 import { addAddress, createTestApp, firstSlot, holdingOf, login, place, setCart, type TestApp } from "./support";
 
 describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
@@ -19,8 +20,8 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
   afterEach(() => t.app.close());
 
   const get = (path: string, token: string) => request(t.http()).get(path).auth(token, { type: "bearer" });
-  const advance = (id: string, token: string, note?: string) =>
-    request(t.http()).post(`/api/admin/orders/${id}/advance`).auth(token, { type: "bearer" }).send(note ? { note } : {});
+  const advance = (id: string, token: string, expectedStatus: Schema<"OrderStatus">, note?: string) =>
+    request(t.http()).post(`/api/admin/orders/${id}/advance`).auth(token, { type: "bearer" }).send({ expectedStatus, ...(note ? { note } : {}) });
 
   async function codOrder(listingId = "201", quantity = 2): Promise<{ id: string; orderCode: string }> {
     await setCart(t, buyer, listingId, quantity).expect(200);
@@ -31,9 +32,9 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
   describe("chuyển bước đơn", () => {
     it("vận hành đi hết tám bước; mỗi bước ghi một sự kiện source=staff; khách thấy dòng thời gian cập nhật", async () => {
       const order = await codOrder();
-      const expected = ["packing", "on_trip", "handed_to_3pl", "delivering", "delivered", "completed"];
+      const expected = ["packing", "on_trip", "handed_to_3pl", "delivering", "delivered", "completed"] as const;
       for (const [i, status] of expected.entries()) {
-        const res = await advance(order.id, ops, i === 0 ? "Đã soạn hàng" : undefined).expect(200);
+        const res = await advance(order.id, ops, expected[i - 1] ?? "paid", i === 0 ? "Đã soạn hàng" : undefined).expect(200);
         expect(res.body.status).toBe(status);
         expect(res.body.timeline.at(-1)).toMatchObject({ toStatus: status, source: "staff", note: i === 0 ? "Đã soạn hàng" : null });
         expect(res.body.buyerName).toBe("Khách lẻ Trần Minh Anh");
@@ -43,30 +44,44 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
         "placed", "paid", "packing", "on_trip", "handed_to_3pl", "delivering", "delivered", "completed",
       ]);
       expect(mine.body.buyerName).toBeUndefined(); // API của khách không lộ tên người mua
-      const done = await advance(order.id, ops).expect(409);
+      const done = await advance(order.id, ops, "completed").expect(409);
       expect(done.body.code).toBe("ORDER_TRANSITION_INVALID");
     });
 
     it("đơn chờ thanh toán hoặc đã hủy trả 409 ORDER_TRANSITION_INVALID; đơn lạ trả 404", async () => {
       await setCart(t, buyer, "201", 1).expect(200);
       const placed = (await place(t, buyer, { addressId, ...(await firstSlot(t, buyer, addressId)), paymentOption: "prepaid" }).expect(201)).body;
-      expect((await advance(placed.id, ops).expect(409)).body.code).toBe("ORDER_TRANSITION_INVALID");
+      expect((await advance(placed.id, ops, "placed").expect(409)).body.code).toBe("ORDER_TRANSITION_INVALID");
       await request(t.http()).post(`/api/orders/${placed.id}/cancel`).auth(buyer, { type: "bearer" }).expect(200);
-      expect((await advance(placed.id, ops).expect(409)).body.code).toBe("ORDER_TRANSITION_INVALID");
-      await advance("424242", ops).expect(404);
+      expect((await advance(placed.id, ops, "cancelled").expect(409)).body.code).toBe("ORDER_TRANSITION_INVALID");
+      await advance("424242", ops, "paid").expect(404);
+    });
+
+    it("hai nhân viên tranh cùng bước ở hai lần liên tiếp chỉ ghi một bước mỗi lần", async () => {
+      const order = await codOrder();
+      await request(t.http()).post(`/api/admin/orders/${order.id}/advance`)
+        .auth(ops, { type: "bearer" }).send({}).expect(400);
+      for (const [from, to] of [["paid", "packing"], ["packing", "on_trip"]] as const) {
+        const results = await Promise.all([advance(order.id, ops, from), advance(order.id, warehouse, from)]);
+        expect(results.map((result) => result.status).sort()).toEqual([200, 409]);
+        expect(results.find((result) => result.status === 409)?.body.code).toBe("ORDER_STATUS_CHANGED");
+        const { body } = await get(`/api/admin/orders/${order.id}`, ops).expect(200);
+        expect(body.status).toBe(to);
+        expect(body.timeline.filter((event: { toStatus: string }) => event.toStatus === to)).toHaveLength(1);
+      }
     });
 
     it("kho chỉ chuyển bước phía kho; bước sau đó trả 403; vai trò khác không được gọi", async () => {
       const order = await codOrder();
-      for (const status of ["packing", "on_trip", "handed_to_3pl"]) {
-        expect((await advance(order.id, warehouse).expect(200)).body.status).toBe(status);
+      for (const [from, to] of [["paid", "packing"], ["packing", "on_trip"], ["on_trip", "handed_to_3pl"]] as const) {
+        expect((await advance(order.id, warehouse, from).expect(200)).body.status).toBe(to);
       }
-      const denied = await advance(order.id, warehouse).expect(403);
+      const denied = await advance(order.id, warehouse, "handed_to_3pl").expect(403);
       expect(denied.body.code).toBe("FORBIDDEN_ROLE");
       expect((await get(`/api/admin/orders/${order.id}`, ops).expect(200)).body.status).toBe("handed_to_3pl");
-      expect((await advance(order.id, ops).expect(200)).body.status).toBe("delivering");
-      await advance(order.id, owner).expect(403);
-      await advance(order.id, buyer).expect(403);
+      expect((await advance(order.id, ops, "handed_to_3pl").expect(200)).body.status).toBe("delivering");
+      await advance(order.id, owner, "delivering").expect(403);
+      await advance(order.id, buyer, "delivering").expect(403);
     });
   });
 
@@ -74,7 +89,7 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
     it("mới nhất trước, lọc theo trạng thái, phân trang bằng cursor, có tên người mua", async () => {
       const first = await codOrder();
       const second = await codOrder();
-      await advance(first.id, ops).expect(200);
+      await advance(first.id, ops, "paid").expect(200);
 
       const all = (await get("/api/admin/orders", ops).expect(200)).body;
       expect(all.items.map((o: { id: string }) => o.id)).toEqual([second.id, first.id]);
@@ -102,7 +117,7 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
       const all = (await get("/api/admin/inventory/holdings", warehouse).expect(200)).body as { batchId: string; ownerType: string }[];
       expect(all).toHaveLength(39); // 39 lô đã duyệt có sản phẩm (15 gốc + 24 bổ sung 05/11)
       expect(all.every((h) => h.ownerType === "farmery")).toBe(true);
-      expect(await holdingOf(t, ops, "1001")).toMatchObject({ batchCode: "DTDL-2610-01", qtyOnHand: 150, qtyReserved: 0, isLocked: false, saleUnit: "hộp 500g" });
+      expect(await holdingOf(t, ops, "1001")).toMatchObject({ batchCode: "DTDL-2610-01", bestBefore: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), qtyOnHand: 150, qtyReserved: 0, isLocked: false, saleUnit: "hộp 500g" });
       expect((await get("/api/admin/inventory/holdings?productId=2", ops).expect(200)).body).toHaveLength(1);
       await get("/api/admin/inventory/holdings", buyer).expect(403);
       await get("/api/admin/inventory/holdings", owner).expect(403);
@@ -140,12 +155,22 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
         freeShippingThreshold: 300000,
         reservationMinutes: 15,
         retailVatPercent: 5,
+        wholesaleCommissionRate: 0,
       });
       const put = (body: object, token = owner) => request(t.http()).put("/api/admin/settings").auth(token, { type: "bearer" }).send(body);
       expect((await put({ shippingFee: 30000 }).expect(200)).body).toMatchObject({ shippingFee: 30000, codMaxAmount: 1000000 });
       // đổi khóa khác không được đặt lại khóa đã đổi trước đó về mặc định
       await put({ codMaxAmount: 500000 }).expect(200);
-      expect((await put({ reservationMinutes: 10 }).expect(200)).body).toMatchObject({ shippingFee: 30000, codMaxAmount: 500000, reservationMinutes: 10 });
+      expect((await put({ reservationMinutes: 10, wholesaleCommissionRate: 0.0755 }).expect(200)).body)
+        .toMatchObject({ shippingFee: 30000, codMaxAmount: 500000, reservationMinutes: 10, wholesaleCommissionRate: 0.0755 });
+      const publicSettings = await request(t.http()).get("/api/shop/delivery-settings").expect(200);
+      expect(publicSettings.body).toEqual({
+        codMaxAmount: 500000,
+        cutoffTime: def.cutoffTime,
+        deliverySlots: def.deliverySlots,
+        shippingFee: 30000,
+        freeShippingThreshold: def.freeShippingThreshold,
+      });
       await put({ shippingFee: 1 }, ops).expect(403);
       await put({ shippingFee: 1 }, warehouse).expect(403);
       await get("/api/admin/settings", warehouse).expect(403);
@@ -155,6 +180,7 @@ describe("Vận hành đơn, dòng tồn, cấu hình, /dev/reset", () => {
       const put = (body: object) => request(t.http()).put("/api/admin/settings").auth(owner, { type: "bearer" }).send(body);
       for (const bad of [
         { khongCo: 1 }, {}, { cutoffTime: "29:00" }, { shippingFee: -1 }, { reservationMinutes: 0 },
+        { wholesaleCommissionRate: -0.01 }, { wholesaleCommissionRate: 1.0001 }, { wholesaleCommissionRate: 0.12345 },
         { deliverySlots: [] }, { deliverySlots: ["11:00-08:00"] }, { deliverySlots: ["08:00-11:00", "08:00-11:00"] },
       ]) {
         const res = await put(bad).expect(400);

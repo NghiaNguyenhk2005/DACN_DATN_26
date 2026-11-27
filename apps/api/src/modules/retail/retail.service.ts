@@ -208,7 +208,12 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
       const id = await this.orders.nextId();
       const allocations = await this.inventory.reserve(
         id,
-        cart.items.map((i) => ({ listingId: i.listingId, quantity: i.quantity })),
+        cart.items.map((i) => ({
+          listingId: i.listingId,
+          quantity: i.quantity,
+          productName: i.productName,
+          saleUnit: i.saleUnit,
+        })),
       );
 
       try {
@@ -358,8 +363,16 @@ export class RetailService implements OnModuleInit, OnModuleDestroy {
     return { ...this.toDetail(order), buyerName: await this.buyerName(order) };
   }
 
-  advanceOrder(orderId: string, roles: readonly RoleCode[], note?: string): Promise<OrderDetail> {
+  advanceOrder(orderId: string, roles: readonly RoleCode[], expectedStatus: OrderStatus, note?: string): Promise<OrderDetail> {
     return this.withOrder(orderId, async (order) => {
+      // So sánh trạng thái ngay trong khóa đơn trước khi chọn bước kế tiếp.
+      if (expectedStatus !== order.status) {
+        throw problem(
+          HttpStatus.CONFLICT,
+          "ORDER_STATUS_CHANGED",
+          `Đơn đã được chuyển sang ${order.status} trước đó (màn hình đang hiện ${expectedStatus}), hãy tải lại để xem trạng thái mới nhất`,
+        );
+      }
       const next = nextStaffStep(order.status);
       if (!next) {
         throw problem(

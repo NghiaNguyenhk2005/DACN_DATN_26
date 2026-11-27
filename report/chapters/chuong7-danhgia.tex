@@ -117,7 +117,9 @@ p95 mọi yêu cầu (ms) & 63 & 57 & 69 & 366 & 320 & 248 \\
 
 \noindent\textbf{Phân quyền và bảo mật.} Script gọi endpoint nghiệp vụ bằng token của vai trò không đủ quyền (ví dụ \texttt{buyer\_retail} gọi endpoint đăng bán, token một vai trò nội bộ gọi endpoint vai trò khác) và xác nhận mọi lời gọi bị chặn với mã 403 (NFR3.1); rà soát cơ sở dữ liệu để xác nhận mã hóa dữ liệu định danh và băm mật khẩu (NFR3.2, NFR3.3).
 
-\noindent\textbf{Độ tin cậy và các yêu cầu còn lại.} Thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (NFR4.2). Các yêu cầu định tính hoặc chỉ thiết kế --- NFR2.1, NFR2.2, NFR3.4--NFR3.6, NFR5.1, NFR5.2, NFR7.1, NFR8.1--NFR8.5, NFR9.1 --- được nghiệm thu bằng danh sách kiểm tra hoặc rà soát thiết kế chứ không đo bằng chỉ số, đúng như mục~\ref{sec:yeucauphichucnang}.
+\noindent\textbf{Thời gian chờ và thử lại khi thanh toán (NFR7.1).} Ngày 25/11/2026, kiểm thử Jest trên Windows với Node.js 22.23.5 đo bằng đồng hồ monotonic của Node.js. Với độ trễ giả lập 4\,500 ms, giao dịch thành công sau 4\,502 ms qua một lần gọi. Với độ trễ 5\,250 ms, ba lần gọi bị ngắt lần lượt sau 5\,008, 5\,011 và 5\,001 ms. Hai khoảng chờ trước khi thử lại là 260 và 508 ms. Giao dịch chuyển sang trạng thái hết hạn sau 15\,789 ms. Phép đo dùng cổng giả lập \texttt{DemoPaymentGateway} và dữ liệu trong bộ nhớ.
+
+\noindent\textbf{Độ tin cậy và các yêu cầu còn lại.} Thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (NFR4.2). Các yêu cầu định tính hoặc chỉ thiết kế --- NFR2.1, NFR2.2, NFR3.4--NFR3.6, NFR5.1, NFR5.2, NFR8.1--NFR8.5, NFR9.1 --- được kiểm bằng danh sách kiểm tra hoặc rà soát thiết kế theo mục~\ref{sec:yeucauphichucnang}.
 
 % TODO: điền số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa; đo thêm khi giỏ hàng, đơn hàng và danh mục chuyển sang PostgreSQL.
 

@@ -12,9 +12,13 @@ export interface Account {
   supplierId: string | null;
   /** FR7.1: đã từng từ chối nhận hàng COD thì không được chọn COD nữa. */
   refusedCod: boolean;
+  totpSecretEnc?: string | null;
 }
 
 export abstract class AccountRepository {
   abstract findByEmail(email: string): Promise<Account | null>;
   abstract findById(id: string): Promise<Account | null>;
+  abstract register(email: string, displayName: string, verifiedAt: Date): Promise<Account | null>;
+  abstract enableTotp(id: string, encryptedSecret: string, step: bigint): Promise<boolean>;
+  abstract consumeTotp(id: string, step: bigint): Promise<boolean>;
 }
