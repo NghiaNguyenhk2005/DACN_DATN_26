@@ -707,7 +707,7 @@ Phần hỏi đáp đầy đủ (100 câu) nằm ở `VIVA-HOI-DAP.md`; ở đâ
 | 2 | Số mục "thách thức" (4.2.3 hay 4.2.4) | Phụ thuộc cách đánh số persona/journey trong PDF | Mở PDF |
 | 3 | 20/40 thao tác có handler | Đếm decorator `@Get/@Post` ở `apps/api/src` = 20, gồm 18 thao tác nghiệp vụ + `getHealth` + `resetData`; 20 còn lại 501 | Chạy API/gọi thử trước giờ bảo vệ |
 | 4 | Hiện trạng nhánh khác | Phân tích ở nhánh `feat/fe-e2e-kich-ban-lo`; nhánh `develop` có thể có thêm | `git log develop` |
-| 5 | PWA/service worker của shop | Báo cáo cam kết PWA + hàng đợi ngoại tuyến; tôi không kiểm mã `apps/shop` | Hỏi người làm FE |
+| 5 | PWA/service worker của shop | Báo cáo cam kết PWA vỏ ứng dụng; hàng đợi ngoại tuyến đã chuyển chỉ thiết kế (27/11); tôi không kiểm mã `apps/shop` | Hỏi người làm FE |
 | 6 | Phân công thành viên theo mô-đun | `kehoach.tex` không ghi tên người; chỉ ghi BE1/BE2/FE trong `NOTES.md` (BE1 làm `catalog`, `identity` tạm; BE2 phụ trách `retail`/`payment`) | Nhóm tự điền (phần 9) |
 | 7 | Nguồn số hao hụt, số GlobalGAP, ngày TraceViet | Lấy lại từ Ch1–2 và `NOTES.md`, không mở lại nguồn | Mở nguồn trong `NOTES.md` rà 15/09 |
 | 8 | Nhãn dư âm trong báo cáo (PL-M FR9, Ch5 §5.3.5, PL-K `wishlist_items`, `channel`) | Còn "chỉ thiết kế" trong khi Ch4 ghi "Để sau prototype" (phần 5, điểm 21) | Nhóm quyết định có sửa không |

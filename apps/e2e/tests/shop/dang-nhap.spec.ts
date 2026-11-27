@@ -1,4 +1,7 @@
 import { expect, test } from "@playwright/test";
+import resetDemo from "../global-setup";
+
+test.beforeEach(() => resetDemo());
 
 test.describe("Shop — đăng nhập OTP", () => {
   test("nhận mã demo, đăng nhập rồi thấy tên tài khoản trên đầu trang", async ({ page }) => {
@@ -19,7 +22,7 @@ test.describe("Shop — đăng nhập OTP", () => {
 
   test("sai mã OTP thì báo lỗi và ở lại trang", async ({ page }) => {
     await page.goto("/dang-nhap");
-    await page.getByLabel("Email").fill("nongdan@example.com");
+    await page.getByLabel("Email").fill("buyer@farmery.vn");
     await page.getByRole("button", { name: "Nhận mã đăng nhập" }).click();
 
     await page.getByLabel("Mã OTP").fill("000000");
@@ -41,15 +44,39 @@ test.describe("Shop — đăng nhập OTP", () => {
       await page.getByLabel("Mã OTP").fill(wrong);
       await page.getByRole("button", { name: "Đăng nhập", exact: true }).click();
       await expect(page.getByLabel("Mã OTP")).toHaveValue("");
-      const expected = i < 5 ? "Mã OTP không đúng." : "Mã OTP đã hết hạn, vui lòng gửi lại mã.";
+      const expected = i < 5 ? "Mã OTP không đúng." : "Nhập sai quá số lần cho phép, hãy gửi lại mã";
       await expect(page.locator("#code-error")).toHaveText(expected);
     }
 
     // Bản demo luôn trả cùng một mã; ô mã dựng lại theo challenge mới nên lỗi cũ biến mất.
-    await page.getByRole("button", { name: "Gửi lại mã" }).click();
+    const resend = page.getByRole("button", { name: /^Gửi mã mới/ });
+    await expect(page.getByLabel("Mã OTP")).toBeDisabled();
+    await resend.click();
+    await expect(resend.filter({ hasText: /\d+s/ }).or(page.getByRole("button", { name: "Gửi lại mã", exact: true }))).toBeVisible();
+    if (await resend.isVisible()) {
+      await expect(resend).toBeEnabled();
+      await resend.click();
+    }
     await expect(page.locator("#code-error")).toBeEmpty();
     const newCode = await page.locator("strong.tracking-widest").innerText();
     await page.getByLabel("Mã OTP").fill(newCode);
+    await page.getByRole("button", { name: "Đăng nhập", exact: true }).click();
+    await expect(page.getByRole("button", { name: /^Tài khoản: / })).toBeVisible();
+  });
+
+  test("gửi lại bị giới hạn vẫn dùng được mã cũ và đếm ngược", async ({ page }) => {
+    await page.goto("/dang-nhap");
+    await page.getByLabel("Email").fill("khachle@example.com");
+    await page.getByRole("button", { name: "Nhận mã đăng nhập" }).click();
+    const code = await page.locator("strong.tracking-widest").innerText();
+    const input = page.locator('input[name="challengeId"]');
+    const challenge = await input.inputValue();
+    const resend = page.getByRole("button", { name: /^Gửi lại mã/ });
+    await resend.click();
+    await expect(resend).toHaveText(/Gửi lại mã \([1-5]s\)/);
+    await expect(resend).toBeDisabled();
+    await expect(input).toHaveValue(challenge);
+    await page.getByLabel("Mã OTP").fill(code);
     await page.getByRole("button", { name: "Đăng nhập", exact: true }).click();
     await expect(page.getByRole("button", { name: /^Tài khoản: / })).toBeVisible();
   });

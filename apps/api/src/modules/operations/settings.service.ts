@@ -22,6 +22,10 @@ export class SettingsService {
   // Hợp đồng đã kiểm kiểu, khóa lạ và định dạng; ở đây kiểm thêm minProperties (bộ kiểm không thực thi) và các ràng buộc giữa các giá trị.
   async update(changes: PlatformSettingsUpdate): Promise<ResolvedSettings> {
     if (Object.keys(changes).length === 0) throw bad("Cần gửi ít nhất một khóa cấu hình");
+    const rate = changes.wholesaleCommissionRate;
+    if (rate !== undefined && (rate < 0 || rate > 1 || Math.round(rate * 10_000) / 10_000 !== rate)) {
+      throw bad("Tỷ lệ hoa hồng phải từ 0 đến 1 và có tối đa 4 chữ số thập phân");
+    }
     if (changes.deliverySlots) {
       const slots = changes.deliverySlots;
       if (new Set(slots).size !== slots.length) throw bad("Khung giờ giao bị trùng nhau");

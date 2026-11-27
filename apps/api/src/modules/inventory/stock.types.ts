@@ -31,9 +31,15 @@ export interface Reservation {
   lines: ReservationLine[];
 }
 
+/** Ba cách khép một giữ chỗ: nhả (active → released), trừ tồn (active → consumed), hoàn tồn (consumed → returned). */
+export type SettleKind = "release" | "consume" | "return";
+
 export interface StockLine {
   listingId: string;
   quantity: number;
+  /** Tên và đơn vị để thông báo thiếu hàng nêu đúng sản phẩm; không có thì nêu mã tin bán. */
+  productName?: string;
+  saleUnit?: string;
 }
 
 export interface Allocation {

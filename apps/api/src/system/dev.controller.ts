@@ -12,8 +12,8 @@ export class DevController {
 
   @Post("reset")
   @HttpCode(204)
-  reset(): void {
+  async reset(): Promise<void> {
     if (!this.config.demoMode) throw new ProblemException(404, "DEMO_MODE_OFF");
-    this.registry.resetAll();
+    await this.registry.resetAll();
   }
 }

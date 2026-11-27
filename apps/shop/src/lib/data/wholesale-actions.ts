@@ -102,11 +102,47 @@ export async function payWholesaleOrder(id: string): Promise<ActionResult<Schema
   return result;
 }
 
+/** Nhà cung cấp xuất kho và bắt đầu giao đơn hàng sỉ 1 đợt (POST /wholesale/quote-requests/:id/ship) (FR6.4). */
+export async function shipWholesaleOrder(id: string): Promise<ActionResult<Schema<"QuoteRequest">>> {
+  const result = await mutate(
+    (api) => api.POST("/wholesale/quote-requests/{id}/ship", { params: { path: { id } } }),
+    "Chưa thể cập nhật xuất kho giao hàng. Vui lòng thử lại.",
+  );
+  revalidatePath("/khach-si");
+  revalidatePath("/nha-cung-cap/bao-gia");
+  return result;
+}
+
+/** Khách sỉ xác nhận đã nhận hàng giao 1 đợt, trừ tồn và sinh đối soát hoa hồng (POST /wholesale/quote-requests/:id/deliver) (FR6.4, FR7.4). */
+export async function deliverWholesaleOrder(
+  id: string,
+): Promise<ActionResult<Schema<"QuoteRequest">>> {
+  const result = await mutate(
+    (api) => api.POST("/wholesale/quote-requests/{id}/deliver", { params: { path: { id } } }),
+    "Chưa thể hoàn tất nhận hàng và đối soát. Vui lòng thử lại.",
+  );
+  revalidatePath("/khach-si");
+  revalidatePath("/nha-cung-cap/bao-gia");
+  return result;
+}
+
+/** Nhà cung cấp xem danh sách đối soát hoa hồng đơn sỉ (GET /seller/commission-settlements) (FR7.4). */
+export async function getSellerCommissionSettlements(): Promise<Schema<"CommissionSettlement">[]> {
+  try {
+    return await read((api) => api.GET("/seller/commission-settlements"));
+  } catch {
+    return [];
+  }
+}
+
 /** Nhà cung cấp gửi báo giá phản hồi 1 lượt (POST /seller/quote-requests/:id/quote). */
 export async function sellerRespondQuote(
   id: string,
   input: { proposedPrice: number; proposedQty: number; proposedDelivery: string; note?: string },
 ): Promise<ActionResult<Schema<"QuoteRequest">>> {
+  if (!(input.proposedPrice > 0) || !(input.proposedQty > 0) || !DATE.test(input.proposedDelivery)) {
+    return { ok: false, message: "Thông tin báo giá chưa hợp lệ." };
+  }
   const result = await mutate(
     (api) =>
       api.POST("/seller/quote-requests/{id}/quote", {
@@ -118,7 +154,7 @@ export async function sellerRespondQuote(
           note: input.note?.trim() || undefined,
         },
       }),
-    "Chưa gửi được báo giá phản hồi. Vui lòng thử lại.",
+    "Chưa gửi được báo giá. Vui lòng thử lại.",
   );
   revalidatePath("/khach-si");
   revalidatePath("/nha-cung-cap/bao-gia");

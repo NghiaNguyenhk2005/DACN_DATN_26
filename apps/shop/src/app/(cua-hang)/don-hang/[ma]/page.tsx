@@ -7,7 +7,7 @@ import { AutoRefresh } from "@/components/farmery/auto-refresh";
 import { CheckoutSteps } from "@/components/farmery/checkout-steps";
 import { isNotImplemented, NotReadyState } from "@/components/farmery/not-ready-state";
 import { OrderTimeline } from "@/components/farmery/order-timeline";
-import { PaymentPanel } from "@/components/farmery/payment-panel";
+import { CancelOrderButton, PaymentPanel } from "@/components/farmery/payment-panel";
 import { getOrder, requireViewer } from "@/lib/data/account";
 import { formatDayVi, formatQty, formatSlot, formatVnd } from "@/lib/format";
 import { ORDER_STATUS_LABELS } from "@/lib/labels";
@@ -17,6 +17,7 @@ export const metadata: Metadata = { title: "Đơn hàng" };
 
 /** Đơn còn đang chạy trên dòng thời gian: trang tự hỏi lại API mỗi 5 giây. */
 const LIVE_STATUSES: readonly Schema<"OrderStatus">[] = [
+  "placed",
   "paid",
   "packing",
   "on_trip",
@@ -67,6 +68,7 @@ export default async function OrderPage({ params }: PageProps<"/don-hang/[ma]">)
           ) : (
             <StatusPanel order={order} />
           )}
+          {!awaitingPayment && order.cancellable && <CancelOrderButton orderId={order.id} />}
           {!awaitingPayment && order.status !== "cancelled" && <OrderTimeline order={order} />}
         </div>
         <OrderSummaryCard order={order} />
