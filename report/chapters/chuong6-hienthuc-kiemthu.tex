@@ -112,4 +112,6 @@ Mô-đun trí tuệ nhân tạo được xây dựng dưới dạng dịch vụ 
 \subsection{Thiết kế và kết quả kiểm thử}
 \label{sec:kichbankiemthu}
 \label{sec:ketquachucnang}
-% TODO: bảng test case theo từng nhóm FR (mã test, mô tả, dữ liệu vào, kết quả mong đợi) và test case phi chức năng bám theo Bảng~\ref{tab:nguongNFR}; kết quả thực thi (đạt hoặc không đạt, lỗi phát hiện và cách khắc phục).
+Bộ test case gồm 69 ca chia theo nhóm yêu cầu: tài khoản, danh mục và tìm kiếm, lô hàng và truy xuất, bán lẻ, vận hành và kho, bán sỉ, ba tính năng AI, sự kiện giữa các mô-đun, và phi chức năng (bảo mật, hiệu năng, giao diện). Mỗi ca ghi yêu cầu được kiểm, điều kiện và dữ liệu vào, kết quả mong đợi, cách chạy và trạng thái; bảng đầy đủ ở Phụ lục~H (Bảng~\ref{tab:testcase}). Hầu hết ca là ca tự động đã có sẵn trong các bộ Jest (máy chủ), hộp đen, Playwright (giao diện), k6 (hiệu năng) và pytest (dịch vụ AI); ca thủ công dành cho điện thoại thật, bố cục và thử với nhóm nhà cung cấp. Theo trạng thái hiện tại có 57 ca đạt (trong đó 2 ca k6 chỉ đo trên bản lưu trữ bộ nhớ), 7 ca có mã nhưng chưa chạy lại và 5 ca chưa chạy. Chưa có ca cho các phần còn đang làm hoặc mới có thiết kế (thu mua và nhập kho, giao hàng ba chặng, đổi trả và hoàn tiền, đánh giá và uy tín, thông báo web, điều khoản dịch vụ).
+
+% TODO: kết quả thực thi toàn bộ bộ test case sau khi đóng băng tính năng (đạt hoặc không đạt, lỗi phát hiện và cách khắc phục), cập nhật cột trạng thái ở Phụ lục~H.
