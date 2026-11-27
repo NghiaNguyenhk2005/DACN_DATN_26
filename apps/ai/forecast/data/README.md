@@ -1,10 +1,10 @@
 # Dữ liệu Chuỗi Thời Gian Giá Nông Sản (FR12.2)
 
-Thư mục này chứa script thu thập, tổng hợp và dữ liệu giá nông sản theo tuần phục vụ huấn luyện và đánh giá mô hình dự báo giá (SARIMA, Prophet) chạy offline cho khâu thu mua của Farmery.
+Thư mục này chứa script sinh dữ liệu giá nông sản **mô phỏng** theo tuần, chỉ dùng để chạy thử pipeline dự báo giá. Dữ liệu này không lấy từ nguồn nào, không dùng đo MAPE và không trích làm số liệu báo cáo; số đo dự báo giá dùng dữ liệu FAOSTAT (`collect_faostat.py`).
 
 ## 1. Cấu trúc tệp
-- `collect_prices.py`: Script thu thập và mô phỏng chuỗi giá theo tuần dựa trên bản tin giá nông sản thực tế.
-- `nong_san_prices.csv`: Tệp dữ liệu CSV kết xuất chuỗi thời gian giá theo tuần từ 2024 đến 2026.
+- `collect_prices.py`: Script sinh chuỗi giá mô phỏng theo tuần (`random.seed(42)`, xu hướng + mùa vụ + nhiễu).
+- `nong_san_prices.csv`: Tệp CSV mô phỏng do script trên sinh ra, từ 2024 đến 2026.
 
 ## 2. Định dạng lược đồ (Schema)
 
@@ -15,7 +15,7 @@ Thư mục này chứa script thu thập, tổng hợp và dữ liệu giá nôn
 | `vùng` | Địa bàn vùng trồng | `Đà Lạt`, `Đơn Dương`, `Lạc Dương`, `Đức Trọng` |
 | `giá` | Giá nông sản bình quân theo tuần (VNĐ) | `294000` |
 | `đơn vị` | Đơn vị tính | `kg` |
-| `nguồn` | Cơ quan / nguồn công bố dữ liệu | `Bản tin giá nông sản Sở Công Thương Lâm Đồng` |
+| `nguồn` | Nhãn nguồn dữ liệu; luôn là dữ liệu mô phỏng | `mô phỏng (simulated)` |
 
 ## 3. Cách chạy
 ```bash
