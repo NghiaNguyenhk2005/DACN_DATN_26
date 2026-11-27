@@ -11,6 +11,7 @@ describe("Hành trình mua bán đầu–cuối", () => {
   let holdingId: string;
   let addressId: string;
   let rivalAddress: string;
+  let initialStock: number;
 
   const key = () => ({ "Idempotency-Key": randomUUID() });
   const stock = async () => (await call(MAIN(), "GET", "/api/products/3")).body.listing.available as number;
@@ -37,13 +38,26 @@ describe("Hành trình mua bán đầu–cuối", () => {
     });
     rivalAddress = created.body.id;
     addressId = (await call(MAIN(), "GET", "/api/me/addresses", { token: buyer })).body[0].id;
+
+    const product = await call(MAIN(), "GET", "/api/products/3");
+    expect(product.status).toBe(200);
+    listingId = product.body.listing.id;
+    initialStock = product.body.listing.available;
+    // Mua hết tồn có sẵn trong seed để các ca sau chỉ dùng lô do suite tạo.
+    if (initialStock > 0) {
+      const cart = await call(MAIN(), "PUT", `/api/cart/items/${listingId}`, {
+        token: rival, body: { quantity: initialStock },
+      });
+      expect(cart.status).toBe(200);
+      const seededOrder = await order(rival, rivalAddress, "prepaid");
+      expect(seededOrder.status).toBe(201);
+      const paid = await call(MAIN(), "POST", `/api/orders/${seededOrder.body.id}/pay`, { token: rival });
+      expect(paid.status).toBe(200);
+    }
+    expect(await stock()).toBe(0);
   });
 
   it("nhà cung cấp tạo lô, kiểm duyệt viên duyệt, hàng xuất hiện trên cửa hàng và trong kho", async () => {
-    const product = await call(MAIN(), "GET", "/api/products/3");
-    listingId = product.body.listing.id;
-    expect(product.body.listing.available).toBe(0); // sản phẩm 3 chưa có lô đã duyệt nên chưa có hàng
-
     const batch = await call(MAIN(), "POST", "/api/seller/batches", {
       token: seller,
       body: { productId: "3", harvestDate: day(-1), bestBefore: day(10), declaredQuantity: 40 },
@@ -85,14 +99,16 @@ describe("Hành trình mua bán đầu–cuối", () => {
     expect(ledger.map((m: { movementType: string }) => m.movementType)).toEqual(["retail_out", "reserve", "open_from_batch"]);
 
     // Vận hành đưa đơn đi hết tám bước; khách thấy từng bước.
+    let expectedStatus = "paid";
     for (const status of ["packing", "on_trip", "handed_to_3pl", "delivering", "delivered", "completed"]) {
-      const res = await call(MAIN(), "POST", `/api/admin/orders/${placed.body.id}/advance`, { token: status === "packing" ? warehouse : ops });
+      const res = await call(MAIN(), "POST", `/api/admin/orders/${placed.body.id}/advance`, { token: status === "packing" ? warehouse : ops, body: { expectedStatus } });
       expect(res.status).toBe(200);
       expect(res.body.status).toBe(status);
+      expectedStatus = status;
     }
     const mine = await call(MAIN(), "GET", `/api/orders/${placed.body.id}`, { token: buyer });
     expect(mine.body.timeline.map((e: { toStatus: string }) => e.toStatus)).toEqual(["placed", "paid", "packing", "on_trip", "handed_to_3pl", "delivering", "delivered", "completed"]);
-    expect((await call(MAIN(), "POST", `/api/admin/orders/${placed.body.id}/advance`, { token: ops })).status).toBe(409);
+    expect((await call(MAIN(), "POST", `/api/admin/orders/${placed.body.id}/advance`, { token: ops, body: { expectedStatus } })).status).toBe(409);
   });
 
   it("hai khách tranh nhau phần hàng còn lại cùng lúc: đúng một người được, không bán vượt", async () => {
@@ -171,7 +187,7 @@ describe("Hành trình mua bán đầu–cuối", () => {
 
   it("/dev/reset đưa mọi thứ về ban đầu", async () => {
     expect((await call(MAIN(), "POST", "/api/dev/reset")).status).toBe(204);
-    expect((await call(MAIN(), "GET", "/api/products/3")).body.listing.available).toBe(0);
+    expect(await stock()).toBe(initialStock);
     const fresh = await login(MAIN(), "vanhanh@farmery.vn");
     expect((await call(MAIN(), "GET", "/api/admin/orders", { token: fresh })).body.items).toEqual([]);
     expect((await call(MAIN(), "GET", "/api/admin/settings", { token: fresh })).body.reservationMinutes).toBe(15);

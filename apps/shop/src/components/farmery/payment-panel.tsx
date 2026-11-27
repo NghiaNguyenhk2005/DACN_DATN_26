@@ -26,7 +26,6 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
   const [now, setNow] = useState(serverNow);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [confirmCancel, setConfirmCancel] = useState(false);
   const refreshed = useRef(false);
 
   const expiresAt = Date.parse(reserveExpiresAt);
@@ -72,7 +71,7 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
   return (
     <section className="rounded-panel border border-border p-5 md:p-7" aria-labelledby="pay-title">
       <h2 id="pay-title" className="mb-1 text-h2-sm font-bold text-ink md:text-h2">
-        Thanh toán để giữ đơn
+        Chờ thanh toán
       </h2>
       <p className="mb-4 text-small text-muted-foreground">Hàng trong đơn đang được giữ cho bạn. Quá thời gian dưới đây chưa thanh toán thì đơn tự hủy.</p>
 
@@ -113,25 +112,44 @@ export function PaymentPanel({ orderId, totalAmount, placedAt, reserveExpiresAt,
         {error}
       </p>
 
-      {cancellable && (
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-small">
+      {cancellable && <CancelOrderButton orderId={orderId} disabled={pending} />}
+    </section>
+  );
+}
+
+export function CancelOrderButton({ orderId, disabled = false }: { orderId: string; disabled?: boolean }) {
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function confirm() {
+    setError(null);
+    startTransition(async () => {
+      const result = await cancelOrder(orderId);
+      if (!result.ok) setError(result.message);
+    });
+  }
+
+  return (
+    <div>
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-small">
           {confirmCancel ? (
             <>
               <span className="text-ink-2">Hủy đơn này?</span>
-              <button type="button" disabled={pending} onClick={() => run(cancelOrder)} className="min-h-11 px-3 font-semibold text-danger">
+              <button type="button" disabled={disabled || pending} onClick={confirm} className="min-h-11 px-3 font-semibold text-danger">
                 Hủy đơn
               </button>
-              <button type="button" onClick={() => setConfirmCancel(false)} className="min-h-11 px-3 font-semibold text-ink-2">
+              <button type="button" disabled={pending} onClick={() => setConfirmCancel(false)} className="min-h-11 px-3 font-semibold text-ink-2">
                 Không
               </button>
             </>
           ) : (
-            <button type="button" disabled={pending} onClick={() => setConfirmCancel(true)} className="min-h-11 px-3 text-muted-foreground hover:text-danger">
+            <button type="button" disabled={disabled || pending} onClick={() => setConfirmCancel(true)} className="min-h-11 px-3 text-muted-foreground hover:text-danger">
               Hủy đơn
             </button>
           )}
-        </div>
-      )}
-    </section>
+      </div>
+      {error && <p role="alert" className="text-center text-small text-danger">{error}</p>}
+    </div>
   );
 }

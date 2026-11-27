@@ -7,6 +7,7 @@ import { CheckoutSteps } from "@/components/farmery/checkout-steps";
 import { EmptyState } from "@/components/farmery/empty-state";
 import { isNotImplemented, NotReadyState } from "@/components/farmery/not-ready-state";
 import { SafeImage } from "@/components/farmery/safe-image";
+import { getDeliverySettings } from "@/lib/data";
 import { getCart, requireViewer } from "@/lib/data/account";
 import { formatQty, formatVnd } from "@/lib/format";
 import { problemMessage } from "@/lib/problem";
@@ -20,9 +21,10 @@ const overStock = (i: Schema<"CartItem">) => i.quantity > i.available;
 export default async function CartPage({ searchParams }: PageProps<"/gio-hang">) {
   const { loi } = await searchParams;
   let cart: Schema<"Cart">;
+  let delivery: Schema<"DeliverySettings"> | null;
   try {
     await requireViewer("/gio-hang");
-    cart = await getCart();
+    [cart, delivery] = await Promise.all([getCart(), getDeliverySettings().catch(() => null)]);
   } catch (e) {
     if (isNotImplemented(e)) return <NotReadyState />;
     throw e;
@@ -102,14 +104,16 @@ export default async function CartPage({ searchParams }: PageProps<"/gio-hang">)
             ))}
           </ul>
 
-          <CartSummary subtotal={cart.subtotal} blocked={blocked} />
+          <CartSummary subtotal={cart.subtotal} blocked={blocked} delivery={delivery} />
         </div>
       )}
     </div>
   );
 }
 
-function CartSummary({ subtotal, blocked }: { subtotal: number; blocked: boolean }) {
+function CartSummary({ subtotal, blocked, delivery }: { subtotal: number; blocked: boolean; delivery: Schema<"DeliverySettings"> | null }) {
+  const untilFree = delivery && delivery.freeShippingThreshold - subtotal;
+  const shipping = delivery && (subtotal < delivery.freeShippingThreshold ? delivery.shippingFee : 0);
   const checkout = blocked ? (
     <span aria-disabled className="grid h-12 cursor-not-allowed place-items-center rounded-btn bg-cta/50 px-6 text-title font-semibold text-white">
       Thanh toán
@@ -128,6 +132,10 @@ function CartSummary({ subtotal, blocked }: { subtotal: number; blocked: boolean
           <span className="text-h3 font-bold text-ink">{formatVnd(subtotal)}</span>
         </div>
         <p className="mb-4 text-caption text-muted-foreground">Giá đã gồm thuế GTGT. Phí giao tính ở bước thanh toán.</p>
+        {shipping !== null && <p className="mb-2 text-small text-ink-2">Phí giao dự kiến {shipping === 0 ? "miễn phí" : formatVnd(shipping)}</p>}
+        {shipping !== null && shipping > 0 && untilFree !== null && (
+          <p className="mb-3 text-small font-semibold text-primary">Mua thêm {formatVnd(untilFree)} để được miễn phí giao.</p>
+        )}
         {blocked && <p className="mb-3 text-small text-danger">Có sản phẩm vượt lượng còn bán, vui lòng sửa số lượng.</p>}
         <div className="hidden flex-col gap-2.5 lg:flex">
           {checkout}

@@ -1,0 +1,638 @@
+{
+  "generatedAt": "2026-11-24T20:29:59.915538",
+  "datasetSummary": {
+    "sourcePath": "apps/ai/forecast/data/nong_san_prices.csv",
+    "totalCommodities": 9,
+    "commodities": [
+      "Dâu tây Hana Đà Lạt",
+      "Cà chua bi Cherry đỏ ngọt",
+      "Cà chua Beef Đà Lạt",
+      "Xà lách Lô lô xanh giòn",
+      "Xà lách Romaine thủy canh",
+      "Ớt chuông ngọt Đà Lạt",
+      "Cải xoăn Kale hữu cơ",
+      "Bơ sáp 034 Lâm Đồng",
+      "Khoai lang mật Đà Lạt"
+    ]
+  },
+  "backtestingConfig": {
+    "method": "Expanding Window Time-Series Backtest",
+    "trainPeriod": "2024-W01 đến 2025-W52 (~104 tuần)",
+    "testPeriod": "2026-W01 đến 2026-W46 (46 tuần)",
+    "metric": "MAPE (%)"
+  },
+  "commodities": [
+    {
+      "name": "Dâu tây Hana Đà Lạt",
+      "region": "Đà Lạt",
+      "unit": "kg",
+      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 6.21,
+          "mae": 15978,
+          "rmse": 21171
+        },
+        "sarima": {
+          "mape": 7.44,
+          "mae": 19384,
+          "rmse": 25394
+        },
+        "prophet": {
+          "mape": 6.46,
+          "mae": 16622,
+          "rmse": 19967
+        },
+        "lightgbm": {
+          "mape": 5.85,
+          "mae": 15329,
+          "rmse": 19598
+        }
+      },
+      "bestModel": "lightgbm",
+      "bestMape": 5.85,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 292000,
+          "lowerBound": 274918,
+          "upperBound": 309082
+        }
+      ]
+    },
+    {
+      "name": "Cà chua bi Cherry đỏ ngọt",
+      "region": "Đơn Dương",
+      "unit": "kg",
+      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 8.42,
+          "mae": 4000,
+          "rmse": 4983
+        },
+        "sarima": {
+          "mape": 11.81,
+          "mae": 5556,
+          "rmse": 6810
+        },
+        "prophet": {
+          "mape": 14.39,
+          "mae": 6457,
+          "rmse": 7091
+        },
+        "lightgbm": {
+          "mape": 6.66,
+          "mae": 3252,
+          "rmse": 4186
+        }
+      },
+      "bestModel": "lightgbm",
+      "bestMape": 6.66,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 55000,
+          "lowerBound": 51337,
+          "upperBound": 58663
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 54000,
+          "lowerBound": 50404,
+          "upperBound": 57596
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 53000,
+          "lowerBound": 49470,
+          "upperBound": 56530
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 52000,
+          "lowerBound": 48537,
+          "upperBound": 55463
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 52000,
+          "lowerBound": 48537,
+          "upperBound": 55463
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 51000,
+          "lowerBound": 47603,
+          "upperBound": 54397
+        }
+      ]
+    },
+    {
+      "name": "Cà chua Beef Đà Lạt",
+      "region": "Đơn Dương",
+      "unit": "kg",
+      "source": "Chợ đầu mối nông sản Thủ Đức",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 6.4,
+          "mae": 2217,
+          "rmse": 2743
+        },
+        "sarima": {
+          "mape": 7.53,
+          "mae": 2574,
+          "rmse": 3368
+        },
+        "prophet": {
+          "mape": 13.12,
+          "mae": 4341,
+          "rmse": 4781
+        },
+        "lightgbm": {
+          "mape": 5.18,
+          "mae": 1805,
+          "rmse": 2245
+        }
+      },
+      "bestModel": "lightgbm",
+      "bestMape": 5.18,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 38000,
+          "lowerBound": 36032,
+          "upperBound": 39968
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 38000,
+          "lowerBound": 36032,
+          "upperBound": 39968
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 38000,
+          "lowerBound": 36032,
+          "upperBound": 39968
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 36000,
+          "lowerBound": 34135,
+          "upperBound": 37865
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 36000,
+          "lowerBound": 34135,
+          "upperBound": 37865
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 36000,
+          "lowerBound": 34135,
+          "upperBound": 37865
+        }
+      ]
+    },
+    {
+      "name": "Xà lách Lô lô xanh giòn",
+      "region": "Đà Lạt",
+      "unit": "kg",
+      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 8.79,
+          "mae": 3717,
+          "rmse": 4771
+        },
+        "sarima": {
+          "mape": 10.67,
+          "mae": 4442,
+          "rmse": 5638
+        },
+        "prophet": {
+          "mape": 14.31,
+          "mae": 5412,
+          "rmse": 6142
+        },
+        "lightgbm": {
+          "mape": 9.61,
+          "mae": 3794,
+          "rmse": 4676
+        }
+      },
+      "bestModel": "seasonal_naive",
+      "bestMape": 8.79,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 41000,
+          "lowerBound": 37396,
+          "upperBound": 44604
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 39000,
+          "lowerBound": 35572,
+          "upperBound": 42428
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 38000,
+          "lowerBound": 34660,
+          "upperBound": 41340
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 35000,
+          "lowerBound": 31924,
+          "upperBound": 38076
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 41000,
+          "lowerBound": 37396,
+          "upperBound": 44604
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 39000,
+          "lowerBound": 35572,
+          "upperBound": 42428
+        }
+      ]
+    },
+    {
+      "name": "Xà lách Romaine thủy canh",
+      "region": "Lạc Dương",
+      "unit": "kg",
+      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 6.52,
+          "mae": 3674,
+          "rmse": 4870
+        },
+        "sarima": {
+          "mape": 7.86,
+          "mae": 4400,
+          "rmse": 5707
+        },
+        "prophet": {
+          "mape": 7.82,
+          "mae": 4168,
+          "rmse": 4772
+        },
+        "lightgbm": {
+          "mape": 6.42,
+          "mae": 3703,
+          "rmse": 4847
+        }
+      },
+      "bestModel": "lightgbm",
+      "bestMape": 6.42,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 58000,
+          "lowerBound": 54276,
+          "upperBound": 61724
+        }
+      ]
+    },
+    {
+      "name": "Ớt chuông ngọt Đà Lạt",
+      "region": "Đức Trọng",
+      "unit": "kg",
+      "source": "Cổng thông tin giá cả nông sản (Bộ NN&PTNT)",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 8.81,
+          "mae": 4696,
+          "rmse": 6058
+        },
+        "sarima": {
+          "mape": 10.08,
+          "mae": 5335,
+          "rmse": 7369
+        },
+        "prophet": {
+          "mape": 5.18,
+          "mae": 2715,
+          "rmse": 3461
+        },
+        "lightgbm": {
+          "mape": 6.74,
+          "mae": 3609,
+          "rmse": 4962
+        }
+      },
+      "bestModel": "prophet",
+      "bestMape": 5.18,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 59000,
+          "lowerBound": 55944,
+          "upperBound": 62056
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 59000,
+          "lowerBound": 55944,
+          "upperBound": 62056
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 59000,
+          "lowerBound": 55944,
+          "upperBound": 62056
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 59000,
+          "lowerBound": 55944,
+          "upperBound": 62056
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 59000,
+          "lowerBound": 55944,
+          "upperBound": 62056
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 60000,
+          "lowerBound": 56892,
+          "upperBound": 63108
+        }
+      ]
+    },
+    {
+      "name": "Cải xoăn Kale hữu cơ",
+      "region": "Đà Lạt",
+      "unit": "kg",
+      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 4.83,
+          "mae": 3413,
+          "rmse": 4301
+        },
+        "sarima": {
+          "mape": 6.54,
+          "mae": 4558,
+          "rmse": 5530
+        },
+        "prophet": {
+          "mape": 2.94,
+          "mae": 2079,
+          "rmse": 2567
+        },
+        "lightgbm": {
+          "mape": 3.75,
+          "mae": 2660,
+          "rmse": 2970
+        }
+      },
+      "bestModel": "prophet",
+      "bestMape": 2.94,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 76000,
+          "lowerBound": 73766,
+          "upperBound": 78234
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 77000,
+          "lowerBound": 74736,
+          "upperBound": 79264
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 77000,
+          "lowerBound": 74736,
+          "upperBound": 79264
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 78000,
+          "lowerBound": 75707,
+          "upperBound": 80293
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 78000,
+          "lowerBound": 75707,
+          "upperBound": 80293
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 78000,
+          "lowerBound": 75707,
+          "upperBound": 80293
+        }
+      ]
+    },
+    {
+      "name": "Bơ sáp 034 Lâm Đồng",
+      "region": "Bảo Lộc",
+      "unit": "kg",
+      "source": "Cục Thống kê tỉnh Lâm Đồng",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 9.04,
+          "mae": 5065,
+          "rmse": 6159
+        },
+        "sarima": {
+          "mape": 11.58,
+          "mae": 6514,
+          "rmse": 8174
+        },
+        "prophet": {
+          "mape": 12.88,
+          "mae": 7003,
+          "rmse": 7809
+        },
+        "lightgbm": {
+          "mape": 18.05,
+          "mae": 9050,
+          "rmse": 10518
+        }
+      },
+      "bestModel": "seasonal_naive",
+      "bestMape": 9.04,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 78000,
+          "lowerBound": 70949,
+          "upperBound": 85051
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 77000,
+          "lowerBound": 70039,
+          "upperBound": 83961
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 81000,
+          "lowerBound": 73678,
+          "upperBound": 88322
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 83000,
+          "lowerBound": 75497,
+          "upperBound": 90503
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 73000,
+          "lowerBound": 66401,
+          "upperBound": 79599
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 70000,
+          "lowerBound": 63672,
+          "upperBound": 76328
+        }
+      ]
+    },
+    {
+      "name": "Khoai lang mật Đà Lạt",
+      "region": "Đà Lạt",
+      "unit": "kg",
+      "source": "Chợ đầu mối nông sản Thủ Đức",
+      "evaluationScores": {
+        "seasonal_naive": {
+          "mape": 5.28,
+          "mae": 2000,
+          "rmse": 2687
+        },
+        "sarima": {
+          "mape": 6.73,
+          "mae": 2544,
+          "rmse": 3311
+        },
+        "prophet": {
+          "mape": 6.97,
+          "mae": 2567,
+          "rmse": 2950
+        },
+        "lightgbm": {
+          "mape": 4.16,
+          "mae": 1570,
+          "rmse": 2133
+        }
+      },
+      "bestModel": "lightgbm",
+      "bestMape": 4.16,
+      "forecastNextWeeks": [
+        {
+          "week": "2026-W47",
+          "predictedPrice": 42000,
+          "lowerBound": 40253,
+          "upperBound": 43747
+        },
+        {
+          "week": "2026-W48",
+          "predictedPrice": 42000,
+          "lowerBound": 40253,
+          "upperBound": 43747
+        },
+        {
+          "week": "2026-W49",
+          "predictedPrice": 42000,
+          "lowerBound": 40253,
+          "upperBound": 43747
+        },
+        {
+          "week": "2026-W50",
+          "predictedPrice": 41000,
+          "lowerBound": 39294,
+          "upperBound": 42706
+        },
+        {
+          "week": "2026-W51",
+          "predictedPrice": 41000,
+          "lowerBound": 39294,
+          "upperBound": 42706
+        },
+        {
+          "week": "2026-W52",
+          "predictedPrice": 41000,
+          "lowerBound": 39294,
+          "upperBound": 42706
+        }
+      ]
+    }
+  ]
+}

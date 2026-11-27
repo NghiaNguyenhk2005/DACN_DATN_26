@@ -44,7 +44,7 @@ export default defineConfig({
     {
       command: "pnpm --filter @farmery/api dev",
       // Mỗi lần đăng nhập tốn 2 lượt /auth; nới trần 30 lượt/phút để chạy cả bộ hai lần liền. Server tự bật ở máy thì theo .env.
-      env: { RATE_LIMIT_AUTH_MAX: "300" },
+      env: { RATE_LIMIT_AUTH_MAX: "300", OTP_RESEND_COOLDOWN_SECONDS: "5" },
       url: `${API_URL}/health`,
       reuseExistingServer: !CI,
       timeout: 120_000,

@@ -60,10 +60,10 @@ export function certValidity(cert: Pick<Schema<"Certification">, "valid" | "expi
   return daysBetween(today, cert.expiryDate) <= CERT_EXPIRING_DAYS ? "expiring" : "valid";
 }
 
-/** Ước tính giao theo giờ chốt 16:00 [tạm — prototype, MVP đọc từ cấu hình]. */
-export function deliveryEstimate(now: Date = new Date()): string {
-  const hour = new Date(now.getTime() + 7 * 3_600_000).getUTCHours();
-  return hour < 16 ? "Đặt trước 16:00 hôm nay, giao từ sáng mai" : "Đặt bây giờ, giao từ sáng ngày kia";
+/** Ước tính giao theo giờ chốt, tính ở múi giờ Việt Nam. */
+export function deliveryEstimate(cutoff: string, now: Date = new Date()): string {
+  const time = new Date(now.getTime() + 7 * 3_600_000).toISOString().slice(11, 16);
+  return time < cutoff ? `Đặt trước ${cutoff} hôm nay, giao từ sáng mai` : "Đặt bây giờ, giao từ sáng ngày kia";
 }
 
 /** Gợi ý số ngày hạn sử dụng theo danh mục cấp 1 khi khai lô. */

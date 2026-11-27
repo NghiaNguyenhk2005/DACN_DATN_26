@@ -26,10 +26,14 @@ export interface AppConfig {
   accessLog: boolean;
   /** Kho dữ liệu của các repository: bộ nhớ (mặc định, có dữ liệu mẫu) hoặc Prisma + PostgreSQL. */
   storage: StorageKind;
-  /** Chỉ có khi storage = "prisma". */
+  /** Kho của mô-đun tồn kho; mặc định theo `storage`, đặt riêng để chạy hỗn hợp (tồn ở PostgreSQL, còn lại bộ nhớ). */
+  inventoryStorage: StorageKind;
+  /** Có khi storage hoặc inventoryStorage là "prisma". */
   databaseUrl: string | null;
   /** Dịch vụ AI nội bộ (apps/ai); null thì không bật vector, tìm kiếm dùng từ điển khái niệm. */
   ai: AiServiceConfig | null;
+  /** Số tài khoản người mua giả thêm cho kiểm thử tải (kho bộ nhớ); 0 là không thêm, chỉ cho đặt khi DEMO_MODE. */
+  loadtestBuyers: number;
 }
 
 export type StorageKind = "memory" | "prisma";
@@ -78,12 +82,18 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   if (storageRaw !== "memory" && storageRaw !== "prisma") throw new Error("STORAGE phải là memory hoặc prisma");
   const databaseUrl = env.DATABASE_URL?.trim() || null;
   if (storageRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi STORAGE=prisma");
+  const inventoryRaw = env.INVENTORY_STORAGE?.trim() || storageRaw;
+  if (inventoryRaw !== "memory" && inventoryRaw !== "prisma") throw new Error("INVENTORY_STORAGE phải là memory hoặc prisma");
+  if (inventoryRaw === "prisma" && !databaseUrl) throw new Error("Thiếu DATABASE_URL khi INVENTORY_STORAGE=prisma");
 
   const aiUrl = env.AI_SERVICE_URL?.trim();
   const aiToken = env.AI_SERVICE_TOKEN?.trim();
   if (aiUrl && !/^https?:\/\//.test(aiUrl)) throw new Error("AI_SERVICE_URL phải bắt đầu bằng http:// hoặc https://");
   if (aiUrl && !aiToken) throw new Error("Thiếu AI_SERVICE_TOKEN khi đã đặt AI_SERVICE_URL");
   const ai = aiUrl && aiToken ? { url: aiUrl, token: aiToken } : null;
+
+  const loadtestBuyers = int(env, "LOADTEST_BUYERS", 0, 0, 1000);
+  if (loadtestBuyers > 0 && !demoMode) throw new Error("LOADTEST_BUYERS chỉ dùng được khi DEMO_MODE=true");
 
   return {
     production,
@@ -109,7 +119,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     smtp,
     accessLog: flag(env, "LOG_REQUESTS", production),
     storage: storageRaw,
+    inventoryStorage: inventoryRaw,
     databaseUrl,
     ai,
+    loadtestBuyers,
   };
 }

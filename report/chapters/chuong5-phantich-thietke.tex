@@ -145,7 +145,7 @@ Mỗi hạng mục được quyết định bằng cách nêu phương án ứng
 \endhead
 \bottomrule
 \endfoot
-Ứng dụng mua hàng & Next.js, PWA & Trang truy xuất và trang sản phẩm mở công khai qua QR, cần SSR và lập chỉ mục; service worker cho hàng đợi ngoại tuyến (NFR7.3). Loại Vue/Nuxt, Angular \\
+Ứng dụng mua hàng & Next.js, PWA & Trang truy xuất và trang sản phẩm mở công khai qua QR, cần SSR và lập chỉ mục; service worker giữ trang đã xem và trang báo mất mạng, hàng đợi ngoại tuyến chỉ thiết kế (NFR7.3). Loại Vue/Nuxt, Angular \\
 Ứng dụng nội bộ & React, Vite, Refine & Chủ yếu danh sách, biểu mẫu, hàng đợi theo vai trò, không cần SSR; tách khỏi Next.js để mã màn hình quyền cao không nằm trong gói tải xuống của khách. Loại React-Admin \\
 Kho mã & Monorepo pnpm, Turborepo & Chia sẻ kiểu dữ liệu sinh từ API, chỉ dựng lại phần bị ảnh hưởng. Loại tách nhiều kho (đồng bộ kiểu bằng tay), Nx (cấu hình nặng) \\
 Framework máy chủ & NestJS (Node.js, TypeScript) & Chung ngôn ngữ với giao diện; mô-đun và guard phù hợp phân quyền nhiều vai trò (NFR3.6). Loại Spring Boot, Django/FastAPI, Laravel \\
@@ -332,6 +332,17 @@ Hình~\ref{fig:erd-tong-quan} là ma trận phụ thuộc giữa các schema: m�
 \caption{ERD tổng quan: ma trận phụ thuộc giữa các schema (số ô là số cột tham chiếu xuyên schema)}
 \label{fig:erd-tong-quan}
 \end{figure}
+
+\noindent\textbf{Ánh xạ ERD sang lược đồ quan hệ.} Lược đồ quan hệ suy ra từ ERD theo các quy tắc sau; Phụ lục~\ref{apdx:quanhe} (Bảng~\ref{tab:luocdoquanhe}) viết đủ 65 bảng theo dạng \emph{bảng}(\underline{khóa chính}, \emph{khóa ngoại}$\rightarrow$bảng cha, thuộc tính).
+\begin{itemize}
+    \item \textbf{Thực thể và thuộc tính:} mỗi thực thể thành một bảng, mỗi thuộc tính thành một cột; khóa chính thường là cột \texttt{id} kiểu \texttt{bigint} tự tăng.
+    \item \textbf{Quan hệ 1--N:} khóa ngoại nằm ở bảng phía N và là ràng buộc vật lý khi hai bảng cùng schema (48 khóa ngoại), ví dụ \texttt{order\_items.order\_id} trỏ tới \texttt{orders}.
+    \item \textbf{Quan hệ N--N:} thành bảng nối có khóa chính ghép từ hai khóa ngoại (7 bảng), ví dụ \texttt{user\_roles}(\underline{user\_id}, \underline{role}) cho một người nhiều vai trò, \texttt{cart\_items}(\underline{cart\_id}, \underline{listing\_id}) cho giỏ hàng.
+    \item \textbf{Quan hệ 1--1:} khóa ngoại kèm ràng buộc duy nhất, ví dụ mỗi đơn có một vận đơn (\texttt{shipments.order\_id}), mỗi chủ một doanh nghiệp (\texttt{businesses.owner\_user\_id}).
+    \item \textbf{Tham chiếu xuyên schema (92 cột):} chỉ lưu định danh, không tạo khóa ngoại vật lý (ràng buộc RB3), vẽ bằng nét đứt trên ERD; toàn vẹn tham chiếu do tầng ứng dụng của mô-đun sở hữu bảo đảm.
+    \item \textbf{Cột mảng và kiểu liệt kê:} danh sách định danh tệp lưu thành cột mảng (8 cột như \texttt{image\_ids}) thay vì bảng nối; trạng thái và loại lưu bằng 41 kiểu liệt kê của PostgreSQL.
+\end{itemize}
+Chiến lược chỉ mục ở mục I.2 của Phụ lục~\ref{apdx:quanhe}: chỉ mục đã có trong migration (27 ràng buộc duy nhất và 3 chỉ mục tìm kiếm) và 14 chỉ mục đề xuất theo truy vấn, chưa khai trong \texttt{schema.prisma}.
 
 \subsection{Thiết kế mô-đun AI}
 \label{sec:thietkeAI}

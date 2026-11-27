@@ -183,6 +183,7 @@ Cảnh báo chứng nhận sắp hết hạn, tồn thấp (FR11.2, FR3.3) & Kh�
 Hiển thị dự báo giá cho nhân viên thu mua (FR12.2) & Mô hình chỉ chạy offline, đo MAPE trên dữ liệu giá công khai; chưa có dữ liệu giá nội bộ & Sai số đạt ngưỡng trên dữ liệu nội bộ \\
 Xe gom chặng đầu; sơ chế nhiều bước, kiểm kê & Nhà cung cấp tự đưa hàng; kho rút gọn về nhập, đóng gói một bước, xuất & Có đội xe, kho vận hành nhiều công đoạn \\
 Gợi ý cá nhân hóa; tìm nhà cung cấp theo ngữ nghĩa (FR12) & Cần dữ liệu tương tác mà nền tảng mới chưa có & Đủ dữ liệu xem, mua, đánh giá \\
+Ghi nhật ký canh tác ngoại tuyến: hàng đợi trên máy, tự gửi lại khi có mạng, chống ghi trùng bằng \texttt{Idempotency-Key} (NFR7.3) & Cần service worker, hàng đợi bền và kiểm thử đồng bộ trên điện thoại thật; hiện có bản nháp biểu mẫu trên máy và trang báo mất mạng & Hoàn thiện hàng đợi và kiểm thử đồng bộ không trùng trên hai điện thoại thật \\
 Đồng bộ TraceViet; báo cáo thống kê (FR10.4, FR2.2) & Cần quyền kết nối với hệ thống của Bộ; dữ liệu mô phỏng chưa đủ ý nghĩa thống kê & Được cấp quyền; có dữ liệu giao dịch thật \\
 \end{longtable}
 \endgroup
@@ -210,7 +211,7 @@ Farmery là nền tảng thương mại điện tử chuyên biệt cho nông s�
 
 Hệ thống có năm khối chức năng: \emph{nền tảng chung} (tài khoản, phân quyền, thông báo, tệp --- FR1, FR11); \emph{nguồn cung} (hồ sơ nhà cung cấp, chứng nhận, sản phẩm, truy xuất, tồn kho --- FR2--FR4); \emph{giao dịch} (bán sỉ, bán lẻ, thu mua và kho, thanh toán --- FR5--FR7, FR13); \emph{sau bán} (giao hàng, đổi trả, đánh giá --- FR5.5, FR8, FR9); \emph{vận hành và hỗ trợ quyết định} (quản trị, AI --- FR10, FR12).
 
-Người dùng truy cập qua hai ứng dụng web riêng cùng gọi một API. \textbf{Ứng dụng mua hàng} (khách vãng lai, khách lẻ, khách sỉ, nhà cung cấp) là ứng dụng web cài đặt được (PWA): mở bằng đường dẫn, cài được lên màn hình chính, nhà cung cấp ghi nhật ký tại ruộng vẫn thao tác được khi sóng yếu (NFR7.3); trang truy xuất và trang sản phẩm dựng sẵn phía máy chủ để mở nhanh khi quét QR và để máy tìm kiếm lập chỉ mục. \textbf{Ứng dụng nội bộ} cho sáu vai trò nhân sự, bắt buộc xác thực hai lớp (NFR3.6). Tách hai ứng dụng giữ ứng dụng mua hàng nhẹ và không để màn hình quyền cao tải xuống máy người dùng ngoài. Hình~\ref{fig:c4-ngucanh} là sơ đồ ngữ cảnh (C4 mức 1~\cite{brown_c4model}); hai mức sau ở mục~\ref{sec:kientruc}. Mười hệ thống bên ngoài chia hai nhóm: ba có trong bản hiện thực, đứng sau giao diện tích hợp (cổng thanh toán và hóa đơn điện tử giả lập, email); bảy chỉ thiết kế (GHN, Web Push, SMS, TraceViet, tổ chức chứng thực chữ ký số, đăng nhập Google, Facebook).
+Người dùng truy cập qua hai ứng dụng web riêng cùng gọi một API. \textbf{Ứng dụng mua hàng} (khách vãng lai, khách lẻ, khách sỉ, nhà cung cấp) là ứng dụng web cài đặt được (PWA): mở bằng đường dẫn, cài được lên màn hình chính, biểu mẫu nhật ký giữ bản nháp trên máy khi sóng yếu, còn ghi và đồng bộ ngoại tuyến chỉ thiết kế (NFR7.3); trang truy xuất và trang sản phẩm dựng sẵn phía máy chủ để mở nhanh khi quét QR và để máy tìm kiếm lập chỉ mục. \textbf{Ứng dụng nội bộ} cho sáu vai trò nhân sự, bắt buộc xác thực hai lớp (NFR3.6). Tách hai ứng dụng giữ ứng dụng mua hàng nhẹ và không để màn hình quyền cao tải xuống máy người dùng ngoài. Hình~\ref{fig:c4-ngucanh} là sơ đồ ngữ cảnh (C4 mức 1~\cite{brown_c4model}); hai mức sau ở mục~\ref{sec:kientruc}. Mười hệ thống bên ngoài chia hai nhóm: ba có trong bản hiện thực, đứng sau giao diện tích hợp (cổng thanh toán và hóa đơn điện tử giả lập, email); bảy chỉ thiết kế (GHN, Web Push, SMS, TraceViet, tổ chức chứng thực chữ ký số, đăng nhập Google, Facebook).
 
 \begin{figure}[H]
 \centering
@@ -466,7 +467,7 @@ NFR6.2 & Nhân viên hỗ trợ vùng hướng dẫn và nhập liệu thay khi 
 NFR6.3 & Luồng đăng bán và ghi nhật ký tối giản, giảm số bước nhập liệu. \\
 NFR7.1 & Tích hợp RESTful với vận chuyển và thanh toán qua lớp tích hợp có thời gian chờ và thử lại; bản hiện thực kiểm với cổng giả lập, kết nối thật \emph{(chỉ thiết kế)}. \\
 NFR7.2 & Giao diện đáp ứng, chạy tốt trên các trình duyệt phổ biến. \\
-NFR7.3 & Ứng dụng mua hàng là PWA: cài được, ghi nhật ký offline rồi đồng bộ; ứng dụng nội bộ dùng được trên điện thoại cho nhân viên kho và hỗ trợ vùng. \\
+NFR7.3 & Ứng dụng mua hàng là PWA: cài được, hiện trang báo khi mất mạng, biểu mẫu nhật ký giữ bản nháp trên máy; ghi nhật ký ngoại tuyến rồi tự đồng bộ \emph{(chỉ thiết kế)}; ứng dụng nội bộ dùng được trên điện thoại cho nhân viên kho và hỗ trợ vùng. \\
 NFR8.1 & Tuân thủ Luật Thương mại điện tử 2025 với cả hai vai trò: công khai chủ quản và chính sách, người dùng đồng ý trước khi mở tài khoản, xác thực người bán, kiểm duyệt trước hiển thị, công khai nhãn bắt buộc. \\
 NFR8.2 & Tuân thủ Luật Bảo vệ dữ liệu cá nhân 2025: thu thập có đồng ý, đúng mục đích, tối thiểu; chủ thể xem, sửa, xóa được (FR1.6). \\
 NFR8.3 & Hóa đơn điện tử đúng nội dung và thời điểm; bản hiện thực dùng hóa đơn giả lập. \\

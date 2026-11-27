@@ -25,6 +25,18 @@ describe("Cấu hình kho dữ liệu (STORAGE)", () => {
     expect(() => loadConfig({ STORAGE: "prisma" })).toThrow("Thiếu DATABASE_URL");
   });
 
+  it("INVENTORY_STORAGE mặc định theo STORAGE và đặt riêng được để chạy hỗn hợp", () => {
+    expect(loadConfig({ NODE_ENV: "development" }).inventoryStorage).toBe("memory");
+    expect(loadConfig({ STORAGE: "prisma", DATABASE_URL: "postgresql://u:p@h/db" }).inventoryStorage).toBe("prisma");
+    const mixed = loadConfig({ INVENTORY_STORAGE: "prisma", DATABASE_URL: "postgresql://u:p@h/db" });
+    expect([mixed.storage, mixed.inventoryStorage]).toEqual(["memory", "prisma"]);
+  });
+
+  it("INVENTORY_STORAGE từ chối giá trị lạ và thiếu DATABASE_URL", () => {
+    expect(() => loadConfig({ INVENTORY_STORAGE: "mongo" })).toThrow("INVENTORY_STORAGE phải là memory hoặc prisma");
+    expect(() => loadConfig({ INVENTORY_STORAGE: "prisma" })).toThrow("Thiếu DATABASE_URL khi INVENTORY_STORAGE=prisma");
+  });
+
   it("STORAGE=prisma kèm DATABASE_URL được nhận", () => {
     const config = loadConfig({ STORAGE: "prisma", DATABASE_URL: "postgresql://u:p@localhost:5432/db" });
     expect(config.storage).toBe("prisma");
@@ -71,8 +83,11 @@ describePg("CategoryRepository trên PostgreSQL (STORAGE=prisma)", () => {
   it("CHECK chặn tồn âm và giữ chỗ vượt tồn ở tầng dữ liệu", async () => {
     const prisma = app.get<PrismaClient>(PRISMA_CLIENT, { strict: false });
     const insert = (onHand: number, reserved: number) => prisma.$executeRaw`
-      INSERT INTO inventory.stock_holdings (batch_id, owner_type, location_type, sale_unit, qty_on_hand, qty_reserved)
-      VALUES (999999, 'supplier', 'farmery_warehouse', 'kg', ${onHand}, ${reserved})`;
+      INSERT INTO inventory.stock_holdings
+        (batch_id, product_id, listing_id, batch_code, product_name, harvest_date, best_before,
+         owner_type, location_type, sale_unit, qty_on_hand, qty_reserved)
+      VALUES (999999, 1, 1, 'CHECK-TEST', 'Thử ràng buộc', '2030-01-01', '2030-01-10',
+         'supplier', 'farmery_warehouse', 'kg', ${onHand}, ${reserved})`;
     await expect(insert(-1, 0)).rejects.toThrow(/stock_holdings_qty_check/);
     await expect(insert(5, 6)).rejects.toThrow(/stock_holdings_qty_check/);
   });

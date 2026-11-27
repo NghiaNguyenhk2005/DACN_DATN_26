@@ -71,7 +71,7 @@ jobs:
       - name: Seed lần 2 (phải chạy lại được)
         run: pnpm db:seed
       - name: Test trên PostgreSQL
-        run: pnpm --filter @farmery/api exec jest test/storage.e2e-spec.ts --coverage=false
+        run: pnpm --filter @farmery/api exec jest test/storage.e2e-spec.ts test/inventory-pg.e2e-spec.ts --coverage=false
 
   # Chưa chặn gộp: job đỏ vẫn để PR gộp được; xem báo cáo Playwright ở artifact.
   e2e:

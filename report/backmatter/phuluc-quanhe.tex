@@ -1,0 +1,204 @@
+% Phụ lục I — lược đồ quan hệ và chiến lược chỉ mục (sinh bởi tools/diagrams/gen_quanhe.py).
+
+\section*{Phụ lục I. Lược đồ quan hệ và chiến lược chỉ mục}
+\label{apdx:quanhe}
+\addcontentsline{toc}{section}{Phụ lục I. Lược đồ quan hệ và chiến lược chỉ mục}
+
+Phụ lục này là kết quả ánh xạ sơ đồ ERD ở mục~\ref{sec:csdl} sang lược đồ quan hệ, theo quy tắc nêu ở đó. Cột \underline{gạch chân} là khóa chính; cột \textit{in nghiêng} kèm $\rightarrow$ là khóa ngoại vật lý tới bảng cha trong cùng schema; cột \textit{in nghiêng} kèm $\dashrightarrow$ là tham chiếu logic sang schema khác (chỉ lưu định danh, không có khóa ngoại vật lý). Kiểu dữ liệu, ràng buộc và ý nghĩa từng cột ở Phụ lục~D.
+
+\subsection*{I.1. Lược đồ quan hệ}
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{3.10cm} L{11.90cm}}
+\caption{Lược đồ quan hệ của 65 bảng theo 13 schema}
+\label{tab:luocdoquanhe} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Bảng} & \textbf{Lược đồ quan hệ (khóa chính, khóa ngoại, thuộc tính)} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Bảng} & \textbf{Lược đồ quan hệ (khóa chính, khóa ngoại, thuộc tính)} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{identity}}} \\
+\texttt{users} & (\underline{id}, full\_\allowbreak{}name, email, phone, email\_\allowbreak{}verified\_\allowbreak{}at, phone\_\allowbreak{}verified\_\allowbreak{}at, password\_\allowbreak{}hash, oauth\_\allowbreak{}provider, oauth\_\allowbreak{}subject, totp\_\allowbreak{}secret\_\allowbreak{}enc, status, locked\_\allowbreak{}until, created\_\allowbreak{}at) \\
+\texttt{user\_\allowbreak{}roles} & (\textit{\underline{user\_\allowbreak{}id}}$\rightarrow$users, \underline{role}, \textit{granted\_\allowbreak{}by}$\rightarrow$users, granted\_\allowbreak{}at, revoked\_\allowbreak{}at) \\
+\texttt{otp\_\allowbreak{}challenges} & (\underline{id}, \textit{user\_\allowbreak{}id}$\rightarrow$users, purpose, channel, code\_\allowbreak{}hash, attempts, expires\_\allowbreak{}at, consumed\_\allowbreak{}at) \\
+\texttt{addresses} & (\underline{id}, \textit{user\_\allowbreak{}id}$\rightarrow$users, label, recipient\_\allowbreak{}name, phone, address\_\allowbreak{}line, ward, province, is\_\allowbreak{}default) \\
+\texttt{businesses} & (\underline{id}, \textit{owner\_\allowbreak{}user\_\allowbreak{}id}$\rightarrow$users, company\_\allowbreak{}name, tax\_\allowbreak{}code, \textit{license\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, verification\_\allowbreak{}status, \textit{verified\_\allowbreak{}by}$\rightarrow$users, verified\_\allowbreak{}at) \\
+\texttt{ekyc\_\allowbreak{}documents} & (\underline{id}, \textit{user\_\allowbreak{}id}$\rightarrow$users, document\_\allowbreak{}type, \textit{front\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, \textit{back\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, \textit{selfie\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, status, \textit{reviewed\_\allowbreak{}by}$\rightarrow$users, reviewed\_\allowbreak{}at, rejection\_\allowbreak{}reason) \\
+\texttt{consent\_\allowbreak{}records} & (\underline{id}, \textit{user\_\allowbreak{}id}$\rightarrow$users, policy\_\allowbreak{}type, policy\_\allowbreak{}version, accepted\_\allowbreak{}at, ip\_\allowbreak{}address) \\
+\texttt{data\_\allowbreak{}requests} & (\underline{id}, \textit{user\_\allowbreak{}id}$\rightarrow$users, request\_\allowbreak{}type, status, requested\_\allowbreak{}at, due\_\allowbreak{}at, retained\_\allowbreak{}note, \textit{handled\_\allowbreak{}by}$\rightarrow$users, completed\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{notification}}} \\
+\texttt{notifications} & (\underline{id}, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, event\_\allowbreak{}type, title, body, link\_\allowbreak{}target, read\_\allowbreak{}at, created\_\allowbreak{}at) \\
+\texttt{deliveries} & (\underline{id}, \textit{notification\_\allowbreak{}id}$\rightarrow$notifications, channel, status, attempts, sent\_\allowbreak{}at) \\
+\texttt{preferences} & (\textit{\underline{user\_\allowbreak{}id}}$\dashrightarrow$identity.users, \underline{event\_\allowbreak{}group}, \underline{channel}, enabled) \\
+\texttt{push\_\allowbreak{}subscriptions} & (\underline{id}, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, endpoint, p256dh, auth\_\allowbreak{}secret, user\_\allowbreak{}agent, created\_\allowbreak{}at, revoked\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{media}}} \\
+\texttt{media\_\allowbreak{}files} & (\underline{id}, \textit{owner\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, bucket, object\_\allowbreak{}key, mime\_\allowbreak{}type, size\_\allowbreak{}bytes, sha256, access\_\allowbreak{}level, status, variants, retain\_\allowbreak{}until, created\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{supplier}}} \\
+\texttt{suppliers} & (\underline{id}, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, display\_\allowbreak{}name, description, \textit{avatar\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, growing\_\allowbreak{}region, growing\_\allowbreak{}area\_\allowbreak{}code, \textit{area\_\allowbreak{}checked\_\allowbreak{}by}$\dashrightarrow$identity.users, tax\_\allowbreak{}type, tax\_\allowbreak{}code, \textit{tax\_\allowbreak{}confirmed\_\allowbreak{}by}$\dashrightarrow$identity.users, status, created\_\allowbreak{}at) \\
+\texttt{certifications} & (\underline{id}, \textit{supplier\_\allowbreak{}id}$\rightarrow$suppliers, type, certificate\_\allowbreak{}number, issuing\_\allowbreak{}authority, \textit{evidence\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, issued\_\allowbreak{}date, expiry\_\allowbreak{}date, approval\_\allowbreak{}status, \textit{reviewed\_\allowbreak{}by}$\dashrightarrow$identity.users, reviewed\_\allowbreak{}at, \textit{supersedes\_\allowbreak{}id}$\rightarrow$certifications) \\
+\texttt{support\_\allowbreak{}assignments} & (\underline{id}, \textit{supplier\_\allowbreak{}id}$\rightarrow$suppliers, \textit{staff\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, assigned\_\allowbreak{}at, revoked\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{catalog}}} \\
+\texttt{categories} & (\underline{id}, \textit{parent\_\allowbreak{}id}$\rightarrow$categories, name, is\_\allowbreak{}leaf, product\_\allowbreak{}group, allowed\_\allowbreak{}units, required\_\allowbreak{}fields) \\
+\texttt{products} & (\underline{id}, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, \textit{category\_\allowbreak{}id}$\rightarrow$categories, name, description, unit, \textit{image\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, reference\_\allowbreak{}retail\_\allowbreak{}price, tax\_\allowbreak{}group, seasonality, search\_\allowbreak{}tsv, status, \textit{reviewed\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at, updated\_\allowbreak{}at) \\
+\texttt{batches} & (\underline{id}, \textit{product\_\allowbreak{}id}$\rightarrow$products, batch\_\allowbreak{}code, harvest\_\allowbreak{}date, best\_\allowbreak{}before, declared\_\allowbreak{}quantity, qr\_\allowbreak{}token, status, \textit{approved\_\allowbreak{}by}$\dashrightarrow$identity.users, approved\_\allowbreak{}at, recalled\_\allowbreak{}at) \\
+\texttt{farming\_\allowbreak{}logs} & (\underline{id}, \textit{batch\_\allowbreak{}id}$\rightarrow$batches, activity\_\allowbreak{}date, activity, description, \textit{image\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, published\_\allowbreak{}at, \textit{supersedes\_\allowbreak{}id}$\rightarrow$farming\_\allowbreak{}logs, \textit{entered\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{product\_\allowbreak{}embeddings} & (\textit{\underline{product\_\allowbreak{}id}}$\rightarrow$products, embedding, model\_\allowbreak{}version, updated\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{inventory}}} \\
+\texttt{stock\_\allowbreak{}holdings} & (\underline{id}, \textit{batch\_\allowbreak{}id}$\dashrightarrow$catalog.batches, owner\_\allowbreak{}type, \textit{owner\_\allowbreak{}supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, location\_\allowbreak{}type, warehouse\_\allowbreak{}code, sale\_\allowbreak{}unit, qty\_\allowbreak{}on\_\allowbreak{}hand, qty\_\allowbreak{}reserved, is\_\allowbreak{}locked, updated\_\allowbreak{}at) \\
+\texttt{stock\_\allowbreak{}movements} & (\underline{id}, \textit{holding\_\allowbreak{}id}$\rightarrow$stock\_\allowbreak{}holdings, movement\_\allowbreak{}type, quantity, \textit{counter\_\allowbreak{}holding\_\allowbreak{}id}$\rightarrow$stock\_\allowbreak{}holdings, source\_\allowbreak{}type, source\_\allowbreak{}id, \textit{performed\_\allowbreak{}by}$\dashrightarrow$identity.users, reason, created\_\allowbreak{}at) \\
+\texttt{reservations} & (\underline{id}, \textit{holding\_\allowbreak{}id}$\rightarrow$stock\_\allowbreak{}holdings, source\_\allowbreak{}type, source\_\allowbreak{}id, quantity, status, expires\_\allowbreak{}at, created\_\allowbreak{}at) \\
+\texttt{packing\_\allowbreak{}runs} & (\underline{id}, \textit{source\_\allowbreak{}holding\_\allowbreak{}id}$\rightarrow$stock\_\allowbreak{}holdings, \textit{output\_\allowbreak{}holding\_\allowbreak{}id}$\rightarrow$stock\_\allowbreak{}holdings, input\_\allowbreak{}qty, output\_\allowbreak{}units, shrinkage\_\allowbreak{}qty, label\_\allowbreak{}data, \textit{packed\_\allowbreak{}by}$\dashrightarrow$identity.users, packed\_\allowbreak{}at) \\
+\texttt{batch\_\allowbreak{}recalls} & (\underline{id}, \textit{batch\_\allowbreak{}id}$\dashrightarrow$catalog.batches, reason, \textit{initiated\_\allowbreak{}by}$\dashrightarrow$identity.users, affected\_\allowbreak{}orders, initiated\_\allowbreak{}at, closed\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{procurement}}} \\
+\texttt{supplier\_\allowbreak{}offers} & (\underline{id}, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, \textit{batch\_\allowbreak{}id}$\dashrightarrow$catalog.batches, offered\_\allowbreak{}qty, unit\_\allowbreak{}price, expected\_\allowbreak{}harvest, status, created\_\allowbreak{}at) \\
+\texttt{purchase\_\allowbreak{}orders} & (\underline{id}, \textit{offer\_\allowbreak{}id}$\rightarrow$supplier\_\allowbreak{}offers, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, \textit{batch\_\allowbreak{}id}$\dashrightarrow$catalog.batches, ordered\_\allowbreak{}qty, unit\_\allowbreak{}price, delivery\_\allowbreak{}due, status, confirm\_\allowbreak{}deadline, supplier\_\allowbreak{}confirmed\_\allowbreak{}at, \textit{created\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{goods\_\allowbreak{}receipts} & (\underline{id}, \textit{purchase\_\allowbreak{}order\_\allowbreak{}id}$\rightarrow$purchase\_\allowbreak{}orders, accepted\_\allowbreak{}qty, rejected\_\allowbreak{}qty, shrinkage\_\allowbreak{}qty, adjusted\_\allowbreak{}unit\_\allowbreak{}price, result, note, \textit{image\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, \textit{target\_\allowbreak{}holding\_\allowbreak{}id}$\dashrightarrow$inventory.stock\_\allowbreak{}holdings, \textit{inspected\_\allowbreak{}by}$\dashrightarrow$identity.users, inspected\_\allowbreak{}at) \\
+\texttt{price\_\allowbreak{}forecasts} & (\underline{id}, \textit{category\_\allowbreak{}id}$\dashrightarrow$catalog.categories, region, week\_\allowbreak{}start, predicted\_\allowbreak{}price, lower\_\allowbreak{}bound, upper\_\allowbreak{}bound, model\_\allowbreak{}name, generated\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{retail}}} \\
+\texttt{listings} & (\underline{id}, \textit{product\_\allowbreak{}id}$\dashrightarrow$catalog.products, sale\_\allowbreak{}unit, unit\_\allowbreak{}price, status, \textit{priced\_\allowbreak{}by}$\dashrightarrow$identity.users, updated\_\allowbreak{}at) \\
+\texttt{vouchers} & (\underline{id}, code, discount\_\allowbreak{}percent, max\_\allowbreak{}discount, min\_\allowbreak{}order\_\allowbreak{}amount, usage\_\allowbreak{}limit, used\_\allowbreak{}count, starts\_\allowbreak{}at, expires\_\allowbreak{}at) \\
+\texttt{carts} & (\underline{id}, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, updated\_\allowbreak{}at) \\
+\texttt{cart\_\allowbreak{}items} & (\textit{\underline{cart\_\allowbreak{}id}}$\rightarrow$carts, \textit{\underline{listing\_\allowbreak{}id}}$\rightarrow$listings, quantity) \\
+\texttt{orders} & (\underline{id}, order\_\allowbreak{}code, \textit{buyer\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, address\_\allowbreak{}snapshot, delivery\_\allowbreak{}date, delivery\_\allowbreak{}slot, payment\_\allowbreak{}option, \textit{voucher\_\allowbreak{}id}$\rightarrow$vouchers, subtotal, discount\_\allowbreak{}amount, tax\_\allowbreak{}amount, shipping\_\allowbreak{}fee, total\_\allowbreak{}amount, status, reserve\_\allowbreak{}expires\_\allowbreak{}at, cod\_\allowbreak{}refused\_\allowbreak{}at, \textit{reorder\_\allowbreak{}of}$\rightarrow$orders, placed\_\allowbreak{}at, completed\_\allowbreak{}at) \\
+\texttt{order\_\allowbreak{}items} & (\underline{id}, \textit{order\_\allowbreak{}id}$\rightarrow$orders, \textit{listing\_\allowbreak{}id}$\rightarrow$listings, \textit{holding\_\allowbreak{}id}$\dashrightarrow$inventory.stock\_\allowbreak{}holdings, \textit{batch\_\allowbreak{}id}$\dashrightarrow$catalog.batches, product\_\allowbreak{}name, quantity, unit\_\allowbreak{}price, line\_\allowbreak{}total) \\
+\texttt{order\_\allowbreak{}status\_\allowbreak{}events} & (\underline{id}, \textit{order\_\allowbreak{}id}$\rightarrow$orders, to\_\allowbreak{}status, source, \textit{actor\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, note, occurred\_\allowbreak{}at) \\
+\texttt{restock\_\allowbreak{}subscriptions} & (\underline{id}, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, \textit{product\_\allowbreak{}id}$\dashrightarrow$catalog.products, kind, created\_\allowbreak{}at, notified\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{wholesale}}} \\
+\texttt{price\_\allowbreak{}tiers} & (\underline{id}, \textit{product\_\allowbreak{}id}$\dashrightarrow$catalog.products, min\_\allowbreak{}qty, unit\_\allowbreak{}price, lead\_\allowbreak{}time\_\allowbreak{}days, valid\_\allowbreak{}from, valid\_\allowbreak{}to) \\
+\texttt{rfqs} & (\underline{id}, \textit{business\_\allowbreak{}id}$\dashrightarrow$identity.businesses, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, \textit{product\_\allowbreak{}id}$\dashrightarrow$catalog.products, requested\_\allowbreak{}qty, quality\_\allowbreak{}standard, desired\_\allowbreak{}delivery, status, created\_\allowbreak{}at) \\
+\texttt{rfq\_\allowbreak{}messages} & (\underline{id}, \textit{rfq\_\allowbreak{}id}$\rightarrow$rfqs, \textit{sender\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, is\_\allowbreak{}quote, proposed\_\allowbreak{}qty, proposed\_\allowbreak{}price, proposed\_\allowbreak{}delivery, content, \textit{attachment\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, sent\_\allowbreak{}at) \\
+\texttt{contracts} & (\underline{id}, \textit{rfq\_\allowbreak{}id}$\rightarrow$rfqs, contract\_\allowbreak{}code, agreed\_\allowbreak{}qty, agreed\_\allowbreak{}unit\_\allowbreak{}price, total\_\allowbreak{}amount, delivery\_\allowbreak{}date, current\_\allowbreak{}version, status, concluded\_\allowbreak{}at) \\
+\texttt{contract\_\allowbreak{}versions} & (\textit{\underline{contract\_\allowbreak{}id}}$\rightarrow$contracts, \underline{version}, \textit{document\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, document\_\allowbreak{}hash, \textit{created\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{contract\_\allowbreak{}confirmations} & (\textit{\underline{contract\_\allowbreak{}id}}$\rightarrow$contracts, \underline{party}, version, document\_\allowbreak{}hash, \textit{user\_\allowbreak{}id}$\dashrightarrow$identity.users, \textit{otp\_\allowbreak{}challenge\_\allowbreak{}id}$\dashrightarrow$identity.otp\_\allowbreak{}challenges, confirmed\_\allowbreak{}at) \\
+\texttt{wholesale\_\allowbreak{}orders} & (\underline{id}, \textit{contract\_\allowbreak{}id}$\rightarrow$contracts, \textit{holding\_\allowbreak{}id}$\dashrightarrow$inventory.stock\_\allowbreak{}holdings, shipped\_\allowbreak{}at, received\_\allowbreak{}at, rejected\_\allowbreak{}qty, status) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{payment}}} \\
+\texttt{payments} & (\underline{id}, source\_\allowbreak{}type, \textit{source\_\allowbreak{}id}$\dashrightarrow$retail.orders, method, gateway, amount, status, gateway\_\allowbreak{}txn\_\allowbreak{}ref, paid\_\allowbreak{}at, escrow\_\allowbreak{}status, created\_\allowbreak{}at) \\
+\texttt{refunds} & (\underline{id}, \textit{payment\_\allowbreak{}id}$\rightarrow$payments, \textit{return\_\allowbreak{}request\_\allowbreak{}id}$\dashrightarrow$fulfillment.return\_\allowbreak{}requests, amount, status, gateway\_\allowbreak{}refund\_\allowbreak{}ref, \textit{requested\_\allowbreak{}by}$\dashrightarrow$identity.users, completed\_\allowbreak{}at) \\
+\texttt{invoices} & (\underline{id}, kind, source\_\allowbreak{}type, source\_\allowbreak{}id, buyer\_\allowbreak{}name, buyer\_\allowbreak{}tax\_\allowbreak{}code, subtotal, tax\_\allowbreak{}amount, total, lookup\_\allowbreak{}code, \textit{pdf\_\allowbreak{}file\_\allowbreak{}id}$\dashrightarrow$media.media\_\allowbreak{}files, provider, issued\_\allowbreak{}at) \\
+\texttt{commission\_\allowbreak{}settlements} & (\underline{id}, \textit{wholesale\_\allowbreak{}order\_\allowbreak{}id}$\dashrightarrow$wholesale.wholesale\_\allowbreak{}orders, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, gross\_\allowbreak{}amount, commission\_\allowbreak{}rate, commission\_\allowbreak{}amount, withholding\_\allowbreak{}rate, withholding\_\allowbreak{}amount, \textit{service\_\allowbreak{}invoice\_\allowbreak{}id}$\rightarrow$invoices, settled\_\allowbreak{}at) \\
+\texttt{supplier\_\allowbreak{}payouts} & (\underline{id}, \textit{purchase\_\allowbreak{}order\_\allowbreak{}id}$\dashrightarrow$procurement.purchase\_\allowbreak{}orders, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, amount, status, bank\_\allowbreak{}reference, paid\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{fulfillment}}} \\
+\texttt{transfer\_\allowbreak{}trips} & (\underline{id}, trip\_\allowbreak{}code, trip\_\allowbreak{}date, vehicle\_\allowbreak{}plate, carrier\_\allowbreak{}name, status, departed\_\allowbreak{}at, handed\_\allowbreak{}over\_\allowbreak{}at, \textit{created\_\allowbreak{}by}$\dashrightarrow$identity.users) \\
+\texttt{trip\_\allowbreak{}orders} & (\textit{\underline{trip\_\allowbreak{}id}}$\rightarrow$transfer\_\allowbreak{}trips, \textit{\underline{order\_\allowbreak{}id}}$\dashrightarrow$retail.orders, loaded\_\allowbreak{}at) \\
+\texttt{shipments} & (\underline{id}, \textit{order\_\allowbreak{}id}$\dashrightarrow$retail.orders, \textit{trip\_\allowbreak{}id}$\rightarrow$transfer\_\allowbreak{}trips, carrier, carrier\_\allowbreak{}order\_\allowbreak{}code, carrier\_\allowbreak{}fee, middle\_\allowbreak{}leg\_\allowbreak{}fee, slot\_\allowbreak{}start, slot\_\allowbreak{}end, status, created\_\allowbreak{}at) \\
+\texttt{shipment\_\allowbreak{}events} & (\underline{id}, \textit{shipment\_\allowbreak{}id}$\rightarrow$shipments, status, carrier\_\allowbreak{}event\_\allowbreak{}id, payload, occurred\_\allowbreak{}at, received\_\allowbreak{}at) \\
+\texttt{return\_\allowbreak{}requests} & (\underline{id}, \textit{order\_\allowbreak{}id}$\dashrightarrow$retail.orders, \textit{buyer\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, request\_\allowbreak{}type, claim\_\allowbreak{}deadline, description, \textit{evidence\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, claimed\_\allowbreak{}amount, suggested\_\allowbreak{}cause, cause, decision, refund\_\allowbreak{}amount, return\_\allowbreak{}required, priority, due\_\allowbreak{}at, \textit{handled\_\allowbreak{}by}$\dashrightarrow$identity.users, status, created\_\allowbreak{}at, decided\_\allowbreak{}at) \\
+\texttt{messages} & (\underline{id}, \textit{order\_\allowbreak{}id}$\dashrightarrow$retail.orders, \textit{return\_\allowbreak{}request\_\allowbreak{}id}$\rightarrow$return\_\allowbreak{}requests, \textit{sender\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, content, \textit{attachment\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, sent\_\allowbreak{}at, read\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{engagement}}} \\
+\texttt{reviews} & (\underline{id}, \textit{order\_\allowbreak{}id}$\dashrightarrow$retail.orders, \textit{order\_\allowbreak{}item\_\allowbreak{}id}$\dashrightarrow$retail.order\_\allowbreak{}items, \textit{product\_\allowbreak{}id}$\dashrightarrow$catalog.products, \textit{supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, \textit{buyer\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, rating, content, \textit{image\_\allowbreak{}ids}$\dashrightarrow$media.media\_\allowbreak{}files, status, flag\_\allowbreak{}reasons, \textit{moderated\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{review\_\allowbreak{}replies} & (\textit{\underline{review\_\allowbreak{}id}}$\rightarrow$reviews, \textit{responder\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, content, created\_\allowbreak{}at) \\
+\texttt{supplier\_\allowbreak{}reputation} & (\textit{\underline{supplier\_\allowbreak{}id}}$\dashrightarrow$supplier.suppliers, score, valid\_\allowbreak{}review\_\allowbreak{}count, computed\_\allowbreak{}at) \\
+\texttt{wishlist\_\allowbreak{}items} & (\textit{\underline{user\_\allowbreak{}id}}$\dashrightarrow$identity.users, \textit{\underline{product\_\allowbreak{}id}}$\dashrightarrow$catalog.products, created\_\allowbreak{}at) \\
+\rowcolor{tblheadbg}
+\multicolumn{2}{l}{\textbf{Schema \texttt{operations}}} \\
+\texttt{platform\_\allowbreak{}settings} & (\underline{key}, value, description, \textit{updated\_\allowbreak{}by}$\dashrightarrow$identity.users, updated\_\allowbreak{}at) \\
+\texttt{review\_\allowbreak{}tasks} & (\underline{id}, task\_\allowbreak{}type, target\_\allowbreak{}id, \textit{reporter\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, status, \textit{assigned\_\allowbreak{}to}$\dashrightarrow$identity.users, due\_\allowbreak{}at, decision\_\allowbreak{}reason, decided\_\allowbreak{}at, created\_\allowbreak{}at) \\
+\texttt{violation\_\allowbreak{}records} & (\underline{id}, subject\_\allowbreak{}type, subject\_\allowbreak{}id, \textit{review\_\allowbreak{}task\_\allowbreak{}id}$\rightarrow$review\_\allowbreak{}tasks, violation\_\allowbreak{}type, sanction, effective\_\allowbreak{}at, reason, \textit{decided\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{threshold\_\allowbreak{}alerts} & (\underline{id}, rule\_\allowbreak{}key, target\_\allowbreak{}type, target\_\allowbreak{}id, observed\_\allowbreak{}value, threshold\_\allowbreak{}value, status, \textit{acknowledged\_\allowbreak{}by}$\dashrightarrow$identity.users, created\_\allowbreak{}at) \\
+\texttt{staff\_\allowbreak{}audit\_\allowbreak{}logs} & (\underline{id}, \textit{staff\_\allowbreak{}user\_\allowbreak{}id}$\dashrightarrow$identity.users, role, action, target\_\allowbreak{}schema, target\_\allowbreak{}table, target\_\allowbreak{}id, \textit{on\_\allowbreak{}behalf\_\allowbreak{}of\_\allowbreak{}supplier\_\allowbreak{}id}$\dashrightarrow$supplier.suppliers, before\_\allowbreak{}state, after\_\allowbreak{}state, reason, ip\_\allowbreak{}address, created\_\allowbreak{}at) \\
+\end{longtable}
+\endgroup
+
+\subsection*{I.2. Chiến lược chỉ mục}
+
+Chỉ mục được chọn theo truy vấn thực tế của hệ thống, không theo từng cột. Khóa chính và ràng buộc duy nhất luôn có chỉ mục B-tree đi kèm; PostgreSQL không tự tạo chỉ mục cho khóa ngoại nên các cột khóa ngoại dùng thường xuyên được liệt kê ở bảng đề xuất.
+
+\noindent\textbf{Chỉ mục đã có} (tạo bằng migration Prisma). Các ràng buộc duy nhất (B-tree):
+
+\begin{flushleft}
+\texttt{catalog}: \texttt{batches}(batch\_\allowbreak{}code); \texttt{batches}(qr\_\allowbreak{}token) \\
+\texttt{engagement}: \texttt{reviews}(order\_\allowbreak{}item\_\allowbreak{}id) \\
+\texttt{fulfillment}: \texttt{transfer\_\allowbreak{}trips}(trip\_\allowbreak{}code); \texttt{shipments}(order\_\allowbreak{}id); \texttt{shipments}(carrier\_\allowbreak{}order\_\allowbreak{}code); \texttt{shipment\_\allowbreak{}events}(carrier\_\allowbreak{}event\_\allowbreak{}id) \\
+\texttt{identity}: \texttt{users}(email); \texttt{users}(phone); \texttt{businesses}(owner\_\allowbreak{}user\_\allowbreak{}id); \texttt{businesses}(tax\_\allowbreak{}code) \\
+\texttt{inventory}: \texttt{batch\_\allowbreak{}recalls}(batch\_\allowbreak{}id) \\
+\texttt{media}: \texttt{media\_\allowbreak{}files}(object\_\allowbreak{}key) \\
+\texttt{notification}: \texttt{push\_\allowbreak{}subscriptions}(endpoint) \\
+\texttt{payment}: \texttt{payments}(gateway\_\allowbreak{}txn\_\allowbreak{}ref); \texttt{invoices}(lookup\_\allowbreak{}code); \texttt{commission\_\allowbreak{}settlements}(wholesale\_\allowbreak{}order\_\allowbreak{}id); \texttt{supplier\_\allowbreak{}payouts}(purchase\_\allowbreak{}order\_\allowbreak{}id) \\
+\texttt{procurement}: \texttt{price\_\allowbreak{}forecasts}(category\_\allowbreak{}id, region, week\_\allowbreak{}start, model\_\allowbreak{}name) \\
+\texttt{retail}: \texttt{vouchers}(code); \texttt{carts}(user\_\allowbreak{}id); \texttt{orders}(order\_\allowbreak{}code); \texttt{restock\_\allowbreak{}subscriptions}(user\_\allowbreak{}id, product\_\allowbreak{}id, kind) \\
+\texttt{supplier}: \texttt{suppliers}(user\_\allowbreak{}id) \\
+\texttt{wholesale}: \texttt{contracts}(rfq\_\allowbreak{}id); \texttt{contracts}(contract\_\allowbreak{}code); \texttt{wholesale\_\allowbreak{}orders}(contract\_\allowbreak{}id) \\
+\end{flushleft}
+
+\noindent Các chỉ mục chuyên dụng phục vụ tìm kiếm:
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{4.50cm} L{7.00cm} L{3.50cm}}
+\caption{Chỉ mục chuyên dụng đã tạo bằng migration}
+\label{tab:chimucdaco} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Bảng} & \textbf{Cột hoặc biểu thức} & \textbf{Loại} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Bảng} & \textbf{Cột hoặc biểu thức} & \textbf{Loại} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\texttt{catalog.product\_\allowbreak{}embeddings} & embedding vector\_\allowbreak{}cosine\_\allowbreak{}ops & HNSW, độ đo cosine \\
+\texttt{catalog.products} & f\_\allowbreak{}unaccent(lower(name)) gin\_\allowbreak{}trgm\_\allowbreak{}ops & GIN \\
+\texttt{catalog.products} & search\_\allowbreak{}tsv & GIN \\
+\end{longtable}
+\endgroup
+
+Chỉ mục \texttt{HNSW} của vector sản phẩm đã tạo ở migration nhưng bản hiện thực hiện giữ chỉ mục vector trong bộ nhớ của máy chủ, nên chỉ mục này chưa được dùng.
+
+\noindent\textbf{Chỉ mục đề xuất} theo truy vấn thực tế. Các chỉ mục dưới đây chưa khai trong \texttt{schema.prisma}; mỗi chỉ mục chỉ nên thêm sau khi kiểm bằng \texttt{EXPLAIN} hoặc \texttt{pg\_\allowbreak{}stat\_\allowbreak{}statements} trên dữ liệu đủ lớn (Chương~\ref{chap:danhgia}).
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{3.20cm} L{4.80cm} L{2.40cm} L{4.60cm}}
+\caption{Chỉ mục đề xuất theo truy vấn}
+\label{tab:chimucdexuat} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Truy vấn} & \textbf{Bảng (cột)} & \textbf{Loại} & \textbf{Lý do} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Truy vấn} & \textbf{Bảng (cột)} & \textbf{Loại} & \textbf{Lý do} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Người mua xem danh sách đơn của mình, mới nhất trước & \texttt{retail.\allowbreak{}orders}(\allowbreak{}buyer\_\allowbreak{}user\_\allowbreak{}id, placed\_\allowbreak{}at) & B-tree (placed\_at giảm dần) & Lọc theo người mua rồi sắp xếp, phân trang bằng cursor. \\
+Vận hành lọc đơn theo trạng thái & \texttt{retail.\allowbreak{}orders}(\allowbreak{}status, placed\_\allowbreak{}at) & B-tree & Bảng vận hành đơn lọc theo trạng thái, mới nhất trước. \\
+Quét đơn trả trước quá hạn giữ chỗ để tự hủy & \texttt{retail.\allowbreak{}orders}(\allowbreak{}reserve\_\allowbreak{}expires\_\allowbreak{}at) & B-tree một phần (chỉ đơn đang giữ chỗ) & Chỉ cần các đơn chưa thanh toán; chỉ mục một phần nhỏ và nhanh. \\
+Mở một đơn thì lấy các dòng của đơn & \texttt{retail.\allowbreak{}order\_\allowbreak{}items}(\allowbreak{}order\_\allowbreak{}id) & B-tree & Khóa ngoại thường dùng trong phép nối; PostgreSQL không tự tạo chỉ mục cho khóa ngoại. \\
+Tìm dòng tồn của một lô khi đặt hàng, duyệt, thu hồi & \texttt{inventory.\allowbreak{}stock\_\allowbreak{}holdings}(\allowbreak{}batch\_\allowbreak{}id) & B-tree & Chọn dòng tồn theo lô trong giao dịch giữ chỗ và trừ tồn. \\
+Xem sổ nhập xuất của một dòng tồn theo thời gian & \texttt{inventory.\allowbreak{}stock\_\allowbreak{}movements}(\allowbreak{}holding\_\allowbreak{}id, created\_\allowbreak{}at) & B-tree & Sổ chỉ ghi thêm, luôn đọc theo dòng tồn rồi theo thời gian. \\
+Nhà cung cấp xem sản phẩm của mình & \texttt{catalog.\allowbreak{}products}(\allowbreak{}supplier\_\allowbreak{}id) & B-tree & Khu nhà cung cấp lọc theo chủ sản phẩm. \\
+Duyệt danh mục: sản phẩm đã duyệt của một danh mục & \texttt{catalog.\allowbreak{}products}(\allowbreak{}category\_\allowbreak{}id, status) & B-tree & Trang danh mục và đếm số sản phẩm theo danh mục. \\
+Lô đang bán của một sản phẩm & \texttt{catalog.\allowbreak{}batches}(\allowbreak{}product\_\allowbreak{}id, status) & B-tree & Trang chi tiết lấy lô đã duyệt của sản phẩm. \\
+Xem nhật ký canh tác của lô theo ngày & \texttt{catalog.\allowbreak{}farming\_\allowbreak{}logs}(\allowbreak{}batch\_\allowbreak{}id, activity\_\allowbreak{}date) & B-tree & Trang truy xuất đọc nhật ký theo lô và ngày hoạt động. \\
+Tra giao dịch theo đơn hoặc yêu cầu nguồn & \texttt{payment.\allowbreak{}payments}(\allowbreak{}source\_\allowbreak{}type, source\_\allowbreak{}id) & B-tree & Mọi lần thanh toán và hoàn tiền tra theo nguồn. \\
+Chuông thông báo: thông báo chưa đọc của người dùng & \texttt{notification.\allowbreak{}notifications}(\allowbreak{}user\_\allowbreak{}id, read\_\allowbreak{}at, created\_\allowbreak{}at) & B-tree & Đếm chưa đọc và liệt kê mới nhất trước. \\
+Điểm uy tín: đánh giá đã duyệt của một sản phẩm & \texttt{engagement.\allowbreak{}reviews}(\allowbreak{}product\_\allowbreak{}id, status) & B-tree & Trang sản phẩm tổng hợp đánh giá hiển thị. \\
+Nhà cung cấp xem yêu cầu báo giá gửi cho mình & \texttt{wholesale.\allowbreak{}rfqs}(\allowbreak{}supplier\_\allowbreak{}id, status) & B-tree & Danh sách báo giá của nhà cung cấp lọc theo trạng thái. \\
+\end{longtable}
+\endgroup

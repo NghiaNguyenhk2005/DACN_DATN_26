@@ -75,8 +75,8 @@ Hệ thống phụ thuộc vào đối tác bên ngoài mà nhóm không kiểm 
 Giao diện hiển thị đúng bố cục (không vỡ layout, không cuộn ngang) trên tối thiểu 3 kích thước màn hình đại diện (điện thoại, máy tính bảng, máy tính để bàn) và 2 trình duyệt phổ biến nhất tại Việt Nam. &
 Nhóm nông dân/HTX và phần lớn người tiêu dùng cá nhân được xác định truy cập chủ yếu qua điện thoại (mục~\ref{sec:doituongnguoidung}), nên hiển thị tốt trên di động là điều kiện bắt buộc phải kiểm chứng, không chỉ là tính năng ``hỗ trợ thêm''. \\
 \textbf{NFR7.3} &
-Kiểm tra thủ công theo danh sách trên tối thiểu 2 điện thoại thật (một Android tầm trung, một iOS): cài được lên màn hình chính; ghi nhật ký canh tác khi tắt mạng, dữ liệu được gửi đủ, không trùng khi bật mạng lại. &
-Không đo bằng điểm số công cụ vì Lighthouse đã bỏ hạng mục PWA từ phiên bản 12; các tiêu chí được chọn đúng theo lý do phải dùng PWA --- nhân sự hiện trường cần cài lên máy và làm việc ở nơi sóng yếu (persona 1, mục~\ref{sec:doituongnguoidung}); nhận thông báo đẩy \emph{chỉ thiết kế} nên không đo. \\
+Kiểm tra thủ công theo danh sách trên tối thiểu 2 điện thoại thật (một Android tầm trung, một iOS): cài được lên màn hình chính; khi tắt mạng thấy trang báo mất mạng và biểu mẫu nhật ký canh tác còn bản nháp khi mở lại; ghi và đồng bộ ngoại tuyến \emph{chỉ thiết kế} nên không đo. &
+Không đo bằng điểm số công cụ vì Lighthouse đã bỏ hạng mục PWA từ phiên bản 12; các tiêu chí được chọn đúng theo lý do phải dùng PWA --- nhân sự hiện trường cần cài lên máy và làm việc ở nơi sóng yếu (persona 1, mục~\ref{sec:doituongnguoidung}); nhận thông báo đẩy và đồng bộ ngoại tuyến \emph{chỉ thiết kế} nên không đo. \\
 \textbf{NFR9.1} &
 0 bản ghi đã công khai bị chỉnh sửa/xóa trực tiếp -- mọi thay đổi sau khi công khai chỉ qua cơ chế correction có ghi log (bản ghi mới kèm lý do, không ghi đè); kiểm tra qua rà soát log thao tác. &
 Mục tiêu là tính bất biến sau khi công khai nên chỉ tiêu đo phải tuyệt đối, nhất quán với lý do chọn giải pháp cơ sở dữ liệu tập trung có kiểm soát thay vì blockchain tại mục~\ref{subsec:gs1blockchain}. \\
@@ -109,5 +109,37 @@ Phần hiện thực chỉ có gợi ý sản phẩm tương tự theo vector m�
 \textbf{Dự báo giá} &
 MAPE (Mean Absolute Percentage Error) dưới 20\% trên tập kiểm tra tách theo thời gian (time-based split), tương đương độ chính xác từ khoảng 80\% trở lên. Đo trên chuỗi giá theo tháng của FAOSTAT, đã nối tại điểm gãy mức giá, cho các mặt hàng có đủ lịch sử (khoai tây, nấm, chè, cà phê), không phải dữ liệu giao dịch của nền tảng. &
 Đặt thấp hơn một chút so với mức khoảng 82\% Farm2Market (2025) công bố cho bài toán dự báo giá nông sản tương tự \parencite{farm2market_2025}, do đây là công trình nghiên cứu học thuật có thể đã tối ưu trên bộ dữ liệu chọn lọc; 80\% là mục tiêu khả thi, kiểm chứng được trong phạm vi đồ án và vẫn đủ hữu ích để hỗ trợ ra quyết định. \\
+\end{longtable}
+\endgroup
+
+\vspace{1em}
+\noindent Bảng~\ref{tab:thangdoAI} chi tiết hóa từng mô-đun AI thành ba chỉ số thuộc ba khía cạnh (chất lượng, hiệu năng hoặc so với mốc, độ phủ hoặc độ bền), mỗi chỉ số có thang ba mức. Mức \lq\lq Đạt\rq\rq{} lấy từ Bảng~\ref{tab:nguongAI} hoặc từ mốc so sánh đã nêu; mức \lq\lq Tốt\rq\rq{} được đặt sau khi có số đo thật (Chương~\ref{chap:danhgia}) nên chỉ là mục tiêu cao hơn, không dùng để nghiệm thu.
+
+\begingroup
+\tblsetup\tblzebra
+\begin{longtable}{L{2.00cm} L{3.30cm} L{2.20cm} L{2.20cm} L{2.20cm} L{3.00cm}}
+\caption{Thang ba mức cho chỉ số của từng mô-đun AI và kết quả đo}
+\label{tab:thangdoAI} \\
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Chỉ số (khía cạnh)} & \textbf{Chưa đạt} & \textbf{Đạt} & \textbf{Tốt} & \textbf{Kết quả đo} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Mô-đun} & \textbf{Chỉ số (khía cạnh)} & \textbf{Chưa đạt} & \textbf{Đạt} & \textbf{Tốt} & \textbf{Kết quả đo} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multirow{3}{=}{Tìm kiếm ngữ nghĩa} & nDCG@10 hơn từ khóa (chất lượng) & dưới 15\% & từ 15\% & từ 30\% & +42\% (bộ độc lập), +61\% (bộ chính): \textbf{Tốt} \\
+ & p95 của \texttt{/products?q=} (hiệu năng) & từ 1 s & dưới 1 s & dưới 300 ms & 173 ms: \textbf{Tốt} \\
+ & Câu ngoài danh mục trả rỗng (độ phủ) & kém bản không vector & không kém bản không vector & từ 90\% & 5 trên 8 câu: \textbf{Đạt} \\
+\multirow{3}{=}{Sản phẩm tương tự} & Precision@5 (chất lượng) & dưới 0,6 & từ 0,6 & từ 0,8 & 0,65: \textbf{Đạt} \\
+ & Sản phẩm nhận đủ 5 gợi ý (độ phủ) & dưới 80\% & từ 80\% & 100\% & 100\%: \textbf{Tốt} \\
+ & Gợi ý còn hàng (độ bền) & dưới 95\% & từ 95\% & 100\% & 100\%: \textbf{Tốt} \\
+\multirow{3}{=}{Dự báo giá} & MAPE của mô hình tốt nhất (chất lượng) & từ 20\% & dưới 20\% & dưới 10\% & 1,8--3,6\% (chuỗi nối), 3,6--9,7\% (chuỗi thô): \textbf{Tốt} \\
+ & MASE so với seasonal naive (so với mốc) & từ 1 & dưới 1 & dưới 0,5 & 0,22--0,44 (chuỗi nối): \textbf{Tốt}; nấm trên chuỗi thô 1,28: \textbf{Chưa đạt} \\
+ & Độ phủ khoảng 80\% (độ bền) & ngoài 60--95\% & 60--70\% hoặc 90--95\% & 70--90\% & chè 94\%, khoai tây 94\% (\textbf{Đạt}); cà phê 85\% (\textbf{Tốt}); nấm 48\% (\textbf{Chưa đạt}) \\
 \end{longtable}
 \endgroup

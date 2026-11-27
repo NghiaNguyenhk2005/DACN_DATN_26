@@ -3,6 +3,7 @@ import type { Schema } from "@farmery/contract";
 import { DemoResetRegistry, type Resettable } from "../../core/demo-reset.registry";
 
 export type QuoteRequest = Schema<"QuoteRequest">;
+export type CommissionSettlement = Schema<"CommissionSettlement">;
 
 export abstract class QuoteRequestRepository {
   abstract create(request: Omit<QuoteRequest, "id">): Promise<QuoteRequest>;
@@ -10,6 +11,7 @@ export abstract class QuoteRequestRepository {
   abstract update(request: QuoteRequest): Promise<QuoteRequest>;
   abstract listBySupplier(supplierId: string): Promise<QuoteRequest[]>;
   abstract listByBuyer(buyerId?: string, buyerName?: string): Promise<QuoteRequest[]>;
+  abstract listSettlementsBySupplier(supplierId: string): Promise<CommissionSettlement[]>;
 }
 
 const FIRST_ID = 8001;
@@ -224,5 +226,15 @@ export class InMemoryQuoteRequestRepository extends QuoteRequestRepository imple
         .filter((r) => (buyerId && r.buyerId === buyerId) || (buyerName && r.buyerName === buyerName) || (!r.buyerId && buyerId === "204"))
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
     );
+  }
+
+  async listSettlementsBySupplier(supplierId: string): Promise<CommissionSettlement[]> {
+    const list: CommissionSettlement[] = [];
+    for (const r of this.items) {
+      if (r.supplier.id === supplierId && r.settlement) {
+        list.push(structuredClone(r.settlement));
+      }
+    }
+    return list;
   }
 }

@@ -1500,3 +1500,50 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 
 SỬA 24/11 (mục "Dự báo giá theo tháng..."): "8 trên 30 sản phẩm" sai vì mới đếm 30 sản phẩm đầu của dữ liệu mẫu; thực tế dữ liệu mẫu có 39 sản phẩm
 và 10 sản phẩm khớp bốn mặt hàng FAOSTAT (khoai tây 1, nấm 4, chè 2, cà phê 3), 29 sản phẩm không có mặt hàng tương ứng.
+
+### Ghi nhật ký canh tác ngoại tuyến chuyển sang chỉ thiết kế (NFR7.3) — 2026-11-27
+**Quyết định:**
+- Hàng đợi trên máy, tự gửi lại khi có mạng và chống ghi trùng bằng `Idempotency-Key` cho nhật ký canh tác chuyển sang *(chỉ thiết kế)*.
+- Giữ phần đã có mã: bản nháp biểu mẫu nhật ký lưu `localStorage` khi mất mạng (chỉ khôi phục khi mở lại, không tự gửi). Giữ PWA vỏ ứng dụng
+  (cài được, trang báo mất mạng, service worker giữ trang đã xem) làm NFR7.3 hiện thực. NFR7.3 mới đo bằng: cài được lên màn hình chính, hiện trang
+  báo khi mất mạng, bản nháp còn khi mở lại; không đo đồng bộ ngoại tuyến.
+- Sửa đồng bộ: Chương 4 (mô tả, bảng NFR, `tab:chi-thiet-ke`), Chương 5, 6, 8, Phụ lục A.6, ngưỡng và ma trận NFR7.3, `kehoach.tex`, `MVP.md`, `README.md`, VIVA.
+**Bối cảnh:** điểm quyết định 27/11 (kế hoạch 16/11 mục 2): sau 16/11 không có dòng mã nào của hàng đợi ngoại tuyến trên `develop` hay nhánh nào đã đẩy lên;
+việc giao cho Dũng ở tuần 10, mà phần `catalog`, `supplier`, `media` lên Prisma của tuần 9 cũng chưa thấy.
+**Đánh đổi:** nhà cung cấp mất sóng ngoài đồng chỉ giữ được bản nháp rồi phải gửi lại thủ công khi có mạng; đổi lại không cam kết thứ chưa có mã và giải phóng
+một người cho các mục bắt buộc. Làm tiếp khi có thời gian: service worker, hàng đợi bền, kiểm thử đồng bộ không trùng trên hai điện thoại thật.
+SỬA 27/11: các mục trước nhắc ghi nhật ký khi mất sóng là việc hiện thực (NFR7.3, mục "cắt tiếp theo") đã lỗi thời theo mục này.
+
+### Dựng k6 trước, đo trên bản bộ nhớ có nhãn rõ; thêm người mua giả cho kiểm thử tải — 2026-11-24
+**Quyết định:**
+- Kịch bản k6 nằm ở `apps/perf/` (browse: tải tăng dần tới 100 VU; oversell: nhiều người mua cùng đặt trên dòng tồn 8). Dựng và chạy ngay trên
+  `STORAGE=memory`, không chờ Prisma. Mọi số đo từ nền này phải ghi nhãn "đo trên bản bộ nhớ" ở Chương 7 và không dùng làm bằng chứng cho PostgreSQL.
+- Kịch bản oversell chỉ đo tranh chấp của đơn lẻ trên cùng dòng tồn. Kịch bản hợp đồng sỉ và đơn thu mua cùng giành tồn bỏ khỏi phạm vi đo vì
+  wholesale chưa gọi `InventoryService` và `ProcurementModule` còn rỗng; ghi là hạn chế ở Chương 7.
+- Thêm biến `LOADTEST_BUYERS=n` (0..1000, mặc định 0, chỉ cho phép khi `DEMO_MODE=true`) nạp n tài khoản người mua giả `loadtest-buyer-NNN@loadtest.example`
+  (id 4001..) vào kho bộ nhớ. Không đổi `SEED_ACCOUNTS` nên `prisma/seed.ts` không nạp chúng vào PostgreSQL.
+- SỬA 2026-11-24 (mục 2026-11-16 "hiệu năng đo bằng k6"): phần "chạy trên PostgreSQL thật" chưa thực hiện được. Hiện chỉ `CategoryRepository` có bản Prisma,
+  retail/inventory/catalog/wholesale vẫn ở bộ nhớ và trong mã không có `SELECT ... FOR UPDATE` (chống bán vượt hiện là `KeyedMutex` trong tiến trình).
+  Quyết định 16/11 vẫn là đích; kịch bản giữ nguyên để chạy lại khi các mô-đun chuyển sang Prisma.
+**Bối cảnh:** khảo sát API ngày 24/11 cho thấy hai điều kiện của quyết định 16/11 chưa có. Mốc đóng băng nội dung 15/12 nên cần có kịch bản và số đo
+sơ bộ sớm, tránh dồn việc vào tuần 13.
+**Đánh đổi:** có số đo và kịch bản chạy lại được từ bây giờ, nhưng số đo chưa chứng minh được khóa dòng của PostgreSQL và chưa đo `pg_stat_statements`.
+Chương 7 hiện còn nói "khóa bi quan `SELECT ... FOR UPDATE`" — phải sửa cho khớp thực tế khi điền kết quả. Thêm `LOADTEST_BUYERS` là một biến cấu hình nữa
+phải nhớ tắt ngoài môi trường thử (đã chặn khi `DEMO_MODE=false`).
+Kết quả sơ bộ trên máy Nghĩa (bộ nhớ, RATE_LIMIT và VALIDATE_RESPONSES tắt): browse đạt ngưỡng (p95 khoảng 10 ms, lỗi 0%); oversell 50 vòng × 50 người mua
+giả: 188 đơn nhận, 2312 đơn bị từ chối, 0 bán vượt. Đây là số thử, chưa phải số báo cáo (chưa lặp 3 lượt, chưa ghi cấu hình máy).
+
+Bổ sung 2026-11-27 (mục k6 ngày 24/11): đã chạy 3 lượt mỗi kịch bản (oversell 50 vòng × 50 người mua: 190/180/182 đơn nhận, 0 bán vượt; browse tới 100 VU: p95 luồng duyệt 6,5–10,6 ms, lỗi 0%)
+và điền Ch.7. Ch.6 mục "Khóa dòng tồn" đã sửa từ "áp dụng FOR UPDATE" thành "hiện là KeyedMutex, đích là FOR UPDATE" cho khớp mã. Ch.5 (bảng chọn công nghệ) giữ nguyên vì chỉ nêu quyết định thiết kế.
+
+### Tồn kho chạy trên PostgreSQL với khóa dòng FOR UPDATE; chế độ hỗn hợp INVENTORY_STORAGE — 2026-11-27
+**Quyết định:**
+- Chuyển riêng mô-đun tồn kho sang PostgreSQL (`PrismaInventoryRepository`); giỏ, đơn, danh mục, wholesale vẫn ở bộ nhớ. Chống bán vượt trên PostgreSQL bằng `SELECT ... FOR UPDATE` trong transaction,
+  khóa theo thứ tự id, `CHECK stock_holdings_qty_check` là chốt chặn cuối. `InventoryRepository` đổi thành các thao tác ghi nguyên tử (`openFromBatch`, `reserve`, `settle`); phần tính FEFO và quy tắc khép giữ chỗ tách ra `stock-math.ts` dùng chung hai kho.
+- Ba thay đổi lược đồ đã duyệt: số lượng tồn `Decimal(12,3)` (khớp `round3` của mã, giỏ tối thiểu 0,001); thêm `returned` vào `reservation_status`; thêm 6 cột chụp thông tin lô vào `stock_holdings`
+  (`product_id`, `listing_id`, `batch_code`, `product_name`, `harvest_date`, `best_before`) kèm chỉ mục `listing_id`, `batch_id`.
+- Thêm `INVENTORY_STORAGE` (mặc định theo `STORAGE`) để chạy hỗn hợp; `DemoResetRegistry.resetAll()` đổi sang bất đồng bộ để đặt lại được kho PostgreSQL (TRUNCATE rồi nạp lại dữ liệu mẫu, chỉ `DEMO_MODE`).
+- SỬA 2026-11-27 (mục 2026-11-24 "Dựng k6 trước"): phần "chạy trên PostgreSQL" đã thực hiện được cho riêng tồn kho; số đo trên bộ nhớ vẫn giữ làm cột đối chiếu.
+**Bối cảnh:** NFR1.2 và NFR4.1 chỉ cần tồn kho có khóa dòng thật; chuyển cả retail và catalog không kịp mốc đóng băng 15/12. Plan làm giàu `HoldingRecord` từ catalog bị bỏ vì `CatalogModule` đã import `InventoryModule` (vòng phụ thuộc), nên chụp thông tin lô vào chính dòng tồn.
+**Đánh đổi:** thông tin lô lặp ở dòng tồn (bất biến sau khi duyệt lô, riêng tên sản phẩm có thể lệch nếu đổi sau). Giữ chỗ (PostgreSQL) và ghi đơn (bộ nhớ) chưa chung giao dịch. Cần thêm một `ci-pg` bước chạy bài kiểm tích hợp `inventory-pg`.
+Kết quả (máy Nghĩa, PostgreSQL 17 trong Docker, 3 lượt, API mới mỗi lượt): oversell 188/197/186 đơn nhận, 0 bán vượt trong 150 vòng × 50 yêu cầu; browse p95 luồng duyệt 125–372 ms, lỗi 0%; truy vấn chậm nhất là câu `FOR UPDATE` theo tin bán (trung bình 13,5–25,7 ms, phần lớn là đợi khóa). Bỏ `FOR UPDATE` thì bài kiểm đỏ (tổng giữ chỗ 58/75/77 trên tồn 8).
