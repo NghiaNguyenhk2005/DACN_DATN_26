@@ -58,15 +58,16 @@ describe("API khung", () => {
     expect(res.body.errors[0].field).toBe("/body/email");
   });
 
-  it("đường dẫn ngoài hợp đồng trả 404, thao tác chưa làm trả 501", async () => {
+  it("đường dẫn ngoài hợp đồng trả 404, POST /media đã hiện thực trả 201", async () => {
     expect((await request(app.getHttpServer()).get("/api/khong-co").expect(404)).body.code).toBe("NOT_IN_CONTRACT");
-    // POST /media (tải tệp) là thao tác trong hợp đồng chưa có endpoint.
+    // POST /media (tải tệp) đã được hiện thực trả về MediaFile:
     const media = await request(app.getHttpServer())
       .post("/api/media")
       .auth(sellerToken, { type: "bearer" })
-      .attach("file", Buffer.from("x"), "a.bin")
-      .expect(501);
-    expect(media.body.code).toBe("NOT_IMPLEMENTED");
+      .attach("file", Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]), "test.jpg")
+      .expect(201);
+    expect(media.body.id).toBeDefined();
+    expect(media.body.url).toBeDefined();
   });
 
   it("thiếu token trả 401, sai vai trò trả 403", async () => {

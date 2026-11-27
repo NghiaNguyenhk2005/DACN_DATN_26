@@ -73,4 +73,26 @@ export class WholesaleController {
   payWholesaleOrder(@Param("id") id: string, @CurrentUser() user?: AuthUser): Promise<QuoteRequest> {
     return this.wholesale.payWholesaleOrder(user?.id, id);
   }
+
+  @Post("wholesale/quote-requests/:id/ship")
+  @HttpCode(HttpStatus.OK)
+  shipWholesaleOrder(@Param("id") id: string, @CurrentUser() user?: AuthUser): Promise<QuoteRequest> {
+    return this.wholesale.shipWholesaleOrder(user?.id, id);
+  }
+
+  @Post("wholesale/quote-requests/:id/deliver")
+  @HttpCode(HttpStatus.OK)
+  deliverWholesaleOrder(
+    @Param("id") id: string,
+    @Body() body: { rejectedQty?: number },
+    @CurrentUser() user?: AuthUser,
+  ): Promise<QuoteRequest> {
+    return this.wholesale.deliverWholesaleOrder(user?.id, id, body?.rejectedQty);
+  }
+
+  @Get("seller/commission-settlements")
+  @HttpCode(HttpStatus.OK)
+  listSellerCommissionSettlements(@CurrentUser() user?: AuthUser) {
+    return this.wholesale.listSellerCommissionSettlements(user?.id);
+  }
 }

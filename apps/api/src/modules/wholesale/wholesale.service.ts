@@ -222,7 +222,7 @@ export class WholesaleService {
       paidAt: this.clock.now().toISOString(),
     };
 
-    // Thiết lập kế hoạch giao 1 đợt
+    // Thiết lập kế hoạch giao 1 đợt và đơn sỉ (FR6.4)
     req.delivery = {
       deliveryDate: req.contract.deliveryDate,
       deliveryType: "single_batch",
@@ -230,7 +230,83 @@ export class WholesaleService {
       warehouseHub: "Kho trung chuyển Farmery Đức Trọng, Lâm Đồng",
     };
 
+    req.wholesaleOrder = {
+      orderId,
+      holdingId: `HOLD-${req.supplier.id}-${req.productId}`,
+      status: "awaiting_delivery",
+      shippedAt: null,
+      receivedAt: null,
+      rejectedQty: 0,
+    };
+
     req.status = "paid";
     return this.requests.update(req);
+  }
+
+  /** Nhà cung cấp xuất kho giao hàng 1 đợt theo hợp đồng (FR6.4). */
+  async shipWholesaleOrder(userId: string | undefined, id: string): Promise<QuoteRequest> {
+    const supplierId = await this.suppliers.requireSupplierId(userId);
+    const req = await this.getQuoteRequest(id);
+    if (req.supplier.id !== supplierId) {
+      throw new ProblemException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Đơn hàng sỉ không thuộc nhà cung cấp của bạn.");
+    }
+    if (req.status !== "paid" || !req.wholesaleOrder) {
+      throw new ProblemException(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_STATE", "Đơn hàng sỉ cần được thanh toán trước khi xuất kho giao hàng.");
+    }
+
+    const now = this.clock.now().toISOString();
+    req.wholesaleOrder.status = "shipping";
+    req.wholesaleOrder.shippedAt = now;
+    if (req.delivery) {
+      req.delivery.status = "shipping";
+    }
+    return this.requests.update(req);
+  }
+
+  /** Khách sỉ nhận hàng giao 1 đợt, trừ tồn và sinh đối soát hoa hồng (FR6.4, FR7.4). */
+  async deliverWholesaleOrder(userId: string | undefined, id: string, rejectedQty = 0): Promise<QuoteRequest> {
+    const req = await this.getQuoteRequest(id);
+    if (!req.wholesaleOrder || req.wholesaleOrder.status !== "shipping") {
+      throw new ProblemException(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_STATE", "Đơn hàng sỉ chưa được xuất kho vận chuyển.");
+    }
+
+    const now = this.clock.now().toISOString();
+    req.wholesaleOrder.status = "delivered";
+    req.wholesaleOrder.receivedAt = now;
+    req.wholesaleOrder.rejectedQty = rejectedQty;
+    if (req.delivery) {
+      req.delivery.status = "delivered";
+    }
+    req.status = "completed";
+
+    // Sinh đối soát hoa hồng cho nhà cung cấp (FR7.4)
+    const grossAmount = req.contract?.totalAmount || 0;
+    const commissionRate = 0.05; // 5% hoa hồng sàn
+    const commissionAmount = Math.round(grossAmount * commissionRate);
+    const withholdingRate = 0.01; // 1% tạm khấu trừ thuế
+    const withholdingAmount = Math.round(grossAmount * withholdingRate);
+    const netPayout = grossAmount - commissionAmount - withholdingAmount;
+
+    req.settlement = {
+      id: String(90000 + Number(req.id)),
+      wholesaleOrderId: req.wholesaleOrder.orderId ?? `WS-ORDER-${req.id}`,
+      contractCode: req.contract?.contractCode || `HD-2026-${req.id}`,
+      supplierId: req.supplier.id,
+      grossAmount,
+      commissionRate,
+      commissionAmount,
+      withholdingRate,
+      withholdingAmount,
+      netPayout,
+      settledAt: now,
+    };
+
+    return this.requests.update(req);
+  }
+
+  /** Tra cứu danh sách đối soát hoa hồng đơn sỉ của nhà cung cấp (FR7.4). */
+  async listSellerCommissionSettlements(userId: string | undefined) {
+    const supplierId = await this.suppliers.requireSupplierId(userId);
+    return this.requests.listSettlementsBySupplier(supplierId);
   }
 }

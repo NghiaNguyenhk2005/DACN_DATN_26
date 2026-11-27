@@ -844,6 +844,69 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
 
+  /wholesale/quote-requests/{id}/ship:
+    post:
+      tags: [Wholesale]
+      operationId: shipWholesaleOrder
+      summary: Nhà cung cấp xuất kho và bắt đầu giao đơn hàng sỉ 1 đợt (FR6.4)
+      x-roles: [seller]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      responses:
+        '200':
+          description: Đã chuyển sang trạng thái đang giao hàng
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /wholesale/quote-requests/{id}/deliver:
+    post:
+      tags: [Wholesale]
+      operationId: deliverWholesaleOrder
+      summary: Khách sỉ nhận hàng giao 1 đợt, trừ tồn và sinh đối soát hoa hồng (FR6.4, FR7.4)
+      x-roles: [buyer_wholesale]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rejectedQty: { type: number, default: 0 }
+      responses:
+        '200':
+          description: Đơn sỉ hoàn tất giao nhận và đối soát
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/QuoteRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /seller/commission-settlements:
+    get:
+      tags: [Wholesale]
+      operationId: listSellerCommissionSettlements
+      summary: Danh sách đối soát hoa hồng đơn sỉ của nhà cung cấp (FR7.4)
+      x-roles: [seller]
+      responses:
+        '200':
+          description: Danh sách đối soát hoa hồng
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/CommissionSettlement' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
   # ---------------------------------------------------------------- Moderation
   /admin/review-tasks:
     get:
@@ -1072,6 +1135,85 @@ paths:
         '400': { $ref: '#/components/responses/BadRequest' }
 
   # ---------------------------------------------------------------- Media
+  /media/presigned:
+    post:
+      tags: [Media]
+      operationId: getPresignedUrl
+      summary: Yêu cầu URL ký trước để tải trực tiếp lên kho tệp MinIO (FR10.2)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName, mimeType, sizeBytes]
+              properties:
+                fileName: { type: string }
+                mimeType: { type: string }
+                sizeBytes: { type: integer }
+                accessLevel: { type: string, enum: [public, private], default: public }
+      responses:
+        '200':
+          description: Đường dẫn ký trước và định danh tệp
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [fileId, uploadUrl, objectKey, expiresInSeconds]
+                properties:
+                  fileId: { $ref: '#/components/schemas/Id' }
+                  uploadUrl: { type: string }
+                  objectKey: { type: string }
+                  expiresInSeconds: { type: integer }
+        '413': { $ref: '#/components/responses/BadRequest' }
+        '415': { $ref: '#/components/responses/BadRequest' }
+
+  /media/confirm:
+    post:
+      tags: [Media]
+      operationId: confirmMediaUpload
+      summary: Xác nhận tệp đã tải xong lên MinIO, kiểm tra magic bytes và sinh WebP nhiều cỡ (FR10.2)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileId]
+              properties:
+                fileId: { $ref: '#/components/schemas/Id' }
+                contentBase64: { type: string }
+      responses:
+        '200':
+          description: Tệp đã sẵn sàng
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MediaFile' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '415': { $ref: '#/components/responses/BadRequest' }
+
+  /media/{id}:
+    get:
+      tags: [Media]
+      operationId: getMediaFile
+      summary: Lấy thông tin tệp hoặc đường dẫn xem ảnh
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/Id' }
+      responses:
+        '200':
+          description: Thông tin tệp
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MediaFile' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
   /media:
     post:
       tags: [Media]
@@ -1268,6 +1410,9 @@ components:
         id: { $ref: '#/components/schemas/Id' }
         url: { type: string, format: uri }
         mimeType: { type: string }
+        status: { type: string }
+        sizeBytes: { type: integer }
+        variants: { type: object }
 
     # ------------------------------------------------------------ enum (khớp schema.dbml)
     RoleCode:
@@ -1547,6 +1692,32 @@ components:
             deliveryType: { type: string, description: single_batch (giao một đợt) }
             status: { type: string, enum: [awaiting_delivery, shipping, delivered] }
             warehouseHub: { type: string }
+        wholesaleOrder:
+          type: object
+          properties:
+            orderId: { type: string }
+            holdingId: { type: string }
+            status: { type: string }
+            shippedAt: { type: [string, 'null'], format: date-time }
+            receivedAt: { type: [string, 'null'], format: date-time }
+            rejectedQty: { type: number }
+        settlement:
+          $ref: '#/components/schemas/CommissionSettlement'
+    CommissionSettlement:
+      type: object
+      required: [id, wholesaleOrderId, contractCode, supplierId, grossAmount, commissionRate, commissionAmount, netPayout, settledAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        wholesaleOrderId: { type: string }
+        contractCode: { type: string }
+        supplierId: { $ref: '#/components/schemas/Id' }
+        grossAmount: { type: integer, description: Tổng giá trị đơn sỉ }
+        commissionRate: { type: number, description: Tỉ lệ hoa hồng sàn }
+        commissionAmount: { type: integer, description: Tiền hoa hồng sàn }
+        withholdingRate: { type: [number, 'null'], description: Thuế khấu trừ nếu có }
+        withholdingAmount: { type: [integer, 'null'] }
+        netPayout: { type: integer, description: Thực nhận của nhà cung cấp }
+        settledAt: { type: string, format: date-time }
     SearchSuggest:
       type: object
       required: [products, categories, regions, interpretation, correction]
