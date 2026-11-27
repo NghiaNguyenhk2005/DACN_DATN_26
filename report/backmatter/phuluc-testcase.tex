@@ -4,12 +4,11 @@
 \label{apdx:testcase}
 \addcontentsline{toc}{section}{Phụ lục H. Bộ test case}
 
-Bảng~\ref{tab:testcase} liệt kê 69 test case theo nhóm yêu cầu. Mỗi ca ghi yêu cầu được kiểm (FR, NFR), điều kiện và dữ liệu vào, kết quả mong đợi, cách chạy và trạng thái. Cột \lq\lq Cách chạy\rq\rq{} nêu bộ kiểm thử tự động chứa ca đó (Jest cho máy chủ, hộp đen là bộ chạy trên máy chủ đã dựng, Playwright cho giao diện, k6 cho hiệu năng, pytest cho dịch vụ AI) hoặc \lq\lq Thủ công\rq\rq. Trạng thái dùng bốn giá trị:
+Bảng~\ref{tab:testcase} liệt kê 69 test case theo nhóm yêu cầu. Mỗi ca ghi yêu cầu được kiểm (FR, NFR), điều kiện và dữ liệu vào, kết quả mong đợi, cách chạy và trạng thái. Cột \lq\lq Cách chạy\rq\rq{} nêu bộ kiểm thử tự động chứa ca đó (Jest cho máy chủ, hộp đen là bộ chạy trên máy chủ đã dựng, Playwright cho giao diện, k6 cho hiệu năng, pytest cho dịch vụ AI) hoặc \lq\lq Thủ công\rq\rq. Trạng thái dùng ba giá trị:
 \begin{itemize}
     \item \textbf{Đạt:} bộ tự động đã chạy và qua ở lần chạy CI gần nhất trên nhánh chính (23/11), hoặc đã đo thật và ghi kết quả ở Chương~\ref{chap:danhgia}; \lq\lq bản bộ nhớ\rq\rq{} là đo trên lớp lưu trữ trong bộ nhớ, chưa phải PostgreSQL.
     \item \textbf{Chưa chạy lại:} có mã kiểm thử nhưng không nằm trong CI chặn gộp (bộ hộp đen, Playwright) nên chưa chạy lại sau lần sửa cuối.
     \item \textbf{Chưa chạy:} ca thủ công, hoặc ca chờ điều kiện (PostgreSQL thật, điện thoại thật, nhóm nhà cung cấp).
-    \item \textbf{Chưa gộp:} ca thuộc phần mã chưa gộp vào nhánh chính.
 \end{itemize}
 Chưa có ca cho các phần còn đang làm hoặc mới có thiết kế: thu mua và nhập kho (FR13.1, FR13.2, FR13.4), giao hàng ba chặng, đổi trả và hoàn tiền (FR8), đánh giá và uy tín (FR5.5), thông báo web (FR11.1), điều khoản dịch vụ (FR1.6); các ca này được thêm khi phần mã tương ứng xong.
 
@@ -38,7 +37,7 @@ TC-03 & FR1.2, NFR3.5 & Nhập sai mã 5 lần liên tiếp & Mã bị khóa, nh
 TC-04 & NFR3.5 & Gửi OTP quá số lần cho phép trong một giờ & 429 \texttt{RATE\_LIMITED}; qua giờ mới gửi lại được & Jest: hardening & Đạt \\
 TC-05 & FR1.1 & Email chưa đăng ký ở chế độ production & Trả như thành công, không gửi thư (không lộ tài khoản); ở demo trả 404 & Hộp đen: security & Chưa chạy lại \\
 TC-06 & FR1.5 & Thêm địa chỉ đầu tiên, rồi đặt địa chỉ mới làm mặc định; thêm địa chỉ thứ 21 & Địa chỉ đầu là mặc định, mặc định cũ bị bỏ; địa chỉ thứ 21 trả 422 & Jest: auth, hardening & Đạt \\
-TC-07 & NFR3.6 & Nhân sự nội bộ bật xác thực hai lớp bằng mã QR, đăng nhập admin & Bắt buộc nhập mã 6 số; sai mã bị từ chối & Thủ công & Chưa gộp \\
+TC-07 & NFR3.6 & Nhân sự nội bộ bật xác thực hai lớp bằng mã QR, đăng nhập admin & Bắt buộc nhập mã 6 số; sai mã bị từ chối & Thủ công & Chưa chạy \\
 \rowcolor{tblheadbg}
 \multicolumn{6}{l}{\textbf{Danh mục, tìm kiếm và sản phẩm (FR4, FR12.3)}} \\
 TC-08 & FR4.4 & Gọi cây danh mục & Cây đa cấp; số sản phẩm của danh mục cha gồm cả danh mục con & Jest: catalog-public & Đạt \\
@@ -113,7 +112,7 @@ TC-62 & NFR3.1 & Khách A đọc, thanh toán, hủy đơn của khách B & 404 
 TC-63 & NFR1.1 & Tải tăng dần đến 100 người dùng đồng thời duyệt và tìm & p95 dưới 2 giây, lỗi dưới 1\%, trung vị dưới 3 giây & k6: browse & Đạt (bản bộ nhớ) \\
 TC-64 & NFR1.2, NFR4.1 & 50 vòng, mỗi vòng 50 người mua cùng đặt trên một dòng tồn & Số đơn nhận không vượt tồn; vượt tồn bằng 0 & k6: oversell & Đạt (bản bộ nhớ) \\
 TC-65 & NFR1.1, NFR1.2 & Chạy lại hai kịch bản k6 trên PostgreSQL thật với dữ liệu mẫu đủ lớn & Đạt cùng ngưỡng, kèm truy vấn chậm nhất & k6 & Chưa chạy \\
-TC-66 & NFR7.1 & Cổng thanh toán giả lập chậm hơn 5 giây & Hết thời gian chờ, thử lại tối đa 2 lần có giãn cách & Jest: payment-lifecycle & Chưa gộp \\
+TC-66 & NFR7.1 & Cổng thanh toán giả lập chậm hơn 5 giây & Hết thời gian chờ, thử lại tối đa 2 lần có giãn cách & Jest: payment-lifecycle & Đạt \\
 TC-67 & NFR7.2 & Mở các màn chính ở điện thoại, máy tính bảng, máy tính và hai trình duyệt & Không vỡ bố cục, không cuộn ngang & Thủ công & Chưa chạy \\
 TC-68 & NFR7.3 & Cài ứng dụng mua hàng lên màn hình chính; tắt mạng; gõ dở biểu mẫu nhật ký rồi mở lại & Cài được; hiện trang báo mất mạng; bản nháp còn nguyên & Thủ công, hai điện thoại & Chưa chạy \\
 TC-69 & NFR6.1--6.3 & Nhóm nhà cung cấp làm ba tác vụ: đăng lô, ghi nhật ký, tìm và mở QR & Từ 80\% hoàn thành không cần hỗ trợ & Thủ công (Phụ lục A) & Chưa chạy \\
