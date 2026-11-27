@@ -535,3 +535,9 @@ Status: open
 - Kịch bản hợp đồng sỉ và đơn thu mua cùng giành dòng tồn chưa đo được: wholesale chưa gọi `InventoryService`, `ProcurementModule` còn rỗng.
 - Lượt đo ngày 27/11: API khởi động một lần cho cả 6 lượt (script dừng nhầm PID nên 5 lượt sau dùng lại API đang chạy); số liệu hợp lệ vì mỗi lượt đặt lại dữ liệu, nhưng lượt đo lại nên dừng API đúng cách.
 Status: open
+**Cập nhật 2026-11-27 (tối):** đã có `PrismaInventoryRepository` (transaction + `SELECT ... FOR UPDATE`) chạy ở chế độ hỗn hợp `INVENTORY_STORAGE=prisma`; đã đo lại k6 trên PostgreSQL (3 lượt mỗi kịch bản, API khởi động mới mỗi lượt): 0 bán vượt, NFR1.1 đạt, có `pg_stat_statements`; Ch.6 và Ch.7 đã cập nhật hai cột (bộ nhớ, PostgreSQL). Thay cho các gạch đầu dòng trên, còn mở:
+- Giỏ hàng, đơn hàng, danh mục, wholesale vẫn ở bộ nhớ; bước giữ chỗ (PostgreSQL) và ghi đơn (bộ nhớ) chưa chung một giao dịch, bù trừ bằng `release`. `STORAGE=prisma` toàn phần chưa có dữ liệu sản phẩm để bán (seed chưa nạp sản phẩm, lô, tin bán).
+- Chỉ mục khóa ngoại: đã thêm `stock_holdings(listing_id)` và `(batch_id)`; các bảng khác (`order_items`, `orders`...) vẫn chờ số đo trên PostgreSQL thật cho giỏ và đơn.
+- `pg_stat_statements` bật bằng tay (`CREATE EXTENSION`), chưa nằm trong migration; số `ci-pg` chưa kiểm vì chưa chạy trên CI.
+- Phát sự kiện vẫn trong khóa của bên phát (NOTES 2026-11-16), chưa chuyển sang sau commit hay outbox.
+- Kịch bản hợp đồng sỉ và đơn thu mua cùng giành tồn vẫn chưa đo được (wholesale chưa gọi `InventoryService`, `ProcurementModule` rỗng).
