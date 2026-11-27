@@ -915,7 +915,7 @@ blockquote{border-left:4px solid #bbb;margin:1em 0;padding:.2em 1em;color:#444}
 <p><strong>Q91. Vì sao Next.js cho ứng dụng mua hàng và Refine cho ứng dụng nội bộ?</strong></p>
 <ul>
 <li><strong>Ý chính: ứng dụng mua hàng cần SSR/SEO và PWA; ứng dụng nội bộ là CRUD quản trị nhiều, Refine dựng nhanh.</strong></li>
-<li>Trang QR công khai cần SSR; PWA (NFR7.3) cài được, ghi nhật ký canh tác khi mất mạng.</li>
+<li>Trang QR công khai cần SSR; PWA (NFR7.3) cài được, giữ bản nháp nhật ký khi mất mạng; đồng bộ ngoại tuyến chỉ thiết kế.</li>
 <li>Ứng dụng nội bộ chỉ có giao diện đáp ứng, không thao tác ngoại tuyến.</li>
 </ul>
 <p><strong>Q92. MinIO để làm gì?</strong></p>
@@ -927,7 +927,7 @@ blockquote{border-left:4px solid #bbb;margin:1em 0;padding:.2em 1em;color:#444}
 <p><strong>Q93. Vì sao không làm app di động gốc, và Web Push là gì?</strong></p>
 <ul>
 <li><strong>Ý chính: PWA đủ cho nhu cầu hiện tại; thông báo đẩy dùng Web Push, một chuẩn mở của trình duyệt chứ không phải đối tác thương mại.</strong></li>
-<li>PWA cài được, ghi nhật ký canh tác ngoại tuyến, nhận thông báo đẩy (NFR7.3); app gốc là hướng phát triển khi nhu cầu ngoại tuyến vượt web (Ch8 §8.2). <strong>[Ngoài phạm vi]</strong></li>
+<li>PWA cài được, giữ bản nháp nhật ký khi mất mạng (NFR7.3); ghi nhật ký ngoại tuyến tự đồng bộ và thông báo đẩy chỉ thiết kế; app gốc là hướng phát triển khi nhu cầu ngoại tuyến vượt web (Ch8 §8.2). <strong>[Ngoài phạm vi]</strong></li>
 <li>Web Push là gì: chuẩn W3C (Push API + Notifications API), khóa VAPID (RFC 8292) để máy chủ tự định danh, tải tin mã hóa (RFC 8291).</li>
 <li>Cơ chế: PWA đăng ký service worker; trình duyệt đăng ký với dịch vụ đẩy do hãng trình duyệt vận hành (Google, Mozilla, Apple; miễn phí, Farmery không có hợp đồng hay tài khoản riêng) và nhận subscription (địa chỉ + khóa); máy chủ nghiệp vụ lưu ở <code>notification.push_subscriptions</code>; khi đơn đổi trạng thái, máy chủ gửi yêu cầu HTTP ký VAPID tới địa chỉ đó; service worker hiển thị thông báo kể cả khi đã đóng tab.</li>
 <li>Trạng thái: prototype hỏi lại trạng thái đơn mỗi 5 giây; MVP dùng Web Push: <strong>[Để sau prototype]</strong> (FR11.1). Trong hình C4 ghi "Dịch vụ đẩy của trình duyệt (Web Push)", một trong 5 hệ thống thuộc phạm vi MVP.</li>

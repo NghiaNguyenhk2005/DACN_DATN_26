@@ -145,7 +145,7 @@ Mỗi hạng mục được quyết định bằng cách nêu phương án ứng
 \endhead
 \bottomrule
 \endfoot
-Ứng dụng mua hàng & Next.js, PWA & Trang truy xuất và trang sản phẩm mở công khai qua QR, cần SSR và lập chỉ mục; service worker cho hàng đợi ngoại tuyến (NFR7.3). Loại Vue/Nuxt, Angular \\
+Ứng dụng mua hàng & Next.js, PWA & Trang truy xuất và trang sản phẩm mở công khai qua QR, cần SSR và lập chỉ mục; service worker giữ trang đã xem và trang báo mất mạng, hàng đợi ngoại tuyến chỉ thiết kế (NFR7.3). Loại Vue/Nuxt, Angular \\
 Ứng dụng nội bộ & React, Vite, Refine & Chủ yếu danh sách, biểu mẫu, hàng đợi theo vai trò, không cần SSR; tách khỏi Next.js để mã màn hình quyền cao không nằm trong gói tải xuống của khách. Loại React-Admin \\
 Kho mã & Monorepo pnpm, Turborepo & Chia sẻ kiểu dữ liệu sinh từ API, chỉ dựng lại phần bị ảnh hưởng. Loại tách nhiều kho (đồng bộ kiểu bằng tay), Nx (cấu hình nặng) \\
 Framework máy chủ & NestJS (Node.js, TypeScript) & Chung ngôn ngữ với giao diện; mô-đun và guard phù hợp phân quyền nhiều vai trò (NFR3.6). Loại Spring Boot, Django/FastAPI, Laravel \\

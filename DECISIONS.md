@@ -1501,6 +1501,19 @@ LightGBM thắng seasonal naive ở cả bốn mặt hàng.
 SỬA 24/11 (mục "Dự báo giá theo tháng..."): "8 trên 30 sản phẩm" sai vì mới đếm 30 sản phẩm đầu của dữ liệu mẫu; thực tế dữ liệu mẫu có 39 sản phẩm
 và 10 sản phẩm khớp bốn mặt hàng FAOSTAT (khoai tây 1, nấm 4, chè 2, cà phê 3), 29 sản phẩm không có mặt hàng tương ứng.
 
+### Ghi nhật ký canh tác ngoại tuyến chuyển sang chỉ thiết kế (NFR7.3) — 2026-11-27
+**Quyết định:**
+- Hàng đợi trên máy, tự gửi lại khi có mạng và chống ghi trùng bằng `Idempotency-Key` cho nhật ký canh tác chuyển sang *(chỉ thiết kế)*.
+- Giữ phần đã có mã: bản nháp biểu mẫu nhật ký lưu `localStorage` khi mất mạng (chỉ khôi phục khi mở lại, không tự gửi). Giữ PWA vỏ ứng dụng
+  (cài được, trang báo mất mạng, service worker giữ trang đã xem) làm NFR7.3 hiện thực. NFR7.3 mới đo bằng: cài được lên màn hình chính, hiện trang
+  báo khi mất mạng, bản nháp còn khi mở lại; không đo đồng bộ ngoại tuyến.
+- Sửa đồng bộ: Chương 4 (mô tả, bảng NFR, `tab:chi-thiet-ke`), Chương 5, 6, 8, Phụ lục A.6, ngưỡng và ma trận NFR7.3, `kehoach.tex`, `MVP.md`, `README.md`, VIVA.
+**Bối cảnh:** điểm quyết định 27/11 (kế hoạch 16/11 mục 2): sau 16/11 không có dòng mã nào của hàng đợi ngoại tuyến trên `develop` hay nhánh nào đã đẩy lên;
+việc giao cho Dũng ở tuần 10, mà phần `catalog`, `supplier`, `media` lên Prisma của tuần 9 cũng chưa thấy.
+**Đánh đổi:** nhà cung cấp mất sóng ngoài đồng chỉ giữ được bản nháp rồi phải gửi lại thủ công khi có mạng; đổi lại không cam kết thứ chưa có mã và giải phóng
+một người cho các mục bắt buộc. Làm tiếp khi có thời gian: service worker, hàng đợi bền, kiểm thử đồng bộ không trùng trên hai điện thoại thật.
+SỬA 27/11: các mục trước nhắc ghi nhật ký khi mất sóng là việc hiện thực (NFR7.3, mục "cắt tiếp theo") đã lỗi thời theo mục này.
+
 ### Dựng k6 trước, đo trên bản bộ nhớ có nhãn rõ; thêm người mua giả cho kiểm thử tải — 2026-11-24
 **Quyết định:**
 - Kịch bản k6 nằm ở `apps/perf/` (browse: tải tăng dần tới 100 VU; oversell: nhiều người mua cùng đặt trên dòng tồn 8). Dựng và chạy ngay trên

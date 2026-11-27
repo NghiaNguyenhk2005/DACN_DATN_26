@@ -74,7 +74,7 @@ Toàn bộ NFR thuộc MVP, trừ:
 | NFR8.3 (một phần) | Tuân thủ đầy đủ quy định hóa đơn điện tử | Bản hiện thực dùng hóa đơn giả lập; kiểm tra thật khi kết nối nhà cung cấp dịch vụ |
 | NFR8.4 | Khấu trừ, nộp thuế thay | Đi theo FR7.4 phần chỉ thiết kế |
 
-NFR7.3: ứng dụng mua hàng là PWA (cài được, thông báo đẩy, ghi nhật ký canh tác khi mất mạng);
+NFR7.3: ứng dụng mua hàng là PWA (cài được, trang báo mất mạng, biểu mẫu nhật ký giữ bản nháp trên máy; ghi nhật ký ngoại tuyến rồi tự đồng bộ *(chỉ thiết kế)*);
 ứng dụng nội bộ có giao diện đáp ứng, không có thao tác ngoại tuyến.
 
 NFR3.6: xác thực hai lớp của nhân sự nội bộ dùng ứng dụng xác thực (TOTP, cột `totp_secret_enc` của
@@ -113,7 +113,7 @@ bản hoàn chỉnh. Khác biệt chỉ nằm ở các phần giả lập dướ
 | Theo dõi đơn | Hỏi lại mỗi 5 giây | Thông báo trong web, email ở mỗi bước (FR11.1) |
 | Tìm kiếm, tương tự | Bỏ dấu + so khớp gần đúng; cùng danh mục | `unaccent` + trigram + vector BGE-M3 (FR12.1, FR12.3) |
 | Tệp | Nhận trực tiếp (Could) | URL ký trước lên MinIO |
-| Ứng dụng mua hàng | Web | PWA, ghi nhật ký canh tác khi mất sóng (NFR7.3) |
+| Ứng dụng mua hàng | Web | PWA cài được, lưu nháp nhật ký khi mất sóng; đồng bộ ngoại tuyến *(chỉ thiết kế)* (NFR7.3) |
 | Bán sỉ, đổi trả, đánh giá | Không có | FR6.1–6.4, FR8.3, FR5.5 |
 
 **Cách giữ để không phải viết lại**
