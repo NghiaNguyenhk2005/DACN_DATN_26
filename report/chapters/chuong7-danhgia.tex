@@ -16,7 +16,7 @@ Mọi ngưỡng đối chiếu được xác định \emph{trước} khi hiện 
     \item \textbf{Mô-đun AI:} đánh giá offline bằng chỉ số riêng từng bài toán; dự báo giá đánh giá trên dữ liệu giá công khai chứ không phải dữ liệu giao dịch của nền tảng.
 \end{itemize}
 
-% TODO: nêu điều kiện đo của toàn chương (cấu hình máy, phiên bản công cụ, kích thước tập dữ liệu mô phỏng, ngày thực hiện) để kết quả tái lập được.
+Điều kiện đo của từng trụ cột nêu ngay đầu mục kết quả tương ứng; số đo phía máy chủ chạy trên một máy phát triển, điều kiện ở mục~\ref{sec:danhgiahieunang}.
 
 \section{Đánh giá chức năng}
 \label{sec:danhgiachucnang}
@@ -28,15 +28,62 @@ Kiểm thử hộp đen theo bộ test case bám các nhóm yêu cầu, với ba
 \section{Đánh giá phía máy chủ (back-end)}
 \label{sec:danhgiahieunang}
 
-\noindent\textbf{Hiệu năng và chịu tải.} Kịch bản tải tăng dần số người dùng đồng thời thực hiện chuỗi: tìm kiếm, xem chi tiết và nhật ký canh tác, thêm giỏ, tạo đơn. Theo Bảng~\ref{tab:nguongNFR}, báo cáo p95 dưới 2 giây ở tải thông thường, và ở mức mục tiêu 100 người dùng đồng thời thì thời gian phản hồi trung vị dưới 3 giây cùng tỷ lệ lỗi dưới 1\% (NFR1.1). Song song, bật \texttt{pg\_stat\_statements} để tìm truy vấn chậm nhất và truy vấn bị gọi lặp.
+\noindent\textbf{Điều kiện đo.} Hai kịch bản k6 (bộ kịch bản ở \texttt{apps/perf}) chạy ngày 27/11/2026, k6 và máy chủ API cùng một máy: Intel Core i5-11400H (6 nhân, 12 luồng), RAM 15,7 GB, Windows 11, Node.js 22.19.0, k6 2.4.0. Máy chủ chạy với kho dữ liệu \textbf{trong bộ nhớ} (dữ liệu mẫu 39 sản phẩm), tắt giới hạn tần suất theo IP và kiểm phản hồi theo hợp đồng để không đo nhầm các lớp bảo vệ này; ngoài bốn tài khoản người mua mẫu còn nạp 50 người mua giả cho kịch bản tranh chấp. Mỗi kịch bản chạy 3 lượt liên tiếp, mỗi lượt gọi lại thao tác đặt lại dữ liệu trước khi đo; máy chủ chỉ khởi động một lần cho cả sáu lượt nên lượt đầu của kịch bản đầu là lượt nguội. Lúc đo máy chỉ còn khoảng 0,2 GB RAM trống do các ứng dụng khác, nên độ trễ có thể dao động. \textbf{Vì kho dữ liệu là bộ nhớ nên các số này đo lớp ứng dụng, không có độ trễ của PostgreSQL} (xem phần giới hạn bên dưới).
 
-\noindent\textbf{Chống bán vượt tồn kho.} Để kiểm chứng NFR1.2 và NFR4.1, kịch bản tranh chấp khởi tạo dòng tồn có số lượng giới hạn rồi kích hoạt đồng thời nhiều yêu cầu vượt số đó, theo hai kịch bản: nhiều đơn lẻ cùng đặt trên dòng tồn của Farmery; hợp đồng sỉ và đơn thu mua cùng giành dòng tồn của nhà cung cấp. Cần chứng minh khóa bi quan (\texttt{SELECT \ldots{} FOR UPDATE}) chặn mọi trường hợp bán vượt ở cả hai kịch bản.
+\noindent\textbf{Hiệu năng và chịu tải (NFR1.1).} Tải tăng dần 10, 50 rồi 100 người dùng ảo trong 3 phút 10 giây; mỗi người dùng lặp chuỗi tìm kiếm, xem danh sách và chi tiết sản phẩm, tra cứu truy xuất, nghỉ 1 giây giữa các bước. Song song, bốn người mua chạy liên tục chuỗi thêm giỏ, báo giá, tạo đơn trả trước. Theo Bảng~\ref{tab:nguongNFR}, ngưỡng là p95 dưới 2 giây ở tải thông thường, trung vị dưới 3 giây ở mức 100 người dùng, tỷ lệ lỗi dưới 1\%. Bảng~\ref{tab:ketquaTai} nêu kết quả ba lượt.
+
+\begin{table}[t]
+\centering
+\caption{Thời gian phản hồi của máy chủ khi tăng dần tới 100 người dùng ảo (bản lưu trữ bộ nhớ)}
+\label{tab:ketquaTai}
+\tblsetup\tblzebra
+\begin{tabular}{L{5.40cm} L{1.70cm} L{1.70cm} L{1.70cm} L{2.80cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Chỉ số} & \textbf{Lượt 1} & \textbf{Lượt 2} & \textbf{Lượt 3} & \textbf{Ngưỡng} \\
+\midrule
+Trung vị luồng duyệt (ms) & 1,7 & 1,6 & 2,1 & dưới 3\,000 \\
+p95 luồng duyệt (ms) & 6,8 & 6,5 & 10,6 & dưới 2\,000 \\
+Lớn nhất luồng duyệt (ms) & 32 & 23 & 179 & --- \\
+p95 tạo đơn (ms) & 6,5 & 5,2 & 13,6 & dưới 2\,000 \\
+Tỷ lệ lỗi HTTP & 0\% & 0\% & 0\% & dưới 1\% \\
+Tổng số yêu cầu & 15\,196 & 15\,204 & 15\,184 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{NFR1.1 đạt với biên rất lớn} trên bản bộ nhớ ở cả ba lượt. Cần đọc kèm hai giới hạn: thông lượng đạt khoảng 80 yêu cầu mỗi giây (do mỗi người dùng nghỉ 1 giây giữa các bước), tức 100 người dùng thao tác xen kẽ chứ chưa phải dồn dập; và vì không có truy cập cơ sở dữ liệu nên con số này không dự báo được độ trễ trên PostgreSQL. Phần bật \texttt{pg\_stat\_statements} để tìm truy vấn chậm nhất và truy vấn gọi lặp chưa thực hiện được vì chưa có truy vấn nào chạy trên PostgreSQL cho luồng bán lẻ.
+
+\noindent\textbf{Chống bán vượt tồn kho (NFR1.2, NFR4.1).} Mỗi vòng đặt lại dữ liệu, cho 50 người mua cùng bỏ vào giỏ một mặt hàng có đúng 8 đơn vị tồn (mỗi người 1 đến 4 đơn vị, tổng nhu cầu vượt tồn), rồi bắn đồng thời 50 yêu cầu tạo đơn. Sau mỗi vòng, tài khoản thủ kho đọc lại dòng tồn để kiểm: tổng số lượng các đơn được nhận không vượt 8, tồn giữ chỗ không vượt tồn thực, và mức tăng tồn giữ chỗ bằng đúng tổng các đơn được nhận. Mỗi lượt gồm 50 vòng; Bảng~\ref{tab:ketquaOversell} nêu kết quả.
+
+\begin{table}[t]
+\centering
+\caption{Kết quả tranh chấp tồn kho: 50 người mua đồng thời, tồn ban đầu 8 đơn vị (bản lưu trữ bộ nhớ)}
+\label{tab:ketquaOversell}
+\tblsetup\tblzebra
+\begin{tabular}{L{6.60cm} L{1.90cm} L{1.90cm} L{1.90cm}}
+\toprule
+\rowcolor{tblheadbg}
+\textbf{Chỉ số} & \textbf{Lượt 1} & \textbf{Lượt 2} & \textbf{Lượt 3} \\
+\midrule
+Số vòng, mỗi vòng 50 yêu cầu đồng thời & 50 & 50 & 50 \\
+Đơn được nhận & 190 & 180 & 182 \\
+Đơn bị từ chối vì hết hàng (mã 409) & 2\,310 & 2\,320 & 2\,318 \\
+Mã trạng thái ngoài dự kiến & 0 & 0 & 0 \\
+Số vòng bán vượt tồn & 0 & 0 & 0 \\
+Số vòng tồn giữ chỗ khớp tổng đơn được nhận & 50 & 50 & 50 \\
+p95 của mọi yêu cầu (ms) & 63 & 57 & 69 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{NFR1.2 đạt trên bản bộ nhớ:} 0 vòng bán vượt trong tổng 150 vòng, tức 7\,500 yêu cầu đặt đơn tranh chấp. Kịch bản có bắt được lỗi: khi cố ý khai tồn thấp hơn thực tế, k6 báo vi phạm và thoát với mã lỗi. Hai giới hạn. Một, cơ chế chống bán vượt đang chạy là hàng đợi theo khóa trong một tiến trình Node, nên kết quả chứng minh logic giữ chỗ đúng khi nhiều yêu cầu cùng đến, \textbf{chưa chứng minh khóa dòng \texttt{SELECT \ldots{} FOR UPDATE} của PostgreSQL}, vốn là thiết kế đích (mục~\ref{sec:hienthucmodule}); việc chuyển mô-đun tồn kho sang PostgreSQL và đo lại bằng chính kịch bản này là công việc còn lại. Hai, kịch bản hợp đồng sỉ và đơn thu mua cùng giành dòng tồn của nhà cung cấp \textbf{chưa đo được}: mô-đun bán sỉ chưa giữ chỗ qua kho và mô-đun thu mua chưa có đơn, nên chỉ đo được tranh chấp giữa các đơn lẻ.
 
 \noindent\textbf{Phân quyền và bảo mật.} Script gọi endpoint nghiệp vụ bằng token của vai trò không đủ quyền (ví dụ \texttt{buyer\_retail} gọi endpoint đăng bán, token một vai trò nội bộ gọi endpoint vai trò khác) và xác nhận mọi lời gọi bị chặn với mã 403 (NFR3.1); rà soát cơ sở dữ liệu để xác nhận mã hóa dữ liệu định danh và băm mật khẩu (NFR3.2, NFR3.3).
 
 \noindent\textbf{Độ tin cậy và các yêu cầu còn lại.} Thử khôi phục từ bản sao lưu ít nhất một lần trong giai đoạn đánh giá (NFR4.2). Các yêu cầu định tính hoặc chỉ thiết kế --- NFR2.1, NFR2.2, NFR3.4--NFR3.6, NFR5.1, NFR5.2, NFR7.1, NFR8.1--NFR8.5, NFR9.1 --- được nghiệm thu bằng danh sách kiểm tra hoặc rà soát thiết kế chứ không đo bằng chỉ số, đúng như mục~\ref{sec:yeucauphichucnang}.
 
-% TODO: điền số đo từng mức tải kèm kết luận so với NFR1.1 và năm truy vấn tốn thời gian nhất; số yêu cầu đồng thời, số lượng ban đầu, số được chấp nhận và bị từ chối, tỷ lệ bán vượt thực đo; số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa.
+% TODO: sau khi lớp lưu trữ tồn kho chuyển sang PostgreSQL, đo lại hai kịch bản k6 và điền năm truy vấn tốn thời gian nhất từ pg_stat_statements; điền số endpoint đã kiểm, tỷ lệ chặn đúng, kết quả rà soát mã hóa.
 
 \section{Đánh giá phía giao diện (front-end)}
 \label{sec:danhgiaux}

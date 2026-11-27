@@ -525,3 +525,13 @@ Status: open
 - Ch.6 đã viết theo thiết kế (giao thẳng), có ghi chú rằng mã còn lệch.
 Status: open
 **Cập nhật 2026-11-23:** đã sửa chỗ nhắc Redis ở Ch.5, Ch.6, Ch.8, Phụ lục E, ảnh C4 (container, mô-đun) và tuần tự: nay ghi bus sự kiện trong tiến trình, Redis và MinIO là chỉ thiết kế. Phụ lục V đã bỏ khỏi báo cáo. Ý "chống lặp trong bộ nhớ" vẫn ở mức một câu ngắn ở Ch.5; còn lại khi lên PostgreSQL (phát sau commit hoặc outbox).
+
+### k6: số đo hiện chỉ trên bản bộ nhớ; còn việc lên PostgreSQL — Claude — 2026-11-27
+- Đã điền Ch.7 mục máy chủ (Bảng tải và Bảng tranh chấp tồn) với nhãn "bản lưu trữ bộ nhớ": NFR1.1 và NFR1.2 đạt trên nền này, 0 bán vượt trong 150 vòng × 50 yêu cầu.
+- Chưa đo trên PostgreSQL vì chỉ `CategoryRepository` có bản Prisma; retail, inventory, catalog, wholesale còn ở bộ nhớ. Trong mã chưa có `SELECT ... FOR UPDATE`
+  (chống bán vượt đang là `KeyedMutex`); Ch.6 mục khóa dòng tồn đã sửa thành "hiện tại hàng đợi trong tiến trình, thiết kế đích là FOR UPDATE".
+- Khi inventory và retail chuyển sang Prisma: đổi `KeyedMutex` thành `FOR UPDATE`, chạy lại `apps/perf/scenarios/oversell.js` và `browse.js`, bật
+  `CREATE EXTENSION pg_stat_statements` (thư viện đã nạp ở docker-compose, migration chưa tạo extension), điền năm truy vấn chậm nhất, quyết định chỉ mục khóa ngoại (NOTES 2026-11-16).
+- Kịch bản hợp đồng sỉ và đơn thu mua cùng giành dòng tồn chưa đo được: wholesale chưa gọi `InventoryService`, `ProcurementModule` còn rỗng.
+- Lượt đo ngày 27/11: API khởi động một lần cho cả 6 lượt (script dừng nhầm PID nên 5 lượt sau dùng lại API đang chạy); số liệu hợp lệ vì mỗi lượt đặt lại dữ liệu, nhưng lượt đo lại nên dừng API đúng cách.
+Status: open

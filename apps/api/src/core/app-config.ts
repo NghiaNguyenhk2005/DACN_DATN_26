@@ -30,6 +30,8 @@ export interface AppConfig {
   databaseUrl: string | null;
   /** Dịch vụ AI nội bộ (apps/ai); null thì không bật vector, tìm kiếm dùng từ điển khái niệm. */
   ai: AiServiceConfig | null;
+  /** Số tài khoản người mua giả thêm cho kiểm thử tải (kho bộ nhớ); 0 là không thêm, chỉ cho đặt khi DEMO_MODE. */
+  loadtestBuyers: number;
 }
 
 export type StorageKind = "memory" | "prisma";
@@ -85,6 +87,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   if (aiUrl && !aiToken) throw new Error("Thiếu AI_SERVICE_TOKEN khi đã đặt AI_SERVICE_URL");
   const ai = aiUrl && aiToken ? { url: aiUrl, token: aiToken } : null;
 
+  const loadtestBuyers = int(env, "LOADTEST_BUYERS", 0, 0, 1000);
+  if (loadtestBuyers > 0 && !demoMode) throw new Error("LOADTEST_BUYERS chỉ dùng được khi DEMO_MODE=true");
+
   return {
     production,
     port: int(env, "PORT", 4000, 1, 65535),
@@ -111,5 +116,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     storage: storageRaw,
     databaseUrl,
     ai,
+    loadtestBuyers,
   };
 }
