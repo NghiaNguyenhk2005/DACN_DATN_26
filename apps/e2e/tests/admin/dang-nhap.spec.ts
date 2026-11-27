@@ -12,10 +12,10 @@ async function requestOtp(page: Page, email: string) {
   return (await notice.innerText()).match(/\d{6}/)![0];
 }
 
-// Input.OTP của antd là 6 ô; gõ vào ô đầu thì con trỏ tự sang ô sau.
+// Input.OTP của antd là 6 ô; điền từng ô để ghi đè mã cũ còn trong ô (gõ liền vào ô đã có chữ làm lệch các chữ số).
 async function submitOtp(page: Page, code: string) {
-  await page.locator(".ant-otp input").first().click();
-  await page.keyboard.type(code);
+  const boxes = page.locator(".ant-otp input");
+  for (const [index, digit] of [...code].entries()) await boxes.nth(index).fill(digit);
   // Nút này dùng lại phần tử của nút "Gửi mã OTP" nên tên có thể còn dính "loading" — không so tên chính xác.
   await page.getByRole("button", { name: "Đăng nhập" }).click();
 }
