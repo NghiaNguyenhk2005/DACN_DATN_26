@@ -26,7 +26,7 @@
       "name": "Dâu tây Hana Đà Lạt",
       "region": "Đà Lạt",
       "unit": "kg",
-      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 6.21,
@@ -94,7 +94,7 @@
       "name": "Cà chua bi Cherry đỏ ngọt",
       "region": "Đơn Dương",
       "unit": "kg",
-      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 8.42,
@@ -162,7 +162,7 @@
       "name": "Cà chua Beef Đà Lạt",
       "region": "Đơn Dương",
       "unit": "kg",
-      "source": "Chợ đầu mối nông sản Thủ Đức",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 6.4,
@@ -230,7 +230,7 @@
       "name": "Xà lách Lô lô xanh giòn",
       "region": "Đà Lạt",
       "unit": "kg",
-      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 8.79,
@@ -298,7 +298,7 @@
       "name": "Xà lách Romaine thủy canh",
       "region": "Lạc Dương",
       "unit": "kg",
-      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 6.52,
@@ -366,7 +366,7 @@
       "name": "Ớt chuông ngọt Đà Lạt",
       "region": "Đức Trọng",
       "unit": "kg",
-      "source": "Cổng thông tin giá cả nông sản (Bộ NN&PTNT)",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 8.81,
@@ -434,7 +434,7 @@
       "name": "Cải xoăn Kale hữu cơ",
       "region": "Đà Lạt",
       "unit": "kg",
-      "source": "Bản tin giá nông sản Sở Công Thương Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 4.83,
@@ -502,7 +502,7 @@
       "name": "Bơ sáp 034 Lâm Đồng",
       "region": "Bảo Lộc",
       "unit": "kg",
-      "source": "Cục Thống kê tỉnh Lâm Đồng",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 9.04,
@@ -570,7 +570,7 @@
       "name": "Khoai lang mật Đà Lạt",
       "region": "Đà Lạt",
       "unit": "kg",
-      "source": "Chợ đầu mối nông sản Thủ Đức",
+      "source": "mô phỏng (simulated)",
       "evaluationScores": {
         "seasonal_naive": {
           "mape": 5.28,
